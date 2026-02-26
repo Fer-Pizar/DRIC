@@ -1,0 +1,53 @@
+# ==========================
+# Global
+# ==========================
+.DS_Store
+.env
+.env.local
+.env.*.local
+*.log
+*.swp
+
+# ==========================
+# Node / Frontend
+# ==========================
+node_modules/
+.next/
+out/
+build/
+dist/
+coverage/
+frontend/.env*
+frontend/node_modules/
+frontend/.next/
+
+# ==========================
+# Python / Backend
+# ==========================
+__pycache__/
+*.py[cod]
+*.sqlite3
+*.db
+*.egg-info/
+*.egg
+*.pyo
+*.pyd
+.Python
+venv/
+.env/
+backend/venv/
+backend/.env*
+backend/media/
+backend/staticfiles/
+
+# ==========================
+# VS Code
+# ==========================
+.vscode/
+
+# ==========================
+# Testing
+# ==========================
+.pytest_cache/
+.coverage
+htmlcov/
