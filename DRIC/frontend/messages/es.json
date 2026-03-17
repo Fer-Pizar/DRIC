@@ -1,0 +1,22 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "presentation": "Presentación",
+    "agreements": "Convenios",
+    "projects": "Proyectos",
+    "mobility": "Becas y Movilidad",
+    "memberships": "Membresías",
+    "events": "Eventos",
+    "regulations": "Normativas",
+    "reports": "Informes de Gestión",
+    "contact": "Contacto"
+  },
+  "hero": {
+    "eyebrow": "Dirección de Relaciones Internacionales y Cooperación",
+    "titleLine1": "Conectando",
+    "titleLine2": "Mentes Globales",
+    "subtitle": "Impulsando la excelencia académica a través de la cooperación internacional y la investigación colaborativa",
+    "ctaPrimary": "Explorar Oportunidades",
+    "ctaSecondary": "Ver Proyectos"
+  }
+}
