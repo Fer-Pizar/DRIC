@@ -9,7 +9,7 @@ const comfortaa = Comfortaa({
 
 export const metadata: Metadata = {
   title: "DRIC",
-  description: "Dirección de Relaciones Internacionales y Cooperación",
+  description: "Dirección de Relaciones Internacionales y Convenios",
 };
 
 export default function RootLayout({
