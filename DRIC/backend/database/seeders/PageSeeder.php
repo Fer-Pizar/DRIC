@@ -110,6 +110,16 @@ class PageSeeder extends Seeder
                 'created_by' => null,
                 'updated_by' => null,
             ],
+            [
+                'slug' => 'campus-life',
+                'page_type' => 'static',
+                'status' => 'draft',
+                'published_at' => null,
+                'sort_order' => 11,
+                'parent_id' => null,
+                'created_by' => null,
+                'updated_by' => null,
+            ],
         ];
 
         foreach ($pages as $page) {

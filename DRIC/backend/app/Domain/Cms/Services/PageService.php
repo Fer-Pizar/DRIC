@@ -16,7 +16,7 @@ class PageService
                 'seo',
                 'sections.translations',
                 'sections.contentBlocks.translations',
-            ])
+            ]) 
             ->first();
     }
 }
