@@ -14,8 +14,9 @@ class Section extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'is_active' => 'boolean',
-    ];
+    'is_active' => 'boolean',
+    'settings' => 'array',
+];
 
     public function page(): BelongsTo
     {

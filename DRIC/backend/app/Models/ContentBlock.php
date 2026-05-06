@@ -14,8 +14,9 @@ class ContentBlock extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'is_active' => 'boolean',
-    ];
+    'is_active' => 'boolean',
+    'data' => 'array',
+];
 
     public function section(): BelongsTo
     {
