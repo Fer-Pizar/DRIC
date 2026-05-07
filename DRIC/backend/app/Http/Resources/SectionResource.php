@@ -21,8 +21,10 @@ class SectionResource extends JsonResource
             'layout' => $this->layout,
             'sort_order' => $this->sort_order,
             'settings' => $this->settings ?? [],
-            'heading' => $translation?->heading,
-            'subheading' => $translation?->subheading,
+            'title' => $translation?->title,
+            'subtitle' => $translation?->subtitle,
+            'summary' => $translation?->summary,
+            'body' => $translation?->body,
             'blocks' => ContentBlockResource::collection($this->whenLoaded('contentBlocks')),
         ];
     }

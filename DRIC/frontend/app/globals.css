@@ -47,3 +47,38 @@ body {
   color: transparent;
   -webkit-text-fill-color: transparent;
 }
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: #020617;
+}
+
+.dric-glass {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(15, 23, 42, 0.72);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+}
+
+.dric-glow-button {
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(2, 6, 23, 0.95));
+  box-shadow: 0 0 24px rgba(96, 165, 250, 0.25);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.dric-glow-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 34px rgba(96, 165, 250, 0.42);
+}
+
+.dric-blur-bg {
+  background:
+    radial-gradient(circle at 20% 20%, rgba(37, 99, 235, 0.35), transparent 32%),
+    radial-gradient(circle at 80% 30%, rgba(127, 29, 29, 0.38), transparent 34%),
+    radial-gradient(circle at 50% 90%, rgba(15, 23, 42, 0.9), transparent 45%),
+    #020617;
+}

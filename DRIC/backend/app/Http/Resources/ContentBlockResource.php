@@ -19,12 +19,16 @@ class ContentBlockResource extends JsonResource
             'id' => $this->id,
             'type' => $this->block_type,
             'sort_order' => $this->sort_order,
+            'link_url' => $this->link_url,
             'settings' => $this->settings ?? [],
             'data' => $this->data ?? [],
             'title' => $translation?->title,
+            'subtitle' => $translation?->subtitle,
+            'summary' => $translation?->summary,
             'body' => $translation?->body,
             'cta_label' => $translation?->cta_label,
-            'media' => $this->whenLoaded('mediaAsset', fn () => new MediaAssetResource($this->mediaAsset)),
+            'secondary_cta_label' => $translation?->secondary_cta_label,
+            'media' => $this->whenLoaded('mediaAsset', fn () => $this->mediaAsset ? new MediaAssetResource($this->mediaAsset) : null),
         ];
     }
 }
