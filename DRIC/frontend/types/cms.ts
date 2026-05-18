@@ -1,33 +1,41 @@
 export type CmsMedia = {
   id: number;
-  type: string | null;
+  file_name: string | null;
+  file_path: string | null;
+  mime_type: string | null;
+  file_size: number | null;
+  disk: string | null;
   url: string | null;
-  alt: string | null;
-  caption: string | null;
+  alt_text?: string | null;
+  caption?: string | null;
 };
 
 export type CmsBlock = {
   id: number;
   type: string;
   sort_order: number;
-  link_url?: string | null;
+  block_type?: string;
+  link_url: string | null;
   settings: Record<string, unknown>;
   data: Record<string, unknown>;
-  title?: string | null;
-  subtitle?: string | null;
-  summary?: string | null;
-  body?: string | null;
-  cta_label?: string | null;
-  secondary_cta_label?: string | null;
-  media?: CmsMedia | null;
+  title: string | null;
+  subtitle: string | null;
+  summary: string | null;
+  body: string | null;
+  cta_label: string | null;
+  secondary_cta_label: string | null;
+  media: CmsMedia | null;
+  media_asset?: CmsMedia | null;
 };
 
 export type CmsSection = {
   id: number;
-  type: string;
+  type?: string;
+  section_type?: string;
+  section_key?: string | null;
   layout?: string | null;
   sort_order: number;
-  settings: Record<string, unknown>;
+  settings?: Record<string, unknown> | null;
   title?: string | null;
   subtitle?: string | null;
   summary?: string | null;
@@ -44,9 +52,15 @@ export type CmsPage = {
   menu_label?: string | null;
   summary?: string | null;
   seo: {
-    meta_title?: string | null;
-    meta_description?: string | null;
-    canonical_url?: string | null;
+  meta_title?: string | null;
+  meta_description?: string | null;
+  canonical_url?: string | null;
   };
   sections: CmsSection[];
+};
+
+export type CmsMediaAsset = {
+  id: number;
+  file_path: string | null;
+  url: string | null;
 };

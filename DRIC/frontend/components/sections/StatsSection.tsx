@@ -1,25 +1,23 @@
-'use client';
+import type { CmsSection } from "@/types/cms";
 
-const stats = [
-  { value: '150+', label: 'Convenios Activos' },
-  { value: '50+', label: 'Países Aliados' },
-  { value: '500+', label: 'Becarios' },
-  { value: '80+', label: 'Proyectos' },
-];
+type Props = {
+  section: CmsSection;
+};
 
-export default function StatsSection() {
+export default function StatsSection({ section }: Props) {
   return (
-    <section className="px-4 py-16 md:px-8 lg:px-12">
-      <div className="mx-auto max-w-6xl">
-        <div className="grid grid-cols-2 gap-10 text-center md:grid-cols-4">
-          {stats.map((stat) => (
-            <div key={stat.label} className="flex flex-col items-center">
-              <span className="text-4xl font-extrabold text-cyan-300 md:text-5xl lg:text-6xl">
-                {stat.value}
-              </span>
-              <span className="mt-2 text-sm text-white/60 md:text-base">
-                {stat.label}
-              </span>
+    <section className="relative px-6 py-20 md:px-10 lg:px-16">
+      <div className="mx-auto max-w-6xl rounded-[32px] border border-white/10 bg-blue-950/40 px-6 py-10 shadow-[0_0_80px_rgba(37,99,235,0.25)] backdrop-blur-xl md:px-10">
+        <div className="grid grid-cols-1 gap-8 text-center sm:grid-cols-3">
+          {section.blocks.map((block) => (
+            <div key={block.id}>
+              <p className="text-4xl font-bold text-cyan-300 md:text-5xl">
+                {String(block.data?.value ?? "")}
+              </p>
+
+              <p className="mt-3 text-sm text-white/70 md:text-base">
+                {block.title}
+              </p>
             </div>
           ))}
         </div>

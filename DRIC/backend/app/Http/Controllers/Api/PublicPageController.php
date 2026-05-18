@@ -23,6 +23,8 @@ class PublicPageController extends Controller
                 'sections.translations.language',
                 'sections.contentBlocks' => fn ($query) => $query->orderBy('sort_order'),
                 'sections.contentBlocks.translations.language',
+                'sections.contentBlocks.mediaAsset',
+                'sections.contentBlocks.mediaAsset.translations',
             ])
             ->firstOrFail();
 

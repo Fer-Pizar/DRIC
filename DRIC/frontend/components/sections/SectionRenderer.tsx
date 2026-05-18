@@ -1,6 +1,6 @@
-import type { CmsSection } from "@/types/cms";
 import HeroSection from "@/components/sections/HeroSection";
 import StatsSection from "@/components/sections/StatsSection";
+
 import ScholarshipGridSection from "@/components/sections/home/ScholarshipGridSection";
 import AboutDricSection from "@/components/sections/home/AboutDricSection";
 import RecentAgreementsSection from "@/components/sections/home/RecentAgreementsSection";
@@ -8,15 +8,20 @@ import DirectorSection from "@/components/sections/home/DirectorSection";
 import FaqSection from "@/components/sections/home/FaqSection";
 import FinalCtaSection from "@/components/sections/home/FinalCtaSection";
 
+import type { CmsSection } from "@/types/cms";
+
 type Props = {
   sections: CmsSection[];
+  locale?: string;
 };
 
-export default function SectionRenderer({ sections }: Props) {
+export default function SectionRenderer({ sections, locale = "es" }: Props) {
   return (
     <>
       {sections.map((section) => {
-        switch (section.type) {
+        const sectionType = section.type ?? section.section_type;
+
+        switch (sectionType) {
           case "hero":
             return <HeroSection key={section.id} section={section} />;
 
@@ -27,7 +32,13 @@ export default function SectionRenderer({ sections }: Props) {
             return <AboutDricSection key={section.id} section={section} />;
 
           case "recent_agreements":
-            return <RecentAgreementsSection key={section.id} section={section} />;
+            return (
+              <RecentAgreementsSection
+                key={section.id}
+                section={section}
+                locale={locale}
+              />
+            );
 
           case "director_mission_purpose":
             return <DirectorSection key={section.id} section={section} />;

@@ -30,6 +30,6 @@ class ContentBlock extends Model
 
     public function mediaAsset(): BelongsTo
     {
-        return $this->belongsTo(MediaAsset::class);
+        return $this->belongsTo(MediaAsset::class, 'media_asset_id');
     }
 }

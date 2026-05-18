@@ -23,7 +23,7 @@ export default function ScholarshipGridSection({ section }: Props) {
               className="overflow-hidden rounded-3xl bg-slate-900 border border-slate-800"
             >
               <img
-                src={String(block.data?.image ?? "")}
+                src={block.media?.url ?? String(block.data?.image ?? "")}
                 alt={block.title ?? ""}
                 className="h-72 w-full object-cover"
               />

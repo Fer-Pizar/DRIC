@@ -1,4 +1,5 @@
 import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
 import SectionRenderer from "@/components/sections/SectionRenderer";
 import { getPageBySlug } from "@/lib/api/pages";
 
@@ -14,10 +15,10 @@ export default async function InicioPage({ params }: Props) {
   const page = await getPageBySlug("inicio", locale);
 
   return (
-    <main className="min-h-screen bg-[#020617] text-white overflow-x-hidden">
+    <main className="min-h-screen overflow-x-hidden bg-[#020617] text-white">
       <Header />
-
-      <SectionRenderer sections={page.sections} />
+      <SectionRenderer sections={page.sections} locale={locale} />
+      <Footer />
     </main>
   );
 }
