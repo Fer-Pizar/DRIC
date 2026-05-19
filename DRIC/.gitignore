@@ -51,3 +51,30 @@ backend/staticfiles/
 .pytest_cache/
 .coverage
 htmlcov/
+
+# Dependencies
+backend/vendor/
+frontend/node_modules/
+
+# Build output
+frontend/.next/
+frontend/out/
+frontend/dist/
+
+# Laravel runtime
+backend/storage/logs/*.log
+backend/storage/framework/cache/data/*
+backend/storage/framework/views/*.php
+backend/bootstrap/cache/*.php
+
+# Environment
+backend/.env
+frontend/.env
+frontend/.env.local
+
+# Local databases
+backend/database/database.sqlite
+
+# OS
+.DS_Store
+EOF

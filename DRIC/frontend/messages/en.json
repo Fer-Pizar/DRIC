@@ -1,0 +1,22 @@
+{
+  "nav": {
+    "home": "Home",
+    "presentation": "Presentation",
+    "agreements": "Agreements",
+    "projects": "Projects",
+    "mobility": "Scholarships and Mobility",
+    "memberships": "Memberships",
+    "events": "Events",
+    "regulations": "Regulations",
+    "reports": "Management Reports",
+    "contact": "Contact"
+  },
+  "hero": {
+    "eyebrow": "Directorate of International Relations and Cooperation",
+    "titleLine1": "Connecting",
+    "titleLine2": "Global Minds",
+    "subtitle": "Driving academic excellence through international cooperation and collaborative research",
+    "ctaPrimary": "Explore Opportunities",
+    "ctaSecondary": "View Projects"
+  }
+}
