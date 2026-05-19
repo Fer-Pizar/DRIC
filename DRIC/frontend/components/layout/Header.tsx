@@ -31,10 +31,10 @@ export default function Header() {
             <Image
               src="/images/brand/DRIC_logo.png"
               alt="DRIC"
-              width={130}
-              height={52}
+              width={70}
+              height={70}
               priority
-              className="h-auto w-[110px] object-contain md:w-[130px]"
+              className="h-auto w-[78px] object-contain md:w-[78px]"
             />
           </a>
 
