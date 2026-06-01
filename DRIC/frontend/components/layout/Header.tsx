@@ -2,10 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Menu, Moon, Sun, Languages } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { usePathname, useRouter } from "next/navigation";
 import MobileMenu from "./MobileMenu";
 
 export default function Header() {
@@ -58,7 +58,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="fixed inset-x-0 top-0 z-50">
+      <header className="fixed inset-x-0 top-0 z-50 px-4 md:px-6">
         <div className="mx-auto mt-4 flex max-w-7xl items-center justify-between rounded-full border border-white/10 bg-[#020617]/75 px-5 py-3 shadow-2xl shadow-black/25 backdrop-blur-xl md:px-7">
           <Link href={`/${locale}/inicio`} className="flex items-center">
             <Image
@@ -76,7 +76,7 @@ export default function Header() {
               type="button"
               onClick={toggleLanguage}
               className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/10 text-white transition hover:bg-white/20"
-              aria-label="Change language"
+              aria-label={locale === "es" ? "Change to English" : "Cambiar a español"}
               title={locale === "es" ? "Change to English" : "Cambiar a español"}
             >
               <Languages className="h-5 w-5" />
@@ -86,7 +86,7 @@ export default function Header() {
               type="button"
               onClick={toggleTheme}
               className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/10 text-white transition hover:bg-white/20"
-              aria-label="Change theme"
+              aria-label={theme === "dark" ? "Change to light mode" : "Change to dark mode"}
               title={theme === "dark" ? "Change to light mode" : "Change to dark mode"}
             >
               {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
@@ -97,6 +97,7 @@ export default function Header() {
               onClick={() => setOpen(true)}
               className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/10 text-white transition hover:bg-white/20"
               aria-label="Open menu"
+              title="Open menu"
             >
               <Menu className="h-6 w-6" />
             </button>
@@ -104,7 +105,7 @@ export default function Header() {
         </div>
       </header>
 
-      <MobileMenu open={open} onClose={() => setOpen(false)} items={items} />
+      <MobileMenu open={open} onClose={() => setOpen(false)} />
     </>
   );
 }

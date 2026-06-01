@@ -199,12 +199,12 @@ class HomePageSeeder extends Seeder
                     'image' => '/images/administration/director.jpg',
                 ],
                 'es' => [
-                    'title' => 'Director: Oscar Edwin Alba Salazar',
+                    'title' => 'Director: Omar Morales Delgadillo',
                     'subtitle' => 'Dirección de Relaciones Internacionales y Convenios',
                     'summary' => 'La DRIC depende directamente del Rectorado para el cumplimiento de sus funciones.',
                 ],
                 'en' => [
-                    'title' => 'Director: Oscar Edwin Alba Salazar',
+                    'title' => 'Director: Omar Morales Delgadillo',
                     'subtitle' => 'International Relations and Agreements Office',
                     'summary' => 'DRIC reports directly to the Rectorate in the fulfillment of its functions.',
                 ],

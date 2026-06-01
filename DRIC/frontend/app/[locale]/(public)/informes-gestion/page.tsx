@@ -19,6 +19,7 @@ const reports = [
   { title: "Informe DRIC 2020", date: "Dic 28, 2020", year: "2020" },
   { title: "Informe DRIC 2019", date: "Dic 27, 2019", year: "2019" },
   { title: "Informe DRIC 2018", date: "Dic 27, 2018", year: "2018" },
+  { title: "Informe DRIC 2017", date: "Dic 29, 2017", year: "2017" },
 ];
 
 export default async function InformesGestionPage({ params }: Props) {
@@ -30,7 +31,6 @@ export default async function InformesGestionPage({ params }: Props) {
 
       <section className="relative isolate px-5 pb-20 pt-36 md:px-10 lg:px-12">
         <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(181,18,27,0.40),transparent_34%),radial-gradient(circle_at_top_right,rgba(22,65,148,0.48),transparent_36%),linear-gradient(135deg,#020617_0%,#08111f_45%,#12070a_100%)]" />
-
         <div className="absolute bottom-0 left-1/2 -z-10 h-[360px] w-[560px] -translate-x-1/2 rounded-full bg-white/10 blur-[150px]" />
 
         <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
@@ -54,7 +54,7 @@ export default async function InformesGestionPage({ params }: Props) {
             </p>
 
             <p className="mt-5 text-5xl font-light tracking-[-0.06em]">
-              2018—2023
+              2017—2023
             </p>
 
             <p className="mt-4 text-sm leading-7 text-white/65">
@@ -85,9 +85,7 @@ export default async function InformesGestionPage({ params }: Props) {
                 slotProps={{
                   input: {
                     startAdornment: (
-                      <SearchRoundedIcon
-                        sx={{ mr: 1.5, color: "#164194" }}
-                      />
+                      <SearchRoundedIcon sx={{ mr: 1.5, color: "#164194" }} />
                     ),
                   },
                 }}
@@ -117,7 +115,6 @@ export default async function InformesGestionPage({ params }: Props) {
               >
                 <div className="relative h-48 overflow-hidden bg-[#020617] p-7 text-white">
                   <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(181,18,27,0.6),transparent_36%),radial-gradient(circle_at_bottom_right,rgba(22,65,148,0.7),transparent_40%)]" />
-
                   <div className="absolute left-0 top-0 h-full w-24 bg-[#b5121b]" />
 
                   <div className="relative">
@@ -141,16 +138,11 @@ export default async function InformesGestionPage({ params }: Props) {
                   </h3>
 
                   <div className="mt-5 flex items-center gap-2 text-sm font-semibold text-slate-500">
-                    <CalendarMonthRoundedIcon
-                      sx={{ fontSize: 19, color: "#b5121b" }}
-                    />
+                    <CalendarMonthRoundedIcon sx={{ fontSize: 19, color: "#b5121b" }} />
                     {report.date}
                   </div>
 
-                  <Link
-                    href={`/${locale}/normativas`}
-                    className="mt-7 inline-flex"
-                  >
+                  <Link href={`/${locale}/normativas`} className="mt-7 inline-flex">
                     <Button
                       variant="contained"
                       endIcon={<DownloadRoundedIcon />}
@@ -158,12 +150,10 @@ export default async function InformesGestionPage({ params }: Props) {
                         borderRadius: "999px",
                         px: 3,
                         py: 1.1,
-                        background:
-                          "linear-gradient(135deg,#b5121b,#e1242f)",
+                        background: "linear-gradient(135deg,#b5121b,#e1242f)",
                         textTransform: "none",
                         fontWeight: 800,
-                        boxShadow:
-                          "0 14px 34px rgba(181,18,27,0.22)",
+                        boxShadow: "0 14px 34px rgba(181,18,27,0.22)",
                       }}
                     >
                       Descargar PDF
@@ -172,72 +162,6 @@ export default async function InformesGestionPage({ params }: Props) {
                 </div>
               </Card>
             ))}
-          </div>
-
-          <div className="mt-20 overflow-hidden rounded-[2.5rem] bg-[#020617] text-white shadow-2xl shadow-slate-300/60">
-            <div className="grid gap-0 lg:grid-cols-[0.85fr_1.15fr]">
-              <div className="relative min-h-[320px] overflow-hidden p-8 md:p-10">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(181,18,27,0.75),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(22,65,148,0.85),transparent_45%)]" />
-
-                <div className="absolute left-0 top-0 h-full w-28 bg-[#b5121b]" />
-
-                <div className="relative">
-                  <p className="text-xs font-bold uppercase tracking-[0.28em] text-white/65">
-                    Archivo histórico
-                  </p>
-
-                  <h3 className="mt-8 max-w-md text-4xl font-black leading-tight tracking-[-0.06em] md:text-5xl">
-                    Informe DRIC 2017
-                  </h3>
-
-                  <p className="mt-5 flex items-center gap-2 text-sm font-semibold text-white/70">
-                    <CalendarMonthRoundedIcon
-                      sx={{ fontSize: 19, color: "#ffffff" }}
-                    />
-                    Dic 29, 2017
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex flex-col justify-center bg-white p-8 text-slate-950 md:p-12">
-                <p className="text-sm font-bold uppercase tracking-[0.25em] text-[#b5121b]">
-                  Documento anterior
-                </p>
-
-                <h3 className="mt-4 text-4xl font-semibold tracking-[-0.05em]">
-                  Consulta gestiones previas
-                </h3>
-
-                <p className="mt-5 max-w-xl text-sm leading-7 text-slate-600">
-                  Los informes históricos permiten revisar la evolución institucional de
-                  la DRIC y conservar un registro transparente de sus actividades,
-                  proyectos y resultados.
-                </p>
-
-                <Link
-                  href={`/${locale}/normativas`}
-                  className="mt-8 inline-flex"
-                >
-                  <Button
-                    variant="contained"
-                    endIcon={<DownloadRoundedIcon />}
-                    sx={{
-                      borderRadius: "999px",
-                      px: 4,
-                      py: 1.2,
-                      background:
-                        "linear-gradient(135deg,#b5121b,#e1242f)",
-                      textTransform: "none",
-                      fontWeight: 800,
-                      boxShadow:
-                        "0 14px 34px rgba(181,18,27,0.22)",
-                    }}
-                  >
-                    Descargar informe 2017
-                  </Button>
-                </Link>
-              </div>
-            </div>
           </div>
         </div>
       </section>
