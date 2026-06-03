@@ -21,6 +21,7 @@ const menuItems = [
   { label: { es: "Normativas", en: "Regulations" }, href: "normativas", description: { es: "Documentos y normativa", en: "Documents and regulations" } },
   { label: { es: "Informes de Gestión", en: "Management Reports" }, href: "informes-gestion", description: { es: "Archivo institucional", en: "Institutional archive" } },
   { label: { es: "Campus Life", en: "Campus Life" }, href: "campus-life", description: { es: "Vida universitaria UMSS", en: "UMSS university life" } },
+  { label: { es: "Verificar Certificado", en: "Verify Certificate" }, href: "validar-certificado", description: { es: "Validación institucional", en: "Institutional validation" } },
   { label: { es: "Contacto", en: "Contact" }, href: "contacto", description: { es: "Ubicación y canales", en: "Location and channels" } },
 ];
 
@@ -36,13 +37,8 @@ export default function MobileMenu({ open, onClose }: MobileMenuProps) {
       <div className="relative mx-auto flex min-h-screen max-w-7xl flex-col px-6 py-7 md:px-10 lg:px-12">
         <div className="flex items-center justify-between border-b border-white/10 pb-6">
           <Link href={`/${locale}/inicio`} onClick={onClose} className="flex items-center gap-4">
-            <div className="relative h-16 w-16 overflow-hidden rounded-full bg-white p-1.5 shadow-2xl shadow-cyan-400/10">
-              <Image
-                src="/images/brand/DRIC_logo.png"
-                alt="DRIC"
-                fill
-                className="object-contain p-1"
-              />
+            <div className="relative h-16 w-16 overflow-hidden rounded-full bg-gray p-0.5 shadow-2xl shadow-cyan-400/10">
+              <Image src="/images/brand/DRIC_logo.png" alt="DRIC" fill className="object-contain p-1" />
             </div>
 
             <div>
@@ -50,7 +46,7 @@ export default function MobileMenu({ open, onClose }: MobileMenuProps) {
                 DRIC · UMSS
               </p>
               <p className="mt-1 text-sm text-white/55">
-                {locale === "en" ? "International Relations and Agreements" : "Relaciones Internacionales y Convenios"}
+                {locale === "en" ? "International Relations and Agreements" : "Dirección de Relaciones Internacionales y Convenios"}
               </p>
             </div>
           </Link>
@@ -77,8 +73,8 @@ export default function MobileMenu({ open, onClose }: MobileMenuProps) {
 
             <p className="mt-6 text-sm leading-7 text-white/62">
               {locale === "en"
-                ? "Navigate through institutional information, agreements, projects, scholarships, reports, campus life and contact channels."
-                : "Navega por información institucional, convenios, proyectos, becas, informes, vida universitaria y canales de contacto."}
+                ? "Navigate through institutional information, agreements, projects, scholarships, reports, campus life, certificate verification and contact channels."
+                : "Navega por información institucional, convenios, proyectos, becas, informes, vida universitaria, verificación de certificados y canales de contacto."}
             </p>
           </div>
 

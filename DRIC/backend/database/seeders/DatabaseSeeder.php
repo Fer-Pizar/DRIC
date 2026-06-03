@@ -12,6 +12,7 @@ class DatabaseSeeder extends Seeder
             LanguageSeeder::class,
             PageSeeder::class,
             HomePageSeeder::class,
+            CertificateVerificationSeeder::class,
         ]);
     }
 }

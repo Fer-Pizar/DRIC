@@ -9,7 +9,8 @@
     "events": "Eventos",
     "regulations": "Normativas",
     "reports": "Informes de Gestión",
-    "contact": "Contacto"
+    "contact": "Contacto",
+    "verifyCertificate": "Verificar Certificado"
   },
   "hero": {
     "eyebrow": "Dirección de Relaciones Internacionales y Cooperación",
@@ -18,5 +19,21 @@
     "subtitle": "Impulsando la excelencia académica a través de la cooperación internacional y la investigación colaborativa",
     "ctaPrimary": "Explorar Oportunidades",
     "ctaSecondary": "Ver Proyectos"
-  }
+  },
+  "certificateVerification": {
+  "eyebrow": "Verificación institucional",
+  "title": "Verificar Certificado",
+  "description": "Consulta la validez de certificados emitidos por la Dirección de Relaciones Internacionales y Convenios mediante un código único de verificación.",
+  "inputLabel": "Insertar código de certificado:",
+  "button": "Verificar",
+  "checking": "Verificando",
+  "invalidCode": "El código debe tener exactamente 7 caracteres alfanuméricos.",
+  "notFound": "No se encontró un certificado activo con ese código.",
+  "serverError": "No se pudo conectar con el servidor. Intenta nuevamente.",
+  "resultTitle": "Certificado encontrado",
+  "fullName": "Nombre completo",
+  "certificate": "Certificado",
+  "issueDate": "Fecha de emisión",
+  "certificateDescription": "Descripción"
+}
 }

@@ -6,7 +6,6 @@ import Card from "@mui/material/Card";
 import Button from "@mui/material/Button";
 import ArrowOutwardRoundedIcon from "@mui/icons-material/ArrowOutwardRounded";
 import SchoolRoundedIcon from "@mui/icons-material/SchoolRounded";
-import MenuBookRoundedIcon from "@mui/icons-material/MenuBookRounded";
 import PublicRoundedIcon from "@mui/icons-material/PublicRounded";
 import GroupsRoundedIcon from "@mui/icons-material/GroupsRounded";
 
@@ -20,7 +19,7 @@ export default async function CampusLifePage({ params }: Props) {
 
   const t = {
     badge: isEnglish ? "UMSS experience" : "Experiencia UMSS",
-    title: isEnglish ? "Campus Life" : "Campus Life",
+    title: "Campus Life",
     subtitle: isEnglish
       ? "A university rooted in Cochabamba, connected to Bolivia and open to the world."
       : "Una universidad enraizada en Cochabamba, conectada con Bolivia y abierta al mundo.",
@@ -34,6 +33,21 @@ export default async function CampusLifePage({ params }: Props) {
     official: isEnglish ? "Official UMSS website" : "Sitio oficial UMSS",
     explore: isEnglish ? "Explore Cochabamba" : "Explorar Cochabamba",
   };
+
+  const stats = [
+    {
+      value: "1832",
+      label: isEnglish ? "Year of foundation" : "Año de fundación",
+    },
+    {
+      value: "10+",
+      label: isEnglish ? "Faculties and academic units" : "Facultades y unidades académicas",
+    },
+    {
+      value: "77k+",
+      label: isEnglish ? "Students and academic community" : "Estudiantes y comunidad académica",
+    },
+  ];
 
   const cards = [
     {
@@ -124,18 +138,14 @@ export default async function CampusLifePage({ params }: Props) {
             }}
           >
             <div className="p-8 md:p-10">
-              <Link
-                href="https://www.umss.edu.bo/"
-                target="_blank"
-                className="inline-flex items-center gap-5"
-              >
+              <Link href="https://www.umss.edu.bo/" target="_blank" className="inline-flex items-center gap-5">
                 <div className="relative h-24 w-24 overflow-hidden rounded-full bg-white">
-                <Image
+                  <Image
                     src="/images/campus-life/umss-logo.png"
                     alt="UMSS logo"
                     fill
                     className="scale-[1.55] object-contain"
-                />
+                  />
                 </div>
 
                 <div>
@@ -148,9 +158,7 @@ export default async function CampusLifePage({ params }: Props) {
                 </div>
               </Link>
 
-              <p className="mt-8 text-sm leading-7 text-white/68">
-                {t.basicText}
-              </p>
+              <p className="mt-8 text-sm leading-7 text-white/68">{t.basicText}</p>
 
               <Link href="https://www.umss.edu.bo/" target="_blank" className="mt-8 inline-flex">
                 <Button
@@ -173,8 +181,23 @@ export default async function CampusLifePage({ params }: Props) {
         </div>
       </section>
 
-      <section className="bg-[#f8fafc] px-5 py-20 text-slate-950 md:px-10 lg:px-12">
+      <section className="bg-[#f8fafc] px-5 py-16 text-slate-950 md:px-10 lg:px-12">
         <div className="mx-auto max-w-7xl">
+          <div className="mb-16 border-y border-slate-200 bg-white/60 px-4 py-10 backdrop-blur md:px-8">
+            <div className="grid gap-8 text-center md:grid-cols-3">
+              {stats.map((stat) => (
+                <div key={stat.label}>
+                  <p className="text-4xl font-black tracking-[-0.05em] text-[#020617] md:text-5xl">
+                    {stat.value}
+                  </p>
+                  <p className="mt-3 text-sm font-semibold text-slate-600 md:text-base">
+                    {stat.label}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+
           <div className="grid gap-7 md:grid-cols-3">
             {cards.map((card) => (
               <Card
@@ -189,12 +212,8 @@ export default async function CampusLifePage({ params }: Props) {
                   <div className="flex h-14 w-14 items-center justify-center rounded-3xl bg-[#020617] text-white">
                     {card.icon}
                   </div>
-                  <h2 className="mt-8 text-3xl font-bold tracking-[-0.05em]">
-                    {card.title}
-                  </h2>
-                  <p className="mt-5 text-sm leading-7 text-slate-600">
-                    {card.text}
-                  </p>
+                  <h2 className="mt-8 text-3xl font-bold tracking-[-0.05em]">{card.title}</h2>
+                  <p className="mt-5 text-sm leading-7 text-slate-600">{card.text}</p>
                 </div>
               </Card>
             ))}
@@ -205,11 +224,11 @@ export default async function CampusLifePage({ params }: Props) {
               {t.basic}
             </p>
             <h2 className="mt-4 max-w-4xl text-5xl font-semibold tracking-[-0.06em]">
-              {isEnglish ? "A historic public university with regional impact" : "Una universidad pública histórica con impacto regional"}
+              {isEnglish
+                ? "A historic public university with regional impact"
+                : "Una universidad pública histórica con impacto regional"}
             </h2>
-            <p className="mt-6 max-w-4xl text-base leading-8 text-slate-600">
-              {t.basicText}
-            </p>
+            <p className="mt-6 max-w-4xl text-base leading-8 text-slate-600">{t.basicText}</p>
           </div>
 
           <div className="mt-16 space-y-10">
@@ -219,24 +238,15 @@ export default async function CampusLifePage({ params }: Props) {
                 className="grid overflow-hidden rounded-[2.5rem] bg-white shadow-2xl shadow-slate-200/70 lg:grid-cols-2"
               >
                 <div className={index % 2 === 1 ? "relative h-[420px] lg:order-2" : "relative h-[420px]"}>
-                  <Image
-                    src={section.image}
-                    alt={section.title}
-                    fill
-                    className="object-cover"
-                  />
+                  <Image src={section.image} alt={section.title} fill className="object-cover" />
                 </div>
 
                 <div className="flex flex-col justify-center p-8 md:p-12">
                   <p className="text-sm font-bold uppercase tracking-[0.25em] text-[#164194]">
                     {index === 0 ? t.features : index === 1 ? t.strengths : t.other}
                   </p>
-                  <h3 className="mt-5 text-4xl font-semibold tracking-[-0.05em]">
-                    {section.title}
-                  </h3>
-                  <p className="mt-6 text-sm leading-8 text-slate-600">
-                    {section.text}
-                  </p>
+                  <h3 className="mt-5 text-4xl font-semibold tracking-[-0.05em]">{section.title}</h3>
+                  <p className="mt-6 text-sm leading-8 text-slate-600">{section.text}</p>
                 </div>
               </div>
             ))}
@@ -257,11 +267,7 @@ export default async function CampusLifePage({ params }: Props) {
                     : "La vida universitaria también se conecta con Cochabamba: su centro histórico, cultura, gastronomía, paisajes y espacios públicos."}
                 </p>
 
-                <Link
-                  href="https://visita.cochabamba.bo/"
-                  target="_blank"
-                  className="mt-8 inline-flex"
-                >
+                <Link href="https://visita.cochabamba.bo/" target="_blank" className="mt-8 inline-flex">
                   <Button
                     variant="contained"
                     endIcon={<ArrowOutwardRoundedIcon />}
@@ -281,12 +287,7 @@ export default async function CampusLifePage({ params }: Props) {
               </div>
 
               <div className="relative min-h-[390px]">
-                <Image
-                  src="/images/campus-life/cochabamba.png"
-                  alt="Cochabamba"
-                  fill
-                  className="object-cover"
-                />
+                <Image src="/images/campus-life/cochabamba.png" alt="Cochabamba" fill className="object-cover" />
               </div>
             </div>
           </div>

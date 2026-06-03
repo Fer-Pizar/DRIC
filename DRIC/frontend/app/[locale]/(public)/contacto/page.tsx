@@ -91,7 +91,7 @@ export default async function ContactoPage({ params }: Props) {
                 </p>
 
                 <h2 className="mt-4 text-2xl font-bold tracking-[-0.04em]">
-                  Rectorado UMSS
+                  DRIC
                 </h2>
 
                 <p className="mt-4 text-sm leading-7 text-slate-600">

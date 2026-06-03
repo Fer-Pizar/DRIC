@@ -82,3 +82,260 @@ body {
     radial-gradient(circle at 50% 90%, rgba(15, 23, 42, 0.9), transparent 45%),
     #020617;
 }
+
+.dric-social-track {
+  --icon-size: 50px;
+  --icon-gap: 180px;
+
+  display: flex;
+  width: max-content;
+  align-items: center;
+  gap: var(--icon-gap);
+  animation: dric-social-marquee 24s linear infinite;
+}
+
+.dric-social-icon {
+  display: inline-flex;
+  width: var(--icon-size);
+  height: var(--icon-size);
+  flex: 0 0 var(--icon-size);
+  align-items: center;
+  justify-content: center;
+  opacity: 0.82;
+  filter: drop-shadow(0 0 12px rgb(255 255 255 / 0.16));
+  transition: opacity 300ms ease, transform 300ms ease, filter 300ms ease;
+}
+
+.dric-social-icon:hover {
+  opacity: 1;
+  transform: translateY(-4px) scale(1.08);
+  filter: drop-shadow(0 0 18px rgb(255 255 255 / 0.28));
+}
+
+@keyframes dric-social-marquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(calc(-5 * (var(--icon-size) + var(--icon-gap))));
+  }
+}
+
+.dric-certificate-page {
+  background:
+    radial-gradient(circle at 12% 10%, rgba(255, 255, 255, 0.96), transparent 30%),
+    radial-gradient(circle at 85% 12%, rgba(187, 213, 255, 0.62), transparent 32%),
+    radial-gradient(circle at 12% 88%, rgba(255, 211, 220, 0.62), transparent 34%),
+    linear-gradient(135deg, #f8fafc 0%, #e9edf4 44%, #f6f8fb 100%);
+  color: #0f172a;
+}
+
+html[data-theme="dark"] .dric-certificate-page {
+  background:
+    radial-gradient(circle at 15% 8%, rgba(185, 28, 28, 0.34), transparent 32%),
+    radial-gradient(circle at 86% 15%, rgba(37, 99, 235, 0.36), transparent 34%),
+    radial-gradient(circle at 20% 88%, rgba(14, 165, 233, 0.14), transparent 38%),
+    linear-gradient(135deg, #020617 0%, #07111f 46%, #020617 100%);
+  color: #ffffff;
+}
+
+.dric-certificate-glass {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.78);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.52), rgba(255, 255, 255, 0.26));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.38),
+    0 34px 100px rgba(15, 23, 42, 0.16);
+  backdrop-filter: blur(30px) saturate(160%);
+}
+
+.dric-certificate-glass::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  pointer-events: none;
+  border-radius: inherit;
+  background:
+    linear-gradient(115deg, rgba(255, 255, 255, 0.62), transparent 30%),
+    linear-gradient(295deg, rgba(255, 255, 255, 0.26), transparent 38%);
+  opacity: 0.75;
+}
+
+.dric-certificate-glass > * {
+  position: relative;
+  z-index: 1;
+}
+
+html[data-theme="dark"] .dric-certificate-glass {
+  border-color: rgba(255, 255, 255, 0.16);
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.48), rgba(15, 23, 42, 0.22));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.08),
+    0 34px 100px rgba(0, 0, 0, 0.46);
+}
+
+.dric-certificate-title {
+  color: #111827;
+}
+
+html[data-theme="dark"] .dric-certificate-title {
+  color: #ffffff;
+}
+
+.dric-certificate-muted,
+.dric-certificate-label {
+  color: #475569;
+}
+
+html[data-theme="dark"] .dric-certificate-muted,
+html[data-theme="dark"] .dric-certificate-label {
+  color: rgba(255, 255, 255, 0.66);
+}
+
+.dric-certificate-input-shell {
+  border: 1px solid rgba(255, 255, 255, 0.78);
+  background: rgba(255, 255, 255, 0.44);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 20px 55px rgba(15, 23, 42, 0.1);
+  backdrop-filter: blur(22px) saturate(150%);
+}
+
+html[data-theme="dark"] .dric-certificate-input-shell {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(2, 6, 23, 0.38);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 20px 55px rgba(0, 0, 0, 0.35);
+}
+
+.dric-certificate-input {
+  border: 1px solid rgba(148, 163, 184, 0.34);
+  background: rgba(255, 255, 255, 0.58);
+  color: #0f172a;
+}
+
+.dric-certificate-input::placeholder {
+  color: rgba(100, 116, 139, 0.62);
+}
+
+.dric-certificate-input:focus {
+  border-color: rgba(6, 182, 212, 0.65);
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: 0 0 0 4px rgba(6, 182, 212, 0.12);
+}
+
+html[data-theme="dark"] .dric-certificate-input {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+  color: #ffffff;
+}
+
+html[data-theme="dark"] .dric-certificate-input::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+html[data-theme="dark"] .dric-certificate-input:focus {
+  border-color: rgba(103, 232, 249, 0.62);
+  background: rgba(255, 255, 255, 0.09);
+  box-shadow: 0 0 0 4px rgba(103, 232, 249, 0.1);
+}
+
+.dric-certificate-button {
+  background: #0f172a;
+  color: #ffffff;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.22);
+}
+
+.dric-certificate-button:hover {
+  transform: translateY(-2px);
+  background: #1e293b;
+}
+
+html[data-theme="dark"] .dric-certificate-button {
+  background: rgba(255, 255, 255, 0.92);
+  color: #020617;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+}
+
+html[data-theme="dark"] .dric-certificate-button:hover {
+  background: #ffffff;
+}
+
+.dric-certificate-table {
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.86);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.32), rgba(255, 255, 255, 0.12));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.98),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.32),
+    0 28px 80px rgba(15, 23, 42, 0.14);
+  backdrop-filter: blur(30px) saturate(180%);
+}
+
+.dric-certificate-table::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(120deg, rgba(255, 255, 255, 0.56), transparent 22%),
+    linear-gradient(300deg, rgba(255, 255, 255, 0.2), transparent 30%);
+}
+
+html[data-theme="dark"] .dric-certificate-table {
+  border-color: rgba(255, 255, 255, 0.18);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.105), rgba(255, 255, 255, 0.035));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.08),
+    0 28px 80px rgba(0, 0, 0, 0.42);
+}
+
+.dric-certificate-table-header {
+  position: relative;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.26);
+}
+
+html[data-theme="dark"] .dric-certificate-table-header {
+  border-bottom-color: rgba(255, 255, 255, 0.12);
+}
+
+.dric-certificate-cell {
+  position: relative;
+  border-top: 1px solid rgba(148, 163, 184, 0.22);
+}
+
+.dric-certificate-cell:not(:last-child) {
+  border-right: 1px solid rgba(148, 163, 184, 0.22);
+}
+
+html[data-theme="dark"] .dric-certificate-cell {
+  border-top-color: rgba(255, 255, 255, 0.11);
+}
+
+html[data-theme="dark"] .dric-certificate-cell:not(:last-child) {
+  border-right-color: rgba(255, 255, 255, 0.11);
+}
+
+.dric-certificate-cell-label {
+  color: rgba(71, 85, 105, 0.68);
+}
+
+.dric-certificate-cell-value {
+  color: #0f172a;
+}
+
+html[data-theme="dark"] .dric-certificate-cell-label {
+  color: rgba(255, 255, 255, 0.38);
+}
+
+html[data-theme="dark"] .dric-certificate-cell-value {
+  color: #ffffff;
+}
