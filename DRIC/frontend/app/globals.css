@@ -124,32 +124,37 @@ body {
 
 .dric-certificate-page {
   background:
-    radial-gradient(circle at 12% 10%, rgba(255, 255, 255, 0.96), transparent 30%),
-    radial-gradient(circle at 85% 12%, rgba(187, 213, 255, 0.62), transparent 32%),
-    radial-gradient(circle at 12% 88%, rgba(255, 211, 220, 0.62), transparent 34%),
-    linear-gradient(135deg, #f8fafc 0%, #e9edf4 44%, #f6f8fb 100%);
+    radial-gradient(circle at 18% 8%, rgba(255, 255, 255, 0.96), transparent 28%),
+    radial-gradient(circle at 82% 12%, rgba(186, 216, 255, 0.72), transparent 32%),
+    radial-gradient(circle at 14% 86%, rgba(255, 205, 224, 0.62), transparent 34%),
+    linear-gradient(135deg, #f9fafb 0%, #e8edf5 46%, #f7f9fc 100%);
   color: #0f172a;
 }
 
 html[data-theme="dark"] .dric-certificate-page {
   background:
-    radial-gradient(circle at 15% 8%, rgba(185, 28, 28, 0.34), transparent 32%),
-    radial-gradient(circle at 86% 15%, rgba(37, 99, 235, 0.36), transparent 34%),
-    radial-gradient(circle at 20% 88%, rgba(14, 165, 233, 0.14), transparent 38%),
-    linear-gradient(135deg, #020617 0%, #07111f 46%, #020617 100%);
+    radial-gradient(circle at 15% 8%, rgba(185, 28, 28, 0.32), transparent 32%),
+    radial-gradient(circle at 86% 15%, rgba(59, 130, 246, 0.35), transparent 34%),
+    radial-gradient(circle at 18% 86%, rgba(14, 165, 233, 0.16), transparent 38%),
+    linear-gradient(135deg, #020617 0%, #07111f 48%, #020617 100%);
   color: #ffffff;
 }
 
 .dric-certificate-glass {
   position: relative;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.78);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.52), rgba(255, 255, 255, 0.26));
+  border: 1px solid rgba(255, 255, 255, 0.82);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.56), rgba(255, 255, 255, 0.18)),
+    radial-gradient(circle at 15% 10%, rgba(255, 255, 255, 0.9), transparent 28%),
+    radial-gradient(circle at 85% 12%, rgba(125, 211, 252, 0.22), transparent 34%);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.95),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.38),
-    0 34px 100px rgba(15, 23, 42, 0.16);
-  backdrop-filter: blur(30px) saturate(160%);
+    inset 0 1px 0 rgba(255, 255, 255, 0.98),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.34),
+    inset 18px 18px 60px rgba(255, 255, 255, 0.16),
+    inset -18px -18px 70px rgba(15, 23, 42, 0.08),
+    0 36px 110px rgba(15, 23, 42, 0.16);
+  backdrop-filter: blur(34px) saturate(180%);
 }
 
 .dric-certificate-glass::before {
@@ -159,9 +164,24 @@ html[data-theme="dark"] .dric-certificate-page {
   pointer-events: none;
   border-radius: inherit;
   background:
-    linear-gradient(115deg, rgba(255, 255, 255, 0.62), transparent 30%),
-    linear-gradient(295deg, rgba(255, 255, 255, 0.26), transparent 38%);
-  opacity: 0.75;
+    linear-gradient(115deg, rgba(255, 255, 255, 0.82) 0%, transparent 24%),
+    linear-gradient(295deg, rgba(255, 255, 255, 0.28) 0%, transparent 36%);
+  opacity: 0.82;
+}
+
+.dric-certificate-glass::after {
+  content: "";
+  position: absolute;
+  top: 8%;
+  left: 6%;
+  width: 42%;
+  height: 18%;
+  pointer-events: none;
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.72), transparent);
+  filter: blur(14px);
+  opacity: 0.48;
+  transform: rotate(-4deg);
 }
 
 .dric-certificate-glass > * {
@@ -170,12 +190,17 @@ html[data-theme="dark"] .dric-certificate-page {
 }
 
 html[data-theme="dark"] .dric-certificate-glass {
-  border-color: rgba(255, 255, 255, 0.16);
-  background: linear-gradient(135deg, rgba(15, 23, 42, 0.48), rgba(15, 23, 42, 0.22));
+  border-color: rgba(255, 255, 255, 0.18);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.105), rgba(255, 255, 255, 0.035)),
+    radial-gradient(circle at 18% 12%, rgba(255, 255, 255, 0.16), transparent 28%),
+    radial-gradient(circle at 88% 14%, rgba(103, 232, 249, 0.12), transparent 34%);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.28),
     inset 0 -1px 0 rgba(255, 255, 255, 0.08),
-    0 34px 100px rgba(0, 0, 0, 0.46);
+    inset 18px 18px 60px rgba(255, 255, 255, 0.03),
+    inset -18px -18px 70px rgba(0, 0, 0, 0.38),
+    0 36px 110px rgba(0, 0, 0, 0.48);
 }
 
 .dric-certificate-title {
@@ -197,26 +222,32 @@ html[data-theme="dark"] .dric-certificate-label {
 }
 
 .dric-certificate-input-shell {
-  border: 1px solid rgba(255, 255, 255, 0.78);
-  background: rgba(255, 255, 255, 0.44);
+  border: 1px solid rgba(255, 255, 255, 0.82);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0.24));
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.9),
-    0 20px 55px rgba(15, 23, 42, 0.1);
-  backdrop-filter: blur(22px) saturate(150%);
+    inset 0 1px 0 rgba(255, 255, 255, 0.96),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.35),
+    0 22px 60px rgba(15, 23, 42, 0.11);
+  backdrop-filter: blur(24px) saturate(170%);
 }
 
 html[data-theme="dark"] .dric-certificate-input-shell {
-  border-color: rgba(255, 255, 255, 0.12);
-  background: rgba(2, 6, 23, 0.38);
+  border-color: rgba(255, 255, 255, 0.14);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.025));
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.16),
-    0 20px 55px rgba(0, 0, 0, 0.35);
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 22px 60px rgba(0, 0, 0, 0.38);
 }
 
 .dric-certificate-input {
-  border: 1px solid rgba(148, 163, 184, 0.34);
-  background: rgba(255, 255, 255, 0.58);
+  border: 1px solid rgba(255, 255, 255, 0.86);
+  background: rgba(255, 255, 255, 0.42);
   color: #0f172a;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.98),
+    inset 0 -12px 28px rgba(15, 23, 42, 0.035);
 }
 
 .dric-certificate-input::placeholder {
@@ -224,31 +255,33 @@ html[data-theme="dark"] .dric-certificate-input-shell {
 }
 
 .dric-certificate-input:focus {
-  border-color: rgba(6, 182, 212, 0.65);
-  background: rgba(255, 255, 255, 0.86);
-  box-shadow: 0 0 0 4px rgba(6, 182, 212, 0.12);
+  border-color: rgba(6, 182, 212, 0.7);
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.98),
+    0 0 0 4px rgba(6, 182, 212, 0.12),
+    0 14px 35px rgba(6, 182, 212, 0.12);
 }
 
 html[data-theme="dark"] .dric-certificate-input {
-  border-color: rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.055);
   color: #ffffff;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    inset 0 -12px 28px rgba(0, 0, 0, 0.2);
 }
 
 html[data-theme="dark"] .dric-certificate-input::placeholder {
   color: rgba(255, 255, 255, 0.35);
 }
 
-html[data-theme="dark"] .dric-certificate-input:focus {
-  border-color: rgba(103, 232, 249, 0.62);
-  background: rgba(255, 255, 255, 0.09);
-  box-shadow: 0 0 0 4px rgba(103, 232, 249, 0.1);
-}
-
 .dric-certificate-button {
   background: #0f172a;
   color: #ffffff;
-  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.22);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 18px 44px rgba(15, 23, 42, 0.24);
 }
 
 .dric-certificate-button:hover {
@@ -259,83 +292,131 @@ html[data-theme="dark"] .dric-certificate-input:focus {
 html[data-theme="dark"] .dric-certificate-button {
   background: rgba(255, 255, 255, 0.92);
   color: #020617;
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
 }
 
-html[data-theme="dark"] .dric-certificate-button:hover {
-  background: #ffffff;
-}
 
-.dric-certificate-table {
-  position: relative;
-  border: 1px solid rgba(255, 255, 255, 0.86);
-  background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.32), rgba(255, 255, 255, 0.12));
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.98),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.32),
-    0 28px 80px rgba(15, 23, 42, 0.14);
-  backdrop-filter: blur(30px) saturate(180%);
-}
 
-.dric-certificate-table::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    linear-gradient(120deg, rgba(255, 255, 255, 0.56), transparent 22%),
-    linear-gradient(300deg, rgba(255, 255, 255, 0.2), transparent 30%);
-}
 
-html[data-theme="dark"] .dric-certificate-table {
-  border-color: rgba(255, 255, 255, 0.18);
-  background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.105), rgba(255, 255, 255, 0.035));
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.22),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.08),
-    0 28px 80px rgba(0, 0, 0, 0.42);
-}
-
-.dric-certificate-table-header {
-  position: relative;
-  border-bottom: 1px solid rgba(148, 163, 184, 0.26);
-}
-
-html[data-theme="dark"] .dric-certificate-table-header {
-  border-bottom-color: rgba(255, 255, 255, 0.12);
-}
-
-.dric-certificate-cell {
-  position: relative;
-  border-top: 1px solid rgba(148, 163, 184, 0.22);
-}
 
 .dric-certificate-cell:not(:last-child) {
-  border-right: 1px solid rgba(148, 163, 184, 0.22);
+  border-right: 1px solid rgba(255, 255, 255, 0.46);
 }
 
 html[data-theme="dark"] .dric-certificate-cell {
-  border-top-color: rgba(255, 255, 255, 0.11);
+  border-top-color: rgba(255, 255, 255, 0.12);
 }
 
 html[data-theme="dark"] .dric-certificate-cell:not(:last-child) {
-  border-right-color: rgba(255, 255, 255, 0.11);
+  border-right-color: rgba(255, 255, 255, 0.12);
 }
 
-.dric-certificate-cell-label {
-  color: rgba(71, 85, 105, 0.68);
-}
 
 .dric-certificate-cell-value {
   color: #0f172a;
 }
 
-html[data-theme="dark"] .dric-certificate-cell-label {
-  color: rgba(255, 255, 255, 0.38);
-}
 
 html[data-theme="dark"] .dric-certificate-cell-value {
   color: #ffffff;
+}
+
+.dric-certificate-table {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  border: 1px solid rgba(255, 255, 255, 0.96);
+  background:
+    radial-gradient(ellipse at 18% 12%, rgba(255, 255, 255, 0.92), transparent 22%),
+    radial-gradient(ellipse at 82% 18%, rgba(255, 255, 255, 0.42), transparent 28%),
+    radial-gradient(ellipse at 68% 78%, rgba(125, 211, 252, 0.2), transparent 34%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.26), rgba(255, 255, 255, 0.04));
+  box-shadow:
+    inset 0 2px 5px rgba(255, 255, 255, 0.95),
+    inset 0 -18px 34px rgba(255, 255, 255, 0.28),
+    inset 22px 20px 48px rgba(255, 255, 255, 0.22),
+    inset -24px -26px 58px rgba(15, 23, 42, 0.16),
+    0 34px 90px rgba(15, 23, 42, 0.18);
+  backdrop-filter: blur(42px) saturate(220%) contrast(118%);
+}
+
+.dric-certificate-table::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  z-index: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background:
+    linear-gradient(118deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.48) 9%, transparent 24%),
+    linear-gradient(300deg, rgba(255, 255, 255, 0.58) 0%, transparent 29%),
+    radial-gradient(ellipse at 25% 6%, rgba(255, 255, 255, 0.95), transparent 18%);
+  opacity: 0.9;
+  mix-blend-mode: screen;
+}
+
+.dric-certificate-table::after {
+  content: "";
+  position: absolute;
+  top: 8%;
+  left: 8%;
+  z-index: 0;
+  width: 46%;
+  height: 18%;
+  pointer-events: none;
+  border-radius: 999px;
+  background:
+    radial-gradient(ellipse at 22% 35%, rgba(255, 255, 255, 0.95), transparent 34%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.78), transparent);
+  filter: blur(10px);
+  opacity: 0.74;
+  transform: rotate(-4deg);
+}
+
+html[data-theme="dark"] .dric-certificate-table {
+  border-color: rgba(255, 255, 255, 0.34);
+  background:
+    radial-gradient(ellipse at 18% 12%, rgba(255, 255, 255, 0.34), transparent 22%),
+    radial-gradient(ellipse at 82% 18%, rgba(255, 255, 255, 0.16), transparent 28%),
+    radial-gradient(ellipse at 68% 78%, rgba(103, 232, 249, 0.16), transparent 34%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.035));
+  box-shadow:
+    inset 0 2px 5px rgba(255, 255, 255, 0.35),
+    inset 0 -18px 34px rgba(255, 255, 255, 0.08),
+    inset 22px 20px 48px rgba(255, 255, 255, 0.06),
+    inset -24px -26px 58px rgba(0, 0, 0, 0.45),
+    0 34px 90px rgba(0, 0, 0, 0.5);
+}
+
+.dric-certificate-table > * {
+  position: relative;
+  z-index: 1;
+}
+
+.dric-certificate-table-header {
+  position: relative;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.56);
+}
+
+html[data-theme="dark"] .dric-certificate-table-header {
+  border-bottom-color: rgba(255, 255, 255, 0.2);
+}
+
+.dric-certificate-table-header p {
+  color: #0891b2;
+  text-shadow: 0 0 18px rgba(103, 232, 249, 0.32);
+}
+
+html[data-theme="dark"] .dric-certificate-table-header p {
+  color: #a5f3fc;
+  text-shadow: 0 0 22px rgba(103, 232, 249, 0.55);
+}
+
+.dric-certificate-cell-label {
+  color: rgba(51, 65, 85, 0.72);
+  text-shadow: 0 1px 8px rgba(255, 255, 255, 0.3);
+}
+
+html[data-theme="dark"] .dric-certificate-cell-label {
+  color: rgba(255, 255, 255, 0.7);
+  text-shadow: 0 0 12px rgba(0, 0, 0, 0.36);
 }

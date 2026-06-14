@@ -10,14 +10,13 @@ class CertificateVerification extends Model
         'code',
         'full_name',
         'certificate_type',
-        'start_date',
-        'end_date',
+        'description',
+        'issue_date',
         'is_active',
     ];
 
     protected $casts = [
-        'start_date' => 'date',
-        'end_date' => 'date',
+        'issue_date' => 'date',
         'is_active' => 'boolean',
     ];
 }

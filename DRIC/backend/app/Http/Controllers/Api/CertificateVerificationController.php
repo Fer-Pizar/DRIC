@@ -31,8 +31,8 @@ class CertificateVerificationController extends Controller
                 'code' => $certificate->code,
                 'full_name' => $certificate->full_name,
                 'certificate_type' => $certificate->certificate_type,
-                'start_date' => $certificate->start_date->format('Y-m-d'),
-                'end_date' => $certificate->end_date->format('Y-m-d'),
+                'description' => $certificate->description,
+                'issue_date' => $certificate->issue_date?->format('Y-m-d'),
             ],
         ]);
     }

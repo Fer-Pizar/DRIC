@@ -14,8 +14,8 @@ class CertificateVerificationSeeder extends Seeder
             [
                 'full_name' => 'Fernanda',
                 'certificate_type' => 'Práctica Empresarial',
-                'start_date' => '2026-02-28',
-                'end_date' => '2026-06-29',
+                'start_date' => '2026-02-26',
+                'end_date' => '2026-06-23',
                 'is_active' => true,
             ]
         );
