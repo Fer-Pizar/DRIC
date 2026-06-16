@@ -11,16 +11,16 @@ type Props = {
 };
 
 const memberships = [
-  { name: "AUF", full: "Agencia Universitaria de la Francofonía", url: "https://www.auf.org/" },
-  { name: "AUGM", full: "Asociación de Universidades Grupo Montevideo", url: "https://grupomontevideo.org/" },
-  { name: "UNAI", full: "United Nations Academic Impact", url: "https://www.un.org/en/academic-impact" },
-  { name: "AUIP", full: "Asociación Universitaria Iberoamericana de Posgrado", url: "https://auip.org/" },
-  { name: "CRISCOS", full: "Consejo de Rectores por la Integración de la Subregión Centro Oeste de Sudamérica", url: "#" },
-  { name: "CLACSO", full: "Consejo Latinoamericano de Ciencias Sociales", url: "https://www.clacso.org/" },
-  { name: "UNAMAZ", full: "Asociación de Universidades Amazónicas", url: "#" },
-  { name: "PADOR", full: "Potential Applicant Data Online Registration", url: "#" },
-  { name: "Comisión Europea", full: "Programas y cooperación internacional de la Unión Europea", url: "https://commission.europa.eu/" },
-  { name: "Universia", full: "Plataforma iberoamericana que conecta universidades, estudiantes, instituciones y oportunidades académicas internacionales.", url: "https://www.universia.net/" },
+  { name: "AUF", full: "Agencia Universitaria de la Francofonía", url: "https://www.auf.org/", logo: "/images/memberships/auf.png" },
+  { name: "AUGM", full: "Asociación de Universidades Grupo Montevideo", url: "https://grupomontevideo.org/", logo: "/images/memberships/augm.png" },
+  { name: "UNAI", full: "United Nations Academic Impact", url: "https://www.un.org/es/academicimpact", logo: "/images/memberships/unai.png" },
+  { name: "AUIP", full: "Asociación Universitaria Iberoamericana de Posgrado", url: "https://auip.org/", logo: "/images/memberships/auip.png" },
+  { name: "CRISCOS", full: "Consejo de Rectores por la Integración de la Subregión Centro Oeste de Sudamérica", url: "https://criscos.unju.edu.ar/", logo: "/images/memberships/criscos.png" },
+  { name: "CLACSO", full: "Consejo Latinoamericano de Ciencias Sociales", url: "https://www.clacso.org/", logo: "/images/memberships/clacso.png" },
+  { name: "UNAMAZ", full: "Asociación de Universidades Amazónicas", url: "https://www.unamaz.org/es", logo: "/images/memberships/unamaz.png" },
+  { name: "PADOR", full: "European Aid Online Registration Services", url: "#", logo: "/images/memberships/pador.png" },
+  { name: "Comisión Europea", full: "Programas y cooperación internacional de la Unión Europea", url: "https://commission.europa.eu/index_es", logo: "/images/memberships/comision-europea.png" },
+  { name: "Universia", full: "Plataforma iberoamericana que conecta universidades, estudiantes, instituciones y oportunidades académicas internacionales.", url: "https://www.universia.net/", logo: "/images/memberships/universia.png" },
 ];
 
 export default async function MembresiasPage({ params }: Props) {
@@ -80,30 +80,46 @@ export default async function MembresiasPage({ params }: Props) {
               >
                 <div className="group relative min-h-[290px] bg-white p-8 transition duration-500 hover:-translate-y-1">
                   <div className="absolute right-6 top-6 h-20 w-20 rounded-full bg-[#164194]/10 blur-2xl" />
-                  <div className="absolute bottom-0 left-0 h-1 w-full bg-gradient-to-r from-[#b5121b] via-[#164194] to-[#ffffff]" />
-
                   <div
-                    className={`flex h-24 w-24 items-center justify-center rounded-[2rem] text-white shadow-xl shadow-slate-300/60 ${
-                      item.name === "Universia" ? "bg-[#e30613]" : "bg-[#020617]"
+                    className={`absolute left-0 h-1 w-full bg-gradient-to-r from-[#b5121b] via-[#164194] to-[#ffffff] ${
+                      item.name === "PADOR" ? "bottom-2" : "bottom-0"
                     }`}
-                  >
-                    <span
-                      className={`font-black tracking-[-0.06em] ${
-                        item.name === "Universia" ? "text-xl" : "text-2xl"
-                      }`}
-                    >
-                      {item.name === "Universia" ? "universia" : item.name}
-                    </span>
+                  />
+
+                  <div className="flex h-32 w-full items-center justify-center">
+                    <img
+                      src={item.logo}
+                      alt={`${item.name} logo`}
+                      className="max-h-24 max-w-[220px] object-contain"
+                    />
                   </div>
 
-                  <h3 className="mt-8 text-2xl font-bold tracking-[-0.04em] text-slate-950">
+                  <h3 className="mt-6 text-2xl font-bold tracking-[-0.04em] text-slate-950">
                     {item.name}
                   </h3>
 
-                  <p className="mt-3 min-h-[72px] text-sm leading-7 text-slate-600">
+                  <p
+                    className={`mt-3 text-sm leading-7 text-slate-600 ${
+                      item.name === "PADOR" ? "min-h-[42px]" : "min-h-[72px]"
+                    }`}
+                  >
                     {item.full}
                   </p>
 
+                  {item.name === "PADOR" ? (
+                    <div className="mt-2 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3">
+                      <p className="text-xs font-medium leading-6 text-slate-600">
+                        Para mayor información sobre el registro PADOR, contactar a:
+                      </p>
+
+                      <a
+                        href="mailto:dric@umss.edu"
+                        className="mt-1 block font-semibold text-[#164194] hover:underline"
+                      >
+                        dric@umss.edu
+                      </a>
+                    </div>
+                  ) : (
                   <Link href={item.url} target="_blank" className="mt-6 inline-flex">
                     <Button
                       variant="outlined"
@@ -125,6 +141,7 @@ export default async function MembresiasPage({ params }: Props) {
                       {item.name === "Universia" ? "Visitar Universia" : "Visitar sitio"}
                     </Button>
                   </Link>
+                )}
                 </div>
               </Card>
             ))}
