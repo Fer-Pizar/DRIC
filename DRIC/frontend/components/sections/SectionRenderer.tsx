@@ -26,7 +26,13 @@ export default function SectionRenderer({ sections, locale = "es" }: Props) {
             return <HeroSection key={section.id} section={section} />;
 
           case "scholarship_country_grid":
-            return <ScholarshipGridSection key={section.id} section={section} />;
+            return (
+              <ScholarshipGridSection
+                key={section.id}
+                section={section}
+                locale={locale}
+              />
+            );
 
           case "about_dric":
             return <AboutDricSection key={section.id} section={section} />;

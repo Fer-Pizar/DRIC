@@ -167,13 +167,13 @@ export default async function PresentacionPage({ params }: Props) {
                   <StaffBlock
                     title="Convenios, Movilidad y Becas"
                     people={[
-                      "Mgr. Asunta Giovanna Magdalena Maldonado Moscoso",
+                      "Jefe del departamento: Mgr. Giovanna Maldonado Moscoso",
                       "Mgr. Silvia del Pilar Arze",
                     ]}
                   />
                   <StaffBlock
                     title="Internacionalización y Proyectos"
-                    people={["Lic. Jimena Salinas", "Ing. John Medina", "Mgr. Roxana Zambrana"]}
+                    people={["Jefe del Departamento: Mgr. Daniel Vasquez Torrez", "Ing. John Medina"]}
                   />
                 </div>
               </div>
