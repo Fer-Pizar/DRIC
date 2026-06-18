@@ -331,7 +331,7 @@ class HomePageSeeder extends Seeder
                     [
                         'type' => 'cta_button',
                         'order' => 1,
-                        'link_url' => '/contacto',
+                        'link_url' => '/agendar-cita',
                         'es' => [
                             'title' => 'Agenda una cita',
                             'summary' => 'Recibe asesoramiento personalizado.',

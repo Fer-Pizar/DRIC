@@ -1,10 +1,22 @@
+import Link from "next/link";
 import type { CmsSection } from "@/types/cms";
 
 type Props = {
   section: CmsSection;
+  locale?: string;
 };
 
-export default function FinalCtaSection({ section }: Props) {
+function getLocalizedHref(linkUrl: string | null, locale: string) {
+  const target = linkUrl === "/contacto" ? "/agendar-cita" : linkUrl ?? "/agendar-cita";
+
+  if (target.startsWith("http")) {
+    return target;
+  }
+
+  return `/${locale}${target.startsWith("/") ? target : `/${target}`}`;
+}
+
+export default function FinalCtaSection({ section, locale = "es" }: Props) {
   return (
     <section className="px-6 py-32">
       <div className="mx-auto max-w-5xl text-center rounded-[40px] border border-slate-800 p-16">
@@ -17,13 +29,13 @@ export default function FinalCtaSection({ section }: Props) {
         </p>
 
         {section.blocks.map((block) => (
-          <a
+          <Link
             key={block.id}
-            href={block.link_url ?? "#"}
+            href={getLocalizedHref(block.link_url, locale)}
             className="inline-flex rounded-full bg-blue-600 px-8 py-4 text-lg font-semibold"
           >
             {block.cta_label}
-          </a>
+          </Link>
         ))}
       </div>
     </section>

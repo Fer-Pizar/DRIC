@@ -3,6 +3,7 @@ import Footer from "@/components/layout/Footer";
 import SectionRenderer from "@/components/sections/SectionRenderer";
 import { getPageBySlug } from "@/lib/api/pages";
 import StudentExperiencesSection from "@/components/sections/StudentExperiencesSection";
+import type { CmsSection } from "@/types/cms";
 
 type Props = {
   params: Promise<{
@@ -16,7 +17,7 @@ export default async function InicioPage({ params }: Props) {
   const page = await getPageBySlug("inicio", locale);
 
   const faqIndex = page.sections.findIndex(
-    (section: any) =>
+    (section: CmsSection) =>
       section.section_key === "faq" ||
       section.type === "faq" ||
       section.section_type === "faq"
@@ -29,7 +30,7 @@ export default async function InicioPage({ params }: Props) {
     faqIndex >= 0 ? page.sections.slice(faqIndex) : [];
 
   return (
-    <main className="min-h-screen overflow-x-hidden bg-[#020617] text-white">
+    <main className="dric-theme-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
       <Header />
       <SectionRenderer sections={sectionsBeforeFaq} locale={locale} />
       <StudentExperiencesSection locale={locale as "es" | "en"} />

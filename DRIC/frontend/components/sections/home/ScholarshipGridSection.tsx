@@ -47,7 +47,7 @@ export default function ScholarshipGridSection({ section, locale = "es" }: Props
               <Link
                 key={block.id}
                 href={`/${locale}/becas-movilidad/${countrySlug}`}
-                className="group block overflow-hidden rounded-3xl border border-white/10 bg-slate-900 transition duration-500 hover:-translate-y-3 hover:scale-[1.03] hover:border-cyan-300/70 hover:shadow-[0_0_45px_rgba(34,211,238,0.25)]"
+                className="dric-scholarship-card group block overflow-hidden rounded-3xl border border-white/10 bg-slate-900 transition duration-500 hover:-translate-y-3 hover:scale-[1.03] hover:border-cyan-300/70 hover:shadow-[0_0_45px_rgba(34,211,238,0.25)]"
               >
                 <div className="relative overflow-hidden">
                   <img
@@ -59,8 +59,8 @@ export default function ScholarshipGridSection({ section, locale = "es" }: Props
                   <div className="absolute inset-0 bg-cyan-300/0 transition duration-500 group-hover:bg-cyan-300/10" />
                 </div>
 
-                <div className="p-6">
-                  <h3 className="text-2xl font-light transition duration-300 group-hover:text-cyan-300">
+                <div className="dric-scholarship-card-strip p-6">
+                  <h3 className="dric-scholarship-card-title text-2xl font-light transition duration-300 group-hover:text-cyan-300">
                     {block.title}
                   </h3>
                 </div>

@@ -85,7 +85,7 @@ export default async function NormativasPage({ params }: Props) {
   const t = content[locale as "es" | "en"] ?? content.es;
 
   return (
-    <main className="min-h-screen overflow-x-hidden bg-[#020617] text-white">
+    <main className="dric-theme-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
       <Header />
 
       <section className="relative px-6 pb-28 pt-44">

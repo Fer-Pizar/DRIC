@@ -34,7 +34,7 @@ export default async function ContactoPage({ params }: Props) {
   };
 
   return (
-    <main className="min-h-screen overflow-x-hidden bg-[#020617] text-white">
+    <main className="dric-theme-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
       <Header />
 
       <section className="relative isolate px-5 pb-20 pt-36 md:px-10 lg:px-12">

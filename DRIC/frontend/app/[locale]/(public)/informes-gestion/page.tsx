@@ -12,21 +12,65 @@ type Props = {
   params: Promise<{ locale: string }>;
 };
 
-const reports = [
-  { title: "Informe de Gestión 2023", date: "Oct 15, 2024", year: "2023" },
-  { title: "Informe de Gestión 2022", date: "Nov 29, 2023", year: "2022" },
-  { title: "Informe DRIC 2021", date: "Mar 3, 2022", year: "2021" },
-  { title: "Informe DRIC 2020", date: "Dic 28, 2020", year: "2020" },
-  { title: "Informe DRIC 2019", date: "Dic 27, 2019", year: "2019" },
-  { title: "Informe DRIC 2018", date: "Dic 27, 2018", year: "2018" },
-  { title: "Informe DRIC 2017", date: "Dic 29, 2017", year: "2017" },
-];
+const content = {
+  es: {
+    eyebrow: "Transparencia institucional",
+    title: "Informes de Gestión",
+    intro:
+      "Consulta los informes institucionales de la Dirección de Relaciones Internacionales y Convenios, organizados por gestión para fortalecer la transparencia y el acceso público a la información.",
+    archiveLabel: "Archivo DRIC",
+    archiveDescription:
+      "Los documentos estarán conectados al CMS para descarga directa en PDF.",
+    exploreLabel: "Explorar documentos",
+    archiveTitle: "Archivo de informes",
+    searchPlaceholder: "Buscar informe...",
+    coverEyebrow: "Dirección de",
+    coverTitle: "Relaciones Internacionales y Convenios",
+    yearLabel: "Gestión",
+    downloadLabel: "Descargar PDF",
+    reports: [
+      { title: "Informe de Gestión 2023", date: "Oct 15, 2024", year: "2023" },
+      { title: "Informe de Gestión 2022", date: "Nov 29, 2023", year: "2022" },
+      { title: "Informe DRIC 2021", date: "Mar 3, 2022", year: "2021" },
+      { title: "Informe DRIC 2020", date: "Dic 28, 2020", year: "2020" },
+      { title: "Informe DRIC 2019", date: "Dic 27, 2019", year: "2019" },
+      { title: "Informe DRIC 2018", date: "Dic 27, 2018", year: "2018" },
+      { title: "Informe DRIC 2017", date: "Dic 29, 2017", year: "2017" },
+    ],
+  },
+  en: {
+    eyebrow: "Institutional transparency",
+    title: "Management Reports",
+    intro:
+      "Review the institutional reports of the Directorate of International Relations and Agreements, organized by year to strengthen transparency and public access to information.",
+    archiveLabel: "DRIC Archive",
+    archiveDescription:
+      "The documents will be connected to the CMS for direct PDF downloads.",
+    exploreLabel: "Explore documents",
+    archiveTitle: "Reports archive",
+    searchPlaceholder: "Search report...",
+    coverEyebrow: "Directorate of",
+    coverTitle: "International Relations and Agreements",
+    yearLabel: "Year",
+    downloadLabel: "Download PDF",
+    reports: [
+      { title: "Management Report 2023", date: "Oct 15, 2024", year: "2023" },
+      { title: "Management Report 2022", date: "Nov 29, 2023", year: "2022" },
+      { title: "DRIC Report 2021", date: "Mar 3, 2022", year: "2021" },
+      { title: "DRIC Report 2020", date: "Dec 28, 2020", year: "2020" },
+      { title: "DRIC Report 2019", date: "Dec 27, 2019", year: "2019" },
+      { title: "DRIC Report 2018", date: "Dec 27, 2018", year: "2018" },
+      { title: "DRIC Report 2017", date: "Dec 29, 2017", year: "2017" },
+    ],
+  },
+};
 
 export default async function InformesGestionPage({ params }: Props) {
   const { locale } = await params;
+  const t = content[locale as "es" | "en"] ?? content.es;
 
   return (
-    <main className="min-h-screen overflow-x-hidden bg-[#020617] text-white">
+    <main className="dric-theme-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
       <Header />
 
       <section className="relative isolate px-5 pb-20 pt-36 md:px-10 lg:px-12">
@@ -36,21 +80,21 @@ export default async function InformesGestionPage({ params }: Props) {
         <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
           <div>
             <p className="mb-5 inline-flex rounded-full border border-white/15 bg-white/10 px-5 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-white/80 backdrop-blur">
-              Transparencia institucional
+              {t.eyebrow}
             </p>
 
             <h1 className="max-w-5xl text-5xl font-light uppercase leading-[0.9] tracking-[-0.07em] md:text-7xl lg:text-8xl">
-              Informes de Gestión
+              {t.title}
             </h1>
 
             <p className="mt-8 max-w-3xl text-base leading-8 text-white/70 md:text-lg">
-              Consulta los informes institucionales de la Dirección de Relaciones Internacionales y Convenios, organizados por gestión para fortalecer la transparencia y el acceso público a la información.
+              {t.intro}
             </p>
           </div>
 
           <div className="rounded-[2rem] border border-white/10 bg-white/10 p-7 backdrop-blur-xl">
             <p className="text-sm font-bold uppercase tracking-[0.24em] text-white/55">
-              Archivo DRIC
+              {t.archiveLabel}
             </p>
 
             <p className="mt-5 text-5xl font-light tracking-[-0.06em]">
@@ -58,7 +102,7 @@ export default async function InformesGestionPage({ params }: Props) {
             </p>
 
             <p className="mt-4 text-sm leading-7 text-white/65">
-              Los documentos estarán conectados al CMS para descarga directa en PDF.
+              {t.archiveDescription}
             </p>
           </div>
         </div>
@@ -69,18 +113,18 @@ export default async function InformesGestionPage({ params }: Props) {
           <div className="mb-12 grid gap-6 lg:grid-cols-[1fr_0.8fr] lg:items-end">
             <div>
               <p className="text-sm font-bold uppercase tracking-[0.25em] text-[#b5121b]">
-                Explorar documentos
+                {t.exploreLabel}
               </p>
 
               <h2 className="mt-4 text-4xl font-semibold tracking-[-0.04em] md:text-5xl">
-                Archivo de informes
+                {t.archiveTitle}
               </h2>
             </div>
 
             <div className="rounded-full bg-white p-2 shadow-xl shadow-slate-200/70">
               <TextField
                 fullWidth
-                placeholder="Buscar informe..."
+                placeholder={t.searchPlaceholder}
                 variant="outlined"
                 slotProps={{
                   input: {
@@ -103,7 +147,7 @@ export default async function InformesGestionPage({ params }: Props) {
           </div>
 
           <div className="grid gap-7 md:grid-cols-2 xl:grid-cols-3">
-            {reports.map((report) => (
+            {t.reports.map((report) => (
               <Card
                 key={report.year}
                 sx={{
@@ -119,18 +163,18 @@ export default async function InformesGestionPage({ params }: Props) {
 
                   <div className="relative">
                     <p className="text-xs font-bold uppercase tracking-[0.24em] text-white/65">
-                      Dirección de
+                      {t.coverEyebrow}
                     </p>
 
                     <h3 className="mt-3 max-w-xs text-2xl font-black leading-tight tracking-[-0.04em]">
-                      Relaciones Internacionales y Convenios
+                      {t.coverTitle}
                     </h3>
                   </div>
                 </div>
 
                 <div className="p-7">
                   <p className="text-sm font-bold uppercase tracking-[0.22em] text-[#164194]">
-                    Gestión {report.year}
+                    {t.yearLabel} {report.year}
                   </p>
 
                   <h3 className="mt-3 text-2xl font-bold tracking-[-0.04em] text-slate-950">
@@ -156,7 +200,7 @@ export default async function InformesGestionPage({ params }: Props) {
                         boxShadow: "0 14px 34px rgba(181,18,27,0.22)",
                       }}
                     >
-                      Descargar PDF
+                      {t.downloadLabel}
                     </Button>
                   </Link>
                 </div>
