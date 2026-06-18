@@ -105,7 +105,10 @@ export default async function ProyectosPage({ params }: Props) {
         </div>
       </section>
 
-      <section id="internacionales" className="bg-white px-5 py-24 text-[#111827] md:px-10 lg:px-12">
+      <section id="internacionales" className="relative isolate overflow-hidden px-5 py-24 text-white md:px-10 lg:px-12">
+        <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(181,18,27,0.24),transparent_34%),radial-gradient(circle_at_center_right,rgba(22,65,148,0.28),transparent_38%),linear-gradient(145deg,#020617_0%,#07111f_50%,#10070b_100%)]" />
+        <div className="absolute right-[-8rem] top-20 -z-10 h-[430px] w-[430px] rounded-full bg-cyan-300/10 blur-[135px]" />
+
         <div className="mx-auto max-w-7xl">
           <div className="mb-12 max-w-3xl">
             <p className="text-sm font-bold uppercase tracking-[0.25em] text-[#b5121b]">
@@ -116,7 +119,7 @@ export default async function ProyectosPage({ params }: Props) {
               Proyectos Internacionales
             </h2>
 
-            <p className="mt-5 text-lg leading-8 text-slate-600">
+            <p className="mt-5 text-lg leading-8 text-white/68">
               Este apartado centraliza iniciativas gestionadas mediante cooperación internacional, articulando alianzas, financiamiento y capacidades institucionales.
             </p>
           </div>
@@ -127,12 +130,12 @@ export default async function ProyectosPage({ params }: Props) {
               "Seguimiento de proyectos",
               "Vinculación con instituciones extranjeras",
             ].map((item) => (
-              <div key={item} className="rounded-3xl border border-slate-200 bg-slate-50 p-7">
+              <div key={item} className="rounded-3xl border border-white/10 bg-white/[0.06] p-7 shadow-2xl shadow-black/20 backdrop-blur-xl">
                 <PublicRoundedIcon sx={{ color: "#b5121b", fontSize: 34 }} />
 
                 <h3 className="mt-5 text-xl font-bold">{item}</h3>
 
-                <p className="mt-3 text-sm leading-7 text-slate-600">
+                <p className="mt-3 text-sm leading-7 text-white/62">
                   Información editable desde el CMS para mantener el contenido actualizado y consistente.
                 </p>
               </div>
@@ -141,12 +144,15 @@ export default async function ProyectosPage({ params }: Props) {
         </div>
       </section>
 
-      <section id="apoyo-financiero" className="bg-[#f8fafc] px-5 py-24 text-[#111827] md:px-10 lg:px-12">
+      <section id="apoyo-financiero" className="relative isolate overflow-hidden px-5 py-24 text-white md:px-10 lg:px-12">
+        <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_right,rgba(181,18,27,0.20),transparent_34%),radial-gradient(circle_at_bottom_left,rgba(22,65,148,0.34),transparent_38%),linear-gradient(145deg,#020617_0%,#07111f_50%,#12070a_100%)]" />
+        <div className="absolute left-[-10rem] bottom-[-8rem] -z-10 h-[460px] w-[460px] rounded-full bg-blue-400/10 blur-[140px]" />
+
         <div className="mx-auto max-w-7xl">
-          <div className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-xl shadow-slate-200/60 md:p-12">
+          <div className="rounded-[2rem] border border-white/10 bg-white/[0.06] p-8 shadow-2xl shadow-black/25 backdrop-blur-xl md:p-12">
             <div className="grid gap-10 lg:grid-cols-[1fr_0.8fr] lg:items-center">
               <div>
-                <p className="text-sm font-bold uppercase tracking-[0.25em] text-[#164194]">
+                <p className="text-sm font-bold uppercase tracking-[0.25em] text-cyan-300">
                   Convocatorias y recursos
                 </p>
 
@@ -154,7 +160,7 @@ export default async function ProyectosPage({ params }: Props) {
                   Apoyo Financiero
                 </h2>
 
-                <p className="mt-5 text-lg leading-8 text-slate-600">
+                <p className="mt-5 text-lg leading-8 text-white/68">
                   Espacio para publicar oportunidades de financiamiento, documentos PDF, guías, formularios y enlaces relevantes para la comunidad universitaria.
                 </p>
               </div>
