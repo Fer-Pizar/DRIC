@@ -33,7 +33,10 @@ export default function NewsExplorer({ locale, news }: Props) {
   }, [query, news]);
 
   return (
-    <section className="bg-[#f8fafc] px-5 py-20 text-slate-950 md:px-10 lg:px-12">
+    <section className="relative isolate overflow-hidden px-5 py-20 text-white md:px-10 lg:px-12">
+      <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(181,18,27,0.22),transparent_34%),radial-gradient(circle_at_center_right,rgba(22,65,148,0.30),transparent_38%),linear-gradient(145deg,#020617_0%,#07111f_50%,#12070a_100%)]" />
+      <div className="absolute right-[-9rem] top-16 -z-10 h-[430px] w-[430px] rounded-full bg-cyan-300/10 blur-[135px]" />
+
       <div className="mx-auto max-w-7xl">
         <div className="mb-12 grid gap-8 lg:grid-cols-[1fr_0.75fr] lg:items-end">
           <div>
@@ -45,13 +48,13 @@ export default function NewsExplorer({ locale, news }: Props) {
             </h2>
           </div>
 
-          <div className="flex items-center rounded-full bg-white px-5 py-3 shadow-xl shadow-slate-200/70">
+          <div className="flex items-center rounded-full border border-white/10 bg-white/[0.06] px-5 py-3 shadow-2xl shadow-black/20 backdrop-blur-xl">
             <SearchRoundedIcon sx={{ color: "#164194", mr: 1.5 }} />
             <input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder={locale === "en" ? "Search news..." : "Buscar noticias..."}
-              className="w-full bg-transparent text-sm outline-none placeholder:text-slate-400"
+              className="w-full bg-transparent text-sm text-white outline-none placeholder:text-white/42"
             />
           </div>
         </div>
@@ -63,11 +66,13 @@ export default function NewsExplorer({ locale, news }: Props) {
               sx={{
                 borderRadius: "32px",
                 overflow: "hidden",
-                border: "1px solid rgba(15,23,42,0.08)",
-                boxShadow: "0 24px 70px rgba(15,23,42,0.08)",
+                background: "rgba(255,255,255,0.06)",
+                border: "1px solid rgba(255,255,255,0.10)",
+                boxShadow: "0 24px 70px rgba(0,0,0,0.24)",
+                color: "white",
               }}
             >
-              <div className="relative min-h-[420px] bg-white p-8">
+              <div className="relative min-h-[420px] bg-white/[0.06] p-8">
                 <div className="absolute inset-x-0 top-0 h-2 bg-gradient-to-r from-[#b5121b] via-[#164194] to-[#b5121b]" />
 
                 <Chip
@@ -89,7 +94,7 @@ export default function NewsExplorer({ locale, news }: Props) {
                   {item.date}
                 </div>
 
-                <p className="mt-6 text-sm leading-7 text-slate-600">
+                <p className="mt-6 text-sm leading-7 text-white/62">
                   {item.excerpt}
                 </p>
 

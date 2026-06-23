@@ -85,10 +85,10 @@ export default async function NormativasPage({ params }: Props) {
   const t = content[locale as "es" | "en"] ?? content.es;
 
   return (
-    <main className="dric-theme-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
+    <main className="dric-theme-page dric-regulations-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
       <Header />
 
-      <section className="relative px-6 pb-28 pt-44">
+      <section className="dric-regulations-section relative px-6 pb-28 pt-44">
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_left,rgba(34,211,238,0.18),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(239,68,68,0.12),transparent_34%)]" />
 
         <div className="mx-auto max-w-7xl">
@@ -106,26 +106,26 @@ export default async function NormativasPage({ params }: Props) {
             </p>
           </div>
 
-          <div className="mt-16 rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 shadow-2xl backdrop-blur-xl">
+          <div className="dric-regulations-panel mt-16 rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 shadow-2xl backdrop-blur-xl">
             <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
               <input
                 placeholder={t.search}
-                className="w-full rounded-full border border-white/10 bg-white/[0.04] px-6 py-4 text-sm text-white outline-none placeholder:text-white/35 focus:border-cyan-300/60 md:max-w-md"
+                className="dric-regulations-input w-full rounded-full border border-white/10 bg-white/[0.04] px-6 py-4 text-sm text-white outline-none placeholder:text-white/35 focus:border-cyan-300/60 md:max-w-md"
               />
 
-              <select className="rounded-full border border-white/10 bg-[#071126] px-6 py-4 text-sm text-white outline-none focus:border-cyan-300/60">
+              <select className="dric-regulations-select rounded-full border border-white/10 bg-[#071126] px-6 py-4 text-sm text-white outline-none focus:border-cyan-300/60">
                 <option>{t.category}</option>
                 <option>Primero</option>
                 <option>Tercero</option>
               </select>
             </div>
 
-            <div className="overflow-hidden rounded-[1.5rem] border border-white/10">
+            <div className="dric-regulations-list overflow-hidden rounded-[1.5rem] border border-white/10">
               {t.items.map((item) => (
                 <a
                   key={`${item.code}-${item.title}`}
                   href={item.file}
-                  className="group grid gap-4 border-b border-white/10 bg-white/[0.02] p-6 transition hover:bg-cyan-300/[0.07] md:grid-cols-[180px_1fr_140px_150px] md:items-center"
+                  className="dric-regulations-row group grid gap-4 border-b border-white/10 bg-white/[0.02] p-6 transition hover:bg-cyan-300/[0.07] md:grid-cols-[180px_1fr_140px_150px] md:items-center"
                 >
                   <span className="text-sm font-semibold uppercase tracking-[0.18em] text-cyan-200">
                     {item.code}

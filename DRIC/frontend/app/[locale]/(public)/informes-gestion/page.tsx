@@ -70,12 +70,12 @@ export default async function InformesGestionPage({ params }: Props) {
   const t = content[locale as "es" | "en"] ?? content.es;
 
   return (
-    <main className="dric-theme-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
+    <main className="dric-theme-page dric-reports-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
       <Header />
 
-      <section className="relative isolate px-5 pb-20 pt-36 md:px-10 lg:px-12">
+      <section className="dric-reports-hero relative isolate px-5 pb-20 pt-36 md:px-10 lg:px-12">
         <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(181,18,27,0.40),transparent_34%),radial-gradient(circle_at_top_right,rgba(22,65,148,0.48),transparent_36%),linear-gradient(135deg,#020617_0%,#08111f_45%,#12070a_100%)]" />
-        <div className="absolute bottom-0 left-1/2 -z-10 h-[360px] w-[560px] -translate-x-1/2 rounded-full bg-white/10 blur-[150px]" />
+        <div className="dric-reports-hero-glow absolute bottom-0 left-1/2 -z-10 h-[360px] w-[560px] -translate-x-1/2 rounded-full bg-white/10 blur-[150px]" />
 
         <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
           <div>
@@ -92,7 +92,7 @@ export default async function InformesGestionPage({ params }: Props) {
             </p>
           </div>
 
-          <div className="rounded-[2rem] border border-white/10 bg-white/10 p-7 backdrop-blur-xl">
+          <div className="dric-reports-summary rounded-[2rem] border border-white/10 bg-white/10 p-7 backdrop-blur-xl">
             <p className="text-sm font-bold uppercase tracking-[0.24em] text-white/55">
               {t.archiveLabel}
             </p>
@@ -108,7 +108,10 @@ export default async function InformesGestionPage({ params }: Props) {
         </div>
       </section>
 
-      <section className="bg-[#f8fafc] px-5 py-20 text-[#111827] md:px-10 lg:px-12">
+      <section className="dric-reports-section relative isolate overflow-hidden px-5 py-20 text-white md:px-10 lg:px-12">
+        <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(181,18,27,0.22),transparent_34%),radial-gradient(circle_at_center_right,rgba(22,65,148,0.30),transparent_38%),linear-gradient(145deg,#020617_0%,#07111f_50%,#12070a_100%)]" />
+        <div className="absolute right-[-9rem] top-16 -z-10 h-[430px] w-[430px] rounded-full bg-cyan-300/10 blur-[135px]" />
+
         <div className="mx-auto max-w-7xl">
           <div className="mb-12 grid gap-6 lg:grid-cols-[1fr_0.8fr] lg:items-end">
             <div>
@@ -121,7 +124,7 @@ export default async function InformesGestionPage({ params }: Props) {
               </h2>
             </div>
 
-            <div className="rounded-full bg-white p-2 shadow-xl shadow-slate-200/70">
+            <div className="dric-reports-search rounded-full border border-white/10 bg-white/[0.06] p-2 shadow-2xl shadow-black/20 backdrop-blur-xl">
               <TextField
                 fullWidth
                 placeholder={t.searchPlaceholder}
@@ -149,17 +152,20 @@ export default async function InformesGestionPage({ params }: Props) {
           <div className="grid gap-7 md:grid-cols-2 xl:grid-cols-3">
             {t.reports.map((report) => (
               <Card
+                className="dric-reports-card"
                 key={report.year}
                 sx={{
                   borderRadius: "30px",
                   overflow: "hidden",
-                  border: "1px solid rgba(15,23,42,0.08)",
-                  boxShadow: "0 24px 70px rgba(15,23,42,0.08)",
+                  background: "rgba(255,255,255,0.06)",
+                  border: "1px solid rgba(255,255,255,0.10)",
+                  boxShadow: "0 24px 70px rgba(0,0,0,0.24)",
+                  color: "white",
                 }}
               >
                 <div className="relative h-48 overflow-hidden bg-[#020617] p-7 text-white">
                   <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(181,18,27,0.6),transparent_36%),radial-gradient(circle_at_bottom_right,rgba(22,65,148,0.7),transparent_40%)]" />
-                  <div className="absolute left-0 top-0 h-full w-24 bg-[#b5121b]" />
+                  <div className="dric-reports-cover-accent absolute left-0 top-0 h-full w-24 bg-[#b5121b]" />
 
                   <div className="relative">
                     <p className="text-xs font-bold uppercase tracking-[0.24em] text-white/65">
@@ -172,16 +178,16 @@ export default async function InformesGestionPage({ params }: Props) {
                   </div>
                 </div>
 
-                <div className="p-7">
+                <div className="dric-reports-card-body p-7">
                   <p className="text-sm font-bold uppercase tracking-[0.22em] text-[#164194]">
                     {t.yearLabel} {report.year}
                   </p>
 
-                  <h3 className="mt-3 text-2xl font-bold tracking-[-0.04em] text-slate-950">
+                  <h3 className="mt-3 text-2xl font-bold tracking-[-0.04em] text-white">
                     {report.title}
                   </h3>
 
-                  <div className="mt-5 flex items-center gap-2 text-sm font-semibold text-slate-500">
+                  <div className="mt-5 flex items-center gap-2 text-sm font-semibold text-white/58">
                     <CalendarMonthRoundedIcon sx={{ fontSize: 19, color: "#b5121b" }} />
                     {report.date}
                   </div>

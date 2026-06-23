@@ -34,12 +34,12 @@ export default async function ContactoPage({ params }: Props) {
   };
 
   return (
-    <main className="dric-theme-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
+    <main className="dric-theme-page dric-contact-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
       <Header />
 
-      <section className="relative isolate px-5 pb-20 pt-36 md:px-10 lg:px-12">
+      <section className="dric-contact-hero relative isolate px-5 pb-20 pt-36 md:px-10 lg:px-12">
         <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(181,18,27,0.42),transparent_34%),radial-gradient(circle_at_top_right,rgba(22,65,148,0.50),transparent_36%),linear-gradient(135deg,#020617_0%,#08111f_45%,#12070a_100%)]" />
-        <div className="absolute left-1/2 top-24 -z-10 h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-white/10 blur-[140px]" />
+        <div className="dric-contact-hero-glow absolute left-1/2 top-24 -z-10 h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-white/10 blur-[140px]" />
 
         <div className="mx-auto max-w-7xl">
           <p className="mb-5 inline-flex rounded-full border border-white/15 bg-white/10 px-5 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-white/80 backdrop-blur">
@@ -56,7 +56,10 @@ export default async function ContactoPage({ params }: Props) {
         </div>
       </section>
 
-      <section className="bg-[#f8fafc] px-5 py-20 text-slate-950 md:px-10 lg:px-12">
+      <section className="dric-contact-section relative isolate overflow-hidden px-5 py-20 text-white md:px-10 lg:px-12">
+        <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(181,18,27,0.22),transparent_34%),radial-gradient(circle_at_center_right,rgba(22,65,148,0.30),transparent_38%),linear-gradient(145deg,#020617_0%,#07111f_50%,#12070a_100%)]" />
+        <div className="absolute right-[-9rem] top-16 -z-10 h-[430px] w-[430px] rounded-full bg-cyan-300/10 blur-[135px]" />
+
         <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[0.85fr_1.15fr]">
           <div className="space-y-6">
             <ContactCard
@@ -74,15 +77,18 @@ export default async function ContactoPage({ params }: Props) {
             />
 
             <Card
+              className="dric-contact-card"
               sx={{
                 borderRadius: "32px",
-                border: "1px solid rgba(15,23,42,0.08)",
-                boxShadow: "0 24px 70px rgba(15,23,42,0.08)",
+                background: "rgba(255,255,255,0.06)",
+                border: "1px solid rgba(255,255,255,0.10)",
+                boxShadow: "0 24px 70px rgba(0,0,0,0.24)",
+                color: "white",
                 overflow: "hidden",
               }}
             >
               <div className="p-8">
-                <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#020617] text-white">
+                <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 text-cyan-300">
                   <LocationOnRoundedIcon />
                 </div>
 
@@ -94,18 +100,20 @@ export default async function ContactoPage({ params }: Props) {
                   DRIC
                 </h2>
 
-                <p className="mt-4 text-sm leading-7 text-slate-600">
+                <p className="mt-4 text-sm leading-7 text-white/62">
                   {labels.addressText}
                 </p>
               </div>
             </Card>
 
             <Card
+              className="dric-contact-card"
               sx={{
                 borderRadius: "32px",
-                background: "#020617",
+                background: "rgba(255,255,255,0.06)",
                 color: "white",
-                boxShadow: "0 24px 70px rgba(15,23,42,0.18)",
+                border: "1px solid rgba(255,255,255,0.10)",
+                boxShadow: "0 24px 70px rgba(0,0,0,0.24)",
                 overflow: "hidden",
               }}
             >
@@ -122,14 +130,17 @@ export default async function ContactoPage({ params }: Props) {
           </div>
 
           <Card
+            className="dric-contact-map-card"
             sx={{
               borderRadius: "36px",
-              border: "1px solid rgba(15,23,42,0.08)",
-              boxShadow: "0 30px 90px rgba(15,23,42,0.12)",
+              background: "rgba(255,255,255,0.06)",
+              border: "1px solid rgba(255,255,255,0.10)",
+              boxShadow: "0 30px 90px rgba(0,0,0,0.24)",
+              color: "white",
               overflow: "hidden",
             }}
           >
-            <div className="bg-white p-6 md:p-8">
+            <div className="dric-contact-map-inner bg-white/[0.06] p-6 md:p-8">
               <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <div>
                   <p className="text-sm font-bold uppercase tracking-[0.25em] text-[#164194]">
@@ -159,7 +170,7 @@ export default async function ContactoPage({ params }: Props) {
                 </Button>
               </div>
 
-              <div className="overflow-hidden rounded-[28px] border border-slate-200">
+              <div className="overflow-hidden rounded-[28px] border border-white/10">
                 <iframe
                   title="DRIC UMSS Google Maps"
                   src="https://www.google.com/maps?q=Rectorado%20UMSS%20Cochabamba%20Bolivia&output=embed"
@@ -191,15 +202,18 @@ function ContactCard({
 }) {
   return (
     <Card
+      className="dric-contact-card"
       sx={{
         borderRadius: "32px",
-        border: "1px solid rgba(15,23,42,0.08)",
-        boxShadow: "0 24px 70px rgba(15,23,42,0.08)",
+        background: "rgba(255,255,255,0.06)",
+        border: "1px solid rgba(255,255,255,0.10)",
+        boxShadow: "0 24px 70px rgba(0,0,0,0.24)",
+        color: "white",
         overflow: "hidden",
       }}
     >
-      <a href={href} className="block p-8 transition hover:bg-slate-50">
-        <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#020617] text-white">
+      <a href={href} className="block p-8 transition hover:bg-white/[0.06]">
+        <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 text-cyan-300">
           {icon}
         </div>
 
@@ -207,7 +221,7 @@ function ContactCard({
           {title}
         </p>
 
-        <p className="mt-4 text-xl font-bold text-[#164194]">{content}</p>
+        <p className="mt-4 text-xl font-bold text-cyan-300">{content}</p>
       </a>
     </Card>
   );

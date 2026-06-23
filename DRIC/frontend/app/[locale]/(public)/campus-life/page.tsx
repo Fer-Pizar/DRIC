@@ -181,16 +181,19 @@ export default async function CampusLifePage({ params }: Props) {
         </div>
       </section>
 
-      <section className="bg-[#f8fafc] px-5 py-16 text-slate-950 md:px-10 lg:px-12">
+      <section className="relative isolate overflow-hidden px-5 py-16 text-white md:px-10 lg:px-12">
+        <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(181,18,27,0.22),transparent_34%),radial-gradient(circle_at_center_right,rgba(22,65,148,0.30),transparent_38%),linear-gradient(145deg,#020617_0%,#07111f_50%,#12070a_100%)]" />
+        <div className="absolute right-[-9rem] top-16 -z-10 h-[430px] w-[430px] rounded-full bg-cyan-300/10 blur-[135px]" />
+
         <div className="mx-auto max-w-7xl">
-          <div className="mb-16 border-y border-slate-200 bg-white/60 px-4 py-10 backdrop-blur md:px-8">
+          <div className="mb-16 border-y border-white/10 bg-white/[0.06] px-4 py-10 shadow-2xl shadow-black/20 backdrop-blur-xl md:px-8">
             <div className="grid gap-8 text-center md:grid-cols-3">
               {stats.map((stat) => (
                 <div key={stat.label}>
-                  <p className="text-4xl font-black tracking-[-0.05em] text-[#020617] md:text-5xl">
+                  <p className="text-4xl font-black tracking-[-0.05em] text-white md:text-5xl">
                     {stat.value}
                   </p>
-                  <p className="mt-3 text-sm font-semibold text-slate-600 md:text-base">
+                  <p className="mt-3 text-sm font-semibold text-white/62 md:text-base">
                     {stat.label}
                   </p>
                 </div>
@@ -204,22 +207,24 @@ export default async function CampusLifePage({ params }: Props) {
                 key={card.title}
                 sx={{
                   borderRadius: "34px",
-                  border: "1px solid rgba(15,23,42,0.08)",
-                  boxShadow: "0 24px 70px rgba(15,23,42,0.08)",
+                  background: "rgba(255,255,255,0.06)",
+                  border: "1px solid rgba(255,255,255,0.10)",
+                  boxShadow: "0 24px 70px rgba(0,0,0,0.24)",
+                  color: "white",
                 }}
               >
-                <div className="min-h-[280px] bg-white p-8">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-3xl bg-[#020617] text-white">
+                <div className="min-h-[280px] bg-white/[0.06] p-8">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-3xl bg-white/10 text-cyan-300">
                     {card.icon}
                   </div>
                   <h2 className="mt-8 text-3xl font-bold tracking-[-0.05em]">{card.title}</h2>
-                  <p className="mt-5 text-sm leading-7 text-slate-600">{card.text}</p>
+                  <p className="mt-5 text-sm leading-7 text-white/62">{card.text}</p>
                 </div>
               </Card>
             ))}
           </div>
 
-          <div className="mt-24 border-t border-slate-200 pt-16">
+          <div className="mt-24 border-t border-white/10 pt-16">
             <p className="text-sm font-bold uppercase tracking-[0.25em] text-[#b5121b]">
               {t.basic}
             </p>
@@ -228,14 +233,14 @@ export default async function CampusLifePage({ params }: Props) {
                 ? "A historic public university with regional impact"
                 : "Una universidad pública histórica con impacto regional"}
             </h2>
-            <p className="mt-6 max-w-4xl text-base leading-8 text-slate-600">{t.basicText}</p>
+            <p className="mt-6 max-w-4xl text-base leading-8 text-white/68">{t.basicText}</p>
           </div>
 
           <div className="mt-16 space-y-10">
             {magazineSections.map((section, index) => (
               <div
                 key={section.title}
-                className="grid overflow-hidden rounded-[2.5rem] bg-white shadow-2xl shadow-slate-200/70 lg:grid-cols-2"
+                className="grid overflow-hidden rounded-[2.5rem] border border-white/10 bg-white/[0.06] shadow-2xl shadow-black/25 backdrop-blur-xl lg:grid-cols-2"
               >
                 <div className={index % 2 === 1 ? "relative h-[420px] lg:order-2" : "relative h-[420px]"}>
                   <Image src={section.image} alt={section.title} fill className="object-cover" />
@@ -246,7 +251,7 @@ export default async function CampusLifePage({ params }: Props) {
                     {index === 0 ? t.features : index === 1 ? t.strengths : t.other}
                   </p>
                   <h3 className="mt-5 text-4xl font-semibold tracking-[-0.05em]">{section.title}</h3>
-                  <p className="mt-6 text-sm leading-8 text-slate-600">{section.text}</p>
+                  <p className="mt-6 text-sm leading-8 text-white/62">{section.text}</p>
                 </div>
               </div>
             ))}

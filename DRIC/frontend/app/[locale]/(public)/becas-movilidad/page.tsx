@@ -61,12 +61,12 @@ export default async function BecasMovilidadPage({ params }: Props) {
   ];
 
   return (
-    <main className="dric-theme-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
+    <main className="dric-theme-page dric-mobility-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
       <Header />
 
-      <section className="relative isolate px-5 pb-20 pt-36 md:px-10 lg:px-12">
+      <section className="dric-mobility-hero relative isolate px-5 pb-20 pt-36 md:px-10 lg:px-12">
         <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(181,18,27,0.42),transparent_34%),radial-gradient(circle_at_top_right,rgba(22,65,148,0.50),transparent_36%),linear-gradient(135deg,#020617_0%,#08111f_45%,#12070a_100%)]" />
-        <div className="absolute left-1/2 top-24 -z-10 h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-white/10 blur-[140px]" />
+        <div className="dric-mobility-hero-glow absolute left-1/2 top-24 -z-10 h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-white/10 blur-[140px]" />
 
         <div className="mx-auto max-w-7xl">
           <p className="mb-5 inline-flex rounded-full border border-white/15 bg-white/10 px-5 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-white/80 backdrop-blur">
@@ -85,7 +85,10 @@ export default async function BecasMovilidadPage({ params }: Props) {
         </div>
       </section>
 
-      <section className="bg-[#f8fafc] px-5 py-20 text-slate-950 md:px-10 lg:px-12">
+      <section className="dric-mobility-section relative isolate overflow-hidden px-5 py-20 text-white md:px-10 lg:px-12">
+        <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(181,18,27,0.22),transparent_34%),radial-gradient(circle_at_center_right,rgba(22,65,148,0.30),transparent_38%),linear-gradient(145deg,#020617_0%,#07111f_50%,#12070a_100%)]" />
+        <div className="absolute right-[-9rem] top-12 -z-10 h-[430px] w-[430px] rounded-full bg-cyan-300/10 blur-[135px]" />
+
         <div className="mx-auto max-w-7xl">
           <div className="mb-14 max-w-3xl">
             <p className="text-sm font-bold uppercase tracking-[0.25em] text-[#b5121b]">
@@ -98,7 +101,7 @@ export default async function BecasMovilidadPage({ params }: Props) {
                 : "Rutas académicas internacionales"}
             </h2>
 
-            <p className="mt-5 text-sm leading-7 text-slate-600 md:text-base">
+            <p className="mt-5 text-sm leading-7 text-white/68 md:text-base">
               {isEnglish
                 ? "This section is prepared to later connect with the CMS and allow administrators to update scholarships, links, PDFs and opportunities directly from the database."
                 : "Esta sección está preparada para conectarse posteriormente con el CMS y permitir que el administrador actualice becas, enlaces, PDFs y oportunidades directamente desde la base de datos."}
@@ -108,15 +111,18 @@ export default async function BecasMovilidadPage({ params }: Props) {
           <div className="grid gap-7 md:grid-cols-2">
             {cards.map((card) => (
               <Card
+                className="dric-mobility-card"
                 key={card.title}
                 sx={{
                   borderRadius: "34px",
                   overflow: "hidden",
-                  border: "1px solid rgba(15,23,42,0.08)",
-                  boxShadow: "0 24px 70px rgba(15,23,42,0.08)",
+                  background: "rgba(255,255,255,0.06)",
+                  border: "1px solid rgba(255,255,255,0.10)",
+                  boxShadow: "0 24px 70px rgba(0,0,0,0.24)",
+                  color: "white",
                 }}
               >
-                <div className="group relative min-h-[390px] bg-white p-8 transition duration-500 hover:-translate-y-1 md:p-10">
+                <div className="dric-mobility-card-inner group relative min-h-[390px] bg-white/[0.06] p-8 transition duration-500 hover:-translate-y-1 md:p-10">
                   <div
                     className="absolute right-[-60px] top-[-60px] h-44 w-44 rounded-full blur-3xl"
                     style={{ backgroundColor: `${card.accent}22` }}
@@ -135,16 +141,17 @@ export default async function BecasMovilidadPage({ params }: Props) {
                     {card.icon}
                   </div>
 
-                  <h3 className="mt-8 max-w-xl text-3xl font-bold leading-tight tracking-[-0.05em] text-slate-950">
+                  <h3 className="mt-8 max-w-xl text-3xl font-bold leading-tight tracking-[-0.05em] text-white">
                     {card.title}
                   </h3>
 
-                  <p className="mt-5 max-w-xl text-sm leading-7 text-slate-600">
+                  <p className="mt-5 max-w-xl text-sm leading-7 text-white/62">
                     {card.description}
                   </p>
 
                   <Link href={card.href} className="mt-10 inline-flex">
                     <Button
+                      className="dric-mobility-card-button"
                       variant="outlined"
                       endIcon={<ArrowForwardRoundedIcon />}
                       sx={{
