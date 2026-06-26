@@ -103,7 +103,7 @@ export default function ValidateCertificatePage() {
                   value={code}
                   onChange={(event) => setCode(event.target.value.toUpperCase())}
                   maxLength={7}
-                  placeholder="1234ABC"
+                  placeholder="1A2BC3D"
                   className="dric-certificate-input min-h-14 flex-1 rounded-2xl px-5 text-lg uppercase tracking-[0.22em] outline-none transition"
                 />
 

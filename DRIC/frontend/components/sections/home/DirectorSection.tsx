@@ -6,27 +6,27 @@ type Props = {
 
 export default function DirectorSection({ section }: Props) {
   return (
-    <section className="px-6 py-24">
+    <section className="px-4 py-16 sm:px-6 md:py-24">
       <div className="mx-auto max-w-6xl">
-        <h2 className="text-5xl font-bold mb-6">
+        <h2 className="mb-4 text-center text-3xl font-bold leading-tight sm:text-4xl md:mb-6 md:text-left md:text-5xl">
           {section.title}
         </h2>
 
-        <p className="text-slate-300 mb-12">
+        <p className="mx-auto mb-8 max-w-2xl text-center text-base leading-relaxed text-slate-300 md:mx-0 md:mb-12 md:text-left">
           {section.summary}
         </p>
 
-        <div className="grid md:grid-cols-2 gap-8">
+        <div className="grid gap-5 md:grid-cols-2 md:gap-8">
           {section.blocks.map((block) => (
             <div
               key={block.id}
-              className="rounded-3xl border border-slate-800 p-8"
+              className="rounded-2xl border border-slate-800 p-5 text-center md:rounded-3xl md:p-8 md:text-left"
             >
-              <h3 className="text-3xl font-semibold mb-4">
+              <h3 className="mb-3 text-xl font-semibold leading-tight sm:text-2xl md:mb-4 md:text-3xl">
                 {block.title}
               </h3>
 
-              <p className="text-slate-300">
+              <p className="text-sm leading-relaxed text-slate-300 sm:text-base">
                 {block.summary}
               </p>
             </div>

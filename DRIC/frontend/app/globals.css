@@ -580,6 +580,24 @@ html[data-theme="light"] .dric-social-icon:hover {
   filter: none;
 }
 
+@media (max-width: 639px) {
+  .dric-theme-page .dric-home-hero .dric-home-hero-content {
+    width: 100%;
+  }
+
+  .dric-theme-page .dric-home-hero .dric-home-hero-title {
+    max-width: min(18rem, 100%);
+    overflow-wrap: break-word;
+    word-break: normal;
+  }
+
+  html[data-theme="light"] .dric-theme-page .dric-home-hero .dric-home-hero-content {
+    margin-top: 4.75rem;
+    padding: 1.75rem 1rem;
+    border-radius: 2rem;
+  }
+}
+
 html[data-theme="light"] .dric-scholarship-card {
   background: #0f172a !important;
   color: #ffffff !important;
@@ -1029,6 +1047,86 @@ html[data-theme="light"] .dric-contact-page .dric-contact-map-inner iframe {
   filter: saturate(0.95) contrast(1.02);
 }
 
+html[data-theme="light"] .dric-mobile-menu {
+  background:
+    radial-gradient(circle at 18% 8%, rgba(255, 255, 255, 0.96), transparent 28%),
+    radial-gradient(circle at 82% 12%, rgba(186, 216, 255, 0.72), transparent 32%),
+    radial-gradient(circle at 14% 86%, rgba(255, 205, 224, 0.62), transparent 34%),
+    linear-gradient(135deg, rgba(248, 250, 252, 0.96), rgba(232, 239, 248, 0.94)) !important;
+  color: #0f172a !important;
+  backdrop-filter: blur(22px) saturate(135%);
+}
+
+html[data-theme="light"] .dric-mobile-menu-bg {
+  background:
+    radial-gradient(circle at top left, rgba(34, 211, 238, 0.16), transparent 36%),
+    radial-gradient(circle at bottom right, rgba(37, 99, 235, 0.18), transparent 38%),
+    radial-gradient(circle at 18% 86%, rgba(255, 205, 224, 0.35), transparent 34%) !important;
+}
+
+html[data-theme="light"] .dric-mobile-menu-header,
+html[data-theme="light"] .dric-mobile-menu-footer {
+  border-color: rgba(15, 23, 42, 0.1) !important;
+  color: rgba(30, 41, 59, 0.64) !important;
+}
+
+html[data-theme="light"] .dric-mobile-menu-footer {
+  border-top: 0 !important;
+}
+
+html[data-theme="light"] .dric-mobile-menu-logo {
+  background: rgba(255, 255, 255, 0.78) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 18px 40px rgba(15, 23, 42, 0.12) !important;
+}
+
+html[data-theme="light"] .dric-mobile-menu-brand,
+html[data-theme="light"] .dric-mobile-menu-kicker {
+  color: #b5121b !important;
+}
+
+html[data-theme="light"] .dric-mobile-menu-subtitle,
+html[data-theme="light"] .dric-mobile-menu-copy,
+html[data-theme="light"] .dric-mobile-menu-link-description {
+  color: rgba(51, 65, 85, 0.72) !important;
+}
+
+html[data-theme="light"] .dric-mobile-menu-title,
+html[data-theme="light"] .dric-mobile-menu-link-title {
+  color: #0f2344 !important;
+}
+
+html[data-theme="light"] .dric-mobile-menu-close,
+html[data-theme="light"] .dric-mobile-menu-feature,
+html[data-theme="light"] .dric-mobile-menu-link {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.68), rgba(255, 255, 255, 0.24)),
+    radial-gradient(circle at 16% 12%, rgba(255, 255, 255, 0.92), transparent 30%),
+    radial-gradient(circle at 86% 16%, rgba(125, 211, 252, 0.22), transparent 34%) !important;
+  border-color: rgba(255, 255, 255, 0.74) !important;
+  color: #0f2344 !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.92),
+    0 22px 56px rgba(15, 23, 42, 0.1) !important;
+  backdrop-filter: blur(12px) saturate(135%);
+}
+
+html[data-theme="light"] .dric-mobile-menu-close:hover,
+html[data-theme="light"] .dric-mobile-menu-link:hover {
+  border-color: rgba(34, 211, 238, 0.55) !important;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.78), rgba(224, 247, 255, 0.34)) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.94),
+    0 26px 62px rgba(15, 23, 42, 0.12),
+    0 0 36px rgba(34, 211, 238, 0.12) !important;
+}
+
+html[data-theme="light"] .dric-mobile-menu-link:hover .dric-mobile-menu-link-description {
+  color: #164194 !important;
+}
+
 html[data-theme="light"] .dric-presentation-page {
   background:
     radial-gradient(circle at 18% 8%, rgba(255, 255, 255, 0.96), transparent 28%),
@@ -1092,4 +1190,37 @@ html[data-theme="light"] .dric-presentation-content .MuiPaper-root {
 html[data-theme="light"] .dric-presentation-content .MuiChip-root {
   background-color: rgba(181, 18, 27, 0.08) !important;
   color: #b5121b !important;
+}
+
+.dric-mobile-menu a,
+.dric-mobile-menu a:hover,
+.dric-mobile-menu a:focus,
+.dric-mobile-menu a:active,
+.dric-mobile-menu a:visited {
+  text-decoration: none !important;
+  outline: none !important;
+}
+
+.dric-mobile-menu-link,
+.dric-mobile-menu-link:hover,
+.dric-mobile-menu-link:focus,
+.dric-mobile-menu-link:active,
+.dric-mobile-menu-link *,
+.dric-mobile-menu-link *:hover,
+.dric-mobile-menu-link *:focus,
+.dric-mobile-menu-link *:active {
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.dric-mobile-menu-link::before,
+.dric-mobile-menu-link::after,
+.dric-mobile-menu-link-title::before,
+.dric-mobile-menu-link-title::after,
+.dric-mobile-menu-link-description::before,
+.dric-mobile-menu-link-description::after {
+  content: none !important;
+  display: none !important;
 }

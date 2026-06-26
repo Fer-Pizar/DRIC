@@ -49,10 +49,10 @@ export default function StudentExperiencesSection({ locale }: Props) {
   const t = content[locale] ?? content.es;
 
   return (
-    <section className="bg-[#020617] px-6 py-24 text-white">
+    <section className="bg-[#020617] px-4 py-16 text-white sm:px-6 md:py-24">
       <div className="mx-auto max-w-7xl">
-        <div className="grid items-center gap-12 lg:grid-cols-2">
-          <div className="relative h-[360px] overflow-hidden rounded-3xl border border-white/10 bg-white/5">
+        <div className="grid items-center gap-8 md:gap-12 lg:grid-cols-2">
+          <div className="relative h-[240px] overflow-hidden rounded-2xl border border-white/10 bg-white/5 sm:h-[320px] md:h-[360px] md:rounded-3xl">
             <Image
               src="/images/home/student-experience.png"
               alt={t.title}
@@ -61,36 +61,36 @@ export default function StudentExperiencesSection({ locale }: Props) {
             />
           </div>
 
-          <div>
-            <h2 className="max-w-xl text-5xl font-light leading-tight tracking-wide">
+          <div className="min-w-0">
+            <h2 className="max-w-xl text-3xl font-light leading-tight tracking-wide sm:text-4xl md:text-5xl">
               {t.title}
             </h2>
-            <p className="mt-6 max-w-xl text-xl leading-relaxed text-white/60">
+            <p className="mt-4 max-w-xl text-base leading-relaxed text-white/60 sm:text-lg md:mt-6 md:text-xl">
               {t.text}
             </p>
             <a
               href={`/${locale}/becas-movilidad`}
-              className="mt-8 inline-flex rounded-2xl border border-white/40 px-7 py-4 text-sm font-medium text-white shadow-[0_0_30px_rgba(255,255,255,0.25)] transition hover:bg-white hover:text-slate-950"
+              className="mt-6 inline-flex rounded-2xl border border-white/40 px-6 py-3 text-sm font-medium text-white shadow-[0_0_30px_rgba(255,255,255,0.25)] transition hover:bg-white hover:text-slate-950 md:mt-8 md:px-7 md:py-4"
             >
               {t.button}
             </a>
           </div>
         </div>
 
-        <div className="mt-16 grid gap-8 lg:grid-cols-2">
+        <div className="mt-10 grid gap-5 md:mt-16 md:gap-8 lg:grid-cols-2">
           {t.comments.map((item) => (
             <article
               key={item.name}
-              className="rounded-3xl border border-white/10 bg-white/[0.03] p-10 shadow-2xl"
+              className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 shadow-2xl sm:p-7 md:rounded-3xl md:p-10"
             >
-              <div className="mb-8 h-20 w-20 rounded-full bg-gradient-to-br from-white/30 to-white/5" />
-              <h3 className="text-3xl font-semibold">{item.name}</h3>
+              <div className="mb-6 h-14 w-14 rounded-full bg-gradient-to-br from-white/30 to-white/5 md:mb-8 md:h-20 md:w-20" />
+              <h3 className="text-xl font-semibold leading-tight sm:text-2xl md:text-3xl">{item.name}</h3>
               <p className="mt-2 text-white/45">{item.role}</p>
               <div className="my-6 h-px bg-white/10" />
-              <p className="text-lg leading-relaxed text-white/65">
+              <p className="text-base leading-relaxed text-white/65 md:text-lg">
                 “{item.comment}”
               </p>
-              <p className="mt-8 text-xl text-yellow-400">5.0 ★★★★★</p>
+              <p className="mt-6 text-lg text-yellow-400 md:mt-8 md:text-xl">5.0 ★★★★★</p>
             </article>
           ))}
         </div>
