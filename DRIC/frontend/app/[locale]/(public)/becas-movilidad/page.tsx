@@ -73,7 +73,13 @@ export default async function BecasMovilidadPage({ params }: Props) {
             DRIC · UMSS
           </p>
 
-          <h1 className="max-w-6xl text-5xl font-light uppercase leading-[0.9] tracking-[-0.07em] md:text-7xl lg:text-8xl">
+          <h1
+            className={`max-w-5xl font-light uppercase ${
+              isEnglish
+                ? "text-[2.47rem] leading-[1.00] tracking-[-0.025em] sm:text-5xl md:text-7xl md:leading-[0.9] md:tracking-[-0.07em] lg:text-7xl"
+                : "text-5xl leading-[0.9] tracking-[-0.07em] md:text-7xl lg:text-7xl"
+            }`}
+          >
             {isEnglish ? "Scholarships and Mobility" : "Becas y Movilidad"}
           </h1>
 

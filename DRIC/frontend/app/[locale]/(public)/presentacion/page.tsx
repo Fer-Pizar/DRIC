@@ -20,19 +20,19 @@ export default async function PresentacionPage({ params }: Props) {
     <main className="dric-presentation-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
       <Header />
 
-      <section className="dric-presentation-content relative isolate px-5 pb-20 pt-36 md:px-10 lg:px-12">
+      <section className="dric-presentation-content relative isolate px-4 pb-16 pt-32 sm:px-5 md:px-10 md:pb-20 md:pt-36 lg:px-12">
         <div className="dric-presentation-hero-bg absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(181,18,27,0.42),transparent_34%),radial-gradient(circle_at_top_right,rgba(22,65,148,0.50),transparent_36%),linear-gradient(135deg,#020617_0%,#08111f_45%,#12070a_100%)]" />
 
-        <div className="mx-auto max-w-7xl">
-          <p className="mb-5 inline-flex rounded-full border border-white/15 bg-white/10 px-5 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-white/80 backdrop-blur">
+        <div className="mx-auto max-w-7xl text-center md:text-left">
+          <p className="mb-5 inline-flex max-w-full rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-white/80 backdrop-blur sm:px-5 sm:tracking-[0.28em]">
             DRIC · UMSS
           </p>
 
-          <h1 className="max-w-6xl text-5xl font-light uppercase leading-[0.9] tracking-[-0.07em] md:text-7xl lg:text-8xl">
+          <h1 className="mx-auto max-w-full break-words text-[2.25rem] font-light uppercase leading-[1.05] tracking-[-0.015em] sm:text-5xl md:mx-0 md:max-w-6xl md:text-7xl md:leading-[0.9] md:tracking-[-0.07em] lg:text-8xl">
             {isEnglish ? "About DRIC" : "Presentación"}
           </h1>
 
-          <p className="mt-8 max-w-3xl text-base leading-8 text-white/70 md:text-lg">
+          <p className="mx-auto mt-6 max-w-3xl text-base leading-7 text-white/70 md:mx-0 md:mt-8 md:text-lg md:leading-8">
             {isEnglish
               ? "The Directorate of International Relations and Agreements promotes cooperation, mobility, projects and international academic opportunities for Universidad Mayor de San Simón."
               : "La Dirección de Relaciones Internacionales y Convenios promueve la cooperación, movilidad, proyectos y oportunidades académicas internacionales de la Universidad Mayor de San Simón."}
@@ -40,7 +40,7 @@ export default async function PresentacionPage({ params }: Props) {
         </div>
       </section>
 
-      <section className="dric-presentation-content relative isolate overflow-hidden px-5 py-20 text-white md:px-10 lg:px-12">
+      <section className="dric-presentation-content relative isolate overflow-hidden px-4 py-14 text-white sm:px-5 md:px-10 md:py-20 lg:px-12">
         <div className="dric-presentation-body-bg absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(181,18,27,0.22),transparent_34%),radial-gradient(circle_at_center_right,rgba(22,65,148,0.34),transparent_38%),linear-gradient(145deg,#020617_0%,#07111f_48%,#12070a_100%)]" />
         <div className="absolute left-1/2 top-32 -z-10 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-cyan-300/10 blur-[150px]" />
 
@@ -55,7 +55,7 @@ export default async function PresentacionPage({ params }: Props) {
                 boxShadow: "0 30px 90px rgba(0,0,0,0.34)",
               }}
             >
-              <div className="relative h-[420px] bg-slate-200">
+              <div className="relative h-[260px] bg-slate-200 sm:h-[340px] md:h-[420px]">
                 <Image
                   src="/images/presentation/dric-team.jpg"
                   alt="Equipo DRIC UMSS"
@@ -65,7 +65,7 @@ export default async function PresentacionPage({ params }: Props) {
               </div>
             </Card>
 
-            <div>
+            <div className="min-w-0 text-center lg:text-left">
               <Chip
                 label={isEnglish ? "Institutional history" : "Historia institucional"}
                 sx={{
@@ -76,11 +76,11 @@ export default async function PresentacionPage({ params }: Props) {
                 }}
               />
 
-              <h2 className="mt-6 text-4xl font-semibold tracking-[-0.05em] md:text-5xl">
+              <h2 className="mt-5 text-3xl font-semibold leading-tight tracking-[-0.025em] sm:text-4xl md:mt-6 md:text-5xl md:tracking-[-0.05em]">
                 {isEnglish ? "International vision from UMSS" : "Una visión internacional desde la UMSS"}
               </h2>
 
-              <p className="mt-6 text-base leading-8 text-white/68">
+              <p className="mx-auto mt-5 max-w-3xl text-sm leading-7 text-white/68 sm:text-base md:mt-6 md:leading-8 lg:mx-0">
                 La Dirección de Relaciones Internacionales y Convenios fue creada el 7 de enero de 1988, con el rango de Secretaría. El año 1995 se instituye como Departamento y en noviembre de 1997 se crea la actual Dirección.
               </p>
 
@@ -92,7 +92,7 @@ export default async function PresentacionPage({ params }: Props) {
             </div>
           </div>
 
-          <div className="mt-24 grid gap-7 md:grid-cols-2">
+          <div className="mt-14 grid gap-5 md:mt-24 md:grid-cols-2 md:gap-7">
             <InfoCard
               title={isEnglish ? "Mission" : "Misión"}
               text="Promover, coordinar y canalizar la cooperación internacional y nacional, así como la coordinación interinstitucional de la UMSS, en beneficio de los procesos de enseñanza-aprendizaje, investigación científica y tecnológica, interacción social y fortalecimiento institucional."
@@ -106,7 +106,7 @@ export default async function PresentacionPage({ params }: Props) {
             />
           </div>
 
-          <div className="mt-24 grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
+          <div className="mt-14 grid gap-8 md:mt-24 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
             <Card
               sx={{
                 borderRadius: "36px",
@@ -116,7 +116,7 @@ export default async function PresentacionPage({ params }: Props) {
                 boxShadow: "0 30px 90px rgba(0,0,0,0.34)",
               }}
             >
-              <div className="relative h-[821px] bg-slate-200">
+              <div className="relative h-[360px] bg-slate-200 sm:h-[560px] lg:h-[821px]">
                 <Image
                   src="/images/presentation/director.jpg"
                   alt="Director DRIC"
@@ -136,16 +136,16 @@ export default async function PresentacionPage({ params }: Props) {
                 overflow: "hidden",
               }}
             >
-              <div className="p-8 md:p-12">
-                <p className="text-sm font-bold uppercase tracking-[0.25em] text-[#b5121b]">
+              <div className="p-5 sm:p-8 md:p-12">
+                <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#b5121b] sm:text-sm sm:tracking-[0.25em]">
                   {isEnglish ? "Organizational structure" : "Estructura"}
                 </p>
 
-                <h2 className="mt-5 text-4xl font-semibold tracking-[-0.05em] md:text-5xl">
+                <h2 className="mt-4 text-3xl font-semibold leading-tight tracking-[-0.025em] sm:text-4xl md:mt-5 md:text-5xl md:tracking-[-0.05em]">
                   Dirección DRIC
                 </h2>
 
-                <p className="mt-6 text-sm leading-7 text-white/68">
+                <p className="mt-5 text-sm leading-7 text-white/68 md:mt-6">
                   La DRIC depende directamente del Rectorado. Para el cumplimiento de sus funciones, se estructura de la siguiente manera:
                 </p>
 
@@ -155,19 +155,19 @@ export default async function PresentacionPage({ params }: Props) {
                   <li>• Departamento de Internacionalización y Proyectos</li>
                 </ul>
 
-                <div className="mt-8 rounded-3xl border border-white/10 bg-white/[0.06] p-6">
-                  <h3 className="text-2xl font-bold tracking-[-0.04em]">
+                <div className="mt-8 rounded-2xl border border-white/10 bg-white/[0.06] p-5 md:rounded-3xl md:p-6">
+                  <h3 className="break-words text-xl font-bold leading-tight tracking-[-0.02em] sm:text-2xl md:tracking-[-0.04em]">
                     Director: Mgr. Omar Morales Delgadillo
                   </h3>
 
                   <div className="mt-5 space-y-3 text-sm text-white/70">
-                    <p className="flex gap-2">
-                      <EmailRoundedIcon sx={{ color: "#b5121b", fontSize: 20 }} />
-                      director-dric@umss.edu.bo
+                    <p className="flex min-w-0 items-start gap-2">
+                      <EmailRoundedIcon sx={{ color: "#b5121b", fontSize: 20, flexShrink: 0 }} />
+                      <span className="min-w-0 break-words">director-dric@umss.edu.bo</span>
                     </p>
-                    <p className="flex gap-2">
-                      <EmailRoundedIcon sx={{ color: "#b5121b", fontSize: 20 }} />
-                      rrii@umss.edu.bo
+                    <p className="flex min-w-0 items-start gap-2">
+                      <EmailRoundedIcon sx={{ color: "#b5121b", fontSize: 20, flexShrink: 0 }} />
+                      <span className="min-w-0 break-words">rrii@umss.edu.bo</span>
                     </p>
                   </div>
                 </div>
@@ -198,10 +198,10 @@ export default async function PresentacionPage({ params }: Props) {
 
 function MiniStat({ icon, title, text }: { icon: React.ReactNode; title: string; text: string }) {
   return (
-    <div className="rounded-3xl border border-white/10 bg-white/[0.06] p-5 shadow-xl shadow-black/20">
+    <div className="rounded-2xl border border-white/10 bg-white/[0.06] p-5 shadow-xl shadow-black/20 md:rounded-3xl">
       <div className="text-cyan-300">{icon}</div>
-      <p className="mt-4 text-2xl font-black tracking-[-0.05em]">{title}</p>
-      <p className="mt-1 text-xs font-bold uppercase tracking-[0.18em] text-white/50">{text}</p>
+      <p className="mt-4 text-xl font-black tracking-[-0.03em] md:text-2xl md:tracking-[-0.05em]">{title}</p>
+      <p className="mt-1 break-words text-xs font-bold uppercase tracking-[0.14em] text-white/50 sm:tracking-[0.18em]">{text}</p>
     </div>
   );
 }
@@ -217,10 +217,10 @@ function InfoCard({ title, text, color }: { title: string; text: string; color: 
         boxShadow: "0 24px 70px rgba(0,0,0,0.28)",
       }}
     >
-      <div className="relative min-h-[310px] p-8 md:p-10">
+      <div className="relative min-h-[260px] p-5 sm:p-8 md:min-h-[310px] md:p-10">
         <div className="absolute inset-x-0 top-0 h-1.5" style={{ backgroundColor: color }} />
-        <h3 className="text-4xl font-semibold tracking-[-0.05em]">{title}</h3>
-        <p className="mt-6 text-sm leading-8 text-white/68">{text}</p>
+        <h3 className="text-3xl font-semibold leading-tight tracking-[-0.025em] md:text-4xl md:tracking-[-0.05em]">{title}</h3>
+        <p className="mt-5 text-sm leading-7 text-white/68 md:mt-6 md:leading-8">{text}</p>
       </div>
     </Card>
   );
@@ -228,11 +228,11 @@ function InfoCard({ title, text, color }: { title: string; text: string; color: 
 
 function StaffBlock({ title, people }: { title: string; people: string[] }) {
   return (
-    <div className="rounded-3xl border border-white/10 bg-white/[0.055] p-6">
-      <p className="text-sm font-black uppercase tracking-[0.18em] text-cyan-300">{title}</p>
-      <ul className="mt-4 space-y-2 text-sm leading-6 text-white/68">
+    <div className="rounded-2xl border border-white/10 bg-white/[0.055] p-5 md:rounded-3xl md:p-6">
+      <p className="break-words text-xs font-black uppercase leading-relaxed tracking-[0.14em] text-cyan-300 sm:text-sm sm:tracking-[0.18em]">{title}</p>
+      <ul className="mt-4 space-y-2 text-sm leading-7 text-white/68">
         {people.map((person) => (
-          <li key={person}>• {person}</li>
+          <li key={person} className="break-words">• {person}</li>
         ))}
       </ul>
     </div>

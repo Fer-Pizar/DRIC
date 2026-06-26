@@ -16,7 +16,7 @@ export default function FaqSection({ section }: Props) {
           {section.blocks.map((block) => (
             <div
               key={block.id}
-              className="rounded-2xl border border-slate-800 p-5 text-center md:p-6 md:text-left"
+              className="rounded-2xl border border-slate-800 p-5 text-left md:p-6 md:text-left"
             >
               <h3 className="mb-3 text-xl font-semibold leading-tight md:mb-4 md:text-2xl">
                 {block.title}

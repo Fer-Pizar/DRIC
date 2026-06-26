@@ -18,7 +18,7 @@ function getLocalizedHref(linkUrl: string | null, locale: string) {
 
 export default function FinalCtaSection({ section, locale = "es" }: Props) {
   return (
-    <section className="px-4 py-16 text-center sm:px-6 md:py-32">
+    <section className="px-4 py-17 text-center sm:px-6 md:py-32">
       <div className="mx-auto max-w-5xl rounded-3xl border border-slate-800 p-6 sm:p-10 md:rounded-[40px] md:p-16">
         <h2 className="mb-4 text-3xl font-bold leading-tight sm:text-4xl md:mb-6 md:text-5xl">
           {section.title}
