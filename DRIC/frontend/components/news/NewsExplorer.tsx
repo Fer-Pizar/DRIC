@@ -72,7 +72,7 @@ export default function NewsExplorer({ locale, news }: Props) {
                 color: "white",
               }}
             >
-              <div className="relative min-h-[420px] bg-white/[0.06] p-8">
+              <div className="relative flex min-h-[420px] flex-col bg-white/[0.06] p-8">
                 <div className="absolute inset-x-0 top-0 h-2 bg-gradient-to-r from-[#b5121b] via-[#164194] to-[#b5121b]" />
 
                 <Chip
@@ -98,7 +98,7 @@ export default function NewsExplorer({ locale, news }: Props) {
                   {item.excerpt}
                 </p>
 
-                <div className="absolute bottom-8 left-8">
+                <div className="mt-8 pt-2">
                   <Link href={`/${locale}/noticias/${index + 1}`} className="inline-flex">
                     <Button
                       variant="outlined"

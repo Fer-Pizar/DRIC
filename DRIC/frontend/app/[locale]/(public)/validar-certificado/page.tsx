@@ -78,22 +78,22 @@ export default function ValidateCertificatePage() {
     <>
       <Header />
 
-      <main className="dric-certificate-page relative min-h-screen overflow-hidden px-6 pb-24 pt-36">
+      <main className="dric-certificate-page relative min-h-screen overflow-hidden px-4 pb-24 pt-32 sm:px-6 md:pt-36">
         <section className="relative mx-auto max-w-6xl">
-          <div className="dric-certificate-glass rounded-[2.8rem] p-8 md:p-12">
-            <p className="mb-4 text-xs font-semibold uppercase tracking-[0.38em] text-[#dc2626]">
+          <div className="dric-certificate-glass rounded-3xl p-5 sm:p-8 md:rounded-[2.8rem] md:p-12">
+            <p className="mb-4 max-w-full text-xs font-semibold uppercase leading-relaxed tracking-[0.22em] text-[#dc2626] sm:tracking-[0.38em]">
               {t("eyebrow")}
             </p>
 
-            <h1 className="dric-certificate-title max-w-5xl text-5xl font-light uppercase leading-none tracking-[-0.075em] md:text-7xl">
+            <h1 className="dric-certificate-title max-w-[18rem] break-words text-[2.41rem] font-light uppercase leading-[1.04] tracking-[-0.025em] sm:max-w-2xl sm:text-5xl md:max-w-5xl md:text-7xl md:leading-none md:tracking-[-0.075em]">
               {t("title")}
             </h1>
 
-            <p className="dric-certificate-muted mt-6 max-w-2xl text-sm leading-7 md:text-base">
+            <p className="dric-certificate-muted mt-5 max-w-2xl text-sm leading-7 md:mt-6 md:text-base">
               {t("description")}
             </p>
 
-            <form onSubmit={handleSubmit} className="mt-12 max-w-2xl">
+            <form onSubmit={handleSubmit} className="mt-10 max-w-2xl md:mt-12">
               <label className="dric-certificate-label mb-4 block text-sm font-medium">
                 {t("inputLabel")}
               </label>
@@ -104,13 +104,13 @@ export default function ValidateCertificatePage() {
                   onChange={(event) => setCode(event.target.value.toUpperCase())}
                   maxLength={7}
                   placeholder="1A2BC3D"
-                  className="dric-certificate-input min-h-14 flex-1 rounded-2xl px-5 text-lg uppercase tracking-[0.22em] outline-none transition"
+                  className="dric-certificate-input min-h-14 flex-1 rounded-2xl px-5 text-base uppercase tracking-[0.18em] outline-none transition sm:text-lg sm:tracking-[0.22em]"
                 />
 
                 <button
                   type="submit"
                   disabled={loading}
-                  className="dric-certificate-button rounded-2xl px-7 py-4 text-sm font-semibold uppercase tracking-[0.18em] transition disabled:cursor-not-allowed disabled:opacity-60"
+                  className="dric-certificate-button rounded-2xl px-5 py-4 text-sm font-semibold uppercase tracking-[0.14em] transition disabled:cursor-not-allowed disabled:opacity-60 sm:px-7 sm:tracking-[0.18em]"
                 >
                   {loading ? t("checking") : t("button")}
                 </button>

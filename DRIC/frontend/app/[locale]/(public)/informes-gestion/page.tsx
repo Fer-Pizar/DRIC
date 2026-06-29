@@ -67,6 +67,7 @@ const content = {
 
 export default async function InformesGestionPage({ params }: Props) {
   const { locale } = await params;
+  const isEnglish = locale === "en";
   const t = content[locale as "es" | "en"] ?? content.es;
 
   return (
@@ -79,25 +80,51 @@ export default async function InformesGestionPage({ params }: Props) {
 
         <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
           <div>
-            <p className="mb-5 inline-flex rounded-full border border-white/15 bg-white/10 px-5 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-white/80 backdrop-blur">
+            <p
+              className={`mb-5 inline-flex max-w-full rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs font-semibold uppercase text-white/80 backdrop-blur sm:px-5 ${
+                isEnglish ? "tracking-[0.16em] sm:tracking-[0.28em]" : "tracking-[0.28em]"
+              }`}
+            >
               {t.eyebrow}
             </p>
 
-            <h1 className="max-w-5xl text-5xl font-light uppercase leading-[0.9] tracking-[-0.07em] md:text-7xl lg:text-8xl">
+            <h1
+              className={`max-w-5xl break-words font-light uppercase ${
+                isEnglish
+                  ? "text-[2.4rem] leading-[1.04] tracking-[-0.025em] sm:text-5xl md:text-7xl md:leading-[0.9] md:tracking-[-0.07em] lg:text-8xl"
+                  : "text-5xl leading-[0.9] tracking-[-0.07em] md:text-7xl lg:text-8xl"
+              }`}
+            >
               {t.title}
             </h1>
 
-            <p className="mt-8 max-w-3xl text-base leading-8 text-white/70 md:text-lg">
+            <p
+              className={`max-w-3xl text-white/70 ${
+                isEnglish
+                  ? "mt-6 text-sm leading-7 sm:text-base md:mt-8 md:text-lg md:leading-8"
+                  : "mt-8 text-base leading-8 md:text-lg"
+              }`}
+            >
               {t.intro}
             </p>
           </div>
 
-          <div className="dric-reports-summary rounded-[2rem] border border-white/10 bg-white/10 p-7 backdrop-blur-xl">
-            <p className="text-sm font-bold uppercase tracking-[0.24em] text-white/55">
+          <div className="dric-reports-summary rounded-3xl border border-white/10 bg-white/10 p-5 backdrop-blur-xl sm:p-7 md:rounded-[2rem]">
+            <p
+              className={`text-sm font-bold uppercase text-white/55 ${
+                isEnglish ? "tracking-[0.16em] sm:tracking-[0.24em]" : "tracking-[0.24em]"
+              }`}
+            >
               {t.archiveLabel}
             </p>
 
-            <p className="mt-5 text-5xl font-light tracking-[-0.06em]">
+            <p
+              className={`mt-5 font-light ${
+                isEnglish
+                  ? "text-[2.65rem] leading-none tracking-[-0.035em] sm:text-5xl sm:tracking-[-0.06em]"
+                  : "text-5xl tracking-[-0.06em]"
+              }`}
+            >
               2017—2023
             </p>
 
