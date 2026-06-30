@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePageRequest;
 use App\Http\Requests\UpdatePageRequest;
 use App\Models\Page;
+use App\Support\PagePermissionMap;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
@@ -15,15 +16,21 @@ class PageController extends Controller
     {
         $pages = Page::query()
             ->with(['parent', 'creator', 'updater'])
+            ->tap(fn ($query) => PagePermissionMap::scopeVisibleToUser($query, auth()->user()))
             ->orderBy('sort_order')
             ->orderBy('id')
             ->paginate(15);
 
-        return view('admin.pages.index', compact('pages'));
+        return view('admin.pages.index', [
+            'pages' => $pages,
+            'isAdmin' => auth()->user()->hasRole('Admin'),
+        ]);
     }
 
     public function create(): View
     {
+        $this->authorizeAdmin();
+
         $parentPages = Page::query()
             ->orderBy('sort_order')
             ->orderBy('slug')
@@ -34,10 +41,12 @@ class PageController extends Controller
 
     public function store(StorePageRequest $request): RedirectResponse
     {
+        $this->authorizeAdmin();
+
         $data = $request->validated();
 
-        $data['created_by'] = 1;
-        $data['updated_by'] = 1;
+        $data['created_by'] = $request->user()->id;
+        $data['updated_by'] = $request->user()->id;
 
         if ($data['status'] !== 'published') {
             $data['published_at'] = null;
@@ -49,7 +58,7 @@ class PageController extends Controller
 
         return redirect()
             ->route('admin.pages.index')
-            ->with('success', 'Page created successfully.');
+            ->with('success', 'Página creada correctamente.');
     }
 
     public function show(Page $page): RedirectResponse
@@ -59,6 +68,8 @@ class PageController extends Controller
 
     public function edit(Page $page): View
     {
+        $this->authorizePageAccess($page);
+
         $parentPages = Page::query()
             ->where('id', '!=', $page->id)
             ->orderBy('sort_order')
@@ -70,9 +81,11 @@ class PageController extends Controller
 
     public function update(UpdatePageRequest $request, Page $page): RedirectResponse
     {
+        $this->authorizePageAccess($page);
+
         $data = $request->validated();
 
-        $data['updated_by'] = 1;
+        $data['updated_by'] = $request->user()->id;
 
         if ($data['status'] !== 'published') {
             $data['published_at'] = null;
@@ -84,13 +97,29 @@ class PageController extends Controller
 
         return redirect()
             ->route('admin.pages.index')
-            ->with('success', 'Page updated successfully.');
+            ->with('success', 'Página actualizada correctamente.');
     }
 
     public function destroy(Page $page): RedirectResponse
     {
+        $this->authorizeAdmin();
+
         return redirect()
             ->route('admin.pages.index')
-            ->with('success', 'Delete is not enabled yet.');
+            ->with('success', 'La eliminación todavía no está habilitada.');
+    }
+
+    private function authorizePageAccess(Page $page): void
+    {
+        abort_unless(
+            PagePermissionMap::canEditPage(auth()->user(), $page),
+            403,
+            'No tienes permiso para editar esta página.'
+        );
+    }
+
+    private function authorizeAdmin(): void
+    {
+        abort_unless(auth()->user()?->hasRole('Admin'), 403, 'Solo el administrador puede crear páginas.');
     }
 }

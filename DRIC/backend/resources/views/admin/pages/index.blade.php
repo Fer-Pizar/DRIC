@@ -1,9 +1,25 @@
+@php
+    $statusLabels = [
+        'draft' => 'Borrador',
+        'published' => 'Publicado',
+        'archived' => 'Archivado',
+    ];
+
+    $pageTypeLabels = [
+        'static' => 'Página estática',
+        'page' => 'Página',
+        'main' => 'Principal',
+        'content' => 'Contenido',
+        'legal' => 'Legal',
+    ];
+@endphp
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Pages</title>
+    <title>Panel DRIC - Páginas</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -100,13 +116,58 @@
             border-radius: 8px;
             color: #6b7280;
         }
+
+        .table-wrap {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 16px;
+            }
+
+            .container {
+                padding: 18px;
+                border-radius: 10px;
+            }
+
+            .header {
+                align-items: stretch;
+                flex-direction: column;
+                gap: 14px;
+            }
+
+            h1 {
+                font-size: 28px;
+                line-height: 1.15;
+            }
+
+            .btn {
+                box-sizing: border-box;
+                text-align: center;
+                width: 100%;
+            }
+
+            table {
+                min-width: 760px;
+            }
+
+            th, td {
+                padding: 10px;
+                white-space: nowrap;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>Pages</h1>
-            <a href="{{ route('admin.pages.create') }}" class="btn btn-primary">Create Page</a>
+            <h1>Páginas</h1>
+            @if ($isAdmin)
+                <a href="{{ route('admin.pages.create') }}" class="btn btn-primary">Crear página</a>
+            @endif
         </div>
 
         @if (session('success'))
@@ -116,43 +177,45 @@
         @endif
 
         @if ($pages->count())
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Slug</th>
-                        <th>Page Type</th>
-                        <th>Status</th>
-                        <th>Sort Order</th>
-                        <th>Published At</th>
-                        <th>Parent</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($pages as $page)
+            <div class="table-wrap">
+                <table>
+                    <thead>
                         <tr>
-                            <td>{{ $page->id }}</td>
-                            <td>{{ $page->slug }}</td>
-                            <td>{{ $page->page_type }}</td>
-                            <td>{{ $page->status }}</td>
-                            <td>{{ $page->sort_order }}</td>
-                            <td>{{ $page->published_at ? $page->published_at->format('Y-m-d H:i') : '—' }}</td>
-                            <td>{{ $page->parent?->slug ?? '—' }}</td>
-                            <td>
-                                <a href="{{ route('admin.pages.edit', $page) }}" class="btn-edit">Edit</a>
-                            </td>
+                            <th>ID</th>
+                            <th>Identificador</th>
+                            <th>Tipo de página</th>
+                            <th>Estado</th>
+                            <th>Orden</th>
+                            <th>Fecha de publicación</th>
+                            <th>Página superior</th>
+                            <th>Acciones</th>
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach ($pages as $page)
+                            <tr>
+                                <td>{{ $page->id }}</td>
+                                <td>{{ $page->slug }}</td>
+                                <td>{{ $pageTypeLabels[$page->page_type] ?? $page->page_type }}</td>
+                                <td>{{ $statusLabels[$page->status] ?? $page->status }}</td>
+                                <td>{{ $page->sort_order }}</td>
+                                <td>{{ $page->published_at ? $page->published_at->format('Y-m-d H:i') : '—' }}</td>
+                                <td>{{ $page->parent?->slug ?? '—' }}</td>
+                                <td>
+                                    <a href="{{ route('admin.pages.edit', $page) }}" class="btn-edit">Editar</a>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
 
             <div class="pagination">
                 {{ $pages->links() }}
             </div>
         @else
             <div class="empty">
-                No pages found yet.
+                Todavía no hay páginas registradas.
             </div>
         @endif
     </div>

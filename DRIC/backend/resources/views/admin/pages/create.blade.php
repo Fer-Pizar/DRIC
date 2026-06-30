@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Create Page</title>
+    <title>Panel DRIC - Crear página</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -53,13 +53,41 @@
             display: grid;
             gap: 20px;
         }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 16px;
+            }
+
+            .container {
+                padding: 18px;
+                border-radius: 10px;
+            }
+
+            .header {
+                align-items: stretch;
+                flex-direction: column;
+                gap: 14px;
+            }
+
+            h1 {
+                font-size: 28px;
+                line-height: 1.15;
+            }
+
+            .btn {
+                box-sizing: border-box;
+                text-align: center;
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>Create Page</h1>
-            <a href="{{ route('admin.pages.index') }}" class="btn btn-secondary">Back</a>
+            <h1>Crear página</h1>
+            <a href="{{ route('admin.pages.index') }}" class="btn btn-secondary">Volver</a>
         </div>
 
         <form action="{{ route('admin.pages.store') }}" method="POST">
@@ -68,7 +96,7 @@
             @include('admin.pages._form')
 
             <div>
-                <button type="submit" class="btn btn-primary">Save Page</button>
+                <button type="submit" class="btn btn-primary">Guardar página</button>
             </div>
         </form>
     </div>
