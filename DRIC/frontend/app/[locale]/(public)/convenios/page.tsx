@@ -86,7 +86,7 @@ export default async function ConveniosPage({ params }: Props) {
       <Header />
 
       <section className="relative px-6 pb-28 pt-44">
-        <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.16),transparent_38%),radial-gradient(circle_at_bottom_right,rgba(37,99,235,0.18),transparent_36%)]" />
+        <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(0,55,112,0.16),transparent_38%),radial-gradient(circle_at_bottom_right,rgba(0,55,112,0.18),transparent_36%)]" />
 
         <div className="mx-auto max-w-7xl">
           <div className="grid items-center gap-14 lg:grid-cols-[1.1fr_0.9fr]">
@@ -107,7 +107,7 @@ export default async function ConveniosPage({ params }: Props) {
               <div className="mt-14 flex justify-center">
                 <Link
                   href={`/${locale}/convenios/procedimiento`}
-                  className="inline-flex items-center gap-3 rounded-full border border-cyan-300/30 bg-white/[0.03] px-8 py-4 text-sm font-medium tracking-wide text-cyan-200 backdrop-blur-xl transition-all duration-300 hover:scale-[1.02] hover:border-cyan-300 hover:bg-cyan-300/10 hover:text-white hover:shadow-[0_0_40px_rgba(34,211,238,0.20)]"
+                  className="inline-flex items-center gap-3 rounded-full border border-cyan-300/30 bg-white/[0.03] px-8 py-4 text-sm font-medium tracking-wide text-cyan-200 backdrop-blur-xl transition-all duration-300 hover:scale-[1.02] hover:border-cyan-300 hover:bg-cyan-300/10 hover:text-white hover:shadow-[0_0_40px_rgba(0,55,112,0.20)]"
                 >
                   <span>{t.procedure}</span>
 
@@ -144,7 +144,7 @@ export default async function ConveniosPage({ params }: Props) {
               <Link
                 key={card.title}
                 href={`/${locale}${card.href}`}
-                className="group overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.04] shadow-2xl backdrop-blur transition duration-500 hover:-translate-y-3 hover:scale-[1.02] hover:border-cyan-300/60 hover:shadow-[0_0_55px_rgba(34,211,238,0.18)]"
+                className="group overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.04] shadow-2xl backdrop-blur transition duration-500 hover:-translate-y-3 hover:scale-[1.02] hover:border-cyan-300/60 hover:shadow-[0_0_55px_rgba(0,55,112,0.18)]"
               >
                 <div className="relative h-64 overflow-hidden">
                   <img

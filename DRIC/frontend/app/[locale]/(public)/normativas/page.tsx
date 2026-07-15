@@ -89,7 +89,7 @@ export default async function NormativasPage({ params }: Props) {
       <Header />
 
       <section className="dric-regulations-section relative px-6 pb-28 pt-44">
-        <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_left,rgba(34,211,238,0.18),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(239,68,68,0.12),transparent_34%)]" />
+        <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_left,rgba(0,55,112,0.18),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(227,6,19,0.12),transparent_34%)]" />
 
         <div className="mx-auto max-w-7xl">
           <div className="max-w-4xl">

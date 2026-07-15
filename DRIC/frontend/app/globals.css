@@ -1,6 +1,9 @@
 @import "tailwindcss";
 
 :root {
+  --umss-blue: #003770;
+  --umss-red: #E30613;
+  --umss-white: #FFFFFF;
   --bg: #050816;
   --surface: rgba(255, 255, 255, 0.04);
   --border: rgba(255, 255, 255, 0.10);
@@ -10,6 +13,20 @@
   --violet: #8b5cf6;
 }
 
+@theme {
+  --color-blue-500: #003770;
+  --color-blue-600: #003770;
+  --color-blue-950: #003770;
+  --color-blue-400: #003770;
+  --color-red-50: #FFFFFF;
+  --color-red-200: #E30613;
+  --color-red-300: #E30613;
+  --color-red-400: #E30613;
+  --color-red-500: #E30613;
+  --color-red-600: #E30613;
+  --color-red-700: #E30613;
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -17,7 +34,7 @@ html {
 body {
   background:
     radial-gradient(circle at 30% 20%, rgba(99, 102, 241, 0.28), transparent 30%),
-    radial-gradient(circle at 70% 65%, rgba(34, 211, 238, 0.18), transparent 28%),
+    radial-gradient(circle at 70% 65%, rgba(0, 55, 112, 0.18), transparent 28%),
     linear-gradient(180deg, #050816 0%, #040611 100%);
   color: var(--text);
   font-family: Comfortaa, Helvetica, sans-serif;
@@ -41,7 +58,7 @@ body {
 }
 
 .text-gradient {
-  background: linear-gradient(90deg, #818cf8 0%, #22d3ee 100%);
+  background: linear-gradient(90deg, #003770 0%, #003770 100%);
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
@@ -66,18 +83,18 @@ body {
 .dric-glow-button {
   border: 1px solid rgba(255, 255, 255, 0.18);
   background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(2, 6, 23, 0.95));
-  box-shadow: 0 0 24px rgba(96, 165, 250, 0.25);
+  box-shadow: 0 0 24px rgba(0, 55, 112, 0.25);
   transition: transform 180ms ease, box-shadow 180ms ease;
 }
 
 .dric-glow-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 0 34px rgba(96, 165, 250, 0.42);
+  box-shadow: 0 0 34px rgba(0, 55, 112, 0.42);
 }
 
 .dric-blur-bg {
   background:
-    radial-gradient(circle at 20% 20%, rgba(37, 99, 235, 0.35), transparent 32%),
+    radial-gradient(circle at 20% 20%, rgba(0, 55, 112, 0.35), transparent 32%),
     radial-gradient(circle at 80% 30%, rgba(127, 29, 29, 0.38), transparent 34%),
     radial-gradient(circle at 50% 90%, rgba(15, 23, 42, 0.9), transparent 45%),
     #020617;
@@ -137,8 +154,8 @@ body {
 html[data-theme="dark"] .dric-certificate-page {
   background:
     radial-gradient(circle at 15% 8%, rgba(185, 28, 28, 0.32), transparent 32%),
-    radial-gradient(circle at 86% 15%, rgba(59, 130, 246, 0.35), transparent 34%),
-    radial-gradient(circle at 18% 86%, rgba(14, 165, 233, 0.16), transparent 38%),
+    radial-gradient(circle at 86% 15%, rgba(0, 55, 112, 0.35), transparent 34%),
+    radial-gradient(circle at 18% 86%, rgba(0, 55, 112, 0.16), transparent 38%),
     linear-gradient(135deg, #020617 0%, #07111f 48%, #020617 100%);
   color: #ffffff;
 }
@@ -197,7 +214,7 @@ html[data-theme="dark"] .dric-certificate-glass {
   background:
     linear-gradient(135deg, rgba(255, 255, 255, 0.105), rgba(255, 255, 255, 0.035)),
     radial-gradient(circle at 18% 12%, rgba(255, 255, 255, 0.16), transparent 28%),
-    radial-gradient(circle at 88% 14%, rgba(103, 232, 249, 0.12), transparent 34%);
+    radial-gradient(circle at 88% 14%, rgba(0, 55, 112, 0.12), transparent 34%);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.28),
     inset 0 -1px 0 rgba(255, 255, 255, 0.08),
@@ -258,12 +275,12 @@ html[data-theme="dark"] .dric-certificate-input-shell {
 }
 
 .dric-certificate-input:focus {
-  border-color: rgba(6, 182, 212, 0.7);
+  border-color: rgba(0, 55, 112, 0.7);
   background: rgba(255, 255, 255, 0.7);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.98),
-    0 0 0 4px rgba(6, 182, 212, 0.12),
-    0 14px 35px rgba(6, 182, 212, 0.12);
+    0 0 0 4px rgba(0, 55, 112, 0.12),
+    0 14px 35px rgba(0, 55, 112, 0.12);
 }
 
 html[data-theme="dark"] .dric-certificate-input {
@@ -380,7 +397,7 @@ html[data-theme="dark"] .dric-certificate-table {
   background:
     radial-gradient(ellipse at 18% 12%, rgba(255, 255, 255, 0.34), transparent 22%),
     radial-gradient(ellipse at 82% 18%, rgba(255, 255, 255, 0.16), transparent 28%),
-    radial-gradient(ellipse at 68% 78%, rgba(103, 232, 249, 0.16), transparent 34%),
+    radial-gradient(ellipse at 68% 78%, rgba(0, 55, 112, 0.16), transparent 34%),
     linear-gradient(135deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.035));
   box-shadow:
     inset 0 2px 5px rgba(255, 255, 255, 0.35),
@@ -405,13 +422,13 @@ html[data-theme="dark"] .dric-certificate-table-header {
 }
 
 .dric-certificate-table-header p {
-  color: #0891b2;
-  text-shadow: 0 0 18px rgba(103, 232, 249, 0.32);
+  color: #003770;
+  text-shadow: 0 0 18px rgba(0, 55, 112, 0.32);
 }
 
 html[data-theme="dark"] .dric-certificate-table-header p {
-  color: #a5f3fc;
-  text-shadow: 0 0 22px rgba(103, 232, 249, 0.55);
+  color: #FFFFFF;
+  text-shadow: 0 0 22px rgba(0, 55, 112, 0.55);
 }
 
 .dric-certificate-cell-label {
@@ -613,7 +630,7 @@ html[data-theme="light"] .dric-scholarship-card-title {
 }
 
 html[data-theme="light"] .dric-scholarship-card:hover .dric-scholarship-card-title {
-  color: #67e8f9 !important;
+  color: #003770 !important;
 }
 
 html[data-theme="light"] .dric-projects-hero-glow {
@@ -631,8 +648,8 @@ html[data-theme="light"] .dric-projects-page {
 html[data-theme="light"] .dric-projects-page .dric-projects-hero > .absolute.inset-0,
 html[data-theme="light"] .dric-projects-page .dric-projects-section > .absolute.inset-0 {
   background:
-    radial-gradient(circle at top, rgba(34, 211, 238, 0.16), transparent 38%),
-    radial-gradient(circle at bottom right, rgba(37, 99, 235, 0.18), transparent 36%) !important;
+    radial-gradient(circle at top, rgba(0, 55, 112, 0.16), transparent 38%),
+    radial-gradient(circle at bottom right, rgba(0, 55, 112, 0.18), transparent 36%) !important;
 }
 
 html[data-theme="light"] .dric-projects-page .dric-projects-hero,
@@ -689,7 +706,7 @@ html[data-theme="light"] .dric-projects-page .dric-projects-feature-card [class*
 }
 
 html[data-theme="light"] .dric-projects-page .dric-projects-feature-card svg {
-  color: #b5121b !important;
+  color: #E30613 !important;
 }
 
 html[data-theme="light"] .dric-projects-page .dric-projects-feature-card img {
@@ -700,7 +717,7 @@ html[data-theme="light"] .dric-projects-page .dric-projects-outline-button,
 html[data-theme="light"] .dric-projects-page .dric-projects-card-button {
   background:
     linear-gradient(135deg, rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0.22)) !important;
-  border-color: rgba(34, 211, 238, 0.32) !important;
+  border-color: rgba(0, 55, 112, 0.32) !important;
   color: #0f172a !important;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.82),
@@ -709,8 +726,8 @@ html[data-theme="light"] .dric-projects-page .dric-projects-card-button {
 
 html[data-theme="light"] .dric-projects-page .dric-projects-outline-button:hover,
 html[data-theme="light"] .dric-projects-page .dric-projects-card-button:hover {
-  border-color: rgba(34, 211, 238, 0.72) !important;
-  background: rgba(34, 211, 238, 0.1) !important;
+  border-color: rgba(0, 55, 112, 0.72) !important;
+  background: rgba(0, 55, 112, 0.1) !important;
   color: #0f172a !important;
 }
 
@@ -729,8 +746,8 @@ html[data-theme="light"] .dric-mobility-page {
 html[data-theme="light"] .dric-mobility-page .dric-mobility-hero > .absolute.inset-0,
 html[data-theme="light"] .dric-mobility-page .dric-mobility-section > .absolute.inset-0 {
   background:
-    radial-gradient(circle at top, rgba(34, 211, 238, 0.16), transparent 38%),
-    radial-gradient(circle at bottom right, rgba(37, 99, 235, 0.18), transparent 36%) !important;
+    radial-gradient(circle at top, rgba(0, 55, 112, 0.16), transparent 38%),
+    radial-gradient(circle at bottom right, rgba(0, 55, 112, 0.18), transparent 36%) !important;
 }
 
 html[data-theme="light"] .dric-mobility-page .dric-mobility-hero,
@@ -786,8 +803,8 @@ html[data-theme="light"] .dric-memberships-page {
 html[data-theme="light"] .dric-memberships-page .dric-memberships-hero > .absolute.inset-0,
 html[data-theme="light"] .dric-memberships-page .dric-memberships-section > .absolute.inset-0 {
   background:
-    radial-gradient(circle at top, rgba(34, 211, 238, 0.16), transparent 38%),
-    radial-gradient(circle at bottom right, rgba(37, 99, 235, 0.18), transparent 36%) !important;
+    radial-gradient(circle at top, rgba(0, 55, 112, 0.16), transparent 38%),
+    radial-gradient(circle at bottom right, rgba(0, 55, 112, 0.18), transparent 36%) !important;
 }
 
 html[data-theme="light"] .dric-memberships-page .dric-memberships-hero,
@@ -827,7 +844,7 @@ html[data-theme="light"] .dric-memberships-page .dric-memberships-note {
 }
 
 html[data-theme="light"] .dric-memberships-page .dric-memberships-note a {
-  color: #164194 !important;
+  color: #003770 !important;
 }
 
 html[data-theme="light"] .dric-memberships-page .dric-memberships-card-button {
@@ -852,8 +869,8 @@ html[data-theme="light"] .dric-regulations-page {
 
 html[data-theme="light"] .dric-regulations-page .dric-regulations-section > .absolute.inset-0 {
   background:
-    radial-gradient(circle at top, rgba(34, 211, 238, 0.16), transparent 38%),
-    radial-gradient(circle at bottom right, rgba(37, 99, 235, 0.18), transparent 36%) !important;
+    radial-gradient(circle at top, rgba(0, 55, 112, 0.16), transparent 38%),
+    radial-gradient(circle at bottom right, rgba(0, 55, 112, 0.18), transparent 36%) !important;
 }
 
 html[data-theme="light"] .dric-regulations-page .dric-regulations-section {
@@ -884,7 +901,7 @@ html[data-theme="light"] .dric-regulations-page .dric-regulations-row {
 }
 
 html[data-theme="light"] .dric-regulations-page .dric-regulations-row:hover {
-  background: rgba(34, 211, 238, 0.1) !important;
+  background: rgba(0, 55, 112, 0.1) !important;
 }
 
 html[data-theme="light"] .dric-regulations-page .dric-regulations-input,
@@ -917,8 +934,8 @@ html[data-theme="light"] .dric-reports-page {
 html[data-theme="light"] .dric-reports-page .dric-reports-hero > .absolute.inset-0,
 html[data-theme="light"] .dric-reports-page .dric-reports-section > .absolute.inset-0 {
   background:
-    radial-gradient(circle at top, rgba(34, 211, 238, 0.16), transparent 38%),
-    radial-gradient(circle at bottom right, rgba(37, 99, 235, 0.18), transparent 36%) !important;
+    radial-gradient(circle at top, rgba(0, 55, 112, 0.16), transparent 38%),
+    radial-gradient(circle at bottom right, rgba(0, 55, 112, 0.18), transparent 36%) !important;
 }
 
 html[data-theme="light"] .dric-reports-page .dric-reports-hero,
@@ -969,12 +986,12 @@ html[data-theme="light"] .dric-reports-page .MuiInputBase-input::placeholder {
 
 html[data-theme="light"] .dric-reports-page .dric-reports-cover-accent {
   background:
-    linear-gradient(180deg, rgba(181, 18, 27, 0.72), rgba(181, 18, 27, 0.42)),
+    linear-gradient(180deg, rgba(227, 6, 19, 0.72), rgba(227, 6, 19, 0.42)),
     radial-gradient(circle at 20% 10%, rgba(255, 255, 255, 0.34), transparent 34%) !important;
   border-right: 1px solid rgba(255, 255, 255, 0.36);
   box-shadow:
     inset 1px 0 0 rgba(255, 255, 255, 0.28),
-    18px 0 44px rgba(181, 18, 27, 0.12);
+    18px 0 44px rgba(227, 6, 19, 0.12);
   backdrop-filter: blur(10px) saturate(125%);
 }
 
@@ -993,8 +1010,8 @@ html[data-theme="light"] .dric-contact-page {
 html[data-theme="light"] .dric-contact-page .dric-contact-hero > .absolute.inset-0,
 html[data-theme="light"] .dric-contact-page .dric-contact-section > .absolute.inset-0 {
   background:
-    radial-gradient(circle at top, rgba(34, 211, 238, 0.16), transparent 38%),
-    radial-gradient(circle at bottom right, rgba(37, 99, 235, 0.18), transparent 36%) !important;
+    radial-gradient(circle at top, rgba(0, 55, 112, 0.16), transparent 38%),
+    radial-gradient(circle at bottom right, rgba(0, 55, 112, 0.18), transparent 36%) !important;
 }
 
 html[data-theme="light"] .dric-contact-page .dric-contact-hero,
@@ -1028,19 +1045,19 @@ html[data-theme="light"] .dric-contact-page .dric-contact-map-inner {
 }
 
 html[data-theme="light"] .dric-contact-page .dric-contact-card a:hover {
-  background: rgba(34, 211, 238, 0.1) !important;
+  background: rgba(0, 55, 112, 0.1) !important;
 }
 
 html[data-theme="light"] .dric-contact-page .dric-contact-card [class*="bg-white/10"] {
   background: rgba(255, 255, 255, 0.58) !important;
-  color: #b5121b !important;
+  color: #E30613 !important;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.8),
     0 14px 28px rgba(15, 23, 42, 0.1) !important;
 }
 
 html[data-theme="light"] .dric-contact-page .dric-contact-card .text-cyan-300 {
-  color: #164194 !important;
+  color: #003770 !important;
 }
 
 html[data-theme="light"] .dric-contact-page .dric-contact-map-inner iframe {
@@ -1059,8 +1076,8 @@ html[data-theme="light"] .dric-mobile-menu {
 
 html[data-theme="light"] .dric-mobile-menu-bg {
   background:
-    radial-gradient(circle at top left, rgba(34, 211, 238, 0.16), transparent 36%),
-    radial-gradient(circle at bottom right, rgba(37, 99, 235, 0.18), transparent 38%),
+    radial-gradient(circle at top left, rgba(0, 55, 112, 0.16), transparent 36%),
+    radial-gradient(circle at bottom right, rgba(0, 55, 112, 0.18), transparent 38%),
     radial-gradient(circle at 18% 86%, rgba(255, 205, 224, 0.35), transparent 34%) !important;
 }
 
@@ -1083,7 +1100,7 @@ html[data-theme="light"] .dric-mobile-menu-logo {
 
 html[data-theme="light"] .dric-mobile-menu-brand,
 html[data-theme="light"] .dric-mobile-menu-kicker {
-  color: #b5121b !important;
+  color: #E30613 !important;
 }
 
 html[data-theme="light"] .dric-mobile-menu-subtitle,
@@ -1114,17 +1131,17 @@ html[data-theme="light"] .dric-mobile-menu-link {
 
 html[data-theme="light"] .dric-mobile-menu-close:hover,
 html[data-theme="light"] .dric-mobile-menu-link:hover {
-  border-color: rgba(34, 211, 238, 0.55) !important;
+  border-color: rgba(0, 55, 112, 0.55) !important;
   background:
     linear-gradient(135deg, rgba(255, 255, 255, 0.78), rgba(224, 247, 255, 0.34)) !important;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.94),
     0 26px 62px rgba(15, 23, 42, 0.12),
-    0 0 36px rgba(34, 211, 238, 0.12) !important;
+    0 0 36px rgba(0, 55, 112, 0.12) !important;
 }
 
 html[data-theme="light"] .dric-mobile-menu-link:hover .dric-mobile-menu-link-description {
-  color: #164194 !important;
+  color: #003770 !important;
 }
 
 html[data-theme="light"] .dric-presentation-page {
@@ -1188,8 +1205,8 @@ html[data-theme="light"] .dric-presentation-content .MuiPaper-root {
 }
 
 html[data-theme="light"] .dric-presentation-content .MuiChip-root {
-  background-color: rgba(181, 18, 27, 0.08) !important;
-  color: #b5121b !important;
+  background-color: rgba(227, 6, 19, 0.08) !important;
+  color: #E30613 !important;
 }
 
 .dric-mobile-menu a,

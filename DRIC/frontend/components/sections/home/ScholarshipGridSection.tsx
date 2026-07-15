@@ -47,7 +47,7 @@ export default function ScholarshipGridSection({ section, locale = "es" }: Props
               <Link
                 key={block.id}
                 href={`/${locale}/becas-movilidad/${countrySlug}`}
-                className="dric-scholarship-card group block overflow-hidden rounded-3xl border border-white/10 bg-slate-900 transition duration-500 hover:-translate-y-3 hover:scale-[1.03] hover:border-cyan-300/70 hover:shadow-[0_0_45px_rgba(34,211,238,0.25)]"
+                className="dric-scholarship-card group block overflow-hidden rounded-3xl border border-white/10 bg-slate-900 transition duration-500 hover:-translate-y-3 hover:scale-[1.03] hover:border-cyan-300/70 hover:shadow-[0_0_45px_rgba(0,55,112,0.25)]"
               >
                 <div className="relative overflow-hidden">
                   <img
@@ -72,7 +72,7 @@ export default function ScholarshipGridSection({ section, locale = "es" }: Props
         <div className="mt-16 flex justify-center">
           <Link
             href={`/${locale}/becas-movilidad`}
-            className="group relative inline-flex overflow-hidden rounded-full border border-white/10 bg-gradient-to-r from-[#7A0015] via-[#B5121B] to-[#163E8C] px-10 py-5 text-sm font-semibold uppercase tracking-[0.18em] text-white shadow-[0_15px_40px_rgba(0,0,0,0.35)] transition-all duration-500 hover:scale-105 hover:shadow-[0_25px_60px_rgba(181,18,27,0.4)]"
+            className="group relative inline-flex overflow-hidden rounded-full border border-white/10 bg-gradient-to-r from-[#E30613] via-[#E30613] to-[#003770] px-10 py-5 text-sm font-semibold uppercase tracking-[0.18em] text-white shadow-[0_15px_40px_rgba(0,0,0,0.35)] transition-all duration-500 hover:scale-105 hover:shadow-[0_25px_60px_rgba(227,6,19,0.4)]"
           >
             <span className="relative z-10">Ver todas las convocatorias</span>
             <span className="relative z-10 ml-3 transition-transform duration-300 group-hover:translate-x-1">

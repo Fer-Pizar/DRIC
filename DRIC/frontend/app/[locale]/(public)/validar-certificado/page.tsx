@@ -81,7 +81,7 @@ export default function ValidateCertificatePage() {
       <main className="dric-certificate-page relative min-h-screen overflow-hidden px-4 pb-24 pt-32 sm:px-6 md:pt-36">
         <section className="relative mx-auto max-w-6xl">
           <div className="dric-certificate-glass rounded-3xl p-5 sm:p-8 md:rounded-[2.8rem] md:p-12">
-            <p className="mb-4 max-w-full text-xs font-semibold uppercase leading-relaxed tracking-[0.22em] text-[#dc2626] sm:tracking-[0.38em]">
+            <p className="mb-4 max-w-full text-xs font-semibold uppercase leading-relaxed tracking-[0.22em] text-[#E30613] sm:tracking-[0.38em]">
               {t("eyebrow")}
             </p>
 

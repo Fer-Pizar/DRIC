@@ -35,7 +35,7 @@ export default async function EventosPage({ params }: Props) {
       <Header />
 
       <section className="relative isolate px-5 pb-24 pt-36 md:px-10 lg:px-12">
-        <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(181,18,27,0.40),transparent_34%),radial-gradient(circle_at_top_right,rgba(22,65,148,0.48),transparent_36%),linear-gradient(135deg,#020617_0%,#08111f_45%,#12070a_100%)]" />
+        <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(227,6,19,0.40),transparent_34%),radial-gradient(circle_at_top_right,rgba(0,55,112,0.48),transparent_36%),linear-gradient(135deg,#020617_0%,#08111f_45%,#12070a_100%)]" />
         <div className="absolute left-1/2 top-24 -z-10 h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-white/10 blur-[140px]" />
 
         <div className="mx-auto max-w-7xl">

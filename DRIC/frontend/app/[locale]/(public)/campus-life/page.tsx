@@ -110,7 +110,7 @@ export default async function CampusLifePage({ params }: Props) {
           className="absolute inset-0 -z-30 object-cover"
         />
         <div className="absolute inset-0 -z-20 bg-gradient-to-b from-[#020617]/80 via-[#020617]/62 to-[#020617]" />
-        <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_left,rgba(181,18,27,0.38),transparent_35%),radial-gradient(circle_at_top_right,rgba(22,65,148,0.42),transparent_38%)]" />
+        <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_left,rgba(227,6,19,0.38),transparent_35%),radial-gradient(circle_at_top_right,rgba(0,55,112,0.42),transparent_38%)]" />
 
         <div className="mx-auto grid min-h-[72vh] max-w-7xl gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-end">
           <div>
@@ -168,7 +168,7 @@ export default async function CampusLifePage({ params }: Props) {
                     borderRadius: "999px",
                     px: 4,
                     py: 1.2,
-                    background: "linear-gradient(135deg,#b5121b,#e1242f)",
+                    background: "linear-gradient(135deg,#E30613,#E30613)",
                     textTransform: "none",
                     fontWeight: 800,
                   }}
@@ -182,7 +182,7 @@ export default async function CampusLifePage({ params }: Props) {
       </section>
 
       <section className="relative isolate overflow-hidden px-5 py-16 text-white md:px-10 lg:px-12">
-        <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(181,18,27,0.22),transparent_34%),radial-gradient(circle_at_center_right,rgba(22,65,148,0.30),transparent_38%),linear-gradient(145deg,#020617_0%,#07111f_50%,#12070a_100%)]" />
+        <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(227,6,19,0.22),transparent_34%),radial-gradient(circle_at_center_right,rgba(0,55,112,0.30),transparent_38%),linear-gradient(145deg,#020617_0%,#07111f_50%,#12070a_100%)]" />
         <div className="absolute right-[-9rem] top-16 -z-10 h-[430px] w-[430px] rounded-full bg-cyan-300/10 blur-[135px]" />
 
         <div className="mx-auto max-w-7xl">
@@ -225,7 +225,7 @@ export default async function CampusLifePage({ params }: Props) {
           </div>
 
           <div className="mt-24 border-t border-white/10 pt-16">
-            <p className="text-sm font-bold uppercase tracking-[0.25em] text-[#b5121b]">
+            <p className="text-sm font-bold uppercase tracking-[0.25em] text-[#E30613]">
               {t.basic}
             </p>
             <h2 className="mt-4 max-w-4xl text-5xl font-semibold tracking-[-0.06em]">
@@ -247,7 +247,7 @@ export default async function CampusLifePage({ params }: Props) {
                 </div>
 
                 <div className="flex flex-col justify-center p-8 md:p-12">
-                  <p className="text-sm font-bold uppercase tracking-[0.25em] text-[#164194]">
+                  <p className="text-sm font-bold uppercase tracking-[0.25em] text-[#003770]">
                     {index === 0 ? t.features : index === 1 ? t.strengths : t.other}
                   </p>
                   <h3 className="mt-5 text-4xl font-semibold tracking-[-0.05em]">{section.title}</h3>
@@ -260,7 +260,7 @@ export default async function CampusLifePage({ params }: Props) {
           <div className="mt-20 overflow-hidden rounded-[2.5rem] bg-[#020617] text-white shadow-2xl shadow-slate-300/60">
             <div className="grid gap-0 lg:grid-cols-[0.95fr_1.05fr]">
               <div className="p-8 md:p-12">
-                <p className="text-sm font-bold uppercase tracking-[0.25em] text-[#ef4444]">
+                <p className="text-sm font-bold uppercase tracking-[0.25em] text-[#E30613]">
                   {isEnglish ? "Getting around" : "Recorriendo Cochabamba"}
                 </p>
                 <h2 className="mt-5 text-5xl font-semibold tracking-[-0.06em]">

@@ -19,7 +19,7 @@ export default function Footer() {
 
         <div>
           <h3 className="text-xs font-semibold uppercase tracking-[0.22em] text-white/65">
-            Navigation
+            Navevagción
           </h3>
 
           <nav className="mt-5 grid gap-3 text-sm text-white/50">
@@ -27,12 +27,13 @@ export default function Footer() {
             <Link className="transition hover:text-cyan-300" href="/es/convenios">Convenios</Link>
             <Link className="transition hover:text-cyan-300" href="/es/proyectos">Proyectos</Link>
             <Link className="transition hover:text-cyan-300" href="/es/becas-movilidad">Becas y Movilidad</Link>
+            <Link className="transition hover:text-cyan-300" href="/es/internacionalizacion">Internacionalización</Link>
           </nav>
         </div>
 
         <div>
           <h3 className="text-xs font-semibold uppercase tracking-[0.22em] text-white/65">
-            Contact
+            Contacto
           </h3>
 
           <div className="mt-5 space-y-3 text-sm text-white/50">

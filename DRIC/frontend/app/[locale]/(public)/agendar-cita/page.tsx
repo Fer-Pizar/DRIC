@@ -120,7 +120,7 @@ ${form.message}
       <Header />
 
       <section className="relative px-6 pb-28 pt-44">
-        <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_left,rgba(34,211,238,0.18),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(181,18,27,0.14),transparent_36%)]" />
+        <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_left,rgba(0,55,112,0.18),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(227,6,19,0.14),transparent_36%)]" />
 
         <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
           <div>
@@ -174,7 +174,7 @@ ${form.message}
 
             <button
               type="submit"
-              className="mt-6 w-full rounded-full border border-cyan-300/40 bg-cyan-300/10 px-8 py-4 font-semibold text-cyan-700 shadow-[0_0_40px_rgba(34,211,238,0.18)] transition hover:scale-[1.01] hover:bg-cyan-300/20 dark:text-cyan-200"
+              className="mt-6 w-full rounded-full border border-cyan-300/40 bg-cyan-300/10 px-8 py-4 font-semibold text-cyan-700 shadow-[0_0_40px_rgba(0,55,112,0.18)] transition hover:scale-[1.01] hover:bg-cyan-300/20 dark:text-cyan-200"
             >
               {t.button}
             </button>

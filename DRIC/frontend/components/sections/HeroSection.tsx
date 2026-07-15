@@ -43,7 +43,8 @@ export default function HeroSection({ section }: Props) {
   const tNav = useTranslations("nav");
 
   const badge = tNav("presentation");
-  const primaryHref = `/${locale}${heroBlock?.link_url ?? "/presentacion"}`;
+  const badgeHref = `/${locale}${heroBlock?.link_url ?? "/presentacion"}`;
+  const primaryHref = `/${locale}/convenios`;
   const secondaryHref = `/${locale}${String(heroBlock?.data?.secondaryLink ?? "/becas-movilidad")}`;
 
   const primaryLabel = heroBlock?.cta_label ?? tNav("agreements");
@@ -60,11 +61,11 @@ export default function HeroSection({ section }: Props) {
       />
 
       <div className="absolute inset-0 -z-20 bg-gradient-to-b from-[#020617]/82 via-[#020617]/62 to-[#020617]" />
-      <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_left,rgba(181,18,27,0.38),transparent_35%),radial-gradient(circle_at_top_right,rgba(22,65,148,0.42),transparent_38%)]" />
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_left,rgba(227,6,19,0.38),transparent_35%),radial-gradient(circle_at_top_right,rgba(0,55,112,0.42),transparent_38%)]" />
 
       <div className="dric-home-hero-content mx-auto flex min-h-[68vh] w-full max-w-6xl flex-col items-center justify-center text-center md:min-h-[72vh]">
         <Link
-          href={primaryHref}
+          href={badgeHref}
           className="dric-home-hero-badge mb-6 inline-flex max-w-full items-center justify-center gap-2 rounded-full border border-white/15 bg-black/35 px-4 py-2 text-center text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-white/90 shadow-[0_0_30px_rgba(255,255,255,0.12)] backdrop-blur-md sm:text-xs sm:tracking-[0.22em] md:mb-7 md:px-5"
         >
           <span className="h-1.5 w-1.5 rounded-full bg-cyan-300 shadow-[0_0_12px_rgba(103,232,249,0.9)]" />

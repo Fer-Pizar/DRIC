@@ -61,6 +61,15 @@ export default function RecentAgreementsSection({
                   .replace(/[\u0300-\u036f]/g, "") ??
                 "agreement"
             );
+            const normalizedSlug = slug
+              .toLowerCase()
+              .normalize("NFD")
+              .replace(/[\u0300-\u036f]/g, "");
+            const href =
+              normalizedSlug === "alianzas-estrategicas" ||
+              normalizedSlug === "strategic-partnerships"
+                ? `/${locale}/membresias`
+                : `/${locale}/convenios/${slug}`;
 
             return (
               <motion.div
@@ -74,7 +83,7 @@ export default function RecentAgreementsSection({
                 }}
               >
                 <Link
-                  href={`/${locale}/convenios/${slug}`}
+                  href={href}
                   className="group relative block overflow-hidden rounded-[34px] border border-white/10 bg-white/[0.03] backdrop-blur-xl"
                 >
                   {/* Image */}

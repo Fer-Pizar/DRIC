@@ -24,7 +24,7 @@ export default async function ProyectosPage({ params }: Props) {
       <Header />
 
       <section className="dric-projects-hero relative isolate overflow-hidden px-5 pb-20 pt-36 md:px-10 lg:px-12">
-        <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(180,20,35,0.34),transparent_35%),radial-gradient(circle_at_top_right,rgba(30,70,160,0.32),transparent_36%),linear-gradient(135deg,#020617_0%,#08111f_48%,#12070a_100%)]" />
+        <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(227,6,19,0.34),transparent_35%),radial-gradient(circle_at_top_right,rgba(0,55,112,0.32),transparent_36%),linear-gradient(135deg,#020617_0%,#08111f_48%,#12070a_100%)]" />
         <div className="dric-projects-hero-glow absolute left-1/2 top-20 -z-10 h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-white/10 blur-[130px]" />
 
         <div className="mx-auto max-w-7xl">
@@ -50,10 +50,10 @@ export default async function ProyectosPage({ params }: Props) {
                     borderRadius: "999px",
                     px: 4,
                     py: 1.4,
-                    background: "linear-gradient(135deg,#b5121b,#e1242f)",
+                    background: "linear-gradient(135deg,#E30613,#E30613)",
                     textTransform: "none",
                     fontWeight: 700,
-                    boxShadow: "0 18px 45px rgba(181,18,27,0.35)",
+                    boxShadow: "0 18px 45px rgba(227,6,19,0.35)",
                   }}
                 >
                   Procedimiento UMSS
@@ -107,12 +107,12 @@ export default async function ProyectosPage({ params }: Props) {
       </section>
 
       <section id="internacionales" className="dric-projects-section relative isolate overflow-hidden px-5 py-24 text-white md:px-10 lg:px-12">
-        <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(181,18,27,0.24),transparent_34%),radial-gradient(circle_at_center_right,rgba(22,65,148,0.28),transparent_38%),linear-gradient(145deg,#020617_0%,#07111f_50%,#10070b_100%)]" />
+        <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(227,6,19,0.24),transparent_34%),radial-gradient(circle_at_center_right,rgba(0,55,112,0.28),transparent_38%),linear-gradient(145deg,#020617_0%,#07111f_50%,#10070b_100%)]" />
         <div className="absolute right-[-8rem] top-20 -z-10 h-[430px] w-[430px] rounded-full bg-cyan-300/10 blur-[135px]" />
 
         <div className="mx-auto max-w-7xl">
           <div className="mb-12 max-w-3xl">
-            <p className="text-sm font-bold uppercase tracking-[0.25em] text-[#b5121b]">
+            <p className="text-sm font-bold uppercase tracking-[0.25em] text-[#E30613]">
               Cooperación internacional
             </p>
 
@@ -132,7 +132,7 @@ export default async function ProyectosPage({ params }: Props) {
               "Vinculación con instituciones extranjeras",
             ].map((item) => (
               <div key={item} className="dric-projects-info-card rounded-3xl border border-white/10 bg-white/[0.06] p-7 shadow-2xl shadow-black/20 backdrop-blur-xl">
-                <PublicRoundedIcon sx={{ color: "#b5121b", fontSize: 34 }} />
+                <PublicRoundedIcon sx={{ color: "#E30613", fontSize: 34 }} />
 
                 <h3 className="mt-5 text-xl font-bold">{item}</h3>
 
@@ -146,7 +146,7 @@ export default async function ProyectosPage({ params }: Props) {
       </section>
 
       <section id="apoyo-financiero" className="dric-projects-section relative isolate overflow-hidden px-5 py-24 text-white md:px-10 lg:px-12">
-        <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_right,rgba(181,18,27,0.20),transparent_34%),radial-gradient(circle_at_bottom_left,rgba(22,65,148,0.34),transparent_38%),linear-gradient(145deg,#020617_0%,#07111f_50%,#12070a_100%)]" />
+        <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_right,rgba(227,6,19,0.20),transparent_34%),radial-gradient(circle_at_bottom_left,rgba(0,55,112,0.34),transparent_38%),linear-gradient(145deg,#020617_0%,#07111f_50%,#12070a_100%)]" />
         <div className="absolute left-[-10rem] bottom-[-8rem] -z-10 h-[460px] w-[460px] rounded-full bg-blue-400/10 blur-[140px]" />
 
         <div className="mx-auto max-w-7xl">
@@ -167,7 +167,7 @@ export default async function ProyectosPage({ params }: Props) {
               </div>
 
               <div className="dric-projects-doc-card rounded-[1.5rem] bg-[#020617] p-7 text-white">
-                <PictureAsPdfRoundedIcon sx={{ color: "#ef4444", fontSize: 38 }} />
+                <PictureAsPdfRoundedIcon sx={{ color: "#E30613", fontSize: 38 }} />
 
                 <h3 className="mt-5 text-2xl font-bold">Documentos disponibles</h3>
 

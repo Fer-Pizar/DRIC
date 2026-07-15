@@ -21,7 +21,7 @@ export default async function PresentacionPage({ params }: Props) {
       <Header />
 
       <section className="dric-presentation-content relative isolate px-4 pb-16 pt-32 sm:px-5 md:px-10 md:pb-20 md:pt-36 lg:px-12">
-        <div className="dric-presentation-hero-bg absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(181,18,27,0.42),transparent_34%),radial-gradient(circle_at_top_right,rgba(22,65,148,0.50),transparent_36%),linear-gradient(135deg,#020617_0%,#08111f_45%,#12070a_100%)]" />
+        <div className="dric-presentation-hero-bg absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(227,6,19,0.42),transparent_34%),radial-gradient(circle_at_top_right,rgba(0,55,112,0.50),transparent_36%),linear-gradient(135deg,#020617_0%,#08111f_45%,#12070a_100%)]" />
 
         <div className="mx-auto max-w-7xl text-center md:text-left">
           <p className="mb-5 inline-flex max-w-full rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-white/80 backdrop-blur sm:px-5 sm:tracking-[0.28em]">
@@ -41,7 +41,7 @@ export default async function PresentacionPage({ params }: Props) {
       </section>
 
       <section className="dric-presentation-content relative isolate overflow-hidden px-4 py-14 text-white sm:px-5 md:px-10 md:py-20 lg:px-12">
-        <div className="dric-presentation-body-bg absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(181,18,27,0.22),transparent_34%),radial-gradient(circle_at_center_right,rgba(22,65,148,0.34),transparent_38%),linear-gradient(145deg,#020617_0%,#07111f_48%,#12070a_100%)]" />
+        <div className="dric-presentation-body-bg absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(227,6,19,0.22),transparent_34%),radial-gradient(circle_at_center_right,rgba(0,55,112,0.34),transparent_38%),linear-gradient(145deg,#020617_0%,#07111f_48%,#12070a_100%)]" />
         <div className="absolute left-1/2 top-32 -z-10 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-cyan-300/10 blur-[150px]" />
 
         <div className="mx-auto max-w-7xl">
@@ -57,7 +57,7 @@ export default async function PresentacionPage({ params }: Props) {
             >
               <div className="relative h-[260px] bg-slate-200 sm:h-[340px] md:h-[420px]">
                 <Image
-                  src="/images/presentation/dric-team.jpg"
+                  src="/images/presentation/dric-team.JPG"
                   alt="Equipo DRIC UMSS"
                   fill
                   className="object-cover"
@@ -70,8 +70,8 @@ export default async function PresentacionPage({ params }: Props) {
                 label={isEnglish ? "Institutional history" : "Historia institucional"}
                 sx={{
                   borderRadius: "999px",
-                  backgroundColor: "rgba(181,18,27,0.08)",
-                  color: "#b5121b",
+                  backgroundColor: "rgba(227,6,19,0.08)",
+                  color: "#E30613",
                   fontWeight: 800,
                 }}
               />
@@ -96,13 +96,13 @@ export default async function PresentacionPage({ params }: Props) {
             <InfoCard
               title={isEnglish ? "Mission" : "Misión"}
               text="Promover, coordinar y canalizar la cooperación internacional y nacional, así como la coordinación interinstitucional de la UMSS, en beneficio de los procesos de enseñanza-aprendizaje, investigación científica y tecnológica, interacción social y fortalecimiento institucional."
-              color="#b5121b"
+              color="#E30613"
             />
 
             <InfoCard
               title={isEnglish ? "Purpose" : "Propósito"}
               text="Es propósito fundamental de la Dirección de Relaciones Internacionales y Convenios de la Universidad Mayor de San Simón explorar de manera organizada y sistemática las oportunidades de cooperación internacional y de coordinación interinstitucional."
-              color="#164194"
+              color="#003770"
             />
           </div>
 
@@ -118,7 +118,7 @@ export default async function PresentacionPage({ params }: Props) {
             >
               <div className="relative h-[360px] bg-slate-200 sm:h-[560px] lg:h-[821px]">
                 <Image
-                  src="/images/presentation/director.jpg"
+                  src="/images/presentation/director.JPG"
                   alt="Director DRIC"
                   fill
                   className="object-cover"
@@ -137,7 +137,7 @@ export default async function PresentacionPage({ params }: Props) {
               }}
             >
               <div className="p-5 sm:p-8 md:p-12">
-                <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#b5121b] sm:text-sm sm:tracking-[0.25em]">
+                <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#E30613] sm:text-sm sm:tracking-[0.25em]">
                   {isEnglish ? "Organizational structure" : "Estructura"}
                 </p>
 
@@ -162,11 +162,11 @@ export default async function PresentacionPage({ params }: Props) {
 
                   <div className="mt-5 space-y-3 text-sm text-white/70">
                     <p className="flex min-w-0 items-start gap-2">
-                      <EmailRoundedIcon sx={{ color: "#b5121b", fontSize: 20, flexShrink: 0 }} />
+                      <EmailRoundedIcon sx={{ color: "#E30613", fontSize: 20, flexShrink: 0 }} />
                       <span className="min-w-0 break-words">director-dric@umss.edu.bo</span>
                     </p>
                     <p className="flex min-w-0 items-start gap-2">
-                      <EmailRoundedIcon sx={{ color: "#b5121b", fontSize: 20, flexShrink: 0 }} />
+                      <EmailRoundedIcon sx={{ color: "#E30613", fontSize: 20, flexShrink: 0 }} />
                       <span className="min-w-0 break-words">rrii@umss.edu.bo</span>
                     </p>
                   </div>

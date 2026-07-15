@@ -32,7 +32,7 @@ export default function MobileMenu({ open, onClose }: MobileMenuProps) {
 
   return (
     <div className="dric-mobile-menu fixed inset-0 z-[999] h-dvh overflow-y-auto bg-[#020617]/96 text-white backdrop-blur-2xl xl:overflow-hidden">
-      <div className="dric-mobile-menu-bg pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(181,18,27,0.28),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(22,65,148,0.34),transparent_36%)]" />
+      <div className="dric-mobile-menu-bg pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(227,6,19,0.28),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(0,55,112,0.34),transparent_36%)]" />
 
       <div className="relative mx-auto flex min-h-dvh w-full max-w-6xl flex-col px-5 py-5 sm:px-7 md:px-10 xl:h-dvh xl:min-h-0">
         <div className="dric-mobile-menu-header flex items-center justify-between gap-4 pb-5">
@@ -63,7 +63,7 @@ export default function MobileMenu({ open, onClose }: MobileMenuProps) {
 
         <div className="grid flex-1 items-start gap-5 pt-10 pb-6 lg:grid-cols-[0.88fr_1.12fr] lg:gap-8">
           <div className="dric-mobile-menu-feature rounded-[1.7rem] border border-white/10 bg-white/10 p-6 shadow-2xl shadow-black/20 backdrop-blur-xl lg:block xl:p-7">
-            <p className="dric-mobile-menu-kicker text-xs font-bold uppercase tracking-[0.28em] text-[#ef4444]">
+            <p className="dric-mobile-menu-kicker text-xs font-bold uppercase tracking-[0.28em] text-[#E30613]">
               {locale === "en" ? "Explore DRIC" : "Explora DRIC"}
             </p>
 

@@ -38,7 +38,7 @@ export default async function ContactoPage({ params }: Props) {
       <Header />
 
       <section className="dric-contact-hero relative isolate px-5 pb-20 pt-36 md:px-10 lg:px-12">
-        <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(181,18,27,0.42),transparent_34%),radial-gradient(circle_at_top_right,rgba(22,65,148,0.50),transparent_36%),linear-gradient(135deg,#020617_0%,#08111f_45%,#12070a_100%)]" />
+        <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(227,6,19,0.42),transparent_34%),radial-gradient(circle_at_top_right,rgba(0,55,112,0.50),transparent_36%),linear-gradient(135deg,#020617_0%,#08111f_45%,#12070a_100%)]" />
         <div className="dric-contact-hero-glow absolute left-1/2 top-24 -z-10 h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-white/10 blur-[140px]" />
 
         <div className="mx-auto max-w-7xl">
@@ -57,7 +57,7 @@ export default async function ContactoPage({ params }: Props) {
       </section>
 
       <section className="dric-contact-section relative isolate overflow-hidden px-5 py-20 text-white md:px-10 lg:px-12">
-        <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(181,18,27,0.22),transparent_34%),radial-gradient(circle_at_center_right,rgba(22,65,148,0.30),transparent_38%),linear-gradient(145deg,#020617_0%,#07111f_50%,#12070a_100%)]" />
+        <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(227,6,19,0.22),transparent_34%),radial-gradient(circle_at_center_right,rgba(0,55,112,0.30),transparent_38%),linear-gradient(145deg,#020617_0%,#07111f_50%,#12070a_100%)]" />
         <div className="absolute right-[-9rem] top-16 -z-10 h-[430px] w-[430px] rounded-full bg-cyan-300/10 blur-[135px]" />
 
         <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[0.85fr_1.15fr]">
@@ -92,7 +92,7 @@ export default async function ContactoPage({ params }: Props) {
                   <LocationOnRoundedIcon />
                 </div>
 
-                <p className="text-sm font-bold uppercase tracking-[0.22em] text-[#b5121b]">
+                <p className="text-sm font-bold uppercase tracking-[0.22em] text-[#E30613]">
                   {labels.address}
                 </p>
 
@@ -118,7 +118,7 @@ export default async function ContactoPage({ params }: Props) {
               }}
             >
               <div className="p-8">
-                <PublicRoundedIcon sx={{ color: "#ef4444", fontSize: 38 }} />
+                <PublicRoundedIcon sx={{ color: "#E30613", fontSize: 38 }} />
                 <h2 className="mt-5 text-2xl font-bold tracking-[-0.04em]">
                   {labels.social}
                 </h2>
@@ -143,7 +143,7 @@ export default async function ContactoPage({ params }: Props) {
             <div className="dric-contact-map-inner bg-white/[0.06] p-6 md:p-8">
               <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <div>
-                  <p className="text-sm font-bold uppercase tracking-[0.25em] text-[#164194]">
+                  <p className="text-sm font-bold uppercase tracking-[0.25em] text-[#003770]">
                     UMSS · Cochabamba
                   </p>
                   <h2 className="mt-3 text-3xl font-semibold tracking-[-0.04em]">
@@ -160,10 +160,10 @@ export default async function ContactoPage({ params }: Props) {
                     borderRadius: "999px",
                     px: 3,
                     py: 1.2,
-                    background: "linear-gradient(135deg,#b5121b,#e1242f)",
+                    background: "linear-gradient(135deg,#E30613,#E30613)",
                     textTransform: "none",
                     fontWeight: 800,
-                    boxShadow: "0 14px 34px rgba(181,18,27,0.22)",
+                    boxShadow: "0 14px 34px rgba(227,6,19,0.22)",
                   }}
                 >
                   {labels.openMap}
@@ -217,7 +217,7 @@ function ContactCard({
           {icon}
         </div>
 
-        <p className="text-sm font-bold uppercase tracking-[0.22em] text-[#b5121b]">
+        <p className="text-sm font-bold uppercase tracking-[0.22em] text-[#E30613]">
           {title}
         </p>
 

@@ -56,7 +56,7 @@ export default async function MembresiasPage({ params }: Props) {
       <Header />
 
       <section className="dric-memberships-hero relative isolate px-5 pb-20 pt-36 md:px-10 lg:px-12">
-        <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(181,18,27,0.42),transparent_34%),radial-gradient(circle_at_top_right,rgba(22,65,148,0.48),transparent_36%),linear-gradient(135deg,#020617_0%,#08111f_45%,#12070a_100%)]" />
+        <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(227,6,19,0.42),transparent_34%),radial-gradient(circle_at_top_right,rgba(0,55,112,0.48),transparent_36%),linear-gradient(135deg,#020617_0%,#08111f_45%,#12070a_100%)]" />
         <div className="dric-memberships-hero-glow absolute left-1/2 top-24 -z-10 h-[430px] w-[430px] -translate-x-1/2 rounded-full bg-white/10 blur-[140px]" />
 
         <div className="mx-auto max-w-7xl">
@@ -81,13 +81,13 @@ export default async function MembresiasPage({ params }: Props) {
       </section>
 
       <section className="dric-memberships-section relative isolate overflow-hidden px-5 py-24 text-white md:px-10 lg:px-12">
-        <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(181,18,27,0.22),transparent_34%),radial-gradient(circle_at_center_right,rgba(22,65,148,0.30),transparent_38%),linear-gradient(145deg,#020617_0%,#07111f_50%,#12070a_100%)]" />
+        <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(227,6,19,0.22),transparent_34%),radial-gradient(circle_at_center_right,rgba(0,55,112,0.30),transparent_38%),linear-gradient(145deg,#020617_0%,#07111f_50%,#12070a_100%)]" />
         <div className="absolute right-[-9rem] top-16 -z-10 h-[430px] w-[430px] rounded-full bg-cyan-300/10 blur-[135px]" />
 
         <div className="mx-auto max-w-7xl">
           <div className="mb-14 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
             <div>
-              <p className="text-sm font-bold uppercase tracking-[0.25em] text-[#b5121b]">
+              <p className="text-sm font-bold uppercase tracking-[0.25em] text-[#E30613]">
                 {copy.kicker}
               </p>
 
@@ -116,9 +116,9 @@ export default async function MembresiasPage({ params }: Props) {
                 }}
               >
                 <div className="dric-memberships-card-inner group relative min-h-[290px] bg-white/[0.06] p-8 transition duration-500 hover:-translate-y-1">
-                  <div className="absolute right-6 top-6 h-20 w-20 rounded-full bg-[#164194]/10 blur-2xl" />
+                  <div className="absolute right-6 top-6 h-20 w-20 rounded-full bg-[#003770]/10 blur-2xl" />
                   <div
-                    className={`absolute left-0 h-1 w-full bg-gradient-to-r from-[#b5121b] via-[#164194] to-[#ffffff] ${
+                    className={`absolute left-0 h-1 w-full bg-gradient-to-r from-[#E30613] via-[#003770] to-[#ffffff] ${
                       item.name === "PADOR" ? "bottom-2" : "bottom-0"
                     }`}
                   />
@@ -168,13 +168,13 @@ export default async function MembresiasPage({ params }: Props) {
                           borderRadius: "999px",
                           px: 3,
                           py: 1.1,
-                          color: "#b5121b",
-                          borderColor: "rgba(181,18,27,0.35)",
+                          color: "#E30613",
+                          borderColor: "rgba(227,6,19,0.35)",
                           textTransform: "none",
                           fontWeight: 800,
                           "&:hover": {
-                            borderColor: "#b5121b",
-                            backgroundColor: "rgba(181,18,27,0.06)",
+                            borderColor: "#E30613",
+                            backgroundColor: "rgba(227,6,19,0.06)",
                           },
                         }}
                       >
@@ -188,7 +188,7 @@ export default async function MembresiasPage({ params }: Props) {
           </div>
 
           <div className="dric-memberships-info-panel mt-16 rounded-[2rem] border border-white/10 bg-white/[0.06] p-8 text-white shadow-2xl shadow-black/25 backdrop-blur-xl md:p-12">
-            <PublicRoundedIcon sx={{ color: "#ef4444", fontSize: 42 }} />
+            <PublicRoundedIcon sx={{ color: "#E30613", fontSize: 42 }} />
 
             <h2 className="mt-5 text-3xl font-semibold tracking-[-0.04em]">
               {copy.infoTitle}

@@ -75,7 +75,7 @@ export default async function InformesGestionPage({ params }: Props) {
       <Header />
 
       <section className="dric-reports-hero relative isolate px-5 pb-20 pt-36 md:px-10 lg:px-12">
-        <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(181,18,27,0.40),transparent_34%),radial-gradient(circle_at_top_right,rgba(22,65,148,0.48),transparent_36%),linear-gradient(135deg,#020617_0%,#08111f_45%,#12070a_100%)]" />
+        <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(227,6,19,0.40),transparent_34%),radial-gradient(circle_at_top_right,rgba(0,55,112,0.48),transparent_36%),linear-gradient(135deg,#020617_0%,#08111f_45%,#12070a_100%)]" />
         <div className="dric-reports-hero-glow absolute bottom-0 left-1/2 -z-10 h-[360px] w-[560px] -translate-x-1/2 rounded-full bg-white/10 blur-[150px]" />
 
         <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
@@ -136,13 +136,13 @@ export default async function InformesGestionPage({ params }: Props) {
       </section>
 
       <section className="dric-reports-section relative isolate overflow-hidden px-5 py-20 text-white md:px-10 lg:px-12">
-        <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(181,18,27,0.22),transparent_34%),radial-gradient(circle_at_center_right,rgba(22,65,148,0.30),transparent_38%),linear-gradient(145deg,#020617_0%,#07111f_50%,#12070a_100%)]" />
+        <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(227,6,19,0.22),transparent_34%),radial-gradient(circle_at_center_right,rgba(0,55,112,0.30),transparent_38%),linear-gradient(145deg,#020617_0%,#07111f_50%,#12070a_100%)]" />
         <div className="absolute right-[-9rem] top-16 -z-10 h-[430px] w-[430px] rounded-full bg-cyan-300/10 blur-[135px]" />
 
         <div className="mx-auto max-w-7xl">
           <div className="mb-12 grid gap-6 lg:grid-cols-[1fr_0.8fr] lg:items-end">
             <div>
-              <p className="text-sm font-bold uppercase tracking-[0.25em] text-[#b5121b]">
+              <p className="text-sm font-bold uppercase tracking-[0.25em] text-[#E30613]">
                 {t.exploreLabel}
               </p>
 
@@ -159,7 +159,7 @@ export default async function InformesGestionPage({ params }: Props) {
                 slotProps={{
                   input: {
                     startAdornment: (
-                      <SearchRoundedIcon sx={{ mr: 1.5, color: "#164194" }} />
+                      <SearchRoundedIcon sx={{ mr: 1.5, color: "#003770" }} />
                     ),
                   },
                 }}
@@ -169,7 +169,7 @@ export default async function InformesGestionPage({ params }: Props) {
                     backgroundColor: "#ffffff",
                     "& fieldset": { borderColor: "transparent" },
                     "&:hover fieldset": { borderColor: "transparent" },
-                    "&.Mui-focused fieldset": { borderColor: "#164194" },
+                    "&.Mui-focused fieldset": { borderColor: "#003770" },
                   },
                 }}
               />
@@ -191,8 +191,8 @@ export default async function InformesGestionPage({ params }: Props) {
                 }}
               >
                 <div className="relative h-48 overflow-hidden bg-[#020617] p-7 text-white">
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(181,18,27,0.6),transparent_36%),radial-gradient(circle_at_bottom_right,rgba(22,65,148,0.7),transparent_40%)]" />
-                  <div className="dric-reports-cover-accent absolute left-0 top-0 h-full w-24 bg-[#b5121b]" />
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(227,6,19,0.6),transparent_36%),radial-gradient(circle_at_bottom_right,rgba(0,55,112,0.7),transparent_40%)]" />
+                  <div className="dric-reports-cover-accent absolute left-0 top-0 h-full w-24 bg-[#E30613]" />
 
                   <div className="relative">
                     <p className="text-xs font-bold uppercase tracking-[0.24em] text-white/65">
@@ -206,7 +206,7 @@ export default async function InformesGestionPage({ params }: Props) {
                 </div>
 
                 <div className="dric-reports-card-body p-7">
-                  <p className="text-sm font-bold uppercase tracking-[0.22em] text-[#164194]">
+                  <p className="text-sm font-bold uppercase tracking-[0.22em] text-[#003770]">
                     {t.yearLabel} {report.year}
                   </p>
 
@@ -215,7 +215,7 @@ export default async function InformesGestionPage({ params }: Props) {
                   </h3>
 
                   <div className="mt-5 flex items-center gap-2 text-sm font-semibold text-white/58">
-                    <CalendarMonthRoundedIcon sx={{ fontSize: 19, color: "#b5121b" }} />
+                    <CalendarMonthRoundedIcon sx={{ fontSize: 19, color: "#E30613" }} />
                     {report.date}
                   </div>
 
@@ -227,10 +227,10 @@ export default async function InformesGestionPage({ params }: Props) {
                         borderRadius: "999px",
                         px: 3,
                         py: 1.1,
-                        background: "linear-gradient(135deg,#b5121b,#e1242f)",
+                        background: "linear-gradient(135deg,#E30613,#E30613)",
                         textTransform: "none",
                         fontWeight: 800,
-                        boxShadow: "0 14px 34px rgba(181,18,27,0.22)",
+                        boxShadow: "0 14px 34px rgba(227,6,19,0.22)",
                       }}
                     >
                       {t.downloadLabel}

@@ -61,7 +61,7 @@ class PageSeeder extends Seeder
                 'updated_by' => null,
             ],
             [
-                'slug' => 'membresias',
+                'slug' => 'internacionalizacion',
                 'page_type' => 'static',
                 'status' => 'draft',
                 'published_at' => null,
@@ -71,7 +71,7 @@ class PageSeeder extends Seeder
                 'updated_by' => null,
             ],
             [
-                'slug' => 'eventos',
+                'slug' => 'membresias',
                 'page_type' => 'static',
                 'status' => 'draft',
                 'published_at' => null,
@@ -81,7 +81,7 @@ class PageSeeder extends Seeder
                 'updated_by' => null,
             ],
             [
-                'slug' => 'normativas',
+                'slug' => 'eventos',
                 'page_type' => 'static',
                 'status' => 'draft',
                 'published_at' => null,
@@ -91,7 +91,7 @@ class PageSeeder extends Seeder
                 'updated_by' => null,
             ],
             [
-                'slug' => 'informes-gestion',
+                'slug' => 'normativas',
                 'page_type' => 'static',
                 'status' => 'draft',
                 'published_at' => null,
@@ -101,7 +101,7 @@ class PageSeeder extends Seeder
                 'updated_by' => null,
             ],
             [
-                'slug' => 'contacto',
+                'slug' => 'informes-gestion',
                 'page_type' => 'static',
                 'status' => 'draft',
                 'published_at' => null,
@@ -111,11 +111,21 @@ class PageSeeder extends Seeder
                 'updated_by' => null,
             ],
             [
-                'slug' => 'campus-life',
+                'slug' => 'contacto',
                 'page_type' => 'static',
                 'status' => 'draft',
                 'published_at' => null,
                 'sort_order' => 11,
+                'parent_id' => null,
+                'created_by' => null,
+                'updated_by' => null,
+            ],
+            [
+                'slug' => 'campus-life',
+                'page_type' => 'static',
+                'status' => 'draft',
+                'published_at' => null,
+                'sort_order' => 12,
                 'parent_id' => null,
                 'created_by' => null,
                 'updated_by' => null,
