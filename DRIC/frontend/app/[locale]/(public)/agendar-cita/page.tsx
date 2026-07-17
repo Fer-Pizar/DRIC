@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 
@@ -59,9 +59,11 @@ export default function AgendarCitaPage({ params }: Props) {
   const [locale, setLocale] = useState<"es" | "en">("es");
   const t = content[locale];
 
-  params.then(({ locale }) => {
-    if (locale === "en" && t !== content.en) setLocale("en");
-  });
+  useEffect(() => {
+    params.then(({ locale }) => {
+      setLocale(locale === "en" ? "en" : "es");
+    });
+  }, [params]);
 
   const [form, setForm] = useState({
     name: "",
@@ -116,28 +118,28 @@ ${form.message}
   };
 
   return (
-    <main className="min-h-screen overflow-x-hidden bg-white text-slate-950 dark:bg-[#020617] dark:text-white">
+    <main className="dric-theme-page dric-appointment-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
       <Header />
 
-      <section className="relative px-6 pb-28 pt-44">
-        <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_left,rgba(0,55,112,0.18),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(227,6,19,0.14),transparent_36%)]" />
+      <section className="dric-appointment-section relative isolate px-4 pb-20 pt-36 sm:px-6 sm:pb-24 sm:pt-40 md:pb-28 md:pt-44">
+        <div className="dric-appointment-glow absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_left,rgba(0,55,112,0.18),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(227,6,19,0.14),transparent_36%)]" />
 
-        <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
-          <div>
-            <p className="text-sm uppercase tracking-[0.35em] text-cyan-500 dark:text-cyan-300">
+        <div className="mx-auto grid max-w-7xl gap-8 sm:gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-12">
+          <div className="min-w-0">
+            <p className="text-xs uppercase tracking-[0.22em] text-[#E30613] sm:text-sm sm:tracking-[0.35em]">
               {t.eyebrow}
             </p>
 
-            <h1 className="mt-6 text-5xl font-light leading-tight tracking-wide md:text-7xl">
+            <h1 className="mt-5 max-w-full break-words text-[2.7rem] font-light leading-[1.08] tracking-[-0.025em] sm:mt-6 sm:text-5xl sm:leading-tight sm:tracking-wide md:text-6xl lg:text-7xl">
               {t.title}
             </h1>
 
-            <p className="mt-8 max-w-2xl text-lg leading-relaxed text-slate-600 dark:text-white/60">
+            <p className="dric-appointment-muted mt-6 max-w-2xl text-base leading-8 text-white/60 sm:mt-8 sm:text-lg sm:leading-relaxed">
               {t.intro}
             </p>
 
-            <div className="mt-10 rounded-3xl border border-slate-200 bg-white/70 p-6 shadow-2xl backdrop-blur-xl dark:border-white/10 dark:bg-white/[0.04]">
-              <p className="text-sm leading-7 text-slate-600 dark:text-white/60">
+            <div className="dric-appointment-note mt-8 rounded-3xl border border-white/10 bg-white/[0.04] p-5 shadow-2xl backdrop-blur-xl sm:mt-10 sm:p-6">
+              <p className="dric-appointment-muted text-sm leading-7 text-white/60 sm:text-base">
                 {t.note}
               </p>
             </div>
@@ -145,22 +147,22 @@ ${form.message}
 
           <form
             onSubmit={handleSubmit}
-            className="rounded-[2rem] border border-slate-200 bg-white/80 p-6 shadow-2xl backdrop-blur-xl dark:border-white/10 dark:bg-white/[0.05] md:p-8"
+            className="dric-appointment-form min-w-0 rounded-[1.75rem] border border-white/10 bg-white/[0.05] p-4 shadow-2xl backdrop-blur-xl sm:rounded-[2rem] sm:p-6 md:p-8"
           >
-            <div className="grid gap-5 md:grid-cols-2">
-              <input required placeholder={t.name} value={form.name} onChange={(e) => updateField("name", e.target.value)} className="rounded-2xl border border-slate-200 bg-white px-5 py-4 outline-none focus:border-cyan-400 dark:border-white/10 dark:bg-white/[0.04]" />
-              <input required type="email" placeholder={t.email} value={form.email} onChange={(e) => updateField("email", e.target.value)} className="rounded-2xl border border-slate-200 bg-white px-5 py-4 outline-none focus:border-cyan-400 dark:border-white/10 dark:bg-white/[0.04]" />
-              <input placeholder={t.phone} value={form.phone} onChange={(e) => updateField("phone", e.target.value)} className="rounded-2xl border border-slate-200 bg-white px-5 py-4 outline-none focus:border-cyan-400 dark:border-white/10 dark:bg-white/[0.04]" />
+            <div className="grid min-w-0 gap-4 sm:gap-5 md:grid-cols-2">
+              <input required placeholder={t.name} value={form.name} onChange={(e) => updateField("name", e.target.value)} className="dric-appointment-field min-w-0 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3.5 text-base outline-none focus:border-[#003770] sm:px-5 sm:py-4" />
+              <input required type="email" placeholder={t.email} value={form.email} onChange={(e) => updateField("email", e.target.value)} className="dric-appointment-field min-w-0 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3.5 text-base outline-none focus:border-[#003770] sm:px-5 sm:py-4" />
+              <input placeholder={t.phone} value={form.phone} onChange={(e) => updateField("phone", e.target.value)} className="dric-appointment-field min-w-0 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3.5 text-base outline-none focus:border-[#003770] sm:px-5 sm:py-4" />
 
-              <select required value={form.topic} onChange={(e) => updateField("topic", e.target.value)} className="rounded-2xl border border-slate-200 bg-white px-5 py-4 outline-none focus:border-cyan-400 dark:border-white/10 dark:bg-[#071126]">
+              <select required value={form.topic} onChange={(e) => updateField("topic", e.target.value)} className="dric-appointment-field min-w-0 rounded-2xl border border-white/10 bg-[#071126] px-4 py-3.5 text-base outline-none focus:border-[#003770] sm:px-5 sm:py-4">
                 <option value="">{t.topic}</option>
                 {t.topics.map((topic) => (
                   <option key={topic}>{topic}</option>
                 ))}
               </select>
 
-              <input type="date" value={form.date} onChange={(e) => updateField("date", e.target.value)} className="rounded-2xl border border-slate-200 bg-white px-5 py-4 outline-none focus:border-cyan-400 dark:border-white/10 dark:bg-white/[0.04]" />
-              <input type="time" value={form.time} onChange={(e) => updateField("time", e.target.value)} className="rounded-2xl border border-slate-200 bg-white px-5 py-4 outline-none focus:border-cyan-400 dark:border-white/10 dark:bg-white/[0.04]" />
+              <input type="date" value={form.date} onChange={(e) => updateField("date", e.target.value)} className="dric-appointment-field min-w-0 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3.5 text-base outline-none focus:border-[#003770] sm:px-5 sm:py-4" />
+              <input type="time" value={form.time} onChange={(e) => updateField("time", e.target.value)} className="dric-appointment-field min-w-0 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3.5 text-base outline-none focus:border-[#003770] sm:px-5 sm:py-4" />
             </div>
 
             <textarea
@@ -169,12 +171,12 @@ ${form.message}
               value={form.message}
               onChange={(e) => updateField("message", e.target.value)}
               rows={6}
-              className="mt-5 w-full rounded-2xl border border-slate-200 bg-white px-5 py-4 outline-none focus:border-cyan-400 dark:border-white/10 dark:bg-white/[0.04]"
+              className="dric-appointment-field mt-4 min-h-44 w-full min-w-0 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3.5 text-base outline-none focus:border-[#003770] sm:mt-5 sm:px-5 sm:py-4"
             />
 
             <button
               type="submit"
-              className="mt-6 w-full rounded-full border border-cyan-300/40 bg-cyan-300/10 px-8 py-4 font-semibold text-cyan-700 shadow-[0_0_40px_rgba(0,55,112,0.18)] transition hover:scale-[1.01] hover:bg-cyan-300/20 dark:text-cyan-200"
+              className="dric-appointment-submit mt-5 w-full rounded-full border border-white/20 bg-[#003770] px-6 py-4 text-base font-semibold text-white shadow-[0_0_40px_rgba(0,55,112,0.18)] transition hover:scale-[1.01] hover:bg-[#E30613] sm:mt-6 sm:px-8 sm:text-lg"
             >
               {t.button}
             </button>

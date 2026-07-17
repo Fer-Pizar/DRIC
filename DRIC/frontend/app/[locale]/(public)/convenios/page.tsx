@@ -24,21 +24,21 @@ const content = {
         description:
           "Acuerdos institucionales supervisados por la DRIC para fortalecer la cooperación académica, científica y administrativa.",
         href: "/convenios/umss",
-        image: "/images/agreements/international-flags.jpg",
+        image: "/images/agreements/convenios-umss.png",
       },
       {
         title: "Otros convenios suscritos",
         description:
           "Convenios suscritos con instituciones que no han sido revisados directamente por la DRIC.",
         href: "/convenios/otros",
-        image: "/images/campus-life/uni-view.png",
+        image: "/images/agreements/convenios.png",
       },
       {
         title: "Convenios CEUB y Gobierno de Bolivia",
         description:
           "Acuerdos suscritos por el Gobierno de Bolivia y el Comité Ejecutivo de la Universidad Boliviana.",
         href: "/convenios/ceub-gobierno",
-        image: "/images/campus-life/faculties.png",
+        image: "/images/agreements/ceub.jpg",
       },
     ],
   },
@@ -57,21 +57,21 @@ const content = {
         description:
           "Institutional agreements supervised by DRIC to strengthen academic, scientific, and administrative cooperation.",
         href: "/convenios/umss",
-        image: "/images/agreements/international-flags.jpg",
+        image: "/images/agreements/convenios-umss.png",
       },
       {
         title: "Other signed agreements",
         description:
           "Agreements signed with institutions that have not been directly reviewed by DRIC.",
         href: "/convenios/otros",
-        image: "/images/campus-life/uni-view.png",
+        image: "/images/agreements/convenios.png",
       },
       {
         title: "CEUB and Government of Bolivia Agreements",
         description:
           "Agreements signed by the Government of Bolivia and the Executive Committee of the Bolivian University.",
         href: "/convenios/ceub-gobierno",
-        image: "/images/campus-life/faculties.png",
+        image: "/images/agreements/ceub.jpg",
       },
     ],
   },

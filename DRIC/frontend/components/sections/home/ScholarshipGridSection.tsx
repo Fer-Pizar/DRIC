@@ -72,9 +72,11 @@ export default function ScholarshipGridSection({ section, locale = "es" }: Props
         <div className="mt-16 flex justify-center">
           <Link
             href={`/${locale}/becas-movilidad`}
-            className="group relative inline-flex overflow-hidden rounded-full border border-white/10 bg-gradient-to-r from-[#E30613] via-[#E30613] to-[#003770] px-10 py-5 text-sm font-semibold uppercase tracking-[0.18em] text-white shadow-[0_15px_40px_rgba(0,0,0,0.35)] transition-all duration-500 hover:scale-105 hover:shadow-[0_25px_60px_rgba(227,6,19,0.4)]"
+            className="group relative inline-flex overflow-hidden rounded-full border border-white/10 bg-[#E30613] px-10 py-5 text-sm font-semibold uppercase tracking-[0.18em] text-white shadow-[0_15px_40px_rgba(0,0,0,0.35)] transition-all duration-500 hover:scale-105 hover:bg-[#003770] hover:shadow-[0_25px_60px_rgba(227,6,19,0.4)]"
           >
-            <span className="relative z-10">Ver todas las convocatorias</span>
+            <span className="relative z-10">
+              {locale === "en" ? "View all open calls" : "Ver todas las convocatorias"}
+            </span>
             <span className="relative z-10 ml-3 transition-transform duration-300 group-hover:translate-x-1">
               →
             </span>

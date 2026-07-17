@@ -32,7 +32,7 @@ export default function FinalCtaSection({ section, locale = "es" }: Props) {
           <Link
             key={block.id}
             href={getLocalizedHref(block.link_url, locale)}
-            className="inline-flex max-w-full justify-center rounded-full bg-blue-600 px-6 py-3 text-center text-base font-semibold sm:px-8 sm:py-4 sm:text-lg"
+            className="dric-final-cta-button inline-flex max-w-full justify-center rounded-full bg-blue-600 px-6 py-3 text-center text-base font-semibold sm:px-8 sm:py-4 sm:text-lg"
           >
             {block.cta_label}
           </Link>
