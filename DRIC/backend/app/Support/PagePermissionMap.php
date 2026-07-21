@@ -16,6 +16,7 @@ class PagePermissionMap
             'normativas' => 'editar.normativas',
             'proyectos' => 'editar.proyectos',
             'becas-movilidad' => 'editar.becas_movilidad',
+            'becas' => 'editar.becas_movilidad',
             'internacionalizacion' => 'editar.internacionalizacion',
             'membresias' => 'editar.membresias',
             'inicio' => 'editar.inicio',

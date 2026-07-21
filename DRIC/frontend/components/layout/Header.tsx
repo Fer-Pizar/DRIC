@@ -54,7 +54,7 @@ export default function Header() {
   return (
     <>
       <header className="fixed inset-x-0 top-0 z-50 px-4 md:px-6">
-        <div className="mx-auto mt-4 flex w-full max-w-7xl items-center justify-between rounded-full border border-white/10 bg-[#020617]/75 px-4 py-2.5 shadow-2xl shadow-black/25 backdrop-blur-xl sm:px-5 sm:py-3 md:px-7">
+        <div className="mx-auto mt-4 flex w-full max-w-7xl items-center justify-between rounded-full border border-white/10 bg-[#001935]/75 px-4 py-2.5 shadow-2xl shadow-black/25 backdrop-blur-xl sm:px-5 sm:py-3 md:px-7">
           <Link href={homePath} onClick={handleLogoClick} className="flex items-center">
             <Image
               src="/images/brand/DRIC_logo.png"

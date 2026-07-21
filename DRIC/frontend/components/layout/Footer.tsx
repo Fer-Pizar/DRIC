@@ -30,7 +30,7 @@ export default function Footer() {
 
   return (
     <footer
-      style={{ backgroundColor: "#001c3a" }}
+      style={{ backgroundColor: "#001935" }}
       className="px-6 py-10 font-[Comfortaa] text-white sm:px-10 sm:py-5 md:px-14 lg:px-20"
     >
       <div className="mx-auto flex max-w-7xl flex-col">

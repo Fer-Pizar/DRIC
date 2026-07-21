@@ -639,6 +639,53 @@ html[data-theme="light"] .dric-scholarship-card:hover .dric-scholarship-card-tit
   color: #003770 !important;
 }
 
+html[data-theme="light"] .dric-scholarship-index-page,
+html[data-theme="light"] .dric-scholarship-detail-page {
+  background:
+    radial-gradient(circle at 18% 8%, rgba(255, 255, 255, 0.96), transparent 28%),
+    radial-gradient(circle at 82% 12%, rgba(230, 230, 230, 0.72), transparent 32%),
+    linear-gradient(135deg, #f9fafb 0%, #e8edf5 46%, #f7f9fc 100%) !important;
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-scholarship-index-page section,
+html[data-theme="light"] .dric-scholarship-detail-page section {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-scholarship-index-page section > .absolute.inset-0,
+html[data-theme="light"] .dric-scholarship-detail-page section > .absolute.inset-0 {
+  background:
+    radial-gradient(circle at 16% 12%, rgba(255, 255, 255, 0.95), transparent 30%),
+    radial-gradient(circle at 84% 16%, rgba(203, 213, 225, 0.82), transparent 34%),
+    linear-gradient(135deg, #f8fafc 0%, #e5e7eb 52%, #f1f5f9 100%) !important;
+}
+
+html[data-theme="light"] .dric-scholarship-index-page .dric-scholarship-option,
+html[data-theme="light"] .dric-scholarship-detail-page [class*="bg-white/"] {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.68), rgba(255, 255, 255, 0.26)) !important;
+  color: #0f172a !important;
+  border-color: rgba(255, 255, 255, 0.82) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 22px 56px rgba(15, 23, 42, 0.1) !important;
+}
+
+html[data-theme="light"] .dric-scholarship-index-page h1,
+html[data-theme="light"] .dric-scholarship-index-page h2,
+html[data-theme="light"] .dric-scholarship-detail-page h1,
+html[data-theme="light"] .dric-scholarship-detail-page h2 {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-scholarship-index-page p,
+html[data-theme="light"] .dric-scholarship-index-page span,
+html[data-theme="light"] .dric-scholarship-detail-page p,
+html[data-theme="light"] .dric-scholarship-detail-page span {
+  color: rgba(51, 65, 85, 0.78) !important;
+}
+
 html[data-theme="light"] .dric-projects-hero-glow {
   opacity: 0;
 }
