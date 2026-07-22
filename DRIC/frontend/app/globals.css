@@ -511,6 +511,37 @@ html[data-theme="light"] .dric-theme-page > section [class*="placeholder:text-wh
   color: rgba(100, 116, 139, 0.62) !important;
 }
 
+html[data-theme="light"] .dric-site-header .dric-site-header-shell {
+  background: rgba(0, 25, 53, 0.88) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25) !important;
+}
+
+html[data-theme="light"] .dric-site-header .dric-site-header-button {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="light"] .dric-site-header .dric-site-header-button:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+}
+
+html[data-theme="light"] .dric-site-footer,
+html[data-theme="light"] .dric-site-footer h2,
+html[data-theme="light"] .dric-site-footer p,
+html[data-theme="light"] .dric-site-footer address {
+  color: #ffffff !important;
+}
+
+html[data-theme="light"] .dric-site-footer {
+  background-color: #001935 !important;
+}
+
+html[data-theme="light"] .dric-site-footer .dric-site-footer-muted {
+  color: rgba(255, 255, 255, 0.68) !important;
+}
+
 html[data-theme="light"] .dric-theme-page .MuiPaper-root {
   background:
     linear-gradient(135deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.34)) !important;
@@ -661,6 +692,10 @@ html[data-theme="light"] .dric-scholarship-detail-page section > .absolute.inset
     linear-gradient(135deg, #f8fafc 0%, #e5e7eb 52%, #f1f5f9 100%) !important;
 }
 
+html[data-theme="light"] .dric-scholarship-index-page .dric-scholarship-index-hero-glow {
+  display: none !important;
+}
+
 html[data-theme="light"] .dric-scholarship-index-page .dric-scholarship-option,
 html[data-theme="light"] .dric-scholarship-detail-page [class*="bg-white/"] {
   background:
@@ -684,6 +719,142 @@ html[data-theme="light"] .dric-scholarship-index-page span,
 html[data-theme="light"] .dric-scholarship-detail-page p,
 html[data-theme="light"] .dric-scholarship-detail-page span {
   color: rgba(51, 65, 85, 0.78) !important;
+}
+
+html[data-theme="light"] .dric-scholarship-index-page .dric-site-header .dric-site-header-shell,
+html[data-theme="light"] .dric-scholarship-detail-page .dric-site-header .dric-site-header-shell {
+  background: rgba(0, 25, 53, 0.88) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25) !important;
+}
+
+html[data-theme="light"] .dric-scholarship-index-page .dric-site-header .dric-site-header-button,
+html[data-theme="light"] .dric-scholarship-detail-page .dric-site-header .dric-site-header-button {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="light"] .dric-scholarship-index-page .dric-site-footer,
+html[data-theme="light"] .dric-scholarship-index-page .dric-site-footer h2,
+html[data-theme="light"] .dric-scholarship-index-page .dric-site-footer p,
+html[data-theme="light"] .dric-scholarship-index-page .dric-site-footer span,
+html[data-theme="light"] .dric-scholarship-index-page .dric-site-footer address,
+html[data-theme="light"] .dric-scholarship-detail-page .dric-site-footer,
+html[data-theme="light"] .dric-scholarship-detail-page .dric-site-footer h2,
+html[data-theme="light"] .dric-scholarship-detail-page .dric-site-footer p,
+html[data-theme="light"] .dric-scholarship-detail-page .dric-site-footer span,
+html[data-theme="light"] .dric-scholarship-detail-page .dric-site-footer address {
+  color: #ffffff !important;
+}
+
+html[data-theme="light"] .dric-scholarship-index-page .dric-site-footer .dric-site-footer-muted,
+html[data-theme="light"] .dric-scholarship-detail-page .dric-site-footer .dric-site-footer-muted {
+  color: rgba(255, 255, 255, 0.68) !important;
+}
+
+.dric-scholarship-detail-page .dric-neon-country-title {
+  font-family: var(--font-poiret-one), "Arial Black", Impact, sans-serif;
+  font-size: clamp(2.7rem, 7vw, 4.5rem);
+  font-weight: 900;
+  line-height: 0.88;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: #fff5f5 !important;
+  text-shadow:
+    0 0 4px rgba(255, 255, 255, 0.96),
+    0 0 12px rgba(227, 6, 19, 0.96),
+    0 0 28px rgba(227, 6, 19, 0.84),
+    0 0 54px rgba(120, 0, 10, 0.9),
+    0 0 86px rgba(120, 0, 10, 0.72);
+}
+
+html[data-theme="light"] .dric-scholarship-detail-page .dric-neon-country-title {
+  color: #05468b !important;
+  text-shadow:
+    0 0 3px rgba(255, 255, 255, 0.96),
+    0 0 10px rgba(0, 55, 112, 0.55),
+    0 0 24px rgba(0, 55, 112, 0.34),
+    0 16px 38px rgba(15, 23, 42, 0.18);
+}
+
+.dric-scholarship-detail-page .dric-scholarship-program-card {
+  background: transparent;
+  box-shadow:
+    0 0 18px rgba(197, 157, 255, 0.18),
+    0 0 42px rgba(84, 36, 187, 0.12),
+    0 30px 80px rgba(0, 0, 0, 0.24);
+}
+
+.dric-scholarship-detail-page .dric-scholarship-program-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(180deg, #c59dff 0%, #111a82 100%);
+  pointer-events: none;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+}
+
+.dric-scholarship-detail-page .dric-scholarship-program-card-inner {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.54);
+  backdrop-filter: none;
+}
+
+.dric-scholarship-detail-page .dric-scholarship-program-divider {
+  height: 1px;
+  width: 100%;
+  background: linear-gradient(90deg, #000000 0%, rgba(255, 255, 255, 0.96) 100%);
+  opacity: 0.94;
+}
+
+.dric-scholarship-detail-page .dric-scholarship-program-link {
+  background: linear-gradient(135deg, #c59dff 0%, #5424bb 100%);
+  box-shadow:
+    0 0 18px rgba(197, 157, 255, 0.16),
+    0 0 36px rgba(84, 36, 187, 0.14);
+}
+
+.dric-scholarship-detail-page .dric-scholarship-program-link span {
+  background: rgba(4, 15, 64, 0.18);
+  color: #ffffff !important;
+}
+
+html[data-theme="light"] .dric-scholarship-detail-page .dric-scholarship-program-card {
+  background: transparent !important;
+}
+
+html[data-theme="light"] .dric-scholarship-detail-page .dric-scholarship-program-card-inner {
+  background: transparent !important;
+  border-color: rgba(84, 36, 187, 0.24) !important;
+  color: #0f172a !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.86),
+    0 22px 56px rgba(15, 23, 42, 0.12) !important;
+}
+
+html[data-theme="light"] .dric-scholarship-detail-page .dric-scholarship-program-card h3,
+html[data-theme="light"] .dric-scholarship-detail-page .dric-scholarship-program-card h4,
+html[data-theme="light"] .dric-scholarship-detail-page .dric-scholarship-program-card li,
+html[data-theme="light"] .dric-scholarship-detail-page .dric-scholarship-program-card p {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-scholarship-detail-page .dric-scholarship-program-link span {
+  background: rgba(255, 255, 255, 0.58) !important;
+  color: #0f172a !important;
 }
 
 html[data-theme="light"] .dric-projects-hero-glow {

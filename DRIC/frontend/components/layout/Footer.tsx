@@ -31,11 +31,11 @@ export default function Footer() {
   return (
     <footer
       style={{ backgroundColor: "#001935" }}
-      className="px-6 py-10 font-[Comfortaa] text-white sm:px-10 sm:py-5 md:px-14 lg:px-20"
+      className="dric-site-footer px-6 py-10 font-[Comfortaa] text-white sm:px-10 sm:py-5 md:px-14 lg:px-20"
     >
       <div className="mx-auto flex max-w-7xl flex-col">
         <div className="flex flex-col items-center justify-between gap-7 text-center sm:gap-5 md:flex-row md:text-left">
-          <p className="text-sm leading-6 text-white/68 sm:text-base">
+          <p className="dric-site-footer-muted text-sm leading-6 text-white/68 sm:text-base">
             Todos los derechos reservados © 2026
           </p>
 
@@ -76,7 +76,7 @@ export default function Footer() {
             <h2 className="text-base font-normal uppercase leading-relaxed tracking-[0.01em] text-white sm:text-lg">
               Dirección de Relaciones Internacionales y Convenios
             </h2>
-            <address className="mt-2 not-italic text-sm leading-7 text-white sm:text-base">
+            <address className="dric-site-footer-address mt-2 not-italic text-sm leading-7 text-white sm:text-base">
               <p>Av. Ballivián N. 591 esq. Reza, Cochabamba, Bolivia</p>
               <p>Edif. Mariscal Andrés de Santa Cruz</p>
             </address>

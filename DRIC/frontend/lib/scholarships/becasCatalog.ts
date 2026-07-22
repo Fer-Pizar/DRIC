@@ -33,6 +33,28 @@ export type ScholarshipOpportunity = {
     es: string;
     en: string;
   };
+  contentSections?: ScholarshipOpportunitySection[];
+};
+
+export type ScholarshipOpportunitySection = {
+  heading?: {
+    es: string;
+    en: string;
+  };
+  paragraphs?: {
+    es: string;
+    en: string;
+  }[];
+  bullets?: {
+    label: {
+      es: string;
+      en: string;
+    };
+    text: {
+      es: string;
+      en: string;
+    };
+  }[];
 };
 
 export const scholarshipCountries: ScholarshipCatalogItem[] = [
@@ -50,13 +72,89 @@ export const scholarshipCountries: ScholarshipCatalogItem[] = [
       {
         slug: "daad",
         title: {
-          es: "Servicio Alemán de Intercambio Académico (DAAD).",
-          en: "German Academic Exchange Service (DAAD).",
+          es: "DAAD - Servicio Alemán de Intercambio Académico (Alemania)",
+          en: "DAAD - German Academic Exchange Service (Germany)",
         },
         body: {
           es: "El DAAD es una de las principales instituciones alemanas de cooperación académica internacional. Sus programas reúnen becas, estancias de investigación, estudios de posgrado, cursos especializados y oportunidades de movilidad para estudiantes, graduados, docentes e investigadores interesados en fortalecer su formación en Alemania.",
           en: "DAAD is one of Germany's leading institutions for international academic cooperation. Its programs bring together scholarships, research stays, postgraduate studies, specialized courses and mobility opportunities for students, graduates, faculty and researchers interested in strengthening their academic path in Germany.",
         },
+        contentSections: [
+          {
+            paragraphs: [
+              {
+                es: "Desde 2013, el DAAD cuenta con representación en Bolivia para promover oportunidades de estudio, investigación y cooperación académica con Alemania. Además de brindar orientación sobre universidades alemanas, ofrece información sobre programas de becas para estudiantes, profesionales, docentes e investigadores.",
+                en: "Since 2013, DAAD has had representation in Bolivia to promote study, research and academic cooperation opportunities with Germany. In addition to providing guidance on German universities, it offers information about scholarship programs for students, professionals, faculty and researchers.",
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "Estudiar en Alemania",
+              en: "Studying in Germany",
+            },
+            paragraphs: [
+              {
+                es: "Alemania destaca por su sistema de educación superior de alta calidad y universidades públicas con costos de matrícula muy reducidos. Es posible acceder a programas de pregrado, maestría, doctorado e investigación, con acceso a bibliotecas, servicios universitarios, transporte público y residencias estudiantiles.",
+                en: "Germany stands out for its high-quality higher education system and public universities with very low tuition costs. It is possible to access undergraduate, master's, doctoral and research programs, with access to libraries, university services, public transportation and student residences.",
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "Costo de vida",
+              en: "Cost of living",
+            },
+            paragraphs: [
+              {
+                es: "El costo promedio de manutención es de aproximadamente 750 euros mensuales. Los estudiantes internacionales pueden trabajar hasta 120 días al año, lo que les permite adquirir experiencia profesional y contribuir a sus gastos.",
+                en: "The average cost of living is approximately 750 euros per month. International students may work up to 120 days per year, allowing them to gain professional experience and contribute to their expenses.",
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "Becas del DAAD",
+              en: "DAAD scholarships",
+            },
+            paragraphs: [
+              {
+                es: "El DAAD ofrece diversas becas, principalmente para estudios de posgrado e investigación, entre las que destacan:",
+                en: "DAAD offers several scholarships, mainly for postgraduate studies and research, including:",
+              },
+            ],
+            bullets: [
+              {
+                label: { es: "EPOS", en: "EPOS" },
+                text: {
+                  es: "Maestrías Interdisciplinarias para el Desarrollo.",
+                  en: "Interdisciplinary Master's programs for development.",
+                },
+              },
+              {
+                label: { es: "PPGG", en: "PPGG" },
+                text: {
+                  es: "Maestrías en Políticas Públicas y Buen Gobierno.",
+                  en: "Master's programs in Public Policy and Good Governance.",
+                },
+              },
+              {
+                label: { es: "Programa de Artes", en: "Arts Program" },
+                text: {
+                  es: "Maestrías y proyectos en artes escénicas, música, artes visuales, cine y arquitectura.",
+                  en: "Master's programs and projects in performing arts, music, visual arts, film and architecture.",
+                },
+              },
+              {
+                label: { es: "Programas de Investigación", en: "Research Programs" },
+                text: {
+                  es: "Apoyo para proyectos científicos y académicos.",
+                  en: "Support for scientific and academic projects.",
+                },
+              },
+            ],
+          },
+        ],
         href: "https://www.daad.de/en/studying-in-germany/scholarships/",
         linkLabel: {
           es: "Ver sitio oficial DAAD",
@@ -66,14 +164,103 @@ export const scholarshipCountries: ScholarshipCatalogItem[] = [
       {
         slug: "kaad",
         title: {
-          es: "Programa de becas KAAD",
-          en: "KAAD scholarship programme",
+          es: "KAAD - Servicio Católico Alemán de Intercambio Académico",
+          en: "KAAD - German Catholic Academic Exchange Service",
         },
         body: {
           es: "El KAAD ofrece programas de becas orientados principalmente a estudios de posgrado, doctorado, investigación y formación académica en Alemania. Sus convocatorias valoran el rendimiento académico, la experiencia profesional, el compromiso social y la vinculación del proyecto de estudios con el desarrollo de la región de origen.",
           en: "KAAD offers scholarship programmes mainly focused on postgraduate studies, doctoral studies, research and academic training in Germany. Its calls value academic performance, professional experience, social commitment and the connection between the study project and the development of the applicant's home region.",
         },
-        href: "https://www.kaad.de/en/stipendien/seite",
+        contentSections: [
+          {
+            paragraphs: [
+              {
+                es: "El KAAD coopera con comités asociados conformados por representantes de la Iglesia Católica y de las universidades de los respectivos países de origen. Su programa está dirigido a posgraduados y profesionales con experiencia laboral, quienes pueden realizar estudios de posgrado o estancias de investigación en Alemania. Asimismo, contempla el apoyo a candidatos que cursan programas de maestría en su país de origen o en otros países.",
+                en: "KAAD works in cooperation with partner committees composed of representatives from the Catholic Church and universities in the applicants’ respective countries of origin. Its scholarship programme is intended for postgraduate candidates and experienced professionals seeking to pursue advanced studies or research stays in Germany. It may also support candidates undertaking master’s degree programmes in their home countries or in third countries.",
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "Programas disponibles",
+              en: "Available programs",
+            },
+            bullets: [
+              {
+                label: { es: "Maestrías y posgrado", en: "Master's and postgraduate studies" },
+                text: {
+                  es: "Programas de maestría y estudios de posgrado en universidades alemanas.",
+                  en: "Master's and postgraduate study programs at German universities.",
+                },
+              },
+              {
+                label: { es: "Doctorados y posdoctorados", en: "Doctoral and postdoctoral studies" },
+                text: {
+                  es: "Apoyo para formación doctoral y posdoctoral.",
+                  en: "Support for doctoral and postdoctoral training.",
+                },
+              },
+              {
+                label: { es: "Estancias de investigación", en: "Research stays" },
+                text: {
+                  es: "Estancias de investigación de corta duración, de 2 a 6 meses.",
+                  en: "Short-term research stays lasting 2 to 6 months.",
+                },
+              },
+              {
+                label: { es: "Cursos de alemán", en: "German courses" },
+                text: {
+                  es: "Posibilidad de acceder a cursos de alemán previos al inicio del programa.",
+                  en: "Possibility of accessing German language courses before the program begins.",
+                },
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "Requisitos generales",
+              en: "General requirements",
+            },
+            bullets: [
+              {
+                label: { es: "Residencia", en: "Residence" },
+                text: {
+                  es: "Ser ciudadano y residir en un país en desarrollo o emergente de América Latina, África, Asia o Medio Oriente.",
+                  en: "Be a citizen and resident of a developing or emerging country in Latin America, Africa, Asia or the Middle East.",
+                },
+              },
+              {
+                label: { es: "Formación", en: "Academic background" },
+                text: {
+                  es: "Contar con título universitario y experiencia profesional.",
+                  en: "Hold a university degree and have professional experience.",
+                },
+              },
+              {
+                label: { es: "Perfil académico y social", en: "Academic and social profile" },
+                text: {
+                  es: "Demostrar un buen desempeño académico y compromiso social.",
+                  en: "Demonstrate strong academic performance and social commitment.",
+                },
+              },
+              {
+                label: { es: "Idioma alemán", en: "German language" },
+                text: {
+                  es: "Tener conocimientos del idioma alemán, generalmente nivel B1 o A2 para programas impartidos en inglés.",
+                  en: "Have knowledge of German, generally level B1 or A2 for programs taught in English.",
+                },
+              },
+              {
+                label: { es: "Retorno", en: "Return commitment" },
+                text: {
+                  es: "Comprometerse a retornar al país de origen tras finalizar los estudios.",
+                  en: "Commit to returning to the country of origin after completing the studies.",
+                },
+              },
+            ],
+          },
+        ],
+        href: "https://www.kaad.de/es/becas",
         linkLabel: {
           es: "Ver sitio oficial KAAD",
           en: "Open KAAD official site",
@@ -91,6 +278,130 @@ export const scholarshipCountries: ScholarshipCatalogItem[] = [
       en: "Academic programs, research and international calls.",
     },
     accent: "#E30613",
+    opportunities: [
+      {
+        slug: "iwc-water-leadership-program-scholarships",
+        title: {
+          es: "IWC Water Leadership Program Scholarships",
+          en: "IWC Water Leadership Program Scholarships",
+        },
+        body: {
+          es: "Las IWC Water Leadership Program Scholarships son becas otorgadas por el International WaterCentre para apoyar el desarrollo de líderes del sector del agua mediante el Water Leadership Program, un programa de formación profesional impartido por Griffith University en Australia.",
+          en: "The IWC Water Leadership Program Scholarships are awarded by the International WaterCentre to support the development of leaders in the water sector through the Water Leadership Program, a professional training program delivered by Griffith University in Australia.",
+        },
+        contentSections: [
+          {
+            paragraphs: [
+              {
+                es: "Las IWC Water Leadership Program Scholarships son becas otorgadas por el International WaterCentre (IWC) para apoyar el desarrollo de líderes del sector del agua mediante el Water Leadership Program, un programa de formación profesional impartido por Griffith University (Australia).",
+                en: "The IWC Water Leadership Program Scholarships are awarded by the International WaterCentre (IWC) to support the development of leaders in the water sector through the Water Leadership Program, a professional training program delivered by Griffith University (Australia).",
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "¿Qué ofrece?",
+              en: "What does it offer?",
+            },
+            bullets: [
+              {
+                label: {
+                  es: "Becas",
+                  en: "Scholarships",
+                },
+                text: {
+                  es: "Becas completas y parciales para participar en el Water Leadership Program.",
+                  en: "Full and partial scholarships to participate in the Water Leadership Program.",
+                },
+              },
+              {
+                label: {
+                  es: "Formación especializada",
+                  en: "Specialized training",
+                },
+                text: {
+                  es: "Formación especializada en liderazgo, gestión y desarrollo profesional en el sector del agua.",
+                  en: "Specialized training in leadership, management and professional development in the water sector.",
+                },
+              },
+              {
+                label: {
+                  es: "Duración",
+                  en: "Duration",
+                },
+                text: {
+                  es: "Programa de 10 meses que combina actividades virtuales con sesiones presenciales en Brisbane, Australia.",
+                  en: "A 10-month program combining virtual activities with in-person sessions in Brisbane, Australia.",
+                },
+              },
+              {
+                label: {
+                  es: "Acompañamiento",
+                  en: "Support",
+                },
+                text: {
+                  es: "Acceso a mentorías, coaching, estudios de caso y certificación otorgada por Griffith University.",
+                  en: "Access to mentoring, coaching, case studies and certification awarded by Griffith University.",
+                },
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "Requisitos principales",
+              en: "Main requirements",
+            },
+            bullets: [
+              {
+                label: {
+                  es: "Experiencia laboral",
+                  en: "Work experience",
+                },
+                text: {
+                  es: "Contar con al menos tres años de experiencia laboral en el sector del agua.",
+                  en: "Have at least three years of work experience in the water sector.",
+                },
+              },
+              {
+                label: {
+                  es: "Idioma inglés",
+                  en: "English language",
+                },
+                text: {
+                  es: "Poseer un buen dominio del idioma inglés.",
+                  en: "Have a good command of the English language.",
+                },
+              },
+              {
+                label: {
+                  es: "Respaldo institucional",
+                  en: "Institutional support",
+                },
+                text: {
+                  es: "Contar con el respaldo del supervisor o empleador para participar en el programa.",
+                  en: "Have the support of a supervisor or employer to participate in the program.",
+                },
+              },
+              {
+                label: {
+                  es: "Compromiso",
+                  en: "Commitment",
+                },
+                text: {
+                  es: "Comprometerse a completar todas las actividades del programa, incluidas las sesiones presenciales en Australia.",
+                  en: "Commit to completing all program activities, including the in-person sessions in Australia.",
+                },
+              },
+            ],
+          },
+        ],
+        href: "https://watercentre.org/professional-development/water-leadership-program/wlp-scholarships/",
+        linkLabel: {
+          es: "Ver sitio oficial IWC",
+          en: "Open IWC official site",
+        },
+      },
+    ],
   },
   {
     slug: "austria",
@@ -102,6 +413,130 @@ export const scholarshipCountries: ScholarshipCatalogItem[] = [
       en: "Training, exchange and academic cooperation opportunities.",
     },
     accent: "#003770",
+    opportunities: [
+      {
+        slug: "richard-plaschka-fellowship",
+        title: {
+          es: "Richard Plaschka Fellowship",
+          en: "Richard Plaschka Fellowship",
+        },
+        body: {
+          es: "La Richard Plaschka Fellowship es un programa de becas del OeAD que promueve la cooperación científica internacional mediante el financiamiento de estancias de investigación en Austria para especialistas en el área de Historia.",
+          en: "The Richard Plaschka Fellowship is a scholarship program from OeAD that promotes international scientific cooperation by funding research stays in Austria for specialists in the field of History.",
+        },
+        contentSections: [
+          {
+            paragraphs: [
+              {
+                es: "La Richard Plaschka Fellowship es un programa de becas del OeAD (Agencia Austriaca para la Educación y la Internacionalización) que promueve la cooperación científica internacional mediante el financiamiento de estancias de investigación en Austria para especialistas en el área de Historia.",
+                en: "The Richard Plaschka Fellowship is a scholarship program from OeAD (Austria's Agency for Education and Internationalisation) that promotes international scientific cooperation by funding research stays in Austria for specialists in the field of History.",
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "¿Qué ofrece?",
+              en: "What does it offer?",
+            },
+            bullets: [
+              {
+                label: {
+                  es: "Estancias de investigación",
+                  en: "Research stays",
+                },
+                text: {
+                  es: "Becas para realizar estancias de investigación en universidades, archivos, bibliotecas e instituciones académicas de Austria.",
+                  en: "Scholarships for research stays at universities, archives, libraries and academic institutions in Austria.",
+                },
+              },
+              {
+                label: {
+                  es: "Proyectos históricos",
+                  en: "Historical projects",
+                },
+                text: {
+                  es: "Apoyo para el desarrollo de proyectos de investigación relacionados con la historia de Austria o temas históricos vinculados al país.",
+                  en: "Support for research projects related to Austrian history or historical topics connected to the country.",
+                },
+              },
+              {
+                label: {
+                  es: "Duración",
+                  en: "Duration",
+                },
+                text: {
+                  es: "Financiamiento con una duración de 4 a 12 meses, con posibilidad de extensión hasta 18 meses previa evaluación favorable.",
+                  en: "Funding for 4 to 12 months, with the possibility of extension up to 18 months after a favorable evaluation.",
+                },
+              },
+              {
+                label: {
+                  es: "Red académica",
+                  en: "Academic network",
+                },
+                text: {
+                  es: "Integración a una red internacional de investigadores y oportunidades de cooperación académica con instituciones austríacas.",
+                  en: "Integration into an international network of researchers and academic cooperation opportunities with Austrian institutions.",
+                },
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "Requisitos principales",
+              en: "Main requirements",
+            },
+            bullets: [
+              {
+                label: {
+                  es: "Perfil académico",
+                  en: "Academic profile",
+                },
+                text: {
+                  es: "Ser estudiante de doctorado, investigador posdoctoral, docente universitario o investigador en el área de Historia o disciplinas afines.",
+                  en: "Be a doctoral student, postdoctoral researcher, university lecturer or researcher in History or related disciplines.",
+                },
+              },
+              {
+                label: {
+                  es: "Tema de investigación",
+                  en: "Research topic",
+                },
+                text: {
+                  es: "Desarrollar un proyecto de investigación con énfasis en la historia de Austria o en temas históricos relacionados con el país.",
+                  en: "Develop a research project focused on Austrian history or historical topics related to the country.",
+                },
+              },
+              {
+                label: {
+                  es: "Institución anfitriona",
+                  en: "Host institution",
+                },
+                text: {
+                  es: "Contar con una institución anfitriona o desarrollar la investigación en una universidad, archivo, biblioteca o centro de investigación en Austria.",
+                  en: "Have a host institution or conduct the research at a university, archive, library or research center in Austria.",
+                },
+              },
+              {
+                label: {
+                  es: "Postulación",
+                  en: "Application",
+                },
+                text: {
+                  es: "Presentar la solicitud a través de la plataforma oficial scholarships.at dentro de las fechas establecidas por el OeAD.",
+                  en: "Submit the application through the official scholarships.at platform within the dates established by OeAD.",
+                },
+              },
+            ],
+          },
+        ],
+        href: "https://oead.at/en/study-research-teaching/overview-grants-and-scholarships/richard-plaschka-grant",
+        linkLabel: {
+          es: "Ver plataforma OeAD",
+          en: "Open OeAD",
+        },
+      },
+    ],
   },
   {
     slug: "belgica",

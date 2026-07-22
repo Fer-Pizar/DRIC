@@ -69,13 +69,7 @@ export default async function ScholarshipDestinationPage({ params }: Props) {
 
           <div className="grid gap-10 lg:grid-cols-[1fr_0.72fr] lg:items-end">
             <div>
-              <p className="mb-5 inline-flex rounded-full border border-white/15 bg-white/10 px-5 py-2 text-xs font-semibold uppercase tracking-[0.26em] text-white/80 backdrop-blur">
-                {item.type === "country"
-                  ? language === "en" ? "Destination" : "Destino"
-                  : language === "en" ? "Program" : "Programa"}
-              </p>
-
-              <h1 className="max-w-5xl text-[3rem] font-light uppercase leading-[0.9] tracking-[-0.07em] sm:text-6xl md:text-8xl">
+              <h1 className="dric-neon-country-title max-w-5xl">
                 {item.name[language]}
               </h1>
 
@@ -121,47 +115,73 @@ export default async function ScholarshipDestinationPage({ params }: Props) {
                   {language === "en" ? "Available programmes" : "Programas disponibles"}
                 </p>
                 <h2 className="mt-3 text-3xl font-semibold tracking-[-0.04em] md:text-5xl">
-                  {language === "en" ? "Scholarship channels for Germany" : "Canales de becas para Alemania"}
+                  {language === "en"
+                    ? `Scholarship channels for ${item.name.en}`
+                    : `Canales de becas para ${item.name.es}`}
                 </h2>
               </div>
 
-              <div className="grid gap-6 lg:grid-cols-2">
+              <div className="mx-auto flex max-w-6xl flex-col gap-8">
                 {opportunities.map((opportunity) => (
                   <article
                     key={opportunity.slug}
-                    className="group relative min-h-[360px] overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.06] p-7 shadow-2xl shadow-black/20 backdrop-blur-xl transition duration-500 hover:-translate-y-1 hover:border-white/25 hover:bg-white/[0.09] md:p-9"
+                    className="dric-scholarship-program-card group relative overflow-hidden rounded-[2rem] p-[1px] shadow-2xl shadow-black/25 transition duration-500 hover:-translate-y-1"
                   >
-                    <div
-                      className="absolute right-[-7rem] top-[-7rem] h-64 w-64 rounded-full blur-[110px] transition duration-500 group-hover:scale-110"
-                      style={{ backgroundColor: `${item.accent}38` }}
-                    />
-                    <div className="absolute inset-x-8 top-0 h-px bg-white/40" />
-
-                    <div className="relative flex h-full flex-col">
-                      <div
-                        className="flex h-14 w-14 items-center justify-center rounded-2xl text-white shadow-xl shadow-black/20"
-                        style={{ backgroundColor: item.accent }}
-                      >
-                        <WorkspacePremiumRoundedIcon />
-                      </div>
-
-                      <h3 className="mt-7 text-3xl font-semibold leading-tight tracking-[-0.045em] md:text-4xl">
+                    <div className="dric-scholarship-program-card-inner relative flex min-h-[430px] flex-col rounded-[calc(2rem-1px)] px-7 py-8 md:min-h-[470px] md:px-12 md:py-11 lg:px-14">
+                      <h3 className="max-w-5xl text-3xl font-normal leading-tight tracking-[-0.035em] text-white md:text-4xl lg:text-[2.65rem]">
                         {opportunity.title[language]}
                       </h3>
 
-                      <p className="mt-6 flex-1 text-justify text-sm leading-8 text-white/64 md:text-base">
-                        {opportunity.body[language]}
-                      </p>
+                      <div className="mt-9 flex-1 space-y-7 text-justify text-base leading-8 text-white/72 md:text-lg md:leading-9">
+                        {opportunity.contentSections ? (
+                          opportunity.contentSections.map((section, sectionIndex) => (
+                            <section key={`${opportunity.slug}-section-${sectionIndex}`} className="space-y-3">
+                              {section.heading ? (
+                                <h4 className="text-left text-xl font-semibold text-white md:text-2xl">
+                                  {section.heading[language]}
+                                </h4>
+                              ) : null}
 
-                      <a
-                        href={opportunity.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="mt-8 inline-flex w-fit items-center gap-2 rounded-full border border-white/14 bg-white/10 px-5 py-3 text-sm font-bold text-white transition hover:border-white/30 hover:bg-white/16"
-                      >
-                        {opportunity.linkLabel[language]}
-                        <OpenInNewRoundedIcon fontSize="small" />
-                      </a>
+                              {section.paragraphs?.map((paragraph, paragraphIndex) => (
+                                <p key={`${opportunity.slug}-paragraph-${paragraphIndex}`}>
+                                  {paragraph[language]}
+                                </p>
+                              ))}
+
+                              {section.bullets ? (
+                                <ul className="space-y-2 pl-5 text-left">
+                                  {section.bullets.map((bullet) => (
+                                    <li key={bullet.label.es} className="list-disc">
+                                      <span className="font-semibold text-white">
+                                        {bullet.label[language]}:
+                                      </span>{" "}
+                                      <span>{bullet.text[language]}</span>
+                                    </li>
+                                  ))}
+                                </ul>
+                              ) : null}
+                            </section>
+                          ))
+                        ) : (
+                          <p>{opportunity.body[language]}</p>
+                        )}
+                      </div>
+
+                      <div className="dric-scholarship-program-divider mt-10" />
+
+                      <div className="mt-7 flex justify-center">
+                        <a
+                          href={opportunity.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="dric-scholarship-program-link inline-flex items-center gap-4 rounded-full p-[1px] text-lg font-normal text-white transition hover:scale-[1.02] md:text-2xl"
+                        >
+                          <span className="inline-flex items-center gap-4 rounded-full px-7 py-3 backdrop-blur-xl">
+                            {opportunity.linkLabel[language]}
+                            <OpenInNewRoundedIcon className="text-[1.6em]" />
+                          </span>
+                        </a>
+                      </div>
                     </div>
                   </article>
                 ))}
