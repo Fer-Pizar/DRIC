@@ -33,7 +33,16 @@ export type ScholarshipOpportunity = {
     es: string;
     en: string;
   };
+  links?: ScholarshipOpportunityLink[];
   contentSections?: ScholarshipOpportunitySection[];
+};
+
+export type ScholarshipOpportunityLink = {
+  href: string;
+  label: {
+    es: string;
+    en: string;
+  };
 };
 
 export type ScholarshipOpportunitySection = {
@@ -45,16 +54,19 @@ export type ScholarshipOpportunitySection = {
     es: string;
     en: string;
   }[];
-  bullets?: {
-    label: {
-      es: string;
-      en: string;
-    };
-    text: {
-      es: string;
-      en: string;
-    };
-  }[];
+  bullets?: ScholarshipOpportunityBullet[];
+};
+
+export type ScholarshipOpportunityBullet = {
+  label?: {
+    es: string;
+    en: string;
+  };
+  text: {
+    es: string;
+    en: string;
+  };
+  children?: ScholarshipOpportunityBullet[];
 };
 
 export const scholarshipCountries: ScholarshipCatalogItem[] = [
@@ -548,6 +560,321 @@ export const scholarshipCountries: ScholarshipCatalogItem[] = [
       en: "European calls, university cooperation and mobility.",
     },
     accent: "#E30613",
+    opportunities: [
+      {
+        slug: "becas-internacionales-ares",
+        title: {
+          es: "Becas Internacionales ARES",
+          en: "ARES International Scholarships",
+        },
+        body: {
+          es: "Las Becas Internacionales ARES son un programa financiado por la Académie de Recherche et d'Enseignement Supérieur de Bélgica, destinado a fortalecer la formación de profesionales de países socios mediante becas para programas de maestría especializada y cursos internacionales en instituciones de educación superior belgas.",
+          en: "The ARES International Scholarships are funded by Belgium's Académie de Recherche et d'Enseignement Supérieur and are designed to strengthen the training of professionals from partner countries through scholarships for specialized master's programs and international courses at Belgian higher education institutions.",
+        },
+        contentSections: [
+          {
+            paragraphs: [
+              {
+                es: "Las Becas Internacionales ARES son un programa financiado por la Académie de Recherche et d'Enseignement Supérieur (ARES) de Bélgica, destinado a fortalecer la formación de profesionales de países socios mediante becas para programas de maestría especializada y cursos internacionales en instituciones de educación superior belgas.",
+                en: "The ARES International Scholarships are funded by Belgium's Académie de Recherche et d'Enseignement Supérieur (ARES) and are designed to strengthen the training of professionals from partner countries through scholarships for specialized master's programs and international courses at Belgian higher education institutions.",
+              },
+            ],
+          },
+          { 
+            bullets: [
+              {
+                text: {
+                  es: "Becas completas para cursar maestrías especializadas y programas internacionales de formación en Bélgica.",
+                  en: "Full scholarships to pursue specialized master's degrees and international training programs in Belgium.",
+                },
+              },
+              {
+                text: {
+                  es: "Cobertura de matrícula, pasajes aéreos, manutención, seguro médico, gastos de instalación y visa, según las condiciones de la convocatoria.",
+                  en: "Coverage of tuition, airfare, living expenses, health insurance, installation costs and visa expenses, according to the conditions of the call.",
+                },
+              },
+              {
+                text: {
+                  es: "Formación en áreas prioritarias para el desarrollo sostenible.",
+                  en: "Training in priority areas for sustainable development.",
+                },
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "Áreas de formación",
+              en: "Training areas",
+            },
+            bullets: [
+              {
+                text: { es: "Derechos humanos.", en: "Human rights." },
+              },
+              {
+                text: { es: "Gestión de riesgos y desastres.", en: "Risk and disaster management." },
+              },
+              {
+                text: { es: "Gestión integrada de riesgos sanitarios.", en: "Integrated health risk management." },
+              },
+              {
+                text: { es: "Economía internacional y del desarrollo.", en: "International and development economics." },
+              },
+              {
+                text: { es: "Microfinanzas.", en: "Microfinance." },
+              },
+              {
+                text: { es: "Salud pública.", en: "Public health." },
+              },
+              {
+                text: { es: "Políticas y sistemas internacionales de salud.", en: "International health policies and systems." },
+              },
+              {
+                text: { es: "Transporte y logística.", en: "Transport and logistics." },
+              },
+              {
+                text: { es: "Innovación social.", en: "Social innovation." },
+              },
+              {
+                text: { es: "Nexus agua, energía y alimentación.", en: "Water, energy and food nexus." },
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "Requisitos principales",
+              en: "Main requirements",
+            },
+            bullets: [
+              
+              {
+                text: {
+                  es: "Contar con el título académico requerido para el programa de interés.",
+                  en: "Hold the academic degree required for the program of interest.",
+                },
+              },
+              {
+                text: {
+                  es: "Poseer experiencia profesional relevante, según los requisitos específicos de cada programa.",
+                  en: "Have relevant professional experience, according to the specific requirements of each program.",
+                },
+              },
+              {
+                text: {
+                  es: "Presentar la postulación exclusivamente a través de la plataforma oficial GIRAF dentro de los plazos establecidos en la convocatoria.",
+                  en: "Submit the application exclusively through the official GIRAF platform within the deadlines established in the call.",
+                },
+              },
+              {
+                text: {
+                  es: "Cumplir con los requisitos particulares del programa académico seleccionado.",
+                  en: "Meet the specific requirements of the selected academic program.",
+                },
+              },
+            ],
+          },
+        ],
+        href: "https://www.ares-ac.be/en/scholarships",
+        linkLabel: {
+          es: "Ver sitio oficial ARES",
+          en: "Open ARES official site",
+        },
+      },
+      {
+        slug: "becas-internacionales-vlir-uos",
+        title: {
+          es: "Becas Internacionales VLIR-UOS",
+          en: "VLIR-UOS International Scholarships",
+        },
+        body: {
+          es: "Las Becas Internacionales VLIR-UOS son un programa financiado por VLIR-UOS que promueve la formación académica y el desarrollo sostenible mediante becas para estudios superiores en universidades e instituciones de educación superior de Flandes, Bélgica.",
+          en: "The VLIR-UOS International Scholarships are funded by VLIR-UOS and promote academic training and sustainable development through scholarships for higher education studies at universities and higher education institutions in Flanders, Belgium.",
+        },
+        contentSections: [
+          {
+            paragraphs: [
+              {
+                es: "Las Becas Internacionales VLIR-UOS son un programa financiado por VLIR-UOS (Flemish Interuniversity Council for University Development Cooperation) que promueve la formación académica y el desarrollo sostenible mediante becas para estudios superiores en universidades e instituciones de educación superior de Flandes, Bélgica.",
+                en: "The VLIR-UOS International Scholarships are funded by VLIR-UOS (Flemish Interuniversity Council for University Development Cooperation) and promote academic training and sustainable development through scholarships for higher education studies at universities and higher education institutions in Flanders, Belgium.",
+              },
+            ],
+            bullets: [
+              {
+                text: {
+                  es: "Becas completas para cursar programas de licenciatura profesional, maestrías iniciales y maestrías de especialización impartidos en inglés.",
+                  en: "Full scholarships to pursue professional bachelor's programs, initial master's programs and advanced master's programs taught in English.",
+                },
+              },
+              {
+                text: {
+                  es: "Cobertura de matrícula, pasajes aéreos, seguro médico, alojamiento y manutención durante toda la duración del programa.",
+                  en: "Coverage of tuition, airfare, health insurance, accommodation and living expenses throughout the full duration of the program.",
+                },
+              },
+              {
+                text: {
+                  es: "Formación en diversas áreas del conocimiento orientadas al desarrollo sostenible, entre ellas:",
+                  en: "Training in various fields of knowledge oriented toward sustainable development, including:",
+                },
+                children: [
+                  {
+                    text: { es: "Desarrollo Sostenible.", en: "Sustainable Development." },
+                  },
+                  {
+                    text: { es: "Antropología y Desarrollo.", en: "Anthropology and Development." },
+                  },
+                  {
+                    text: { es: "Gobernanza y Desarrollo.", en: "Governance and Development." },
+                  },
+                  {
+                    text: { es: "Economía y Evaluación del Desarrollo.", en: "Development Economics and Evaluation." },
+                  },
+                  {
+                    text: { es: "Tecnología de Alimentos.", en: "Food Technology." },
+                  },
+                  {
+                    text: { es: "Epidemiología.", en: "Epidemiology." },
+                  },
+                  {
+                    text: { es: "Nutrición y Sistemas Alimentarios.", en: "Nutrition and Food Systems." },
+                  },
+                  {
+                    text: { es: "Recursos Hídricos.", en: "Water Resources." },
+                  },
+                  {
+                    text: { es: "Acuicultura.", en: "Aquaculture." },
+                  },
+                  {
+                    text: { es: "Estadística y Ciencia de Datos.", en: "Statistics and Data Science." },
+                  },
+                  {
+                    text: { es: "Transporte y Seguridad Vial.", en: "Transport and Road Safety." },
+                  },
+                  {
+                    text: { es: "Biodiversidad y Ecosistemas Tropicales.", en: "Biodiversity and Tropical Ecosystems." },
+                  },
+                  {
+                    text: { es: "Desarrollo Rural.", en: "Rural Development." },
+                  },
+                  {
+                    text: { es: "Asentamientos Humanos.", en: "Human Settlements." },
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "Requisitos principales",
+              en: "Main requirements",
+            },
+            bullets: [
+              {
+                text: {
+                  es: "Cumplir con los requisitos de admisión establecidos por el programa académico seleccionado.",
+                  en: "Meet the admission requirements established by the selected academic program.",
+                },
+              },
+              {
+                text: {
+                  es: "Presentar la solicitud a través de la universidad belga que ofrece el programa, indicando el interés en postular a una beca VLIR-UOS.",
+                  en: "Submit the application through the Belgian university offering the program, indicating interest in applying for a VLIR-UOS scholarship.",
+                },
+              },
+              {
+                text: {
+                  es: "Solo es posible presentar una solicitud de beca por convocatoria.",
+                  en: "Only one scholarship application may be submitted per call.",
+                },
+              },
+            ],
+          },
+        ],
+        href: "https://www.vliruos.be/en/scholarships",
+        linkLabel: {
+          es: "Ver sitio oficial VLIR-UOS",
+          en: "Open VLIR-UOS official site",
+        },
+      },
+      {
+        slug: "programa-becas-grupo-coimbra-latinoamerica",
+        title: {
+          es: "Programa de Becas del Grupo Coimbra para Profesores e Investigadores Latinoamericanos",
+          en: "Coimbra Group Scholarship Program for Latin American Professors and Researchers",
+        },
+        body: {
+          es: "El Programa de Becas del Grupo Coimbra es una iniciativa de la Coimbra Group que promueve la cooperación académica y científica mediante becas para realizar estancias cortas de investigación en Europa.",
+          en: "The Coimbra Group Scholarship Program is an initiative of the Coimbra Group that promotes academic and scientific cooperation through scholarships for short research stays in Europe.",
+        },
+        contentSections: [
+          {
+            paragraphs: [
+              {
+                es: "El Programa de Becas del Grupo Coimbra es una iniciativa de la Coimbra Group, asociación integrada por prestigiosas universidades europeas, que promueve la cooperación académica y científica mediante becas para realizar estancias cortas de investigación en Europa.",
+                en: "The Coimbra Group Scholarship Program is an initiative of the Coimbra Group, an association made up of prestigious European universities, that promotes academic and scientific cooperation through scholarships for short research stays in Europe.",
+              },
+            ],
+            bullets: [
+              {
+                text: {
+                  es: "Becas para realizar estancias de investigación de 1 a 3 meses en universidades miembros del Grupo Coimbra.",
+                  en: "Scholarships for research stays of 1 to 3 months at Coimbra Group member universities.",
+                },
+              },
+              {
+                text: {
+                  es: "Oportunidad de fortalecer proyectos de investigación y establecer redes de cooperación internacional con instituciones europeas.",
+                  en: "Opportunity to strengthen research projects and establish international cooperation networks with European institutions.",
+                },
+              },
+              {
+                text: {
+                  es: "Financiamiento otorgado por la universidad anfitriona, el cual puede incluir apoyo para manutención, alojamiento y otros gastos relacionados con la estancia, según las condiciones de cada institución participante.",
+                  en: "Funding awarded by the host university, which may include support for living expenses, accommodation and other costs related to the stay, according to the conditions of each participating institution.",
+                },
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "Requisitos principales",
+              en: "Main requirements",
+            },
+            bullets: [
+              {
+                text: {
+                  es: "Ser profesor o investigador vinculado a una universidad reconocida de América Latina.",
+                  en: "Be a professor or researcher affiliated with a recognized university in Latin America.",
+                },
+              },
+              {
+                text: {
+                  es: "Contar con un título universitario.",
+                  en: "Hold a university degree.",
+                },
+              },
+              {
+                text: {
+                  es: "Obtener una carta de aceptación de un supervisor académico de la universidad europea anfitriona.",
+                  en: "Obtain an acceptance letter from an academic supervisor at the European host university.",
+                },
+              },
+              {
+                text: {
+                  es: "Presentar la solicitud mediante la plataforma oficial del Grupo Coimbra dentro del período de la convocatoria.",
+                  en: "Submit the application through the official Coimbra Group platform within the call period.",
+                },
+              },
+            ],
+          },
+        ],
+        href: "https://www.coimbra-group.eu/scholarships/grant-information-for-latin-america/",
+        linkLabel: {
+          es: "Ver sitio oficial Grupo Coimbra",
+          en: "Open Coimbra Group official site",
+        },
+      },
+    ],
   },
   {
     slug: "brasil",
@@ -559,6 +886,517 @@ export const scholarshipCountries: ScholarshipCatalogItem[] = [
       en: "Regional programs, academic networks and south-south cooperation.",
     },
     accent: "#003770",
+    opportunities: [
+      {
+        slug: "programa-estudios-posgrado-pec-pg",
+        title: {
+          es: "Programa de Estudios de Posgrado PEC-PG",
+          en: "PEC-PG Graduate Studies Program",
+        },
+        body: {
+          es: "El Programa de Estudiantes-Convênio de Posgrado ofrece becas para que ciudadanos de países participantes, entre ellos Bolivia, realicen estudios de maestría y doctorado en universidades brasileñas de reconocido prestigio.",
+          en: "The Graduate Student Agreement Program offers scholarships for citizens of participating countries, including Bolivia, to pursue master's and doctoral studies at prestigious Brazilian universities.",
+        },
+        contentSections: [
+          {
+            paragraphs: [
+              {
+                es: "El Programa de Estudiantes-Convênio de Posgrado (PEC-PG) ofrece becas para que ciudadanos de países participantes, entre ellos Bolivia, realicen estudios de maestría y doctorado en universidades brasileñas de reconocido prestigio.",
+                en: "The Graduate Student Agreement Program (PEC-PG) offers scholarships for citizens of participating countries, including Bolivia, to pursue master's and doctoral studies at prestigious Brazilian universities.",
+              },
+              {
+                es: "Las becas contemplan una asignación mensual, apoyo para seguro médico y la posibilidad de desarrollar actividades académicas e investigativas en diversas áreas del conocimiento, conforme a las condiciones establecidas en cada convocatoria.",
+                en: "The scholarships include a monthly allowance, support for health insurance and the possibility of carrying out academic and research activities in various fields of knowledge, according to the conditions established in each call.",
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "¿Cómo aplicar?",
+              en: "How to apply?",
+            },
+            paragraphs: [
+              {
+                es: "Las postulaciones se realizan en línea a través de la plataforma oficial de CAPES. Antes de postular, se recomienda revisar cuidadosamente los requisitos de elegibilidad, la convocatoria vigente y la documentación solicitada.",
+                en: "Applications are submitted online through the official CAPES platform. Before applying, it is recommended to carefully review the eligibility requirements, the current call and the requested documentation.",
+              },
+              {
+                es: "La convocatoria se publica anualmente, por lo que se recomienda consultar periódicamente los sitios oficiales para verificar las fechas de apertura y cierre de cada edición.",
+                en: "The call is published annually, so it is recommended to periodically check the official websites to verify the opening and closing dates for each edition.",
+              },
+            ],
+          },
+        ],
+        href: "https://www.gov.br/capes/pt-br/acesso-a-informacao/acoes-e-programas/cooperacao-internacional/multinacional/programa-de-estudantes-convenio-de-pos-graduacao-pec-pg",
+        linkLabel: {
+          es: "Información oficial",
+          en: "Official information",
+        },
+        links: [
+          {
+            href: "https://www.gov.br/capes/pt-br/acesso-a-informacao/acoes-e-programas/cooperacao-internacional/multinacional/programa-de-estudantes-convenio-de-pos-graduacao-pec-pg",
+            label: {
+              es: "Información oficial",
+              en: "Official information",
+            },
+          },
+          {
+            href: "https://inscricao.capes.gov.br/",
+            label: {
+              es: "Portal de postulaciones",
+              en: "Application portal",
+            },
+          },
+        ],
+      },
+      {
+        slug: "programa-estudiantes-convenio-posgrado-pec-pg-mre",
+        title: {
+          es: "Programa de Estudiantes-Convênio de Posgrado (PEC-PG)",
+          en: "Graduate Student Agreement Program (PEC-PG)",
+        },
+        body: {
+          es: "El Programa de Estudiantes-Convênio de Posgrado (PEC-PG) es una iniciativa del Gobierno de Brasil, coordinada por el Ministerio de Relaciones Exteriores, CAPES y CNPq, que ofrece becas para realizar estudios de maestría y doctorado en universidades brasileñas participantes.",
+          en: "The Graduate Student Agreement Program (PEC-PG) is an initiative of the Government of Brazil, coordinated by the Ministry of Foreign Affairs, CAPES and CNPq, offering scholarships for master's and doctoral studies at participating Brazilian universities.",
+        },
+        contentSections: [
+          {
+            paragraphs: [
+              {
+                es: "El Programa de Estudiantes-Convênio de Posgrado (PEC-PG) es una iniciativa del Gobierno de Brasil, coordinada por el Ministerio de Relaciones Exteriores (MRE), CAPES y CNPq, que ofrece becas para realizar estudios de maestría y doctorado en universidades brasileñas participantes.",
+                en: "The Graduate Student Agreement Program (PEC-PG) is an initiative of the Government of Brazil, coordinated by the Ministry of Foreign Affairs (MRE), CAPES and CNPq, offering scholarships for master's and doctoral studies at participating Brazilian universities.",
+              },
+            ],
+            bullets: [
+              {
+                text: {
+                  es: "Becas para cursar maestrías y doctorados presenciales en diversas áreas del conocimiento.",
+                  en: "Scholarships for in-person master's and doctoral programs in various fields of knowledge.",
+                },
+              },
+              {
+                text: {
+                  es: "Financiamiento que contempla asignación mensual, apoyo para seguro médico y otros beneficios establecidos en cada convocatoria.",
+                  en: "Funding that includes a monthly allowance, support for health insurance and other benefits established in each call.",
+                },
+              },
+              {
+                text: {
+                  es: "Oportunidad de desarrollar actividades académicas y de investigación en instituciones brasileñas de educación superior.",
+                  en: "Opportunity to develop academic and research activities at Brazilian higher education institutions.",
+                },
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "Requisitos principales",
+              en: "Main requirements",
+            },
+            bullets: [
+              {
+                text: {
+                  es: "Contar con el título académico requerido para el nivel de estudios al que se postula.",
+                  en: "Hold the academic degree required for the level of study being applied to.",
+                },
+              },
+              {
+                text: {
+                  es: "Cumplir con los requisitos establecidos por la universidad brasileña y por la convocatoria vigente.",
+                  en: "Meet the requirements established by the Brazilian university and by the current call.",
+                },
+              },
+              {
+                text: {
+                  es: "Presentar la solicitud a través de la plataforma oficial de CAPES, conforme al proceso de selección publicado para cada edición.",
+                  en: "Submit the application through the official CAPES platform, according to the selection process published for each edition.",
+                },
+              },
+            ],
+          },
+          
+        ],
+        href: "https://www.gov.br/mre/es/temas/cultura-y-educacion/cooperacion-educativa/oportunidades-de-estudio-para-extranjeros/pec-pg-posgrado/proceso-de-seleccion",
+        linkLabel: {
+          es: "Ver proceso de selección",
+          en: "Open selection process",
+        },
+      },
+      {
+        slug: "unila-pregrado-proceso-selectivo-pueblos-indigenas",
+        title: {
+          es: "Universidad Federal de la Integración Latinoamericana - UNILA (Pregrado)",
+          en: "Federal University of Latin American Integration - UNILA (Undergraduate)",
+        },
+        body: {
+          es: "La Universidad Federal de la Integración Latinoamericana es una universidad pública ubicada en Foz do Iguaçu, en la triple frontera entre Brasil, Paraguay y Argentina, que promueve la integración académica, científica y cultural de América Latina y el Caribe.",
+          en: "The Federal University of Latin American Integration is a public university located in Foz do Iguaçu, on the triple border between Brazil, Paraguay and Argentina, promoting academic, scientific and cultural integration in Latin America and the Caribbean.",
+        },
+        contentSections: [
+          {
+            paragraphs: [
+              {
+                es: "La Universidad Federal de la Integración Latinoamericana (UNILA) es una universidad pública ubicada en Foz do Iguaçu, en la triple frontera entre Brasil, Paraguay y Argentina. La institución promueve la integración académica, científica y cultural de América Latina y el Caribe, desarrollando sus actividades en un entorno bilingüe (portugués y español).",
+                en: "The Federal University of Latin American Integration (UNILA) is a public university located in Foz do Iguaçu, on the triple border between Brazil, Paraguay and Argentina. The institution promotes academic, scientific and cultural integration in Latin America and the Caribbean, carrying out its activities in a bilingual environment (Portuguese and Spanish).",
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "Proceso Selectivo para Pueblos Indígenas (PSIN)",
+              en: "Selection Process for Indigenous Peoples (PSIN)",
+            },
+            paragraphs: [
+              {
+                es: "UNILA ofrece un proceso de admisión dirigido a estudiantes indígenas de América Latina y el Caribe interesados en cursar programas de pregrado en Brasil.",
+                en: "UNILA offers an admission process aimed at Indigenous students from Latin America and the Caribbean interested in pursuing undergraduate programs in Brazil.",
+              },
+            ],
+            bullets: [
+              {
+                text: {
+                  es: "Acceso a programas de pregrado en una universidad pública sin costo de matrícula.",
+                  en: "Access to undergraduate programs at a public university with no tuition fees.",
+                },
+              },
+              {
+                text: {
+                  es: "Formación en un ambiente multicultural e internacional.",
+                  en: "Education in a multicultural and international environment.",
+                },
+              },
+              {
+                text: {
+                  es: "Programas impartidos en diversas áreas del conocimiento con enfoque en la integración latinoamericana.",
+                  en: "Programs offered in various fields of knowledge with a focus on Latin American integration.",
+                },
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "Requisitos principales",
+              en: "Main requirements",
+            },
+            bullets: [
+              {
+                text: {
+                  es: "Haber concluido la educación secundaria o equivalente.",
+                  en: "Have completed secondary education or its equivalent.",
+                },
+              },
+              {
+                text: {
+                  es: "Verificar los requisitos establecidos en la convocatoria vigente de UNILA.",
+                  en: "Verify the requirements established in the current UNILA call.",
+                },
+              },
+              {
+                text: {
+                  es: "Realizar la postulación a través del Proceso Selectivo para Pueblos Indígenas (PSIN).",
+                  en: "Apply through the Selection Process for Indigenous Peoples (PSIN).",
+                },
+              },
+            ],
+          },
+        ],
+        href: "https://divulga.unila.edu.br/internacional/graduacao/ingresso-psin/",
+        linkLabel: {
+          es: "Ver proceso PSIN",
+          en: "Open PSIN process",
+        },
+      },
+      {
+        slug: "grupo-cooperacion-internacional-universidades-brasilenas-gcub",
+        title: {
+          es: "Grupo de Cooperación Internacional de Universidades Brasileñas (GCUB)",
+          en: "International Cooperation Group of Brazilian Universities (GCUB)",
+        },
+        body: {
+          es: "El Grupo de Cooperación Internacional de Universidades Brasileñas es una asociación académica sin fines de lucro que promueve la cooperación científica, académica y cultural, así como la internacionalización de la educación superior mediante programas de movilidad y becas.",
+          en: "The International Cooperation Group of Brazilian Universities is a non-profit academic association that promotes scientific, academic and cultural cooperation, as well as the internationalization of higher education through mobility and scholarship programs.",
+        },
+        contentSections: [
+          {
+            paragraphs: [
+              {
+                es: "El Grupo de Cooperación Internacional de Universidades Brasileñas (GCUB) es una asociación académica sin fines de lucro que reúne a universidades brasileñas e internacionales con el objetivo de promover la cooperación científica, académica y cultural, así como la internacionalización de la educación superior mediante programas de movilidad y becas para estudiantes e investigadores.",
+                en: "The International Cooperation Group of Brazilian Universities (GCUB) is a non-profit academic association that brings together Brazilian and international universities with the aim of promoting scientific, academic and cultural cooperation, as well as the internationalization of higher education through mobility and scholarship programs for students and researchers.",
+              },
+            ],
+            bullets: [
+              {
+                text: {
+                  es: "Programas de movilidad internacional, becas de maestría y doctorado, cursos, investigación y cooperación académica.",
+                  en: "International mobility programs, master's and doctoral scholarships, courses, research and academic cooperation.",
+                },
+              },
+              {
+                text: {
+                  es: "Oportunidades de estudio en universidades públicas brasileñas pertenecientes a la red GCUB.",
+                  en: "Study opportunities at Brazilian public universities belonging to the GCUB network.",
+                },
+              },
+              {
+                text: {
+                  es: "Convocatorias dirigidas a estudiantes internacionales, docentes e investigadores.",
+                  en: "Calls aimed at international students, faculty and researchers.",
+                },
+              },
+              {
+                text: {
+                  es: "Entre sus principales iniciativas se encuentra el Programa GCUB de Movilidad Internacional (GCUB-Mob), que ofrece becas para estudios de posgrado en universidades brasileñas.",
+                  en: "Among its main initiatives is the GCUB International Mobility Program (GCUB-Mob), which offers scholarships for graduate studies at Brazilian universities.",
+                },
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "Requisitos principales",
+              en: "Main requirements",
+            },
+            bullets: [
+              {
+                text: {
+                  es: "Cumplir con los requisitos establecidos por el programa o convocatoria de interés.",
+                  en: "Meet the requirements established by the program or call of interest.",
+                },
+              },
+              {
+                text: {
+                  es: "Contar con el grado académico requerido según el nivel de estudios al que se postula.",
+                  en: "Hold the academic degree required according to the level of study being applied to.",
+                },
+              },
+              {
+                text: {
+                  es: "Presentar la solicitud a través de la plataforma oficial correspondiente dentro de los plazos establecidos.",
+                  en: "Submit the application through the corresponding official platform within the established deadlines.",
+                },
+              },
+              {
+                text: {
+                  es: "Verificar los requisitos específicos de cada universidad y programa participante.",
+                  en: "Verify the specific requirements of each participating university and program.",
+                },
+              },
+            ],
+          },
+        ],
+        href: "https://www.gcub.org.br/category/programas/ativos/",
+        linkLabel: {
+          es: "Ver programas activos GCUB",
+          en: "Open GCUB active programs",
+        },
+      },
+      {
+        slug: "programa-becas-paec-oea-gcub",
+        title: {
+          es: "Programa de Becas PAEC OEA - GCUB",
+          en: "PAEC OAS - GCUB Scholarship Program",
+        },
+        body: {
+          es: "El Programa de Becas PAEC OEA - GCUB forma parte del Programa de Alianzas para la Educación y la Capacitación de la Organización de los Estados Americanos, en colaboración con el Grupo de Cooperación Internacional de Universidades Brasileñas.",
+          en: "The PAEC OAS - GCUB Scholarship Program is part of the Partnerships Program for Education and Training of the Organization of American States, in collaboration with the International Cooperation Group of Brazilian Universities.",
+        },
+        contentSections: [
+          {
+            paragraphs: [
+              {
+                es: "El Programa de Becas PAEC OEA - GCUB forma parte del Programa de Alianzas para la Educación y la Capacitación (PAEC) de la Organización de los Estados Americanos (OEA), en colaboración con el Grupo de Cooperación Internacional de Universidades Brasileñas (GCUB). Su objetivo es promover la formación de profesionales mediante becas para realizar estudios de maestría y doctorado en universidades brasileñas participantes.",
+                en: "The PAEC OAS - GCUB Scholarship Program is part of the Partnerships Program for Education and Training (PAEC) of the Organization of American States (OAS), in collaboration with the International Cooperation Group of Brazilian Universities (GCUB). Its objective is to promote the training of professionals through scholarships for master's and doctoral studies at participating Brazilian universities.",
+              },
+            ],
+            bullets: [
+              {
+                text: {
+                  es: "Becas para programas presenciales de maestría y doctorado en universidades asociadas al GCUB.",
+                  en: "Scholarships for in-person master's and doctoral programs at universities associated with GCUB.",
+                },
+              },
+              {
+                text: {
+                  es: "Oportunidad de acceder a programas de posgrado en diversas áreas del conocimiento en instituciones de educación superior de Brasil.",
+                  en: "Opportunity to access graduate programs in various fields of knowledge at higher education institutions in Brazil.",
+                },
+              },
+              {
+                text: {
+                  es: "Convocatorias desarrolladas en el marco del Programa GCUB de Movilidad Internacional (GCUB-Mob), con el apoyo de la OEA y otras instituciones internacionales.",
+                  en: "Calls developed within the framework of the GCUB International Mobility Program (GCUB-Mob), with the support of the OAS and other international institutions.",
+                },
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "Requisitos principales",
+              en: "Main requirements",
+            },
+            bullets: [
+              {
+                text: {
+                  es: "Ser ciudadano de un Estado Miembro de la OEA.",
+                  en: "Be a citizen of an OAS Member State.",
+                },
+              },
+              {
+                text: {
+                  es: "Contar con el título académico requerido para el programa de posgrado al que se postula.",
+                  en: "Hold the academic degree required for the graduate program being applied to.",
+                },
+              },
+              {
+                text: {
+                  es: "Cumplir con los requisitos establecidos por la universidad brasileña seleccionada y por la convocatoria vigente.",
+                  en: "Meet the requirements established by the selected Brazilian university and by the current call.",
+                },
+              },
+              {
+                text: {
+                  es: "Presentar la solicitud mediante la plataforma oficial del Programa GCUB-Mob dentro del período de postulación.",
+                  en: "Submit the application through the official GCUB-Mob Program platform within the application period.",
+                },
+              },
+            ],
+          },
+        ],
+        href: "https://www.oas.org/es/becas/",
+        linkLabel: {
+          es: "Portal oficial de Becas OEA",
+          en: "Official OAS Scholarships portal",
+        },
+        links: [
+          {
+            href: "https://www.oas.org/es/becas/",
+            label: {
+              es: "Portal oficial de Becas OEA",
+              en: "Official OAS Scholarships portal",
+            },
+          },
+          {
+            href: "https://www.gcub.org.br/category/programas/ativos/",
+            label: {
+              es: "Programa GCUB-Mob",
+              en: "GCUB-Mob Program",
+            },
+          },
+        ],
+      },
+      {
+        slug: "programa-estudiantes-convenio-grado-pec-g",
+        title: {
+          es: "Programa de Estudiantes-Convenio de Grado (PEC-G)",
+          en: "Undergraduate Student Agreement Program (PEC-G)",
+        },
+        body: {
+          es: "El Programa de Estudiantes-Convenio de Grado (PEC-G) es una iniciativa de cooperación educativa internacional del Gobierno de Brasil que ofrece a estudiantes extranjeros de países participantes la oportunidad de cursar gratuitamente una carrera de grado o pregrado en instituciones brasileñas de educación superior.",
+          en: "The Undergraduate Student Agreement Program (PEC-G) is an international educational cooperation initiative of the Government of Brazil that offers foreign students from participating countries the opportunity to pursue an undergraduate degree free of charge at Brazilian higher education institutions.",
+        },
+        contentSections: [
+          {
+            paragraphs: [
+              {
+                es: "El Programa de Estudiantes-Convenio de Grado (PEC-G) es una iniciativa de cooperación educativa internacional del Gobierno de Brasil que ofrece a estudiantes extranjeros de países participantes la oportunidad de cursar gratuitamente una carrera de grado o pregrado en instituciones brasileñas de educación superior.",
+                en: "The Undergraduate Student Agreement Program (PEC-G) is an international educational cooperation initiative of the Government of Brazil that offers foreign students from participating countries the opportunity to pursue an undergraduate degree free of charge at Brazilian higher education institutions.",
+              },
+            ],
+            bullets: [
+              {
+                text: {
+                  es: "Acceso a plazas gratuitas en programas de grado ofrecidos por instituciones de educación superior de Brasil.",
+                  en: "Access to tuition-free places in undergraduate programs offered by higher education institutions in Brazil.",
+                },
+              },
+              {
+                text: {
+                  es: "Formación académica en distintas áreas del conocimiento.",
+                  en: "Academic training in different fields of knowledge.",
+                },
+              },
+              {
+                text: {
+                  es: "Oportunidad de obtener un título universitario brasileño, con el compromiso de regresar al país de origen al finalizar los estudios.",
+                  en: "Opportunity to obtain a Brazilian university degree, with the commitment to return to the country of origin after completing the studies.",
+                },
+              },
+              {
+                text: {
+                  es: "La gratuidad comprende los costos académicos del programa, pero no necesariamente los gastos de alojamiento, alimentación, transporte, seguro médico u otros costos personales.",
+                  en: "The tuition-free benefit covers the academic costs of the program, but not necessarily accommodation, food, transportation, health insurance or other personal expenses.",
+                },
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "Requisitos principales",
+              en: "Main requirements",
+            },
+            bullets: [
+              {
+                text: {
+                  es: "Ser ciudadano de uno de los países participantes del PEC-G y residir fuera de Brasil.",
+                  en: "Be a citizen of one of the countries participating in PEC-G and reside outside Brazil.",
+                },
+              },
+              {
+                text: {
+                  es: "No poseer nacionalidad brasileña ni encontrarse comprendido en las restricciones establecidas por el programa.",
+                  en: "Not hold Brazilian nationality and not fall under the restrictions established by the program.",
+                },
+              },
+              {
+                text: {
+                  es: "Haber concluido o estar finalizando la educación secundaria fuera de Brasil.",
+                  en: "Have completed or be completing secondary education outside Brazil.",
+                },
+              },
+              {
+                text: {
+                  es: "Acreditar conocimientos de portugués mediante el Certificado de Proficiência em Língua Portuguesa para Estrangeiros (Celpe-Bras) o cumplir las condiciones lingüísticas establecidas en la convocatoria.",
+                  en: "Prove knowledge of Portuguese through the Certificate of Proficiency in Portuguese for Foreigners (Celpe-Bras) or meet the language conditions established in the call.",
+                },
+              },
+              {
+                text: {
+                  es: "Presentar la documentación académica, personal y financiera solicitada.",
+                  en: "Submit the required academic, personal and financial documentation.",
+                },
+              },
+              {
+                text: {
+                  es: "Realizar la inscripción mediante la Embajada, Consulado o puesto diplomático de Brasil correspondiente al país de residencia.",
+                  en: "Register through the Brazilian Embassy, Consulate or diplomatic mission corresponding to the country of residence.",
+                },
+              },
+            ],
+          },
+        ],
+        href: "https://www.gov.br/mre/es/temas/cultura-y-educacion/cooperacion-educativa/oportunidades-de-estudio-para-extranjeros/pec-g/seleccion",
+        linkLabel: {
+          es: "Proceso de selección PEC-G",
+          en: "PEC-G selection process",
+        },
+        links: [
+          {
+            href: "https://www.gov.br/mre/es/temas/cultura-y-educacion/cooperacion-educativa/oportunidades-de-estudio-para-extranjeros/pec-g/seleccion",
+            label: {
+              es: "Proceso de selección PEC-G",
+              en: "PEC-G selection process",
+            },
+          },
+          {
+            href: "https://www.gov.br/pt-br/servicos/estudar-o-ensino-superior-no-brasil",
+            label: {
+              es: "Información oficial del servicio",
+              en: "Official service information",
+            },
+          },
+        ],
+      },
+    ],
   },
   {
     slug: "chile",
@@ -570,6 +1408,109 @@ export const scholarshipCountries: ScholarshipCatalogItem[] = [
       en: "Regional mobility, joint research and university scholarships.",
     },
     accent: "#E30613",
+    opportunities: [
+      {
+        slug: "programas-becas-agcid-extranjeros",
+        title: {
+          es: "Programas de Becas AGCID para Extranjeros",
+          en: "AGCID Scholarship Programs for Foreign Applicants",
+        },
+        body: {
+          es: "La Agencia Chilena de Cooperación Internacional para el Desarrollo ofrece programas de becas y oportunidades de formación dirigidos a ciudadanos extranjeros para fortalecer la cooperación internacional, el desarrollo de capital humano y el intercambio académico.",
+          en: "The Chilean Agency for International Cooperation for Development offers scholarship programs and training opportunities for foreign citizens to strengthen international cooperation, human capital development and academic exchange.",
+        },
+        contentSections: [
+          {
+            paragraphs: [
+              {
+                es: "La Agencia Chilena de Cooperación Internacional para el Desarrollo (AGCID) ofrece programas de becas y oportunidades de formación dirigidos a ciudadanos extranjeros con el propósito de fortalecer la cooperación internacional, el desarrollo de capital humano y el intercambio académico mediante estudios de posgrado, cursos internacionales y programas de movilidad en Chile.",
+                en: "The Chilean Agency for International Cooperation for Development (AGCID) offers scholarship programs and training opportunities for foreign citizens with the purpose of strengthening international cooperation, human capital development and academic exchange through postgraduate studies, international courses and mobility programs in Chile.",
+              },
+            ],
+            bullets: [
+              {
+                text: {
+                  es: "Becas para realizar estudios de magíster en universidades chilenas acreditadas.",
+                  en: "Scholarships to pursue master's studies at accredited Chilean universities.",
+                },
+              },
+              {
+                text: {
+                  es: "Programas de formación, cursos internacionales y oportunidades de perfeccionamiento en diversas áreas del conocimiento.",
+                  en: "Training programs, international courses and professional development opportunities in various fields of knowledge.",
+                },
+              },
+              {
+                text: {
+                  es: "Beneficios que pueden incluir estipendio mensual, seguro de salud, pasajes y otros apoyos, de acuerdo con cada convocatoria.",
+                  en: "Benefits that may include a monthly stipend, health insurance, airfare and other support, according to each call.",
+                },
+              },
+              {
+                text: {
+                  es: "Convocatorias dirigidas a profesionales y estudiantes de países de América Latina, el Caribe, África, Asia y otras regiones, según el programa correspondiente.",
+                  en: "Calls aimed at professionals and students from countries in Latin America, the Caribbean, Africa, Asia and other regions, depending on the corresponding program.",
+                },
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "Requisitos principales",
+              en: "Main requirements",
+            },
+            bullets: [
+              {
+                text: {
+                  es: "Cumplir con los requisitos establecidos en la convocatoria vigente del programa de interés.",
+                  en: "Meet the requirements established in the current call for the program of interest.",
+                },
+              },
+              {
+                text: {
+                  es: "Contar con el grado académico o título profesional requerido, cuando corresponda.",
+                  en: "Hold the required academic degree or professional title, when applicable.",
+                },
+              },
+              {
+                text: {
+                  es: "Presentar la documentación solicitada dentro de los plazos establecidos.",
+                  en: "Submit the requested documentation within the established deadlines.",
+                },
+              },
+              {
+                text: {
+                  es: "Realizar la postulación a través del Punto Focal, Embajada o institución designada por AGCID en el país de origen, según las bases de cada convocatoria.",
+                  en: "Apply through the Focal Point, Embassy or institution designated by AGCID in the country of origin, according to the rules of each call.",
+                },
+              },
+            ],
+          },
+         
+        ],
+        href: "https://appspublic.agci.cl/convocatorias/extranjeros.php",
+        linkLabel: {
+          es: "Ofertas vigentes AGCID",
+          en: "Current AGCID opportunities",
+        },
+        links: [
+          {
+            href: "https://appspublic.agci.cl/convocatorias/extranjeros.php",
+            label: {
+              es: "Ofertas vigentes AGCID",
+              en: "Current AGCID opportunities",
+            },
+          },
+          {
+            href: "https://www.agcid.gob.cl/becas/becas-para-extranjeros",
+            label: {
+              es: "Información oficial de Becas para Extranjeros",
+              en: "Official information for foreign scholarships",
+            },
+          },
+        ],
+      },
+    ],
   },
   {
     slug: "china",
@@ -581,6 +1522,102 @@ export const scholarshipCountries: ScholarshipCatalogItem[] = [
       en: "Government scholarships, mobility and academic opportunities in Asia.",
     },
     accent: "#003770",
+    opportunities: [
+      {
+        slug: "programa-becas-gobierno-republica-popular-china",
+        title: {
+          es: "Programa de Becas del Gobierno de la República Popular China",
+          en: "Scholarship Program of the Government of the People's Republic of China",
+        },
+        body: {
+          es: "El Programa de Becas del Gobierno de la República Popular China, administrado por el China Scholarship Council, ofrece oportunidades de financiamiento para que estudiantes internacionales realicen estudios en universidades chinas participantes.",
+          en: "The Scholarship Program of the Government of the People's Republic of China, administered by the China Scholarship Council, offers funding opportunities for international students to study at participating Chinese universities.",
+        },
+        contentSections: [
+          {
+            paragraphs: [
+              {
+                es: "El Programa de Becas del Gobierno de la República Popular China (Chinese Government Scholarship - CGS), administrado por el China Scholarship Council (CSC), ofrece oportunidades de financiamiento para que estudiantes internacionales realicen estudios de pregrado, maestría, doctorado, así como programas de investigación y formación en universidades chinas participantes.",
+                en: "The Scholarship Program of the Government of the People's Republic of China (Chinese Government Scholarship - CGS), administered by the China Scholarship Council (CSC), offers funding opportunities for international students to pursue undergraduate, master's and doctoral studies, as well as research and training programs at participating Chinese universities.",
+              },
+            ],
+            bullets: [
+              {
+                text: {
+                  es: "Becas para estudios de pregrado, maestría, doctorado y programas de investigación.",
+                  en: "Scholarships for undergraduate, master's and doctoral studies, as well as research programs.",
+                },
+              },
+              {
+                text: {
+                  es: "Oportunidad de estudiar en universidades chinas en diversas áreas del conocimiento.",
+                  en: "Opportunity to study at Chinese universities in various fields of knowledge.",
+                },
+              },
+              {
+                text: {
+                  es: "Beneficios que pueden incluir matrícula, alojamiento, estipendio mensual, seguro médico y otros apoyos, de acuerdo con la modalidad de la beca.",
+                  en: "Benefits may include tuition, accommodation, monthly stipend, health insurance and other support, according to the scholarship category.",
+                },
+              },
+              {
+                text: {
+                  es: "Las convocatorias son publicadas anualmente a través de la Embajada de la República Popular China y del China Scholarship Council (CSC).",
+                  en: "Calls are published annually through the Embassy of the People's Republic of China and the China Scholarship Council (CSC).",
+                },
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "Requisitos principales",
+              en: "Main requirements",
+            },
+            bullets: [
+              {
+                text: {
+                  es: "Cumplir con los requisitos académicos y de edad establecidos para el nivel de estudios al que se postula.",
+                  en: "Meet the academic and age requirements established for the level of study being applied to.",
+                },
+              },
+              {
+                text: {
+                  es: "Presentar la documentación requerida, incluyendo pasaporte, certificados académicos, formulario de examen médico y demás documentos establecidos en la convocatoria vigente.",
+                  en: "Submit the required documentation, including passport, academic certificates, medical examination form and other documents established in the current call.",
+                },
+              },
+              {
+                text: {
+                  es: "Realizar la postulación mediante el Chinese Government Scholarship Information System (CGSIS) y cumplir con el procedimiento indicado por la Embajada de China correspondiente.",
+                  en: "Apply through the Chinese Government Scholarship Information System (CGSIS) and follow the procedure indicated by the corresponding Chinese Embassy.",
+                },
+              },
+            ],
+          },
+        ],
+        href: "https://www.campuschina.org/",
+        linkLabel: {
+          es: "Portal oficial Study in China (CSC)",
+          en: "Official Study in China portal (CSC)",
+        },
+        links: [
+          {
+            href: "https://www.campuschina.org/",
+            label: {
+              es: "Portal oficial Study in China (CSC)",
+              en: "Official Study in China portal (CSC)",
+            },
+          },
+          {
+            href: "https://bo.china-embassy.gov.cn/esp/",
+            label: {
+              es: "Convocatorias oficiales de la Embajada de China en Bolivia",
+              en: "Official calls from the Embassy of China in Bolivia",
+            },
+          },
+        ],
+      },
+    ],
     children: [
       {
         slug: "hong-kong",
@@ -605,6 +1642,102 @@ export const scholarshipCountries: ScholarshipCatalogItem[] = [
       en: "Academic exchange, university networks and regional programs.",
     },
     accent: "#E30613",
+    opportunities: [
+      {
+        slug: "programa-reciprocidad-extranjeros-colombia-icetex",
+        title: {
+          es: "Programa de Reciprocidad para Extranjeros en Colombia (ICETEX)",
+          en: "Reciprocity Program for Foreigners in Colombia (ICETEX)",
+        },
+        body: {
+          es: "El Programa de Reciprocidad para Extranjeros en Colombia, administrado por ICETEX, ofrece oportunidades de becas para ciudadanos extranjeros interesados en realizar estudios de especialización, maestría y programas de investigación en instituciones colombianas.",
+          en: "The Reciprocity Program for Foreigners in Colombia, administered by ICETEX, offers scholarship opportunities for foreign citizens interested in pursuing specialization studies, master's programs and research programs at Colombian institutions.",
+        },
+        contentSections: [
+          {
+            paragraphs: [
+              {
+                es: "El Programa de Reciprocidad para Extranjeros en Colombia, administrado por el Instituto Colombiano de Crédito Educativo y Estudios Técnicos en el Exterior (ICETEX), ofrece oportunidades de becas para ciudadanos extranjeros interesados en realizar estudios de especialización, maestría y programas de investigación en instituciones de educación superior colombianas participantes.",
+                en: "The Reciprocity Program for Foreigners in Colombia, administered by the Colombian Institute of Educational Credit and Technical Studies Abroad (ICETEX), offers scholarship opportunities for foreign citizens interested in pursuing specialization studies, master's programs and research programs at participating Colombian higher education institutions.",
+              },
+            ],
+            bullets: [
+              {
+                text: {
+                  es: "Becas para estudios de especialización, maestría y programas de investigación en universidades colombianas.",
+                  en: "Scholarships for specialization studies, master's programs and research programs at Colombian universities.",
+                },
+              },
+              {
+                text: {
+                  es: "Oportunidad de acceder a instituciones de educación superior públicas y privadas incluidas en el catálogo oficial de oferta académica.",
+                  en: "Opportunity to access public and private higher education institutions included in the official academic offer catalog.",
+                },
+              },
+              {
+                text: {
+                  es: "Beneficios que pueden incluir matrícula, apoyo económico mensual, seguro médico y otros apoyos establecidos en cada convocatoria.",
+                  en: "Benefits may include tuition, monthly financial support, health insurance and other support established in each call.",
+                },
+              },
+              {
+                text: {
+                  es: "Convocatorias publicadas periódicamente por ICETEX para ciudadanos extranjeros de países elegibles, entre ellos Bolivia.",
+                  en: "Calls published periodically by ICETEX for foreign citizens from eligible countries, including Bolivia.",
+                },
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "Requisitos principales",
+              en: "Main requirements",
+            },
+            bullets: [
+              {
+                text: {
+                  es: "Contar con un título profesional o de pregrado para acceder al programa académico correspondiente.",
+                  en: "Hold a professional or undergraduate degree to access the corresponding academic program.",
+                },
+              },
+              {
+                text: {
+                  es: "Obtener la admisión a uno de los programas incluidos en el catálogo oficial de la convocatoria vigente.",
+                  en: "Obtain admission to one of the programs included in the official catalog of the current call.",
+                },
+              },
+              {
+                text: {
+                  es: "Cumplir con los requisitos académicos y documentales establecidos por ICETEX y realizar la postulación mediante la plataforma oficial.",
+                  en: "Meet the academic and documentary requirements established by ICETEX and apply through the official platform.",
+                },
+              },
+            ],
+          },
+        ],
+        href: "https://web.icetex.gov.co/es/becas/programa-de-reciprocidad-para-extranjeros-en-colombia",
+        linkLabel: {
+          es: "Programa de Reciprocidad para Extranjeros",
+          en: "Reciprocity Program for Foreigners",
+        },
+        links: [
+          {
+            href: "https://web.icetex.gov.co/es/becas/programa-de-reciprocidad-para-extranjeros-en-colombia",
+            label: {
+              es: "Programa de Reciprocidad para Extranjeros",
+              en: "Reciprocity Program for Foreigners",
+            },
+          },
+          {
+            href: "https://web.icetex.gov.co/es/web/portal/becas/beca-colombia-extranjeros",
+            label: {
+              es: "Convocatorias oficiales",
+              en: "Official calls",
+            },
+          },
+        ],
+      },
+    ],
   },
   {
     slug: "corea-del-sur",
@@ -616,6 +1749,108 @@ export const scholarshipCountries: ScholarshipCatalogItem[] = [
       en: "Scholarships, graduate studies and mobility with Korean institutions.",
     },
     accent: "#003770",
+    opportunities: [
+      {
+        slug: "programa-becas-koica",
+        title: {
+          es: "Programa de Becas KOICA",
+          en: "KOICA Scholarship Program",
+        },
+        body: {
+          es: "El Programa de Becas KOICA, administrado por la Agencia de Cooperación Internacional de Corea, ofrece oportunidades de formación para profesionales del sector público de países socios mediante programas de maestría y doctorado en universidades de la República de Corea.",
+          en: "The KOICA Scholarship Program, administered by the Korea International Cooperation Agency, offers training opportunities for public sector professionals from partner countries through master's and doctoral programs at universities in the Republic of Korea.",
+        },
+        contentSections: [
+          {
+            paragraphs: [
+              {
+                es: "El Programa de Becas KOICA, administrado por la Agencia de Cooperación Internacional de Corea (KOICA), ofrece oportunidades de formación para profesionales del sector público de países socios mediante programas de maestría y doctorado en universidades de la República de Corea. Su objetivo es fortalecer las capacidades institucionales y promover el desarrollo sostenible a través de la formación de líderes y funcionarios públicos.",
+                en: "The KOICA Scholarship Program, administered by the Korea International Cooperation Agency (KOICA), offers training opportunities for public sector professionals from partner countries through master's and doctoral programs at universities in the Republic of Korea. Its objective is to strengthen institutional capacities and promote sustainable development through the training of leaders and public officials.",
+              },
+            ],
+            bullets: [
+              {
+                text: {
+                  es: "Becas para programas de maestría y doctorado impartidos en universidades de Corea.",
+                  en: "Scholarships for master's and doctoral programs taught at universities in Korea.",
+                },
+              },
+              {
+                text: {
+                  es: "Beneficios que pueden incluir matrícula, alojamiento, estipendio mensual, pasajes internacionales, seguro médico y otros apoyos establecidos por KOICA.",
+                  en: "Benefits may include tuition, accommodation, monthly stipend, international airfare, health insurance and other support established by KOICA.",
+                },
+              },
+              {
+                text: {
+                  es: "Las convocatorias se publican anualmente y son canalizadas a través de las instituciones gubernamentales designadas o de la Embajada de la República de Corea, según el país participante.",
+                  en: "Calls are published annually and are channeled through designated government institutions or the Embassy of the Republic of Korea, depending on the participating country.",
+                },
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "Requisitos principales",
+              en: "Main requirements",
+            },
+            bullets: [
+              {
+                text: {
+                  es: "Ser ciudadano de un país elegible para el programa.",
+                  en: "Be a citizen of a country eligible for the program.",
+                },
+              },
+              {
+                text: {
+                  es: "Desempeñarse como funcionario público o profesional del sector público, conforme a los requisitos de la convocatoria.",
+                  en: "Work as a public official or public sector professional, according to the requirements of the call.",
+                },
+              },
+              {
+                text: {
+                  es: "Contar con el título académico requerido para el nivel de estudios al que se postula.",
+                  en: "Hold the academic degree required for the level of study being applied to.",
+                },
+              },
+              {
+                text: {
+                  es: "Cumplir con los requisitos académicos, profesionales y de idioma establecidos para el programa seleccionado.",
+                  en: "Meet the academic, professional and language requirements established for the selected program.",
+                },
+              },
+              {
+                text: {
+                  es: "Presentar la postulación mediante el organismo oficial designado en el país o conforme al procedimiento indicado por KOICA.",
+                  en: "Submit the application through the official body designated in the country or according to the procedure indicated by KOICA.",
+                },
+              },
+            ],
+          },
+        ],
+        href: "https://www.koica.go.kr/sites/ciat/index.do",
+        linkLabel: {
+          es: "Programa oficial KOICA CIAT",
+          en: "Official KOICA CIAT program",
+        },
+        links: [
+          {
+            href: "https://www.koica.go.kr/sites/ciat/index.do",
+            label: {
+              es: "Programa oficial KOICA CIAT",
+              en: "Official KOICA CIAT program",
+            },
+          },
+          {
+            href: "https://www.koica.go.kr/",
+            label: {
+              es: "Portal oficial KOICA",
+              en: "Official KOICA portal",
+            },
+          },
+        ],
+      },
+    ],
   },
   {
     slug: "ecuador",
@@ -627,6 +1862,109 @@ export const scholarshipCountries: ScholarshipCatalogItem[] = [
       en: "Regional cooperation, exchange and academic opportunities.",
     },
     accent: "#E30613",
+    opportunities: [
+      {
+        slug: "flacso-ecuador-maestria-doctorado",
+        title: {
+          es: "FLACSO Ecuador - Programas de Maestría y Doctorado",
+          en: "FLACSO Ecuador - Master's and Doctoral Programs",
+        },
+        body: {
+          es: "FLACSO Ecuador ofrece programas de maestría y doctorado orientados a la formación de investigadores y profesionales en diversas áreas de las ciencias sociales, además de becas y apoyo financiero para estudiantes nacionales e internacionales.",
+          en: "FLACSO Ecuador offers master's and doctoral programs aimed at training researchers and professionals in various areas of the social sciences, along with scholarships and financial support for national and international students.",
+        },
+        contentSections: [
+          {
+            paragraphs: [
+              {
+                es: "La Facultad Latinoamericana de Ciencias Sociales (FLACSO Ecuador) ofrece programas de maestría y doctorado orientados a la formación de investigadores y profesionales en diversas áreas de las ciencias sociales. Además, cuenta con un sistema de becas y apoyo financiero para estudiantes nacionales e internacionales que promueve la excelencia académica y la investigación.",
+                en: "The Latin American Faculty of Social Sciences (FLACSO Ecuador) offers master's and doctoral programs aimed at training researchers and professionals in various areas of the social sciences. It also has a scholarship and financial support system for national and international students that promotes academic excellence and research.",
+              },
+            ],
+            bullets: [
+              {
+                text: {
+                  es: "Programas de maestría y doctorado en áreas como ciencias políticas, relaciones internacionales, estudios internacionales, sociología, antropología, historia, economía, desarrollo territorial, políticas públicas, estudios de género, estudios urbanos, estudios socioambientales, comunicación y otras disciplinas de las ciencias sociales.",
+                  en: "Master's and doctoral programs in areas such as political science, international relations, international studies, sociology, anthropology, history, economics, territorial development, public policy, gender studies, urban studies, socio-environmental studies, communication and other social science disciplines.",
+                },
+              },
+              {
+                text: {
+                  es: "Becas y apoyos financieros que pueden cubrir entre el 10% y el 100% de la colegiatura, de acuerdo con el programa y el proceso de selección.",
+                  en: "Scholarships and financial support that may cover between 10% and 100% of tuition, according to the program and selection process.",
+                },
+              },
+              {
+                text: {
+                  es: "Algunas modalidades incluyen becas de estipendio, becas de asistencia financiera, becas para investigación de tesis y otros beneficios para estudiantes internacionales, conforme a la convocatoria vigente.",
+                  en: "Some modalities include stipend scholarships, financial assistance scholarships, thesis research scholarships and other benefits for international students, according to the current call.",
+                },
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "Requisitos principales",
+              en: "Main requirements",
+            },
+            bullets: [
+              {
+                text: {
+                  es: "Contar con el título académico requerido para el programa al que se postula.",
+                  en: "Hold the academic degree required for the program being applied to.",
+                },
+              },
+              {
+                text: {
+                  es: "Completar la solicitud de admisión en línea y presentar la documentación requerida por FLACSO Ecuador.",
+                  en: "Complete the online admission application and submit the documentation required by FLACSO Ecuador.",
+                },
+              },
+              {
+                text: {
+                  es: "Cumplir con los requisitos específicos del programa seleccionado y participar en el proceso de admisión correspondiente.",
+                  en: "Meet the specific requirements of the selected program and participate in the corresponding admission process.",
+                },
+              },
+              {
+                text: {
+                  es: "Postular a las becas o apoyos financieros disponibles conforme a las bases de la convocatoria vigente.",
+                  en: "Apply for available scholarships or financial support according to the rules of the current call.",
+                },
+              },
+            ],
+          },
+        ],
+        href: "https://www.flacso.edu.ec/es/maestria",
+        linkLabel: {
+          es: "Programas de Maestría",
+          en: "Master's Programs",
+        },
+        links: [
+          {
+            href: "https://www.flacso.edu.ec/es/maestria",
+            label: {
+              es: "Programas de Maestría",
+              en: "Master's Programs",
+            },
+          },
+          {
+            href: "https://doctoradosflacso.ec/",
+            label: {
+              es: "Doctorados",
+              en: "Doctoral Programs",
+            },
+          },
+          {
+            href: "https://www.flacso.edu.ec/es/becas_y_apoyo_financiero",
+            label: {
+              es: "Becas y apoyo financiero",
+              en: "Scholarships and financial support",
+            },
+          },
+        ],
+      },
+    ],
   },
   {
     slug: "espana",

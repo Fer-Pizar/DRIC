@@ -150,12 +150,35 @@ export default async function ScholarshipDestinationPage({ params }: Props) {
 
                               {section.bullets ? (
                                 <ul className="space-y-2 pl-5 text-left">
-                                  {section.bullets.map((bullet) => (
-                                    <li key={bullet.label.es} className="list-disc">
-                                      <span className="font-semibold text-white">
-                                        {bullet.label[language]}:
-                                      </span>{" "}
+                                  {section.bullets.map((bullet, bulletIndex) => (
+                                    <li key={`${opportunity.slug}-bullet-${bulletIndex}`} className="list-disc">
+                                      {bullet.label ? (
+                                        <>
+                                          <span className="font-semibold text-white">
+                                            {bullet.label[language]}:
+                                          </span>{" "}
+                                        </>
+                                      ) : null}
                                       <span>{bullet.text[language]}</span>
+                                      {bullet.children ? (
+                                        <ul className="mt-2 space-y-1 pl-5">
+                                          {bullet.children.map((child, childIndex) => (
+                                            <li
+                                              key={`${opportunity.slug}-bullet-${bulletIndex}-${childIndex}`}
+                                              className="list-disc"
+                                            >
+                                              {child.label ? (
+                                                <>
+                                                  <span className="font-semibold text-white">
+                                                    {child.label[language]}:
+                                                  </span>{" "}
+                                                </>
+                                              ) : null}
+                                              <span>{child.text[language]}</span>
+                                            </li>
+                                          ))}
+                                        </ul>
+                                      ) : null}
                                     </li>
                                   ))}
                                 </ul>
@@ -169,18 +192,26 @@ export default async function ScholarshipDestinationPage({ params }: Props) {
 
                       <div className="dric-scholarship-program-divider mt-10" />
 
-                      <div className="mt-7 flex justify-center">
-                        <a
-                          href={opportunity.href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="dric-scholarship-program-link inline-flex items-center gap-4 rounded-full p-[1px] text-lg font-normal text-white transition hover:scale-[1.02] md:text-2xl"
-                        >
-                          <span className="inline-flex items-center gap-4 rounded-full px-7 py-3 backdrop-blur-xl">
-                            {opportunity.linkLabel[language]}
-                            <OpenInNewRoundedIcon className="text-[1.6em]" />
-                          </span>
-                        </a>
+                      <div className="mt-7 flex flex-wrap justify-center gap-4">
+                        {(opportunity.links ?? [
+                          {
+                            href: opportunity.href,
+                            label: opportunity.linkLabel,
+                          },
+                        ]).map((link) => (
+                          <a
+                            key={link.href}
+                            href={link.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="dric-scholarship-program-link inline-flex items-center gap-4 rounded-full p-[1px] text-base font-normal text-white transition hover:scale-[1.02] md:text-xl"
+                          >
+                            <span className="inline-flex items-center gap-4 rounded-full px-6 py-3 backdrop-blur-xl md:px-7">
+                              {link.label[language]}
+                              <OpenInNewRoundedIcon className="text-[1.45em]" />
+                            </span>
+                          </a>
+                        ))}
                       </div>
                     </div>
                   </article>

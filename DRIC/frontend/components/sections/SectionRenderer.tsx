@@ -53,7 +53,9 @@ export default function SectionRenderer({ sections, locale = "es" }: Props) {
             return <StatsSection key={section.id} section={section} />;
 
           case "faq":
-            return <FaqSection key={section.id} section={section} />;
+            return (
+              <FaqSection key={section.id} section={section} locale={locale} />
+            );
 
           case "final_cta":
             return (

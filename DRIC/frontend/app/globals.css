@@ -523,6 +523,106 @@ html[data-theme="light"] .dric-site-header .dric-site-header-button {
   color: #ffffff !important;
 }
 
+.dric-faq-section {
+  color: #ffffff;
+}
+
+.dric-faq-toggle-all {
+  border-color: rgba(227, 6, 19, 0.92);
+  color: #ffffff;
+  background: rgba(227, 6, 19, 0.08);
+}
+
+.dric-faq-toggle-all:hover,
+.dric-faq-toggle-all:focus-visible {
+  background: rgba(227, 6, 19, 0.16);
+  box-shadow: 0 12px 30px rgba(227, 6, 19, 0.18);
+  outline: none;
+  transform: translateY(-1px);
+}
+
+.dric-faq-list {
+  border-top: 1px solid rgba(148, 163, 184, 0.24);
+}
+
+.dric-faq-item {
+  border-bottom: 1px solid rgba(148, 163, 184, 0.24);
+}
+
+.dric-faq-question {
+  color: #ffffff;
+}
+
+.dric-faq-question:hover {
+  color: #f8fafc;
+}
+
+.dric-faq-question:focus-visible {
+  outline: 2px solid rgba(227, 6, 19, 0.82);
+  outline-offset: 4px;
+}
+
+.dric-faq-plus {
+  color: #e30613;
+  transform-origin: center;
+}
+
+.dric-faq-item.is-open .dric-faq-plus {
+  transform: rotate(45deg);
+}
+
+.dric-faq-answer-grid {
+  grid-template-rows: 0fr;
+  opacity: 0;
+}
+
+.dric-faq-item.is-open .dric-faq-answer-grid {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.dric-faq-answer {
+  max-width: 58rem;
+  color: rgba(203, 213, 225, 0.86);
+}
+
+html[data-theme="light"] .dric-theme-page .dric-faq-section {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-theme-page .dric-faq-toggle-all {
+  background: rgba(255, 255, 255, 0.5);
+  border-color: rgba(227, 6, 19, 0.92) !important;
+  color: #b91c1c !important;
+  box-shadow: 0 16px 38px rgba(15, 23, 42, 0.08);
+}
+
+html[data-theme="light"] .dric-theme-page .dric-faq-toggle-all:hover,
+html[data-theme="light"] .dric-theme-page .dric-faq-toggle-all:focus-visible {
+  background: rgba(227, 6, 19, 0.08);
+}
+
+html[data-theme="light"] .dric-theme-page .dric-faq-list,
+html[data-theme="light"] .dric-theme-page .dric-faq-item {
+  border-color: rgba(15, 23, 42, 0.14);
+}
+
+html[data-theme="light"] .dric-theme-page .dric-faq-question {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-theme-page .dric-faq-question:hover {
+  color: #003770 !important;
+}
+
+html[data-theme="light"] .dric-theme-page .dric-faq-plus {
+  color: #e30613 !important;
+}
+
+html[data-theme="light"] .dric-theme-page .dric-faq-answer {
+  color: rgba(51, 65, 85, 0.82) !important;
+}
+
 html[data-theme="light"] .dric-site-header .dric-site-header-button:hover {
   background: rgba(255, 255, 255, 0.2) !important;
 }
