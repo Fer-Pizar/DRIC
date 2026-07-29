@@ -1976,6 +1976,382 @@ export const scholarshipCountries: ScholarshipCatalogItem[] = [
       en: "Undergraduate, graduate, mobility and university cooperation scholarships.",
     },
     accent: "#003770",
+    opportunities: [
+      {
+        slug: "programa-jovenes-lideres-iberoamericanos",
+        title: {
+          es: "Programa Jóvenes Líderes Iberoamericanos",
+          en: "Ibero-American Young Leaders Program",
+        },
+        body: {
+          es: "El Programa Jóvenes Líderes Iberoamericanos, organizado por la Fundación Carolina y Banco Santander, es una iniciativa de liderazgo y formación internacional dirigida a jóvenes universitarios con destacada trayectoria académica y compromiso social.",
+          en: "The Ibero-American Young Leaders Program, organized by the Carolina Foundation and Banco Santander, is an international leadership and training initiative aimed at university students with an outstanding academic record and social commitment.",
+        },
+        contentSections: [
+          {
+            paragraphs: [
+              {
+                es: "El Programa Jóvenes Líderes Iberoamericanos, organizado por la Fundación Carolina y Banco Santander, es una iniciativa de liderazgo y formación internacional dirigida a jóvenes universitarios con una destacada trayectoria académica y compromiso social. Su objetivo es fortalecer el liderazgo, la cooperación iberoamericana y el intercambio de experiencias entre los futuros profesionales de los países de la Comunidad Iberoamericana de Naciones.",
+                en: "The Ibero-American Young Leaders Program, organized by the Carolina Foundation and Banco Santander, is an international leadership and training initiative aimed at university students with an outstanding academic record and social commitment. Its objective is to strengthen leadership, Ibero-American cooperation and the exchange of experiences among future professionals from the countries of the Ibero-American Community of Nations.",
+              },
+            ],
+            bullets: [
+              {
+                text: {
+                  es: "Incluye conferencias, encuentros institucionales, visitas académicas y actividades de formación en España y otros países europeos, de acuerdo con la edición correspondiente.",
+                  en: "It includes conferences, institutional meetings, academic visits and training activities in Spain and other European countries, according to the corresponding edition.",
+                },
+              },
+              {
+                text: {
+                  es: "Promueve la creación de una red de jóvenes líderes comprometidos con el desarrollo, la cooperación internacional y la integración iberoamericana.",
+                  en: "It promotes the creation of a network of young leaders committed to development, international cooperation and Ibero-American integration.",
+                },
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "Requisitos principales",
+              en: "Main requirements",
+            },
+            bullets: [
+              {
+                text: {
+                  es: "Ser ciudadano de un país miembro de la Comunidad Iberoamericana de Naciones.",
+                  en: "Be a citizen of a member country of the Ibero-American Community of Nations.",
+                },
+              },
+              {
+                text: {
+                  es: "Contar con un excelente expediente académico, liderazgo, participación social y compromiso con su comunidad.",
+                  en: "Have an excellent academic record, leadership, social participation and commitment to the community.",
+                },
+              },
+              {
+                text: {
+                  es: "Completar la postulación mediante las plataformas oficiales de la Fundación Carolina y Santander Open Academy, presentando la documentación requerida.",
+                  en: "Complete the application through the official Carolina Foundation and Santander Open Academy platforms, submitting the required documentation.",
+                },
+              },
+            ],
+          },
+        ],
+        href: "https://www.fundacioncarolina.es/programa-int-visitantes/visitas-de-grupo/programa-jovenes-lideres-iberoamericanos/",
+        linkLabel: {
+          es: "Programa Jóvenes Líderes Iberoamericanos",
+          en: "Ibero-American Young Leaders Program",
+        },
+      },
+      {
+        slug: "fundacion-carolina",
+        title: {
+          es: "Fundación Carolina",
+          en: "Carolina Foundation",
+        },
+        body: {
+          es: "La Fundación Carolina ofrece un amplio programa de becas y ayudas al estudio para ciudadanos de América Latina que deseen realizar estudios de maestría, doctorado, estancias de investigación y programas de formación en España.",
+          en: "The Carolina Foundation offers a broad program of scholarships and study grants for Latin American citizens who wish to pursue master's studies, doctoral studies, research stays and training programs in Spain.",
+        },
+        contentSections: [
+          {
+            paragraphs: [
+              {
+                es: "La Fundación Carolina ofrece un amplio programa de becas y ayudas al estudio para ciudadanos de América Latina que deseen realizar estudios de maestría, doctorado, estancias de investigación y programas de formación en universidades e instituciones académicas de España. Su objetivo es fortalecer la cooperación educativa, científica y cultural entre España y los países de la Comunidad Iberoamericana de Naciones.",
+                en: "The Carolina Foundation offers a broad program of scholarships and study grants for Latin American citizens who wish to pursue master's studies, doctoral studies, research stays and training programs at universities and academic institutions in Spain. Its objective is to strengthen educational, scientific and cultural cooperation between Spain and the countries of the Ibero-American Community of Nations.",
+              },
+            ],
+            bullets: [
+              {
+                text: {
+                  es: "Becas para maestrías, doctorados, estancias posdoctorales, movilidad académica y programas de formación permanente.",
+                  en: "Scholarships for master's programs, doctoral studies, postdoctoral stays, academic mobility and continuing education programs.",
+                },
+              },
+              {
+                text: {
+                  es: "Oportunidades de estudio en universidades e instituciones de educación superior de España.",
+                  en: "Study opportunities at universities and higher education institutions in Spain.",
+                },
+              },
+              {
+                text: {
+                  es: "Modalidades de becas completas o parciales, así como ayudas al estudio, dependiendo del programa y de la institución participante.",
+                  en: "Full or partial scholarship modalities, as well as study grants, depending on the program and the participating institution.",
+                },
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "Requisitos principales",
+              en: "Main requirements",
+            },
+            bullets: [
+              {
+                text: {
+                  es: "Contar con el título académico requerido para el programa al que se postula.",
+                  en: "Hold the academic degree required for the program being applied to.",
+                },
+              },
+              {
+                text: {
+                  es: "Cumplir con los requisitos académicos y de experiencia profesional establecidos por cada convocatoria.",
+                  en: "Meet the academic and professional experience requirements established by each call.",
+                },
+              },
+              {
+                text: {
+                  es: "Realizar la postulación de forma en línea mediante la plataforma oficial de la Fundación Carolina y presentar la documentación solicitada.",
+                  en: "Apply online through the official Carolina Foundation platform and submit the requested documentation.",
+                },
+              },
+            ],
+          },
+        ],
+        href: "https://gestion.fundacioncarolina.es/programas",
+        linkLabel: {
+          es: "Convocatoria anual de becas",
+          en: "Annual scholarship call",
+        },
+      },
+      {
+        slug: "becas-captacion-talento-internacional-upna",
+        title: {
+          es: "Becas de Captación de Talento Internacional - Universidad Pública de Navarra (UPNA)",
+          en: "International Talent Attraction Scholarships - Public University of Navarra (UPNA)",
+        },
+        body: {
+          es: "La Universidad Pública de Navarra ofrece el programa de Becas de Captación de Talento Internacional, dirigido a estudiantes internacionales que deseen cursar estudios de pregrado, posgrado y otras modalidades de formación en España.",
+          en: "The Public University of Navarra offers the International Talent Attraction Scholarships program, aimed at international students who wish to pursue undergraduate, graduate and other training programs in Spain.",
+        },
+        contentSections: [
+          {
+            paragraphs: [
+              {
+                es: "La Universidad Pública de Navarra (UPNA) ofrece el programa de Becas de Captación de Talento Internacional, dirigido a estudiantes internacionales que deseen cursar estudios de pregrado, posgrado y otras modalidades de formación en España. Estas becas buscan atraer talento académico de países no pertenecientes a la Unión Europea y apoyar la formación de profesionales en diversas áreas del conocimiento.",
+                en: "The Public University of Navarra (UPNA) offers the International Talent Attraction Scholarships program, aimed at international students who wish to pursue undergraduate, graduate and other training programs in Spain. These scholarships seek to attract academic talent from countries outside the European Union and support the training of professionals in various fields of knowledge.",
+              },
+            ],
+            bullets: [
+              {
+                text: {
+                  es: "Dirigidas a estudiantes internacionales no residentes en un Estado miembro de la Unión Europea.",
+                  en: "Aimed at international students who are not residents of a European Union Member State.",
+                },
+              },
+              {
+                text: {
+                  es: "Los beneficios pueden incluir matrícula, apoyo para desplazamiento, alojamiento, manutención y otros conceptos, de acuerdo con la convocatoria vigente.",
+                  en: "Benefits may include tuition, travel support, accommodation, living expenses and other items, according to the current call.",
+                },
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "Requisitos principales",
+              en: "Main requirements",
+            },
+            bullets: [
+              {
+                text: {
+                  es: "Ser admitido o cumplir los requisitos de admisión a un máster oficial de la Universidad Pública de Navarra.",
+                  en: "Be admitted or meet the admission requirements for an official master's program at the Public University of Navarra.",
+                },
+              },
+              {
+                text: {
+                  es: "Cumplir con los requisitos académicos y documentales establecidos por la convocatoria vigente.",
+                  en: "Meet the academic and documentary requirements established by the current call.",
+                },
+              },
+              {
+                text: {
+                  es: "Presentar la solicitud dentro de los plazos y mediante el procedimiento oficial establecido por la UPNA.",
+                  en: "Submit the application within the deadlines and through the official procedure established by UPNA.",
+                },
+              },
+            ],
+          },
+        ],
+        href: "https://sedeelectronica.unavarra.es/oficina/tramites/acceso.do?entity=1096&id=8390",
+        linkLabel: {
+          es: "Becas de Captación de Talento",
+          en: "Talent Attraction Scholarships",
+        },
+        links: [
+          {
+            href: "https://sedeelectronica.unavarra.es/oficina/tramites/acceso.do?entity=1096&id=8390",
+            label: {
+              es: "Becas de Captación de Talento",
+              en: "Talent Attraction Scholarships",
+            },
+          },
+          {
+            href: "https://www.unavarra.es/sites/estudios/becas-ayudas-premios/grado.html",
+            label: {
+              es: "Oferta oficial de becas",
+              en: "Official scholarship offer",
+            },
+          },
+        ],
+      },
+      {
+        slug: "programa-becas-master-universitario-valladolid",
+        title: {
+          es: "Programa de Becas de Máster Universitario - Universidad de Valladolid",
+          en: "University Master's Scholarship Program - University of Valladolid",
+        },
+        body: {
+          es: "La Universidad de Valladolid ofrece un programa de becas dirigido a docentes y estudiantes que deseen realizar estudios oficiales de máster universitario en España, en el marco de su estrategia de internacionalización.",
+          en: "The University of Valladolid offers a scholarship program for faculty and students who wish to pursue official university master's studies in Spain, within the framework of its internationalization strategy.",
+        },
+        contentSections: [
+          {
+            paragraphs: [
+              {
+                es: "La Universidad de Valladolid (UVa) ofrece un programa de becas dirigido a docentes y estudiantes que deseen realizar estudios oficiales de máster universitario en España. Esta iniciativa forma parte de la estrategia de internacionalización de la universidad y promueve la cooperación académica con instituciones de Iberoamérica y Asia.",
+                en: "The University of Valladolid (UVa) offers a scholarship program for faculty and students who wish to pursue official university master's studies in Spain. This initiative is part of the university's internationalization strategy and promotes academic cooperation with institutions in Ibero-America and Asia.",
+              },
+            ],
+            bullets: [
+              {
+                text: {
+                  es: "Becas para cursar másteres universitarios oficiales impartidos por la Universidad de Valladolid.",
+                  en: "Scholarships to pursue official university master's programs offered by the University of Valladolid.",
+                },
+              },
+              {
+                text: {
+                  es: "Los beneficios pueden incluir apoyo para matrícula, alojamiento, manutención, desplazamiento y otros conceptos, conforme a la convocatoria vigente.",
+                  en: "Benefits may include support for tuition, accommodation, living expenses, travel and other items, according to the current call.",
+                },
+              },
+              {
+                text: {
+                  es: "La oferta de programas, el número de becas y las condiciones de financiación se actualizan en cada convocatoria anual.",
+                  en: "The program offer, number of scholarships and funding conditions are updated in each annual call.",
+                },
+              },
+              {
+                text: {
+                  es: "Cumplir con los requisitos académicos y documentales establecidos por la convocatoria vigente.",
+                  en: "Meet the academic and documentary requirements established by the current call.",
+                },
+              },
+              {
+                text: {
+                  es: "Presentar la solicitud mediante el procedimiento oficial de la Universidad de Valladolid dentro de los plazos establecidos.",
+                  en: "Submit the application through the official University of Valladolid procedure within the established deadlines.",
+                },
+              },
+            ],
+          },
+          {
+            paragraphs: [
+              {
+                es: "En el marco de nuestra alianza como socios Erasmus+, los postulantes de la UMSS contarán con preferencia en esta convocatoria, lo que representa una excelente oportunidad para acceder a este programa.",
+                en: "Within the framework of our alliance as Erasmus+ partners, UMSS applicants will receive preference in this call, representing an excellent opportunity to access this program.",
+              },
+            ],
+          },
+        ],
+        href: "https://iberoamerica-asia.uva.es/",
+        linkLabel: {
+          es: "Programa oficial de Becas de Máster Universitario",
+          en: "Official University Master's Scholarship Program",
+        },
+      },
+      {
+        slug: "programa-becas-maec-aecid-master",
+        title: {
+          es: "Programa de Becas MAEC-AECID - Programa MASTER",
+          en: "MAEC-AECID Scholarship Program - MASTER Program",
+        },
+        body: {
+          es: "El Programa de Becas MAEC-AECID ofrece becas para que funcionarios y empleados públicos realicen estudios oficiales de máster universitario presencial en instituciones de educación superior españolas.",
+          en: "The MAEC-AECID Scholarship Program offers scholarships for public officials and public employees to pursue official in-person university master's studies at Spanish higher education institutions.",
+        },
+        contentSections: [
+          {
+            paragraphs: [
+              {
+                es: "El Programa de Becas MAEC-AECID, promovido por la Agencia Española de Cooperación Internacional para el Desarrollo (AECID) y el Ministerio de Asuntos Exteriores, Unión Europea y Cooperación de España (MAEC), ofrece becas para que funcionarios y empleados públicos realicen estudios oficiales de máster universitario presencial en instituciones de educación superior españolas.",
+                en: "The MAEC-AECID Scholarship Program, promoted by the Spanish Agency for International Development Cooperation (AECID) and Spain's Ministry of Foreign Affairs, European Union and Cooperation (MAEC), offers scholarships for public officials and public employees to pursue official in-person university master's studies at Spanish higher education institutions.",
+              },
+            ],
+            bullets: [
+              {
+                text: {
+                  es: "Becas para cursar másteres universitarios oficiales en universidades de España.",
+                  en: "Scholarships to pursue official university master's programs at universities in Spain.",
+                },
+              },
+              {
+                text: {
+                  es: "Dirigidas a funcionarios y empleados públicos de carácter permanente, incluido el personal del sistema educativo y universitario público, de los países elegibles establecidos en cada convocatoria.",
+                  en: "Aimed at permanent public officials and public employees, including staff from the public education and university system, from eligible countries established in each call.",
+                },
+              },
+              {
+                text: {
+                  es: "Los beneficios pueden incluir asignación mensual, seguro de asistencia sanitaria y otros apoyos contemplados en la convocatoria vigente.",
+                  en: "Benefits may include a monthly allowance, health care insurance and other support included in the current call.",
+                },
+              },
+              {
+                text: {
+                  es: "Las convocatorias se publican anualmente y las modalidades, beneficios y requisitos específicos pueden variar en cada edición.",
+                  en: "Calls are published annually and the modalities, benefits and specific requirements may vary in each edition.",
+                },
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "Requisitos principales",
+              en: "Main requirements",
+            },
+            bullets: [
+              {
+                text: {
+                  es: "Desempeñarse como funcionario o empleado público de carácter permanente, conforme a las condiciones del programa.",
+                  en: "Work as a permanent public official or public employee, according to the conditions of the program.",
+                },
+              },
+              {
+                text: {
+                  es: "Realizar la postulación mediante la sede electrónica de AECID y presentar la documentación requerida dentro de los plazos establecidos.",
+                  en: "Apply through the AECID electronic office and submit the required documentation within the established deadlines.",
+                },
+              },
+            ],
+          },
+        ],
+        href: "https://www.aecid.gob.es/activos",
+        linkLabel: {
+          es: "Sede electrónica AECID",
+          en: "AECID electronic office",
+        },
+        links: [
+          {
+            href: "https://www.aecid.gob.es/activos",
+            label: {
+              es: "Sede electrónica AECID",
+              en: "AECID electronic office",
+            },
+          },
+          {
+            href: "https://www.aecid.es/es/becas-para-ciudadanos-de-paises-de-america-latina-africa-y-asia",
+            label: {
+              es: "Programa oficial de Becas MAEC-AECID",
+              en: "Official MAEC-AECID Scholarship Program",
+            },
+          },
+        ],
+      },
+    ],
   },
   {
     slug: "estados-unidos",

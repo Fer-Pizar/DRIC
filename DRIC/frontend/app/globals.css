@@ -878,7 +878,10 @@ html[data-theme="light"] .dric-scholarship-detail-page .dric-neon-country-title 
     0 16px 38px rgba(15, 23, 42, 0.18);
 }
 
-.dric-scholarship-detail-page .dric-scholarship-program-card {
+.dric-scholarship-detail-page .dric-scholarship-program-card,
+.dric-campus-life-page .dric-campus-feature-card,
+html[data-theme="dark"] .dric-scholarship-index-page .dric-scholarship-option,
+html[data-theme="dark"] .dric-mobility-page .dric-mobility-card {
   background: transparent;
   box-shadow:
     0 0 18px rgba(197, 157, 255, 0.18),
@@ -886,7 +889,20 @@ html[data-theme="light"] .dric-scholarship-detail-page .dric-neon-country-title 
     0 30px 80px rgba(0, 0, 0, 0.24);
 }
 
-.dric-scholarship-detail-page .dric-scholarship-program-card::before {
+html[data-theme="dark"] .dric-mobility-page .dric-mobility-card {
+  position: relative;
+  border-color: transparent !important;
+}
+
+.dric-campus-life-page .dric-campus-feature-card,
+html[data-theme="dark"] .dric-scholarship-index-page .dric-scholarship-option {
+  border-color: transparent !important;
+}
+
+.dric-scholarship-detail-page .dric-scholarship-program-card::before,
+.dric-campus-life-page .dric-campus-feature-card::before,
+html[data-theme="dark"] .dric-scholarship-index-page .dric-scholarship-option::before,
+html[data-theme="dark"] .dric-mobility-page .dric-mobility-card::before {
   content: "";
   position: absolute;
   inset: 0;
@@ -904,13 +920,27 @@ html[data-theme="light"] .dric-scholarship-detail-page .dric-neon-country-title 
   mask-composite: exclude;
 }
 
-.dric-scholarship-detail-page .dric-scholarship-program-card-inner {
+.dric-scholarship-detail-page .dric-scholarship-program-card-inner,
+.dric-campus-life-page .dric-campus-feature-card-inner,
+html[data-theme="dark"] .dric-mobility-page .dric-mobility-card-inner {
   background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.04);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.16),
     inset 0 -1px 0 rgba(0, 0, 0, 0.54);
   backdrop-filter: none;
+}
+
+.dric-mobility-page .dric-mobility-card-inner {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.dric-mobility-page .dric-mobility-card-inner > a {
+  align-self: center;
+  margin-top: auto !important;
+  padding-top: 2.5rem;
 }
 
 .dric-scholarship-detail-page .dric-scholarship-program-divider {
@@ -932,6 +962,82 @@ html[data-theme="light"] .dric-scholarship-detail-page .dric-neon-country-title 
   color: #ffffff !important;
 }
 
+html[data-theme="dark"] .dric-mobility-page .dric-mobility-card-inner > .absolute.inset-x-0.bottom-0.h-1 {
+  display: none;
+}
+
+html[data-theme="dark"] .dric-mobility-page .dric-mobility-card-button {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.22), rgba(197, 157, 255, 0.08)),
+    rgba(4, 15, 64, 0.16) !important;
+  border-color: rgba(255, 255, 255, 0.56) !important;
+  color: #ffffff !important;
+  text-shadow: 0 1px 12px rgba(255, 255, 255, 0.28);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.46),
+    inset 0 -1px 0 rgba(197, 157, 255, 0.18),
+    0 0 18px rgba(197, 157, 255, 0.2),
+    0 14px 34px rgba(0, 0, 0, 0.22) !important;
+  backdrop-filter: blur(16px) saturate(145%);
+}
+
+.dric-mobility-page .dric-mobility-card-button {
+  position: relative;
+  overflow: visible;
+  isolation: isolate;
+  transition:
+    background 220ms ease,
+    border-color 220ms ease,
+    box-shadow 220ms ease,
+    color 220ms ease,
+    transform 220ms ease;
+}
+
+.dric-mobility-page .dric-mobility-card-button::before {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  z-index: -1;
+  border-radius: inherit;
+  padding: 3px;
+  background: linear-gradient(90deg, #fe58d4 0%, #ff57aa 46%, #bf8eff 100%);
+  opacity: 0;
+  filter: blur(8px);
+  transition: opacity 220ms ease, filter 220ms ease;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+}
+
+.dric-mobility-page .dric-mobility-card-inner > a:hover .dric-mobility-card-button,
+.dric-mobility-page .dric-mobility-card-button:hover {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.32), rgba(197, 157, 255, 0.16)),
+    rgba(20, 10, 34, 0.2) !important;
+  border-color: rgba(255, 190, 230, 0.92) !important;
+  color: #ffffff !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.58),
+    0 0 8px rgba(255, 255, 255, 0.42),
+    0 0 14px rgba(227, 6, 164, 0.42),
+    0 0 24px rgba(253, 94, 181, 0.798),
+    0 0 34px rgba(155, 76, 255, 0.3),
+    0 16px 38px rgba(0, 0, 0, 0.24) !important;
+  transform: translateY(-2px);
+}
+
+.dric-mobility-page .dric-mobility-card-inner > a:hover .dric-mobility-card-button::before,
+.dric-mobility-page .dric-mobility-card-button:hover::before {
+  opacity: 1;
+  filter: blur(10px);
+}
+
+html[data-theme="light"] .dric-campus-life-page .dric-campus-feature-card,
 html[data-theme="light"] .dric-scholarship-detail-page .dric-scholarship-program-card {
   background: transparent !important;
 }

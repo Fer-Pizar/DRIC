@@ -88,17 +88,10 @@ export default async function CampusLifePage({ params }: Props) {
         : "La UMSS integra facultades, institutos y unidades académicas que sostienen la formación profesional.",
       image: "/images/campus-life/faculties.png",
     },
-    {
-      title: isEnglish ? "Cochabamba: university city" : "Cochabamba: ciudad universitaria",
-      text: isEnglish
-        ? "The university experience is connected to the cultural, social and geographic identity of Cochabamba."
-        : "La experiencia universitaria se conecta con la identidad cultural, social y geográfica de Cochabamba.",
-      image: "/images/campus-life/cochabamba.png",
-    },
   ];
 
   return (
-    <main className="dric-theme-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
+    <main className="dric-theme-page dric-campus-life-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
       <Header />
 
       <section className="relative isolate min-h-screen px-5 pb-20 pt-36 md:px-10 lg:px-12">
@@ -204,16 +197,15 @@ export default async function CampusLifePage({ params }: Props) {
           <div className="grid gap-7 md:grid-cols-3">
             {cards.map((card) => (
               <Card
+                className="dric-campus-feature-card relative overflow-hidden rounded-[2rem] p-[1px] shadow-2xl shadow-black/25"
                 key={card.title}
                 sx={{
-                  borderRadius: "34px",
-                  background: "rgba(255,255,255,0.06)",
-                  border: "1px solid rgba(255,255,255,0.10)",
-                  boxShadow: "0 24px 70px rgba(0,0,0,0.24)",
+                  borderRadius: "2rem",
+                  background: "transparent",
                   color: "white",
                 }}
               >
-                <div className="min-h-[280px] bg-white/[0.06] p-8">
+                <div className="dric-campus-feature-card-inner h-full min-h-[280px] rounded-[calc(2rem-1px)] p-8">
                   <div className="flex h-14 w-14 items-center justify-center rounded-3xl bg-white/10 text-cyan-300">
                     {card.icon}
                   </div>
