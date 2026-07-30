@@ -294,6 +294,18 @@ class HomePageSeeder extends Seeder
                         'answer_en' => 'DRIC shares calls for undergraduate, graduate, mobility, internship, and international academic programs.',
                     ],
                     [
+                        'question_es' => '¿Las becas cubren todos los gastos?',
+                        'answer_es' => 'No siempre. La cobertura depende de cada convocatoria y puede ser total o parcial, incluyendo beneficios como matrícula, alojamiento, manutención, pasajes o seguro médico. Se recomienda revisar los requisitos y beneficios específicos de cada programa.',
+                        'question_en' => 'Do scholarships cover all expenses?',
+                        'answer_en' => 'Not always. Coverage depends on each call and may be full or partial, including benefits such as tuition, housing, living expenses, travel or health insurance. We recommend reviewing the specific requirements and benefits of each program.',
+                    ],
+                    [
+                        'question_es' => '¿También existen oportunidades para docentes e investigadores?',
+                        'answer_es' => 'Sí. La DRIC también difunde programas de movilidad, investigación, capacitación y cooperación internacional para docentes, investigadores y personal administrativo. Los requisitos y beneficios varían según cada convocatoria.',
+                        'question_en' => 'Are there also opportunities for faculty and researchers?',
+                        'answer_en' => 'Yes. DRIC also shares mobility, research, training and international cooperation programs for faculty, researchers and administrative staff. Requirements and benefits vary depending on each call.',
+                    ],
+                    [
                         'question_es' => '¿En qué países puedo realizar intercambios académicos?',
                         'answer_es' => 'Las oportunidades dependen de los convenios vigentes, convocatorias activas y requisitos de cada institución extranjera.',
                         'question_en' => 'In which countries can I do academic exchanges?',

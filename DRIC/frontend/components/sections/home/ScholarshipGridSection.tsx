@@ -46,7 +46,7 @@ export default function ScholarshipGridSection({ section, locale = "es" }: Props
             return (
               <Link
                 key={block.id}
-                href={`/${locale}/becas-movilidad/${countrySlug}`}
+                href={`/${locale}/becas-movilidad/becas/${countrySlug}`}
                 className="dric-scholarship-card group block overflow-hidden rounded-3xl border border-white/10 bg-slate-900 transition duration-500 hover:-translate-y-3 hover:scale-[1.03] hover:border-cyan-300/70 hover:shadow-[0_0_45px_rgba(0,55,112,0.25)]"
               >
                 <div className="relative overflow-hidden">
