@@ -4529,49 +4529,169 @@ export const scholarshipOrganizations: ScholarshipCatalogItem[] = [
     accent: "#003770",
     opportunities: [
       {
-        slug: "portal-becas-oea",
+        slug: "programa-becas-paec-oea-eude-business-school",
         title: {
-          es: "Portal de Becas OEA",
-          en: "OAS Scholarship Portal",
+          es: "Programa de Becas PAEC OEA - EUDE Business School",
+          en: "PAEC OAS - EUDE Business School Scholarship Program",
         },
         body: {
-          es: "La Organización de los Estados Americanos ofrece programas de becas y oportunidades de formación para ciudadanos de sus Estados Miembros, orientados al fortalecimiento académico, profesional y regional.",
-          en: "The Organization of American States offers scholarship programs and training opportunities for citizens of its Member States, aimed at academic, professional and regional development.",
+          es: "El Programa de Becas PAEC OEA - EUDE Business School es una iniciativa desarrollada por la Organización de los Estados Americanos (OEA) y EUDE Business School, que ofrece becas parciales para ciudadanos de los Estados Miembros de la OEA interesados en realizar estudios de maestría.",
+          en: "The PAEC OAS - EUDE Business School Scholarship Program is an initiative developed by the Organization of American States (OAS) and EUDE Business School, offering partial scholarships for citizens of OAS Member States interested in pursuing master's studies.",
         },
         contentSections: [
           {
             paragraphs: [
               {
-                es: "La OEA difunde oportunidades de becas, capacitación y cooperación académica en alianza con universidades e instituciones internacionales. Las convocatorias, áreas de estudio, modalidades y beneficios pueden variar según cada programa.",
-                en: "The OAS shares scholarship, training and academic cooperation opportunities in partnership with universities and international institutions. Calls, fields of study, formats and benefits may vary depending on each program.",
+                es: "El Programa de Becas PAEC OEA - EUDE Business School es una iniciativa desarrollada por la Organización de los Estados Americanos (OEA) y EUDE Business School, que ofrece becas parciales para ciudadanos de los Estados Miembros de la OEA interesados en realizar estudios de maestría en modalidad presencial y en línea.",
+                en: "The PAEC OAS - EUDE Business School Scholarship Program is an initiative developed by the Organization of American States (OAS) and EUDE Business School, offering partial scholarships for citizens of OAS Member States interested in pursuing master's studies in in-person and online formats.",
               },
             ],
             bullets: [
               {
                 text: {
-                  es: "Programas dirigidos a ciudadanos de Estados Miembros de la OEA.",
-                  en: "Programs aimed at citizens of OAS Member States.",
+                  es: "Programas de maestría en áreas como administración de empresas, marketing, finanzas, comercio internacional, recursos humanos, logística, transformación digital, gestión de proyectos, Big Data, Business Intelligence, entre otras.",
+                  en: "Master's programs in areas such as business administration, marketing, finance, international trade, human resources, logistics, digital transformation, project management, Big Data, Business Intelligence and others.",
                 },
               },
               {
                 text: {
-                  es: "Oportunidades de formación, posgrado, capacitación profesional y cooperación académica.",
-                  en: "Training, graduate study, professional development and academic cooperation opportunities.",
+                  es: "Disponibles en modalidad presencial y online, según la oferta académica vigente.",
+                  en: "Available in in-person and online formats, according to the current academic offer.",
                 },
               },
               {
                 text: {
-                  es: "Los requisitos, beneficios y fechas deben revisarse en cada convocatoria oficial.",
-                  en: "Requirements, benefits and dates should be reviewed in each official call.",
+                  es: "Las becas consisten en descuentos parciales sobre el costo de la matrícula y los beneficios pueden variar en cada convocatoria.",
+                  en: "Scholarships consist of partial discounts on tuition costs, and benefits may vary in each call.",
+                },
+              },
+              {
+                text: {
+                  es: "Las convocatorias se publican periódicamente y el número de becas, programas participantes y porcentajes de financiación pueden cambiar en cada edición.",
+                  en: "Calls are published periodically, and the number of scholarships, participating programs and funding percentages may change in each edition.",
+                },
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "Requisitos principales",
+              en: "Main requirements",
+            },
+            bullets: [
+              {
+                text: {
+                  es: "Cumplir con los requisitos de admisión establecidos por EUDE Business School.",
+                  en: "Meet the admission requirements established by EUDE Business School.",
+                },
+              },
+              {
+                text: {
+                  es: "Presentar la solicitud dentro de los plazos oficiales de la convocatoria.",
+                  en: "Submit the application within the official deadlines of the call.",
                 },
               },
             ],
           },
         ],
-        href: "https://www.oas.org/es/becas/",
+        href: "https://www.oas.org/en/scholarships/",
         linkLabel: {
-          es: "Portal oficial de Becas OEA",
-          en: "Official OAS Scholarship Portal",
+          es: "Programa OEA",
+          en: "OAS Program",
+        },
+        links: [
+          {
+            href: "https://www.oas.org/en/scholarships/",
+            label: {
+              es: "Programa OEA",
+              en: "OAS Program",
+            },
+          },
+          {
+            href: "https://www.eude.es/",
+            label: {
+              es: "EUDE Business School",
+              en: "EUDE Business School",
+            },
+          },
+        ],
+      },
+      {
+        slug: "programa-becas-academicas-oea",
+        title: {
+          es: "Programa de Becas Académicas de la OEA",
+          en: "OAS Academic Scholarship Program",
+        },
+        body: {
+          es: "El Programa de Becas Académicas de la Organización de los Estados Americanos (OEA) promueve el acceso a la educación superior y al fortalecimiento de capacidades mediante becas para ciudadanos de los Estados Miembros de la OEA.",
+          en: "The Academic Scholarship Program of the Organization of American States (OAS) promotes access to higher education and capacity strengthening through scholarships for citizens of OAS Member States.",
+        },
+        contentSections: [
+          {
+            paragraphs: [
+              {
+                es: "El Programa de Becas Académicas de la Organización de los Estados Americanos (OEA) promueve el acceso a la educación superior y al fortalecimiento de capacidades mediante becas para ciudadanos de los Estados Miembros de la OEA. Su objetivo es contribuir a la formación de profesionales que impulsen el desarrollo económico y social de sus países.",
+                en: "The Academic Scholarship Program of the Organization of American States (OAS) promotes access to higher education and capacity strengthening through scholarships for citizens of OAS Member States. Its objective is to contribute to the training of professionals who promote the economic and social development of their countries.",
+              },
+            ],
+            bullets: [
+              {
+                text: {
+                  es: "Becas para realizar estudios de pregrado, maestría, investigación y programas de desarrollo profesional.",
+                  en: "Scholarships to pursue undergraduate studies, master's studies, research and professional development programs.",
+                },
+              },
+              {
+                text: {
+                  es: "Los estudios pueden desarrollarse en universidades e instituciones de educación superior de los Estados Miembros de la OEA, en modalidad presencial, virtual o mixta, según el programa.",
+                  en: "Studies may be carried out at universities and higher education institutions in OAS Member States, in in-person, virtual or blended formats, depending on the program.",
+                },
+              },
+              {
+                text: {
+                  es: "La OEA también promueve oportunidades de capacitación, cursos especializados y programas de cooperación académica con universidades e instituciones asociadas.",
+                  en: "The OAS also promotes training opportunities, specialized courses and academic cooperation programs with partner universities and institutions.",
+                },
+              },
+              {
+                text: {
+                  es: "Las convocatorias, modalidades de estudio, beneficios y áreas académicas pueden variar en cada edición.",
+                  en: "Calls, study formats, benefits and academic areas may vary in each edition.",
+                },
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "Requisitos principales",
+              en: "Main requirements",
+            },
+            bullets: [
+              {
+                text: {
+                  es: "Ser ciudadano o residente permanente de un Estado Miembro de la OEA.",
+                  en: "Be a citizen or permanent resident of an OAS Member State.",
+                },
+              },
+              {
+                text: {
+                  es: "Cumplir con los requisitos académicos establecidos por la convocatoria correspondiente.",
+                  en: "Meet the academic requirements established by the corresponding call.",
+                },
+              },
+              {
+                text: {
+                  es: "Presentar la documentación requerida dentro de los plazos oficiales.",
+                  en: "Submit the required documentation within the official deadlines.",
+                },
+              },
+            ],
+          },
+        ],
+        href: "https://www.oas.org/en/scholarships/",
+        linkLabel: {
+          es: "Programas de Becas OEA",
+          en: "OAS Scholarship Programs",
         },
       },
     ],
@@ -4586,6 +4706,98 @@ export const scholarshipOrganizations: ScholarshipCatalogItem[] = [
       en: "Scholarships, mobility, projects and European international cooperation.",
     },
     accent: "#003770",
+    opportunities: [
+      {
+        slug: "erasmus-mundus-joint-masters-emjm",
+        title: {
+          es: "Erasmus Mundus Joint Masters (EMJM)",
+          en: "Erasmus Mundus Joint Masters (EMJM)",
+        },
+        body: {
+          es: "Los Erasmus Mundus Joint Masters (EMJM) son programas internacionales de maestría de alto nivel financiados por la Unión Europea y desarrollados conjuntamente por consorcios de universidades e instituciones de educación superior de distintos países.",
+          en: "Erasmus Mundus Joint Masters (EMJM) are high-level international master's programs funded by the European Union and jointly developed by consortia of universities and higher education institutions from different countries.",
+        },
+        contentSections: [
+          {
+            paragraphs: [
+              {
+                es: "Los Erasmus Mundus Joint Masters (EMJM) son programas internacionales de maestría de alto nivel financiados por la Unión Europea y desarrollados conjuntamente por consorcios de universidades e instituciones de educación superior de distintos países.",
+                en: "Erasmus Mundus Joint Masters (EMJM) are high-level international master's programs funded by the European Union and jointly developed by consortia of universities and higher education institutions from different countries.",
+              },
+            ],
+            bullets: [
+              {
+                text: {
+                  es: "Programas de maestría integrados e internacionales impartidos por al menos tres instituciones de educación superior de diferentes países.",
+                  en: "Integrated and international master's programs taught by at least three higher education institutions from different countries.",
+                },
+              },
+              {
+                text: {
+                  es: "Los estudiantes realizan períodos de estudio, investigación, prácticas profesionales y elaboración de tesis en dos o más países participantes.",
+                  en: "Students complete periods of study, research, professional internships and thesis work in two or more participating countries.",
+                },
+              },
+              {
+                text: {
+                  es: "Al finalizar, los estudiantes pueden recibir un título conjunto emitido por varias universidades o varios títulos expedidos por las instituciones participantes.",
+                  en: "Upon completion, students may receive a joint degree issued by several universities or multiple degrees issued by participating institutions.",
+                },
+              },
+              {
+                text: {
+                  es: "Las becas pueden cubrir los costos de participación académica y contribuir a los gastos de manutención, viaje, visa y otros conceptos establecidos por cada programa.",
+                  en: "Scholarships may cover academic participation costs and contribute to living, travel, visa and other expenses established by each program.",
+                },
+              },
+              {
+                text: {
+                  es: "La oferta académica abarca diversas áreas, como ingeniería, ciencias, tecnología, salud, economía, medioambiente, educación, ciencias sociales, cultura y políticas públicas.",
+                  en: "The academic offer covers various fields, such as engineering, sciences, technology, health, economics, environment, education, social sciences, culture and public policy.",
+                },
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "Requisitos principales",
+              en: "Main requirements",
+            },
+            bullets: [
+              {
+                text: {
+                  es: "Contar con un título universitario de grado o encontrarse cursando el último año, siempre que el título sea obtenido antes del inicio de la maestría.",
+                  en: "Hold an undergraduate university degree or be in the final year, provided that the degree is obtained before the start of the master's program.",
+                },
+              },
+              {
+                text: {
+                  es: "Cumplir con los requisitos académicos, lingüísticos y documentales establecidos por el programa seleccionado.",
+                  en: "Meet the academic, language and documentation requirements established by the selected program.",
+                },
+              },
+              {
+                text: {
+                  es: "Presentar la solicitud directamente al consorcio responsable de la maestría, no ante una oficina central de Erasmus+.",
+                  en: "Submit the application directly to the consortium responsible for the master's program, not to a central Erasmus+ office.",
+                },
+              },
+              {
+                text: {
+                  es: "La mayoría de las postulaciones se realiza entre octubre y enero para programas que comienzan el siguiente año académico.",
+                  en: "Most applications take place between October and January for programs that begin the following academic year.",
+                },
+              },
+            ],
+          },
+        ],
+        href: "https://erasmus-plus.ec.europa.eu/es/opportunities/individuals/students/erasmus-mundus-joint-masters",
+        linkLabel: {
+          es: "Erasmus Mundus Joint Masters",
+          en: "Erasmus Mundus Joint Masters",
+        },
+      },
+    ],
   },
   {
     slug: "otros",
@@ -4597,6 +4809,108 @@ export const scholarshipOrganizations: ScholarshipCatalogItem[] = [
       en: "Other international calls that do not belong to a specific country.",
     },
     accent: "#E30613",
+    opportunities: [
+      {
+        slug: "programa-becas-marie-sklodowska-curie-mscfp",
+        title: {
+          es: "Programa de Becas Marie Skłodowska-Curie (MSCFP)",
+          en: "Marie Skłodowska-Curie Fellowship Programme (MSCFP)",
+        },
+        body: {
+          es: "El Programa de Becas Marie Skłodowska-Curie (MSCFP) es una iniciativa del Organismo Internacional de Energía Atómica (OIEA/IAEA) destinada a incrementar la participación de mujeres en las áreas de ciencia y tecnología nuclear.",
+          en: "The Marie Skłodowska-Curie Fellowship Programme (MSCFP) is an initiative of the International Atomic Energy Agency (IAEA) aimed at increasing the participation of women in nuclear science and technology.",
+        },
+        contentSections: [
+          {
+            paragraphs: [
+              {
+                es: "El Programa de Becas Marie Skłodowska-Curie (MSCFP) es una iniciativa del Organismo Internacional de Energía Atómica (OIEA/IAEA) destinada a incrementar la participación de mujeres en las áreas de ciencia y tecnología nuclear. El programa ofrece becas para cursar estudios de maestría en disciplinas relacionadas con el ámbito nuclear, además de oportunidades de desarrollo profesional mediante prácticas en el OIEA y organizaciones asociadas.",
+                en: "The Marie Skłodowska-Curie Fellowship Programme (MSCFP) is an initiative of the International Atomic Energy Agency (IAEA) aimed at increasing the participation of women in nuclear science and technology. The program offers scholarships for master's studies in nuclear-related disciplines, as well as professional development opportunities through internships at the IAEA and partner organizations.",
+              },
+            ],
+            bullets: [
+              {
+                text: {
+                  es: "Dirigido a mujeres estudiantes de los Estados Miembros del OIEA.",
+                  en: "Aimed at women students from IAEA Member States.",
+                },
+              },
+              {
+                text: {
+                  es: "Becas para realizar estudios de maestría en áreas relacionadas con la ciencia y tecnología nuclear.",
+                  en: "Scholarships to pursue master's studies in areas related to nuclear science and technology.",
+                },
+              },
+              {
+                text: {
+                  es: "Los beneficios pueden incluir apoyo para matrícula, manutención y la posibilidad de realizar una práctica profesional de hasta 12 meses facilitada por el OIEA.",
+                  en: "Benefits may include tuition support, living support and the possibility of completing an internship of up to 12 months facilitated by the IAEA.",
+                },
+              },
+              {
+                text: {
+                  es: "Las áreas de estudio incluyen, entre otras: ingeniería nuclear, física nuclear, química nuclear, medicina nuclear, protección radiológica, seguridad tecnológica y física nuclear, gestión de residuos radiactivos, aplicaciones de radioisótopos, ciencias ambientales, ciencias de los materiales y otras disciplinas relacionadas.",
+                  en: "Fields of study include, among others: nuclear engineering, nuclear physics, nuclear chemistry, nuclear medicine, radiation protection, nuclear safety and security, radioactive waste management, radioisotope applications, environmental sciences, materials science and other related disciplines.",
+                },
+              },
+              {
+                text: {
+                  es: "Las convocatorias se publican anualmente y los beneficios, requisitos y fechas pueden variar en cada edición.",
+                  en: "Calls are published annually, and benefits, requirements and dates may vary in each edition.",
+                },
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "Requisitos principales",
+              en: "Main requirements",
+            },
+            bullets: [
+              {
+                text: {
+                  es: "Haber sido admitida o estar postulando a un programa de maestría acreditado en un área relacionada con la tecnología nuclear.",
+                  en: "Have been admitted or be applying to an accredited master's program in an area related to nuclear technology.",
+                },
+              },
+              {
+                text: {
+                  es: "Demostrar un buen desempeño académico y cumplir con los requisitos establecidos por el programa.",
+                  en: "Demonstrate good academic performance and meet the requirements established by the program.",
+                },
+              },
+              {
+                text: {
+                  es: "Presentar la solicitud a través del sistema oficial del OIEA dentro de los plazos de la convocatoria vigente.",
+                  en: "Submit the application through the official IAEA system within the deadlines of the current call.",
+                },
+              },
+            ],
+          },
+        ],
+        href: "https://www.iaea.org/services/key-programmes/iaea-marie-sklodowska-curie-fellowship-programme",
+        linkLabel: {
+          es: "Portal MSCFP",
+          en: "MSCFP Portal",
+        },
+        links: [
+          {
+            href: "https://www.iaea.org/services/key-programmes/iaea-marie-sklodowska-curie-fellowship-programme",
+            label: {
+              es: "Portal MSCFP",
+              en: "MSCFP Portal",
+            },
+          },
+          {
+            href: "https://www.iaea.org/services/key-programmes/iaea-marie-sklodowska-curie-fellowship-programme/information-for-applicants",
+            label: {
+              es: "Información para postulantes",
+              en: "Information for applicants",
+            },
+          },
+        ],
+      },
+    ],
   },
 ];
 
