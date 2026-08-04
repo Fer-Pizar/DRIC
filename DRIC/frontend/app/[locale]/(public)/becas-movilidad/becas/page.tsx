@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import ScholarshipOrgCarousel from "@/components/sections/scholarships/ScholarshipOrgCarousel";
 import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
 import PublicRoundedIcon from "@mui/icons-material/PublicRounded";
 import WorkspacePremiumRoundedIcon from "@mui/icons-material/WorkspacePremiumRounded";
@@ -142,15 +143,7 @@ export default async function BecasPage({ params }: Props) {
               </h2>
             </div>
 
-            <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-5">
-              {scholarshipOrganizations.map((organization) => (
-                <CatalogCard
-                  key={organization.slug}
-                  item={organization}
-                  locale={locale}
-                />
-              ))}
-            </div>
+            <ScholarshipOrgCarousel items={scholarshipOrganizations} locale={locale} />
           </div>
         </div>
       </section>

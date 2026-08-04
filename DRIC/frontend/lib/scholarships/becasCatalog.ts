@@ -1629,6 +1629,102 @@ export const scholarshipCountries: ScholarshipCatalogItem[] = [
           en: "Specific calls and opportunities for Hong Kong.",
         },
         accent: "#E30613",
+        opportunities: [
+          {
+            slug: "hong-kong-phd-fellowship-scheme",
+            title: {
+              es: "Hong Kong PhD Fellowship Scheme (HKPFS)",
+              en: "Hong Kong PhD Fellowship Scheme (HKPFS)",
+            },
+            body: {
+              es: "El Hong Kong PhD Fellowship Scheme (HKPFS) es un programa internacional de becas financiado por el Research Grants Council (RGC) de Hong Kong, cuyo objetivo es atraer a estudiantes internacionales con excelencia académica para realizar estudios de doctorado en universidades participantes de Hong Kong.",
+              en: "The Hong Kong PhD Fellowship Scheme (HKPFS) is an international scholarship program funded by the Research Grants Council (RGC) of Hong Kong, aimed at attracting academically excellent international students to pursue doctoral studies at participating universities in Hong Kong.",
+            },
+            contentSections: [
+              {
+                paragraphs: [
+                  {
+                    es: "El Hong Kong PhD Fellowship Scheme (HKPFS) es un programa internacional de becas financiado por el Research Grants Council (RGC) de Hong Kong, cuyo objetivo es atraer a estudiantes internacionales con excelencia académica para realizar estudios de doctorado en universidades participantes de Hong Kong.",
+                    en: "The Hong Kong PhD Fellowship Scheme (HKPFS) is an international scholarship program funded by the Research Grants Council (RGC) of Hong Kong, aimed at attracting academically excellent international students to pursue doctoral studies at participating universities in Hong Kong.",
+                  },
+                ],
+                bullets: [
+                  {
+                    text: {
+                      es: "Becas para realizar estudios de doctorado en universidades de Hong Kong.",
+                      en: "Scholarships to pursue doctoral studies at universities in Hong Kong.",
+                    },
+                  },
+                  {
+                    text: {
+                      es: "Las áreas de estudio incluyen ciencias, medicina, ingeniería, tecnología, humanidades, ciencias sociales, administración y otras disciplinas ofrecidas por las universidades participantes.",
+                      en: "Fields of study include science, medicine, engineering, technology, humanities, social sciences, business administration and other disciplines offered by participating universities.",
+                    },
+                  },
+                  {
+                    text: {
+                      es: "Los beneficios pueden incluir estipendio anual, apoyo para investigación, subsidios de viaje y otros beneficios establecidos en la convocatoria vigente.",
+                      en: "Benefits may include an annual stipend, research support, travel allowances and other benefits established in the current call.",
+                    },
+                  },
+                ],
+              },
+              {
+                heading: {
+                  es: "Requisitos principales",
+                  en: "Main requirements",
+                },
+                bullets: [
+                  {
+                    text: {
+                      es: "Contar con el título académico requerido para acceder a un programa de doctorado.",
+                      en: "Hold the academic degree required to access a doctoral program.",
+                    },
+                  },
+                  {
+                    text: {
+                      es: "Demostrar excelencia académica, potencial de investigación y capacidad de liderazgo.",
+                      en: "Demonstrate academic excellence, research potential and leadership ability.",
+                    },
+                  },
+                  {
+                    text: {
+                      es: "Cumplir con los requisitos de admisión de la universidad participante seleccionada.",
+                      en: "Meet the admission requirements of the selected participating university.",
+                    },
+                  },
+                  {
+                    text: {
+                      es: "Presentar la solicitud mediante el sistema oficial del HKPFS y completar el proceso de admisión de la universidad correspondiente.",
+                      en: "Submit the application through the official HKPFS system and complete the admission process of the corresponding university.",
+                    },
+                  },
+                ],
+              },
+            ],
+            href: "https://cerg1.ugc.edu.hk/hkpfs/index.html",
+            linkLabel: {
+              es: "Hong Kong PhD Fellowship Scheme",
+              en: "Hong Kong PhD Fellowship Scheme",
+            },
+            links: [
+              {
+                href: "https://cerg1.ugc.edu.hk/hkpfs/index.html",
+                label: {
+                  es: "Hong Kong PhD Fellowship Scheme",
+                  en: "Hong Kong PhD Fellowship Scheme",
+                },
+              },
+              {
+                href: "https://www.studyinhongkong.edu.hk/",
+                label: {
+                  es: "Study in Hong Kong",
+                  en: "Study in Hong Kong",
+                },
+              },
+            ],
+          },
+        ],
       },
     ],
   },
@@ -2363,6 +2459,86 @@ export const scholarshipCountries: ScholarshipCatalogItem[] = [
       en: "Calls, research, exchange and leadership programs.",
     },
     accent: "#E30613",
+    opportunities: [
+      {
+        slug: "programa-becas-fulbright-profesionales",
+        title: {
+          es: "Programa de Becas Fulbright para Profesionales",
+          en: "Fulbright Scholarship Program for Professionals",
+        },
+        body: {
+          es: "El Programa de Becas Fulbright para Profesionales ofrece a ciudadanos bolivianos la oportunidad de realizar estudios de maestría en universidades de los Estados Unidos.",
+          en: "The Fulbright Scholarship Program for Professionals offers Bolivian citizens the opportunity to pursue master's studies at universities in the United States.",
+        },
+        contentSections: [
+          {
+            paragraphs: [
+              {
+                es: "El Programa de Becas Fulbright para Profesionales ofrece a ciudadanos bolivianos la oportunidad de realizar estudios de maestría en universidades de los Estados Unidos. Administrado por el Programa Fulbright y la Embajada de los Estados Unidos en Bolivia, este programa busca formar profesionales con excelencia académica, potencial de liderazgo y compromiso con el desarrollo de Bolivia.",
+                en: "The Fulbright Scholarship Program for Professionals offers Bolivian citizens the opportunity to pursue master's studies at universities in the United States. Administered by the Fulbright Program and the Embassy of the United States in Bolivia, this program seeks to train professionals with academic excellence, leadership potential and commitment to Bolivia's development.",
+              },
+            ],
+            bullets: [
+              {
+                text: {
+                  es: "Dirigidas a profesionales bolivianos con un destacado desempeño académico y profesional.",
+                  en: "Aimed at Bolivian professionals with outstanding academic and professional performance.",
+                },
+              },
+              {
+                text: {
+                  es: "El programa puede incluir apoyo para matrícula, manutención, pasajes, seguro médico y otros beneficios, conforme a la convocatoria vigente.",
+                  en: "The program may include support for tuition, living expenses, airfare, health insurance and other benefits, according to the current call.",
+                },
+              },
+              {
+                text: {
+                  es: "Las convocatorias se publican periódicamente y los requisitos específicos pueden variar en cada edición.",
+                  en: "Calls are published periodically and specific requirements may vary in each edition.",
+                },
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "Requisitos principales",
+              en: "Main requirements",
+            },
+            bullets: [
+              {
+                text: {
+                  es: "Contar con un título universitario de licenciatura o equivalente.",
+                  en: "Hold a bachelor's degree or equivalent university degree.",
+                },
+              },
+              {
+                text: {
+                  es: "Demostrar un excelente historial académico, liderazgo y compromiso con el desarrollo del país.",
+                  en: "Demonstrate an excellent academic record, leadership and commitment to the country's development.",
+                },
+              },
+              {
+                text: {
+                  es: "Acreditar el nivel de inglés requerido y presentar la documentación solicitada durante el proceso de postulación.",
+                  en: "Prove the required level of English and submit the requested documentation during the application process.",
+                },
+              },
+              {
+                text: {
+                  es: "Realizar la solicitud mediante la plataforma oficial del Programa Fulbright y cumplir con las etapas de selección establecidas.",
+                  en: "Apply through the official Fulbright Program platform and comply with the established selection stages.",
+                },
+              },
+            ],
+          },
+        ],
+        href: "https://foreign.fulbrightonline.org/apply?country=bolivia",
+        linkLabel: {
+          es: "Programa Fulbright para estudiantes internacionales",
+          en: "Fulbright Foreign Student Program",
+        },
+      },
+    ],
   },
   {
     slug: "francia",
@@ -2374,6 +2550,146 @@ export const scholarshipCountries: ScholarshipCatalogItem[] = [
       en: "Scholarships, academic networks and international training opportunities.",
     },
     accent: "#003770",
+    opportunities: [
+      {
+        slug: "becas-excelencia-eur-healthy",
+        title: {
+          es: "Becas de Excelencia EUR HEALTHY - Université Côte d'Azur",
+          en: "EUR HEALTHY Excellence Scholarships - Université Côte d'Azur",
+        },
+        body: {
+          es: "La École Universitaire de Recherche (EUR) HEALTHY de la Université Côte d'Azur, en Francia, ofrece un programa de Becas de Excelencia dirigido a estudiantes internacionales con un destacado rendimiento académico que deseen realizar estudios de maestría en las áreas de ciencias de la salud.",
+          en: "The École Universitaire de Recherche (EUR) HEALTHY at Université Côte d'Azur, in France, offers an Excellence Scholarship program for international students with outstanding academic performance who wish to pursue master's studies in health sciences.",
+        },
+        contentSections: [
+          {
+            paragraphs: [
+              {
+                es: "La École Universitaire de Recherche (EUR) HEALTHY de la Université Côte d'Azur, en Francia, ofrece un programa de Becas de Excelencia dirigido a estudiantes internacionales con un destacado rendimiento académico que deseen realizar estudios de maestría en las áreas de ciencias de la salud.",
+                en: "The École Universitaire de Recherche (EUR) HEALTHY at Université Côte d'Azur, in France, offers an Excellence Scholarship program for international students with outstanding academic performance who wish to pursue master's studies in health sciences.",
+              },
+            ],
+            bullets: [
+              {
+                text: {
+                  es: "Becas para cursar programas oficiales de maestría en la Université Côte d'Azur.",
+                  en: "Scholarships to pursue official master's programs at Université Côte d'Azur.",
+                },
+              },
+              {
+                text: {
+                  es: "Los beneficios pueden incluir apoyo económico para facilitar la realización de los estudios, de acuerdo con la convocatoria vigente.",
+                  en: "Benefits may include financial support to facilitate the completion of studies, according to the current call.",
+                },
+              },
+              {
+                text: {
+                  es: "Las convocatorias se publican anualmente y las modalidades, beneficios y requisitos específicos pueden variar en cada edición.",
+                  en: "Calls are published annually, and the modalities, benefits and specific requirements may vary in each edition.",
+                },
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "Requisitos principales",
+              en: "Main requirements",
+            },
+            bullets: [
+              {
+                text: {
+                  es: "Demostrar un excelente desempeño académico.",
+                  en: "Demonstrate excellent academic performance.",
+                },
+              },
+              {
+                text: {
+                  es: "Presentar la documentación requerida conforme a la convocatoria vigente.",
+                  en: "Submit the required documentation according to the current call.",
+                },
+              },
+              {
+                text: {
+                  es: "Realizar la postulación mediante el procedimiento oficial establecido por la Université Côte d'Azur.",
+                  en: "Apply through the official procedure established by Université Côte d'Azur.",
+                },
+              },
+            ],
+          },
+        ],
+        href: "https://healthy.univ-cotedazur.fr/",
+        linkLabel: {
+          es: "EUR HEALTHY - Becas de Excelencia",
+          en: "EUR HEALTHY - Excellence Scholarships",
+        },
+      },
+      {
+        slug: "becas-gobierno-frances",
+        title: {
+          es: "Becas del Gobierno Francés",
+          en: "French Government Scholarships",
+        },
+        body: {
+          es: "Las Becas del Gobierno Francés (BGF) son un programa de cooperación académica promovido por la Embajada de Francia en Bolivia y Campus France Bolivia, dirigido a estudiantes bolivianos que deseen realizar estudios de maestría o doctorado en instituciones de educación superior de Francia.",
+          en: "The French Government Scholarships (BGF) are an academic cooperation program promoted by the Embassy of France in Bolivia and Campus France Bolivia, aimed at Bolivian students who wish to pursue master's or doctoral studies at higher education institutions in France.",
+        },
+        contentSections: [
+          {
+            paragraphs: [
+              {
+                es: "Las Becas del Gobierno Francés (BGF) son un programa de cooperación académica promovido por la Embajada de Francia en Bolivia y Campus France Bolivia, dirigido a estudiantes bolivianos que deseen realizar estudios de maestría o doctorado en instituciones de educación superior de Francia. Estas becas tienen como objetivo fortalecer la formación académica y la cooperación científica entre ambos países.",
+                en: "The French Government Scholarships (BGF) are an academic cooperation program promoted by the Embassy of France in Bolivia and Campus France Bolivia, aimed at Bolivian students who wish to pursue master's or doctoral studies at higher education institutions in France. These scholarships aim to strengthen academic training and scientific cooperation between both countries.",
+              },
+            ],
+            bullets: [
+              {
+                text: {
+                  es: "Becas para realizar estudios de posgrado en universidades y grandes escuelas francesas.",
+                  en: "Scholarships to pursue graduate studies at French universities and grandes écoles.",
+                },
+              },
+              {
+                text: {
+                  es: "Los beneficios pueden incluir apoyo económico, cobertura de estudios, seguro y otros beneficios establecidos en la convocatoria vigente.",
+                  en: "Benefits may include financial support, study coverage, insurance and other benefits established in the current call.",
+                },
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "Requisitos principales",
+              en: "Main requirements",
+            },
+            bullets: [
+              {
+                text: {
+                  es: "Contar con el título académico requerido para el programa de estudios al que se postula.",
+                  en: "Hold the academic degree required for the study program being applied to.",
+                },
+              },
+              {
+                text: {
+                  es: "Cumplir con los requisitos de admisión de la institución francesa correspondiente.",
+                  en: "Meet the admission requirements of the corresponding French institution.",
+                },
+              },
+              {
+                text: {
+                  es: "Presentar la documentación requerida y realizar la postulación conforme al procedimiento establecido por la Embajada de Francia en Bolivia y Campus France Bolivia.",
+                  en: "Submit the required documentation and apply according to the procedure established by the Embassy of France in Bolivia and Campus France Bolivia.",
+                },
+              },
+            ],
+          },
+        ],
+        href: "https://www.bolivie.campusfrance.org/",
+        linkLabel: {
+          es: "Campus France Bolivia",
+          en: "Campus France Bolivia",
+        },
+      },
+    ],
   },
   {
     slug: "holanda",
@@ -2385,6 +2701,74 @@ export const scholarshipCountries: ScholarshipCatalogItem[] = [
       en: "Exchange programs, scholarships and scientific cooperation.",
     },
     accent: "#E30613",
+    opportunities: [
+      {
+        slug: "nl-scholarship",
+        title: {
+          es: "NL Scholarship",
+          en: "NL Scholarship",
+        },
+        body: {
+          es: "La NL Scholarship, anteriormente conocida como Holland Scholarship, es un programa de becas financiado por el Ministerio de Educación, Cultura y Ciencia de los Países Bajos, en colaboración con universidades de investigación y universidades de ciencias aplicadas participantes.",
+          en: "The NL Scholarship, formerly known as the Holland Scholarship, is a scholarship program funded by the Dutch Ministry of Education, Culture and Science, in collaboration with participating research universities and universities of applied sciences.",
+        },
+        contentSections: [
+          {
+            paragraphs: [
+              {
+                es: "La NL Scholarship, anteriormente conocida como Holland Scholarship, es un programa de becas financiado por el Ministerio de Educación, Cultura y Ciencia de los Países Bajos, en colaboración con universidades de investigación y universidades de ciencias aplicadas participantes. Está dirigida a estudiantes internacionales que deseen realizar estudios de pregrado o maestría en los Países Bajos.",
+                en: "The NL Scholarship, formerly known as the Holland Scholarship, is a scholarship program funded by the Dutch Ministry of Education, Culture and Science, in collaboration with participating research universities and universities of applied sciences. It is aimed at international students who wish to pursue bachelor's or master's studies in the Netherlands.",
+              },
+            ],
+            bullets: [
+              {
+                text: {
+                  es: "Dirigidas a estudiantes internacionales provenientes de países fuera del Espacio Económico Europeo (EEE).",
+                  en: "Aimed at international students from countries outside the European Economic Area (EEA).",
+                },
+              },
+              {
+                text: {
+                  es: "Los beneficios y el monto de la beca son establecidos por el programa y las instituciones participantes, conforme a la convocatoria vigente.",
+                  en: "The benefits and scholarship amount are established by the program and participating institutions, according to the current call.",
+                },
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "Requisitos principales",
+              en: "Main requirements",
+            },
+            bullets: [
+              {
+                text: {
+                  es: "Solicitar la admisión a un programa oficial de pregrado o maestría en una institución participante.",
+                  en: "Apply for admission to an official bachelor's or master's program at a participating institution.",
+                },
+              },
+              {
+                text: {
+                  es: "Cumplir con los requisitos académicos y de idioma establecidos por la universidad seleccionada.",
+                  en: "Meet the academic and language requirements established by the selected university.",
+                },
+              },
+              {
+                text: {
+                  es: "Presentar la solicitud de acuerdo con el procedimiento oficial de la institución participante y la convocatoria vigente.",
+                  en: "Submit the application according to the official procedure of the participating institution and the current call.",
+                },
+              },
+            ],
+          },
+        ],
+        href: "https://www.studyinnl.org/finances/nl-scholarship",
+        linkLabel: {
+          es: "NL Scholarship",
+          en: "NL Scholarship",
+        },
+      },
+    ],
   },
   {
     slug: "irlanda",
@@ -2396,6 +2780,74 @@ export const scholarshipCountries: ScholarshipCatalogItem[] = [
       en: "Academic opportunities, graduate studies and international programs.",
     },
     accent: "#003770",
+    opportunities: [
+      {
+        slug: "government-ireland-international-education-scholarship",
+        title: {
+          es: "Government of Ireland International Education Scholarship (GOI-IES)",
+          en: "Government of Ireland International Education Scholarship (GOI-IES)",
+        },
+        body: {
+          es: "La Government of Ireland International Education Scholarship (GOI-IES) es un programa de becas financiado por el Gobierno de Irlanda y administrado por la Higher Education Authority (HEA), en colaboración con instituciones de educación superior participantes.",
+          en: "The Government of Ireland International Education Scholarship (GOI-IES) is a scholarship program funded by the Government of Ireland and administered by the Higher Education Authority (HEA), in collaboration with participating higher education institutions.",
+        },
+        contentSections: [
+          {
+            paragraphs: [
+              {
+                es: "La Government of Ireland International Education Scholarship (GOI-IES) es un programa de becas financiado por el Gobierno de Irlanda y administrado por la Higher Education Authority (HEA), en colaboración con instituciones de educación superior participantes.",
+                en: "The Government of Ireland International Education Scholarship (GOI-IES) is a scholarship program funded by the Government of Ireland and administered by the Higher Education Authority (HEA), in collaboration with participating higher education institutions.",
+              },
+            ],
+            bullets: [
+              {
+                text: {
+                  es: "Dirigidas a estudiantes internacionales con un destacado desempeño académico y potencial de liderazgo.",
+                  en: "Aimed at international students with outstanding academic performance and leadership potential.",
+                },
+              },
+              {
+                text: {
+                  es: "Los beneficios pueden incluir apoyo económico, exención de matrícula y otros beneficios establecidos en la convocatoria vigente.",
+                  en: "Benefits may include financial support, tuition waiver and other benefits established in the current call.",
+                },
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "Requisitos principales",
+              en: "Main requirements",
+            },
+            bullets: [
+              {
+                text: {
+                  es: "Cumplir con los requisitos académicos y de admisión establecidos por la institución seleccionada.",
+                  en: "Meet the academic and admission requirements established by the selected institution.",
+                },
+              },
+              {
+                text: {
+                  es: "Demostrar excelencia académica, habilidades de liderazgo y compromiso con el desarrollo personal y profesional.",
+                  en: "Demonstrate academic excellence, leadership skills and commitment to personal and professional development.",
+                },
+              },
+              {
+                text: {
+                  es: "Presentar la solicitud conforme al procedimiento oficial del programa y de la institución participante.",
+                  en: "Submit the application according to the official procedure of the program and the participating institution.",
+                },
+              },
+            ],
+          },
+        ],
+        href: "https://hea.ie/policy/internationalisation/goi-ies/",
+        linkLabel: {
+          es: "Government of Ireland International Education Scholarship (GOI-IES)",
+          en: "Government of Ireland International Education Scholarship (GOI-IES)",
+        },
+      },
+    ],
   },
   {
     slug: "italia",
@@ -2407,6 +2859,96 @@ export const scholarshipCountries: ScholarshipCatalogItem[] = [
       en: "Scholarships, cultural exchange and international academic cooperation.",
     },
     accent: "#E30613",
+    opportunities: [
+      {
+        slug: "becas-gobierno-italiano-maeci",
+        title: {
+          es: "Becas del Gobierno Italiano (MAECI)",
+          en: "Italian Government Scholarships (MAECI)",
+        },
+        body: {
+          es: "Las Becas del Gobierno Italiano (MAECI) son un programa oficial del Ministerio de Asuntos Exteriores y de Cooperación Internacional de Italia, destinado a promover la cooperación académica, científica y cultural mediante oportunidades de estudio e investigación para estudiantes internacionales.",
+          en: "The Italian Government Scholarships (MAECI) are an official program of Italy's Ministry of Foreign Affairs and International Cooperation, aimed at promoting academic, scientific and cultural cooperation through study and research opportunities for international students.",
+        },
+        contentSections: [
+          {
+            paragraphs: [
+              {
+                es: "Las Becas del Gobierno Italiano (MAECI) son un programa oficial del Ministerio de Asuntos Exteriores y de Cooperación Internacional de Italia, destinado a promover la cooperación académica, científica y cultural mediante oportunidades de estudio e investigación para estudiantes internacionales en instituciones italianas de educación superior.",
+                en: "The Italian Government Scholarships (MAECI) are an official program of Italy's Ministry of Foreign Affairs and International Cooperation, aimed at promoting academic, scientific and cultural cooperation through study and research opportunities for international students at Italian higher education institutions.",
+              },
+            ],
+            bullets: [
+              {
+                text: {
+                  es: "Becas para realizar estudios de maestría, doctorado, investigación, programas AFAM (Alta Formación Artística, Musical y Coreográfica) y cursos de lengua y cultura italiana, conforme a la convocatoria vigente.",
+                  en: "Scholarships to pursue master's studies, doctoral studies, research, AFAM programs (Higher Education in Art, Music and Dance) and Italian language and culture courses, according to the current call.",
+                },
+              },
+              {
+                text: {
+                  es: "Los beneficios pueden incluir apoyo económico, exención parcial o total de matrícula, seguro médico y otros beneficios establecidos en la convocatoria vigente.",
+                  en: "Benefits may include financial support, partial or full tuition exemption, health insurance and other benefits established in the current call.",
+                },
+              },
+              {
+                text: {
+                  es: "Las convocatorias se publican anualmente a través del portal oficial Study in Italy.",
+                  en: "Calls are published annually through the official Study in Italy portal.",
+                },
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "Requisitos principales",
+              en: "Main requirements",
+            },
+            bullets: [
+              {
+                text: {
+                  es: "Cumplir con los requisitos académicos y de admisión del programa seleccionado.",
+                  en: "Meet the academic and admission requirements of the selected program.",
+                },
+              },
+              {
+                text: {
+                  es: "Presentar la documentación requerida conforme a las bases del programa.",
+                  en: "Submit the required documentation according to the program guidelines.",
+                },
+              },
+              {
+                text: {
+                  es: "Realizar la postulación mediante el portal oficial Study in Italy dentro del plazo establecido.",
+                  en: "Apply through the official Study in Italy portal within the established deadline.",
+                },
+              },
+            ],
+          },
+        ],
+        href: "https://studyinitaly.esteri.it/",
+        linkLabel: {
+          es: "Study in Italy",
+          en: "Study in Italy",
+        },
+        links: [
+          {
+            href: "https://studyinitaly.esteri.it/",
+            label: {
+              es: "Study in Italy",
+              en: "Study in Italy",
+            },
+          },
+          {
+            href: "https://studyinitaly.esteri.it/ListaBandi",
+            label: {
+              es: "Convocatorias oficiales (Lista Bandi)",
+              en: "Official calls (Lista Bandi)",
+            },
+          },
+        ],
+      },
+    ],
   },
   {
     slug: "japon",
@@ -2418,6 +2960,264 @@ export const scholarshipCountries: ScholarshipCatalogItem[] = [
       en: "Scholarships, research, technology and academic mobility.",
     },
     accent: "#003770",
+    opportunities: [
+      {
+        slug: "becas-mext-institutos-tecnicos-senshu-gakko",
+        title: {
+          es: "Becas MEXT para Institutos Técnicos Especializados (Senshu-gakkō)",
+          en: "MEXT Scholarships for Specialized Training Colleges (Senshu-gakko)",
+        },
+        body: {
+          es: "Las Becas MEXT para Institutos Técnicos Especializados (Senshu-gakkō) son un programa del Ministerio de Educación, Cultura, Deportes, Ciencia y Tecnología del Japón (MEXT).",
+          en: "The MEXT Scholarships for Specialized Training Colleges (Senshu-gakko) are a program of Japan's Ministry of Education, Culture, Sports, Science and Technology (MEXT).",
+        },
+        contentSections: [
+          {
+            paragraphs: [
+              {
+                es: "Las Becas MEXT para Institutos Técnicos Especializados (Senshu-gakkō) son un programa del Ministerio de Educación, Cultura, Deportes, Ciencia y Tecnología del Japón (MEXT).",
+                en: "The MEXT Scholarships for Specialized Training Colleges (Senshu-gakko) are a program of Japan's Ministry of Education, Culture, Sports, Science and Technology (MEXT).",
+              },
+            ],
+            bullets: [
+              {
+                text: {
+                  es: "Becas para cursar programas de formación técnica y profesional en institutos técnicos especializados (Senshu-gakkō) de Japón.",
+                  en: "Scholarships to pursue technical and professional training programs at specialized training colleges (Senshu-gakko) in Japan.",
+                },
+              },
+              {
+                text: {
+                  es: "Incluyen un período preparatorio de idioma japonés antes del inicio de la formación especializada, conforme a la convocatoria vigente.",
+                  en: "They include a preparatory Japanese language period before the start of specialized training, according to the current call.",
+                },
+              },
+              {
+                text: {
+                  es: "Las áreas de estudio abarcan tecnología, ingeniería, negocios, bienestar, educación, moda, diseño, gastronomía, animación, manga, música y otras disciplinas técnicas y profesionales.",
+                  en: "Fields of study include technology, engineering, business, welfare, education, fashion, design, gastronomy, animation, manga, music and other technical and professional disciplines.",
+                },
+              },
+              {
+                text: {
+                  es: "Los beneficios pueden incluir matrícula, pasajes internacionales, estipendio mensual y otros apoyos establecidos por el programa MEXT.",
+                  en: "Benefits may include tuition, international airfare, monthly stipend and other support established by the MEXT program.",
+                },
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "Requisitos principales",
+              en: "Main requirements",
+            },
+            bullets: [
+              {
+                text: {
+                  es: "Haber concluido la educación secundaria o cumplir con los requisitos académicos establecidos por la convocatoria vigente.",
+                  en: "Have completed secondary education or meet the academic requirements established by the current call.",
+                },
+              },
+              {
+                text: {
+                  es: "Demostrar interés y aptitud para realizar estudios técnicos en Japón.",
+                  en: "Demonstrate interest and aptitude for technical studies in Japan.",
+                },
+              },
+              {
+                text: {
+                  es: "Cumplir con los requisitos académicos, lingüísticos y documentales establecidos por MEXT y la Embajada del Japón.",
+                  en: "Meet the academic, language and documentation requirements established by MEXT and the Embassy of Japan.",
+                },
+              },
+              {
+                text: {
+                  es: "Presentar la solicitud mediante el proceso oficial de selección de la Embajada del Japón en Bolivia.",
+                  en: "Submit the application through the official selection process of the Embassy of Japan in Bolivia.",
+                },
+              },
+            ],
+          },
+        ],
+        href: "https://www.bo.emb-japan.go.jp/",
+        linkLabel: {
+          es: "Embajada del Japón en Bolivia - Becas MEXT",
+          en: "Embassy of Japan in Bolivia - MEXT Scholarships",
+        },
+        links: [
+          {
+            href: "https://www.bo.emb-japan.go.jp/",
+            label: {
+              es: "Embajada del Japón en Bolivia - Becas MEXT",
+              en: "Embassy of Japan in Bolivia - MEXT Scholarships",
+            },
+          },
+          {
+            href: "https://www.studyinjapan.go.jp/en/planning/scholarships/mext-scholarships/",
+            label: {
+              es: "Study in Japan - MEXT Scholarships",
+              en: "Study in Japan - MEXT Scholarships",
+            },
+          },
+        ],
+      },
+      {
+        slug: "becas-mext-pregrado-undergraduate-students",
+        title: {
+          es: "Becas MEXT de Pregrado (Undergraduate Students)",
+          en: "MEXT Undergraduate Scholarships (Undergraduate Students)",
+        },
+        body: {
+          es: "Las Becas MEXT de Pregrado (Undergraduate Students) son un programa del Ministerio de Educación, Cultura, Deportes, Ciencia y Tecnología del Japón (MEXT), dirigido a estudiantes internacionales que deseen realizar estudios universitarios de pregrado en instituciones de educación superior japonesas.",
+          en: "The MEXT Undergraduate Scholarships (Undergraduate Students) are a program of Japan's Ministry of Education, Culture, Sports, Science and Technology (MEXT), aimed at international students who wish to pursue undergraduate university studies at Japanese higher education institutions.",
+        },
+        contentSections: [
+          {
+            paragraphs: [
+              {
+                es: "Las Becas MEXT de Pregrado (Undergraduate Students) son un programa del Ministerio de Educación, Cultura, Deportes, Ciencia y Tecnología del Japón (MEXT), dirigido a estudiantes internacionales que deseen realizar estudios universitarios de pregrado en instituciones de educación superior japonesas.",
+                en: "The MEXT Undergraduate Scholarships (Undergraduate Students) are a program of Japan's Ministry of Education, Culture, Sports, Science and Technology (MEXT), aimed at international students who wish to pursue undergraduate university studies at Japanese higher education institutions.",
+              },
+            ],
+            bullets: [
+              {
+                text: {
+                  es: "Incluyen un período preparatorio de idioma japonés antes del inicio de los estudios universitarios, conforme a la convocatoria vigente.",
+                  en: "They include a preparatory Japanese language period before the start of university studies, according to the current call.",
+                },
+              },
+              {
+                text: {
+                  es: "Permiten acceder a una amplia variedad de áreas académicas, incluyendo ciencias sociales, humanidades, ciencias naturales, ingeniería, agricultura, medicina y otras disciplinas ofrecidas por las universidades japonesas.",
+                  en: "They provide access to a wide variety of academic fields, including social sciences, humanities, natural sciences, engineering, agriculture, medicine and other disciplines offered by Japanese universities.",
+                },
+              },
+              {
+                text: {
+                  es: "Los beneficios pueden incluir matrícula, pasajes internacionales, estipendio mensual y otros apoyos establecidos por el programa MEXT.",
+                  en: "Benefits may include tuition, international airfare, monthly stipend and other support established by the MEXT program.",
+                },
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "Requisitos principales",
+              en: "Main requirements",
+            },
+            bullets: [
+              {
+                text: {
+                  es: "Haber concluido la educación secundaria o cumplir con los requisitos académicos establecidos por la convocatoria vigente.",
+                  en: "Have completed secondary education or meet the academic requirements established by the current call.",
+                },
+              },
+              {
+                text: {
+                  es: "Cumplir con los requisitos lingüísticos y documentales establecidos por la Embajada del Japón.",
+                  en: "Meet the language and documentation requirements established by the Embassy of Japan.",
+                },
+              },
+              {
+                text: {
+                  es: "Presentar la solicitud mediante el proceso oficial de selección de la Embajada del Japón en Bolivia.",
+                  en: "Submit the application through the official selection process of the Embassy of Japan in Bolivia.",
+                },
+              },
+            ],
+          },
+        ],
+        href: "https://www.studyinjapan.go.jp/en/planning/scholarships/mext-scholarships/",
+        linkLabel: {
+          es: "Study in Japan - MEXT Scholarships",
+          en: "Study in Japan - MEXT Scholarships",
+        },
+      },
+      {
+        slug: "becas-mext-investigadores-research-students",
+        title: {
+          es: "Becas MEXT para Investigadores (Research Students)",
+          en: "MEXT Scholarships for Research Students",
+        },
+        body: {
+          es: "Las Becas MEXT para Investigadores (Research Students) son un programa del Ministerio de Educación, Cultura, Deportes, Ciencia y Tecnología del Japón (MEXT), dirigido a estudiantes internacionales que deseen realizar estudios de investigación, maestría o doctorado en universidades japonesas.",
+          en: "The MEXT Scholarships for Research Students are a program of Japan's Ministry of Education, Culture, Sports, Science and Technology (MEXT), aimed at international students who wish to pursue research, master's or doctoral studies at Japanese universities.",
+        },
+        contentSections: [
+          {
+            paragraphs: [
+              {
+                es: "Las Becas MEXT para Investigadores (Research Students) son un programa del Ministerio de Educación, Cultura, Deportes, Ciencia y Tecnología del Japón (MEXT), dirigido a estudiantes internacionales que deseen realizar estudios de investigación, maestría o doctorado en universidades japonesas.",
+                en: "The MEXT Scholarships for Research Students are a program of Japan's Ministry of Education, Culture, Sports, Science and Technology (MEXT), aimed at international students who wish to pursue research, master's or doctoral studies at Japanese universities.",
+              },
+            ],
+            bullets: [
+              {
+                text: {
+                  es: "Permiten desarrollar un plan de investigación en universidades de Japón con posibilidad de continuar hacia un programa de maestría o doctorado, conforme a la convocatoria vigente.",
+                  en: "They allow students to develop a research plan at universities in Japan, with the possibility of continuing into a master's or doctoral program, according to the current call.",
+                },
+              },
+              {
+                text: {
+                  es: "Incluyen un período preparatorio de idioma japonés cuando la universidad anfitriona lo considere necesario.",
+                  en: "They include a preparatory Japanese language period when the host university considers it necessary.",
+                },
+              },
+              {
+                text: {
+                  es: "Están dirigidas a graduados universitarios de cualquier área del conocimiento interesados en desarrollar investigación académica en instituciones japonesas.",
+                  en: "They are aimed at university graduates from any field of knowledge interested in developing academic research at Japanese institutions.",
+                },
+              },
+              {
+                text: {
+                  es: "Los beneficios pueden incluir matrícula, pasajes internacionales, estipendio mensual y otros apoyos establecidos por el programa MEXT.",
+                  en: "Benefits may include tuition, international airfare, monthly stipend and other support established by the MEXT program.",
+                },
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "Requisitos principales",
+              en: "Main requirements",
+            },
+            bullets: [
+              {
+                text: {
+                  es: "Contar con un título universitario que permita el ingreso a estudios de posgrado.",
+                  en: "Hold a university degree that allows admission to graduate studies.",
+                },
+              },
+              {
+                text: {
+                  es: "Presentar un plan de investigación relacionado con el área académica de interés.",
+                  en: "Submit a research plan related to the academic area of interest.",
+                },
+              },
+              {
+                text: {
+                  es: "Cumplir con los requisitos académicos, lingüísticos y documentales establecidos por MEXT y la Embajada del Japón.",
+                  en: "Meet the academic, language and documentation requirements established by MEXT and the Embassy of Japan.",
+                },
+              },
+              {
+                text: {
+                  es: "Realizar la postulación mediante el proceso oficial de selección de la Embajada del Japón en Bolivia.",
+                  en: "Apply through the official selection process of the Embassy of Japan in Bolivia.",
+                },
+              },
+            ],
+          },
+        ],
+        href: "https://www.studyinjapan.go.jp/en/planning/scholarships/mext-scholarships/",
+        linkLabel: {
+          es: "Study in Japan - MEXT Scholarships",
+          en: "Study in Japan - MEXT Scholarships",
+        },
+      },
+    ],
   },
   {
     slug: "mexico",
@@ -2429,6 +3229,86 @@ export const scholarshipCountries: ScholarshipCatalogItem[] = [
       en: "Regional programs, graduate studies and academic cooperation networks.",
     },
     accent: "#E30613",
+    opportunities: [
+      {
+        slug: "becas-excelencia-gobierno-mexico-amexcid",
+        title: {
+          es: "Becas de Excelencia del Gobierno de México para Extranjeros (AMEXCID)",
+          en: "Mexican Government Excellence Scholarships for Foreigners (AMEXCID)",
+        },
+        body: {
+          es: "Las Becas de Excelencia del Gobierno de México para Extranjeros, administradas por la Agencia Mexicana de Cooperación Internacional para el Desarrollo (AMEXCID) de la Secretaría de Relaciones Exteriores (SRE).",
+          en: "The Mexican Government Excellence Scholarships for Foreigners are administered by the Mexican Agency for International Development Cooperation (AMEXCID) of the Ministry of Foreign Affairs (SRE).",
+        },
+        contentSections: [
+          {
+            paragraphs: [
+              {
+                es: "Las Becas de Excelencia del Gobierno de México para Extranjeros, administradas por la Agencia Mexicana de Cooperación Internacional para el Desarrollo (AMEXCID) de la Secretaría de Relaciones Exteriores (SRE).",
+                en: "The Mexican Government Excellence Scholarships for Foreigners are administered by the Mexican Agency for International Development Cooperation (AMEXCID) of the Ministry of Foreign Affairs (SRE).",
+              },
+            ],
+            bullets: [
+              {
+                text: {
+                  es: "Becas para realizar estudios de licenciatura (movilidad académica), maestría, doctorado, especialidades médicas, estancias de investigación y estancias posdoctorales, conforme a la convocatoria vigente.",
+                  en: "Scholarships to pursue undergraduate studies (academic mobility), master's studies, doctoral studies, medical specialties, research stays and postdoctoral stays, according to the current call.",
+                },
+              },
+              {
+                text: {
+                  es: "Más de 90 instituciones mexicanas de educación superior participan en el programa con una amplia oferta académica en diversas áreas del conocimiento.",
+                  en: "More than 90 Mexican higher education institutions participate in the program with a broad academic offer in various fields of knowledge.",
+                },
+              },
+              {
+                text: {
+                  es: "Los beneficios pueden incluir apoyo económico, matrícula, seguro médico y otros beneficios establecidos en la convocatoria vigente.",
+                  en: "Benefits may include financial support, tuition, health insurance and other benefits established in the current call.",
+                },
+              },
+              {
+                text: {
+                  es: "Las convocatorias se publican anualmente y las modalidades, beneficios y requisitos específicos pueden variar en cada edición.",
+                  en: "Calls are published annually, and the modalities, benefits and specific requirements may vary in each edition.",
+                },
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "Requisitos principales",
+              en: "Main requirements",
+            },
+            bullets: [
+              {
+                text: {
+                  es: "Cumplir con los requisitos académicos y de admisión del programa seleccionado.",
+                  en: "Meet the academic and admission requirements of the selected program.",
+                },
+              },
+              {
+                text: {
+                  es: "Presentar la documentación requerida conforme a las bases de la convocatoria.",
+                  en: "Submit the required documentation according to the call guidelines.",
+                },
+              },
+              {
+                text: {
+                  es: "Realizar la postulación mediante el procedimiento oficial establecido por AMEXCID.",
+                  en: "Apply through the official procedure established by AMEXCID.",
+                },
+              },
+            ],
+          },
+        ],
+        href: "https://www.gob.mx/amexcid/acciones-y-programas/becas-para-extranjeros-29785",
+        linkLabel: {
+          es: "Portal oficial de Becas para Extranjeros",
+          en: "Official Scholarships for Foreigners portal",
+        },
+      },
+    ],
   },
   {
     slug: "reino-unido",
@@ -2440,6 +3320,170 @@ export const scholarshipCountries: ScholarshipCatalogItem[] = [
       en: "Excellence scholarships, graduate studies and international opportunities.",
     },
     accent: "#003770",
+    opportunities: [
+      {
+        slug: "programa-becas-chevening",
+        title: {
+          es: "Programa de Becas Chevening",
+          en: "Chevening Scholarship Program",
+        },
+        body: {
+          es: "El Programa de Becas Chevening es la iniciativa internacional de becas del Gobierno del Reino Unido, financiada por el Foreign, Commonwealth and Development Office (FCDO) y organizaciones asociadas.",
+          en: "The Chevening Scholarship Program is the international scholarship initiative of the Government of the United Kingdom, funded by the Foreign, Commonwealth and Development Office (FCDO) and partner organizations.",
+        },
+        contentSections: [
+          {
+            paragraphs: [
+              {
+                es: "El Programa de Becas Chevening es la iniciativa internacional de becas del Gobierno del Reino Unido, financiada por el Foreign, Commonwealth and Development Office (FCDO) y organizaciones asociadas. Está dirigida a profesionales con potencial de liderazgo que deseen cursar una maestría presencial de un año en una universidad del Reino Unido.",
+                en: "The Chevening Scholarship Program is the international scholarship initiative of the Government of the United Kingdom, funded by the Foreign, Commonwealth and Development Office (FCDO) and partner organizations. It is aimed at professionals with leadership potential who wish to pursue a one-year in-person master's degree at a university in the United Kingdom.",
+              },
+            ],
+            bullets: [
+              {
+                text: {
+                  es: "Cobertura que puede incluir matrícula universitaria, pasajes internacionales, estipendio mensual, visa, asignaciones de llegada y salida y otros apoyos establecidos por el programa.",
+                  en: "Coverage may include university tuition, international airfare, monthly stipend, visa, arrival and departure allowances and other support established by the program.",
+                },
+              },
+              {
+                text: {
+                  es: "Acceso a actividades académicas, profesionales y de relacionamiento con la red internacional de Chevening.",
+                  en: "Access to academic, professional and networking activities with the international Chevening network.",
+                },
+              },
+              {
+                text: {
+                  es: "No existe un límite máximo de edad para postular.",
+                  en: "There is no maximum age limit to apply.",
+                },
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "Requisitos principales",
+              en: "Main requirements",
+            },
+            bullets: [
+              {
+                text: {
+                  es: "Contar con un título universitario que permita acceder a estudios de maestría en el Reino Unido.",
+                  en: "Hold a university degree that allows access to master's studies in the United Kingdom.",
+                },
+              },
+              {
+                text: {
+                  es: "Haber concluido el pregrado dentro del plazo mínimo establecido por la convocatoria vigente.",
+                  en: "Have completed undergraduate studies within the minimum period established by the current call.",
+                },
+              },
+              {
+                text: {
+                  es: "Acreditar al menos 2.800 horas de experiencia laboral obtenidas después de finalizar el pregrado. Puede incluir empleo a tiempo completo o parcial, voluntariado y prácticas profesionales remuneradas o no remuneradas.",
+                  en: "Prove at least 2,800 hours of work experience obtained after completing undergraduate studies. This may include full-time or part-time employment, volunteering and paid or unpaid internships.",
+                },
+              },
+              {
+                text: {
+                  es: "Postular a tres programas elegibles de maestría y obtener posteriormente una oferta incondicional de al menos uno de ellos dentro del plazo señalado.",
+                  en: "Apply to three eligible master's programs and later obtain an unconditional offer from at least one of them within the indicated deadline.",
+                },
+              },
+              {
+                text: {
+                  es: "Demostrar liderazgo, capacidad para establecer redes profesionales y un proyecto claro de impacto para Bolivia.",
+                  en: "Demonstrate leadership, the ability to build professional networks and a clear impact project for Bolivia.",
+                },
+              },
+              {
+                text: {
+                  es: "Comprometerse a regresar al país de origen durante al menos dos años después de finalizar la beca.",
+                  en: "Commit to returning to the country of origin for at least two years after completing the scholarship.",
+                },
+              },
+            ],
+          },
+        ],
+        href: "https://www.chevening.org/scholarship/bolivia/",
+        linkLabel: {
+          es: "Programa de Becas Chevening",
+          en: "Chevening Scholarship Program",
+        },
+      },
+      {
+        slug: "gates-cambridge-scholarship",
+        title: {
+          es: "Gates Cambridge Scholarship",
+          en: "Gates Cambridge Scholarship",
+        },
+        body: {
+          es: "La Gates Cambridge Scholarship es un programa internacional de becas financiado por la Fundación Bill & Melinda Gates y administrado por la Universidad de Cambridge, dirigido a estudiantes internacionales con excelencia académica, liderazgo y compromiso con mejorar la vida de otras personas.",
+          en: "The Gates Cambridge Scholarship is an international scholarship program funded by the Bill & Melinda Gates Foundation and administered by the University of Cambridge, aimed at international students with academic excellence, leadership and a commitment to improving the lives of others.",
+        },
+        contentSections: [
+          {
+            paragraphs: [
+              {
+                es: "La Gates Cambridge Scholarship es un programa internacional de becas financiado por la Fundación Bill & Melinda Gates y administrado por la Universidad de Cambridge, dirigido a estudiantes internacionales con excelencia académica, liderazgo y compromiso con mejorar la vida de otras personas.",
+                en: "The Gates Cambridge Scholarship is an international scholarship program funded by the Bill & Melinda Gates Foundation and administered by the University of Cambridge, aimed at international students with academic excellence, leadership and a commitment to improving the lives of others.",
+              },
+            ],
+            bullets: [
+              {
+                text: {
+                  es: "Becas completas para realizar estudios de maestría y doctorado en la Universidad de Cambridge, Reino Unido.",
+                  en: "Full scholarships to pursue master's and doctoral studies at the University of Cambridge, United Kingdom.",
+                },
+              },
+              {
+                text: {
+                  es: "Disponibles para prácticamente todas las disciplinas académicas ofrecidas por la Universidad de Cambridge.",
+                  en: "Available for almost all academic disciplines offered by the University of Cambridge.",
+                },
+              },
+              {
+                text: {
+                  es: "Los beneficios pueden incluir matrícula universitaria, estipendio de manutención, pasajes internacionales, costos de visa, seguro de salud y otros apoyos establecidos en la convocatoria vigente.",
+                  en: "Benefits may include university tuition, maintenance stipend, international airfare, visa costs, health insurance and other support established in the current call.",
+                },
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "Requisitos principales",
+              en: "Main requirements",
+            },
+            bullets: [
+              {
+                text: {
+                  es: "Postular a un programa de maestría o doctorado elegible en la Universidad de Cambridge.",
+                  en: "Apply to an eligible master's or doctoral program at the University of Cambridge.",
+                },
+              },
+              {
+                text: {
+                  es: "Demostrar excelencia académica, liderazgo y un firme compromiso con generar un impacto positivo en la sociedad.",
+                  en: "Demonstrate academic excellence, leadership and a strong commitment to generating a positive impact on society.",
+                },
+              },
+              {
+                text: {
+                  es: "Presentar la solicitud mediante el proceso oficial de admisión de la Universidad de Cambridge, incluyendo los requisitos específicos de la Gates Cambridge Scholarship.",
+                  en: "Submit the application through the official University of Cambridge admission process, including the specific Gates Cambridge Scholarship requirements.",
+                },
+              },
+            ],
+          },
+        ],
+        href: "https://www.gatescambridge.org/",
+        linkLabel: {
+          es: "Gates Cambridge Scholarship",
+          en: "Gates Cambridge Scholarship",
+        },
+      },
+    ],
   },
   {
     slug: "suecia",
@@ -2451,6 +3495,260 @@ export const scholarshipCountries: ScholarshipCatalogItem[] = [
       en: "Scholarships, sustainability, research and academic mobility.",
     },
     accent: "#E30613",
+    opportunities: [
+      {
+        slug: "lund-university-global-scholarship",
+        title: {
+          es: "Lund University Global Scholarship",
+          en: "Lund University Global Scholarship",
+        },
+        body: {
+          es: "La Lund University Global Scholarship es un programa de becas por mérito académico ofrecido por la Universidad de Lund (Suecia), dirigido a estudiantes internacionales con un excelente desempeño académico que deseen cursar estudios de pregrado o maestría.",
+          en: "The Lund University Global Scholarship is an academic merit scholarship program offered by Lund University (Sweden), aimed at international students with excellent academic performance who wish to pursue bachelor's or master's studies.",
+        },
+        contentSections: [
+          {
+            paragraphs: [
+              {
+                es: "La Lund University Global Scholarship es un programa de becas por mérito académico ofrecido por la Universidad de Lund (Suecia), dirigido a estudiantes internacionales con un excelente desempeño académico que deseen cursar estudios de pregrado (programas seleccionados) o maestría.",
+                en: "The Lund University Global Scholarship is an academic merit scholarship program offered by Lund University (Sweden), aimed at international students with excellent academic performance who wish to pursue bachelor's studies (selected programs) or master's studies.",
+              },
+            ],
+            bullets: [
+              {
+                text: {
+                  es: "Becas dirigidas a estudiantes internacionales provenientes de países fuera de la Unión Europea (UE) y del Espacio Económico Europeo (EEE).",
+                  en: "Scholarships aimed at international students from countries outside the European Union (EU) and the European Economic Area (EEA).",
+                },
+              },
+              {
+                text: {
+                  es: "La beca puede cubrir parcial o totalmente el costo de la matrícula, según la evaluación del candidato.",
+                  en: "The scholarship may partially or fully cover tuition costs, depending on the candidate's evaluation.",
+                },
+              },
+              {
+                text: {
+                  es: "Se otorga con base en la excelencia académica, el potencial del postulante y su motivación para estudiar en la Universidad de Lund.",
+                  en: "It is awarded based on academic excellence, the applicant's potential and their motivation to study at Lund University.",
+                },
+              },
+              {
+                text: {
+                  es: "Las convocatorias se publican anualmente y los beneficios, requisitos y fechas pueden variar en cada edición.",
+                  en: "Calls are published annually, and benefits, requirements and dates may vary in each edition.",
+                },
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "Requisitos principales",
+              en: "Main requirements",
+            },
+            bullets: [
+              {
+                text: {
+                  es: "Cumplir con los requisitos académicos y de admisión establecidos por la universidad.",
+                  en: "Meet the academic and admission requirements established by the university.",
+                },
+              },
+              {
+                text: {
+                  es: "Presentar la solicitud de beca dentro del plazo oficial y adjuntar la carta de motivación requerida.",
+                  en: "Submit the scholarship application within the official deadline and attach the required motivation letter.",
+                },
+              },
+              {
+                text: {
+                  es: "Demostrar un excelente rendimiento académico, ya que la selección se realiza exclusivamente por mérito.",
+                  en: "Demonstrate excellent academic performance, since selection is based exclusively on merit.",
+                },
+              },
+            ],
+          },
+        ],
+        href: "https://www.lunduniversity.lu.se/study/admission-degree-studies/entry-requirements",
+        linkLabel: {
+          es: "Lund University Global Scholarship",
+          en: "Lund University Global Scholarship",
+        },
+      },
+      {
+        slug: "uppsala-university-global-scholarship",
+        title: {
+          es: "Uppsala University Global Scholarship",
+          en: "Uppsala University Global Scholarship",
+        },
+        body: {
+          es: "La Uppsala University Global Scholarship es un programa de becas por mérito académico ofrecido por la Universidad de Uppsala (Suecia), dirigido a estudiantes internacionales con un excelente desempeño académico que deseen cursar estudios de maestría.",
+          en: "The Uppsala University Global Scholarship is an academic merit scholarship program offered by Uppsala University (Sweden), aimed at international students with excellent academic performance who wish to pursue master's studies.",
+        },
+        contentSections: [
+          {
+            paragraphs: [
+              {
+                es: "La Uppsala University Global Scholarship es un programa de becas por mérito académico ofrecido por la Universidad de Uppsala (Suecia), dirigido a estudiantes internacionales con un excelente desempeño académico que deseen cursar estudios de maestría.",
+                en: "The Uppsala University Global Scholarship is an academic merit scholarship program offered by Uppsala University (Sweden), aimed at international students with excellent academic performance who wish to pursue master's studies.",
+              },
+            ],
+            bullets: [
+              {
+                text: {
+                  es: "Becas dirigidas a estudiantes internacionales provenientes de países fuera de la Unión Europea (UE), del Espacio Económico Europeo (EEE) y Suiza.",
+                  en: "Scholarships aimed at international students from countries outside the European Union (EU), the European Economic Area (EEA) and Switzerland.",
+                },
+              },
+              {
+                text: {
+                  es: "La beca cubre el costo total de la matrícula, pero no incluye los gastos de manutención.",
+                  en: "The scholarship covers the full cost of tuition, but does not include living expenses.",
+                },
+              },
+              {
+                text: {
+                  es: "Se otorga con base en la excelencia académica, el potencial del postulante y su capacidad para desenvolverse en un entorno académico internacional.",
+                  en: "It is awarded based on academic excellence, the applicant's potential and their ability to perform in an international academic environment.",
+                },
+              },
+              {
+                text: {
+                  es: "Las convocatorias se publican anualmente y los requisitos, beneficios y fechas pueden variar en cada edición.",
+                  en: "Calls are published annually, and requirements, benefits and dates may vary in each edition.",
+                },
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "Requisitos principales",
+              en: "Main requirements",
+            },
+            bullets: [
+              {
+                text: {
+                  es: "Haber postulado a un programa internacional de maestría en la Universidad de Uppsala, seleccionándolo como primera opción en University Admissions.",
+                  en: "Have applied to an international master's program at Uppsala University, selecting it as the first choice in University Admissions.",
+                },
+              },
+              {
+                text: {
+                  es: "Cumplir con todos los requisitos de admisión y presentar la documentación completa dentro de los plazos establecidos.",
+                  en: "Meet all admission requirements and submit the complete documentation within the established deadlines.",
+                },
+              },
+              {
+                text: {
+                  es: "Demostrar un excelente rendimiento académico y potencial para contribuir al entorno académico de la universidad.",
+                  en: "Demonstrate excellent academic performance and potential to contribute to the university's academic environment.",
+                },
+              },
+              {
+                text: {
+                  es: "Presentar la solicitud de la beca mediante el sistema oficial de la Universidad de Uppsala.",
+                  en: "Submit the scholarship application through Uppsala University's official system.",
+                },
+              },
+            ],
+          },
+        ],
+        href: "https://www.uu.se/en/study/masters-studies/scholarships/uppsala-university-scholarships.html",
+        linkLabel: {
+          es: "Enlace oficial del programa",
+          en: "Official program link",
+        },
+      },
+      {
+        slug: "kth-scholarship",
+        title: {
+          es: "KTH Scholarship",
+          en: "KTH Scholarship",
+        },
+        body: {
+          es: "La KTH Scholarship es un programa de becas por mérito académico ofrecido por el KTH Royal Institute of Technology, una de las universidades tecnológicas más prestigiosas de Europa.",
+          en: "The KTH Scholarship is an academic merit scholarship program offered by KTH Royal Institute of Technology, one of Europe's most prestigious technological universities.",
+        },
+        contentSections: [
+          {
+            paragraphs: [
+              {
+                es: "La KTH Scholarship es un programa de becas por mérito académico ofrecido por el KTH Royal Institute of Technology, una de las universidades tecnológicas más prestigiosas de Europa. Está dirigida a estudiantes internacionales con un excelente desempeño académico que deseen cursar estudios de maestría en Suecia.",
+                en: "The KTH Scholarship is an academic merit scholarship program offered by KTH Royal Institute of Technology, one of Europe's most prestigious technological universities. It is aimed at international students with excellent academic performance who wish to pursue master's studies in Sweden.",
+              },
+            ],
+            bullets: [
+              {
+                text: {
+                  es: "Becas dirigidas a estudiantes internacionales provenientes de países fuera de la Unión Europea (UE), del Espacio Económico Europeo (EEE) y Suiza.",
+                  en: "Scholarships aimed at international students from countries outside the European Union (EU), the European Economic Area (EEA) and Switzerland.",
+                },
+              },
+              {
+                text: {
+                  es: "Destinadas a programas de maestría impartidos por el KTH Royal Institute of Technology.",
+                  en: "Intended for master's programs offered by KTH Royal Institute of Technology.",
+                },
+              },
+              {
+                text: {
+                  es: "La beca cubre el costo total de la matrícula durante uno o dos años de estudio, siempre que el estudiante mantenga un rendimiento académico satisfactorio.",
+                  en: "The scholarship covers the full cost of tuition for one or two years of study, provided that the student maintains satisfactory academic performance.",
+                },
+              },
+              {
+                text: {
+                  es: "Se otorga con base en la excelencia académica, la trayectoria del postulante y su potencial para contribuir al desarrollo sostenible mediante los conocimientos adquiridos en KTH.",
+                  en: "It is awarded based on academic excellence, the applicant's background and their potential to contribute to sustainable development through the knowledge acquired at KTH.",
+                },
+              },
+              {
+                text: {
+                  es: "Las convocatorias se publican anualmente y los requisitos, beneficios y fechas pueden variar en cada edición.",
+                  en: "Calls are published annually, and requirements, benefits and dates may vary in each edition.",
+                },
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "Requisitos principales",
+              en: "Main requirements",
+            },
+            bullets: [
+              {
+                text: {
+                  es: "Haber postulado a un programa de maestría elegible en KTH como primera opción a través del sistema oficial University Admissions.",
+                  en: "Have applied to an eligible master's program at KTH as the first choice through the official University Admissions system.",
+                },
+              },
+              {
+                text: {
+                  es: "Ser un estudiante sujeto al pago de matrícula internacional.",
+                  en: "Be a student subject to international tuition fees.",
+                },
+              },
+              {
+                text: {
+                  es: "Cumplir con todos los requisitos de admisión y presentar la documentación dentro de los plazos establecidos.",
+                  en: "Meet all admission requirements and submit the documentation within the established deadlines.",
+                },
+              },
+              {
+                text: {
+                  es: "Demostrar un excelente historial académico, motivación y potencial para contribuir al desarrollo sostenible.",
+                  en: "Demonstrate an excellent academic record, motivation and potential to contribute to sustainable development.",
+                },
+              },
+            ],
+          },
+        ],
+        href: "https://www.kth.se/en/studies/master/admissions/scholarships/kth-scholarship-1.72827",
+        linkLabel: {
+          es: "Enlace oficial del programa",
+          en: "Official program link",
+        },
+      },
+    ],
   },
   {
     slug: "suiza",
@@ -2462,6 +3760,164 @@ export const scholarshipCountries: ScholarshipCatalogItem[] = [
       en: "Research programs, mobility and academic excellence.",
     },
     accent: "#003770",
+    opportunities: [
+      {
+        slug: "becas-excelencia-gobierno-suizo",
+        title: {
+          es: "Becas de Excelencia del Gobierno Suizo",
+          en: "Swiss Government Excellence Scholarships",
+        },
+        body: {
+          es: "Las Becas de Excelencia del Gobierno Suizo son un programa internacional financiado por la Confederación Suiza y administrado por la Comisión Federal de Becas para Estudiantes Extranjeros (FCS/ESKAS).",
+          en: "The Swiss Government Excellence Scholarships are an international program funded by the Swiss Confederation and administered by the Federal Commission for Scholarships for Foreign Students (FCS/ESKAS).",
+        },
+        contentSections: [
+          {
+            paragraphs: [
+              {
+                es: "Las Becas de Excelencia del Gobierno Suizo son un programa internacional financiado por la Confederación Suiza y administrado por la Comisión Federal de Becas para Estudiantes Extranjeros (FCS/ESKAS). Su objetivo es promover el intercambio académico y la cooperación científica entre Suiza y más de 180 países.",
+                en: "The Swiss Government Excellence Scholarships are an international program funded by the Swiss Confederation and administered by the Federal Commission for Scholarships for Foreign Students (FCS/ESKAS). Its objective is to promote academic exchange and scientific cooperation between Switzerland and more than 180 countries.",
+              },
+            ],
+            bullets: [
+              {
+                text: {
+                  es: "Becas dirigidas a jóvenes investigadores internacionales que deseen realizar estancias de investigación o estudios de doctorado en universidades, institutos federales de tecnología, universidades de ciencias aplicadas e institutos públicos de investigación de Suiza.",
+                  en: "Scholarships aimed at young international researchers who wish to carry out research stays or doctoral studies at universities, federal institutes of technology, universities of applied sciences and public research institutes in Switzerland.",
+                },
+              },
+              {
+                text: {
+                  es: "Disponibles para todas las áreas del conocimiento, siempre que el proyecto de investigación sea respaldado por un profesor o supervisor académico de una institución suiza.",
+                  en: "Available for all fields of knowledge, provided that the research project is supported by a professor or academic supervisor from a Swiss institution.",
+                },
+              },
+              {
+                text: {
+                  es: "Los beneficios pueden incluir estipendio mensual, seguro médico, exención de matrícula cuando corresponda y otros apoyos establecidos en la convocatoria vigente.",
+                  en: "Benefits may include a monthly stipend, health insurance, tuition exemption where applicable and other support established in the current call.",
+                },
+              },
+              {
+                text: {
+                  es: "Las convocatorias se publican anualmente y los tipos de beca, requisitos y beneficios pueden variar según el país de origen y la edición correspondiente.",
+                  en: "Calls are published annually, and scholarship types, requirements and benefits may vary according to the country of origin and the corresponding edition.",
+                },
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "Requisitos principales",
+              en: "Main requirements",
+            },
+            bullets: [
+              {
+                text: {
+                  es: "Contar con un título de maestría o el grado académico requerido para la modalidad de beca solicitada.",
+                  en: "Hold a master's degree or the academic degree required for the requested scholarship modality.",
+                },
+              },
+              {
+                text: {
+                  es: "Presentar un proyecto de investigación o una propuesta doctoral de alta calidad.",
+                  en: "Submit a high-quality research project or doctoral proposal.",
+                },
+              },
+              {
+                text: {
+                  es: "Obtener el respaldo de un profesor o supervisor académico de una institución de educación superior en Suiza.",
+                  en: "Obtain the support of a professor or academic supervisor from a higher education institution in Switzerland.",
+                },
+              },
+              {
+                text: {
+                  es: "Cumplir con los requisitos de elegibilidad establecidos para el país de origen y presentar la solicitud conforme al procedimiento oficial.",
+                  en: "Meet the eligibility requirements established for the country of origin and submit the application according to the official procedure.",
+                },
+              },
+            ],
+          },
+        ],
+        href: "https://www.sbfi.admin.ch/sbfi/en/home/education/scholarships-and-grants/swiss-government-excellence-scholarships.html",
+        linkLabel: {
+          es: "Becas Suizas",
+          en: "Swiss Scholarships",
+        },
+      },
+      {
+        slug: "becas-maestria-fundacion-simon-patino",
+        title: {
+          es: "Becas de Maestría - Fundación Simón I. Patiño",
+          en: "Master's Scholarships - Simón I. Patiño Foundation",
+        },
+        body: {
+          es: "La Fundación Simón I. Patiño ofrece un programa de becas dirigido a profesionales bolivianos que deseen realizar estudios de maestría en universidades asociadas de Suiza.",
+          en: "The Simón I. Patiño Foundation offers a scholarship program for Bolivian professionals who wish to pursue master's studies at partner universities in Switzerland.",
+        },
+        contentSections: [
+          {
+            paragraphs: [
+              {
+                es: "La Fundación Simón I. Patiño ofrece un programa de becas dirigido a profesionales bolivianos que deseen realizar estudios de maestría en universidades asociadas de Suiza. El programa busca fortalecer la formación académica de alto nivel y contribuir al desarrollo de Bolivia mediante el retorno y la aplicación de los conocimientos adquiridos.",
+                en: "The Simón I. Patiño Foundation offers a scholarship program for Bolivian professionals who wish to pursue master's studies at partner universities in Switzerland. The program seeks to strengthen high-level academic training and contribute to Bolivia's development through the return and application of the knowledge acquired.",
+              },
+            ],
+            bullets: [
+              {
+                text: {
+                  es: "Dirigidas exclusivamente a profesionales bolivianos con excelencia académica y potencial de liderazgo.",
+                  en: "Aimed exclusively at Bolivian professionals with academic excellence and leadership potential.",
+                },
+              },
+              {
+                text: {
+                  es: "Los beneficios y la cobertura se establecen en la convocatoria vigente y pueden incluir apoyo para estudios y otros gastos asociados.",
+                  en: "Benefits and coverage are established in the current call and may include support for studies and other associated expenses.",
+                },
+              },
+              {
+                text: {
+                  es: "Los becarios asumen el compromiso de retornar a Bolivia al finalizar sus estudios para contribuir al desarrollo del país.",
+                  en: "Scholarship recipients commit to returning to Bolivia after completing their studies to contribute to the country's development.",
+                },
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "Requisitos principales",
+              en: "Main requirements",
+            },
+            bullets: [
+              {
+                text: {
+                  es: "Contar con un título universitario de licenciatura o equivalente.",
+                  en: "Hold a bachelor's degree or equivalent university degree.",
+                },
+              },
+              {
+                text: {
+                  es: "Obtener la admisión a un programa de maestría elegible en una universidad asociada.",
+                  en: "Obtain admission to an eligible master's program at a partner university.",
+                },
+              },
+              {
+                text: {
+                  es: "Cumplir con los requisitos establecidos por la Fundación Simón I. Patiño y la convocatoria vigente.",
+                  en: "Meet the requirements established by the Simón I. Patiño Foundation and the current call.",
+                },
+              },
+            ],
+          },
+        ],
+        href: "https://patino.org/es/nuestras-becas-de-estudio/",
+        linkLabel: {
+          es: "Programa Fundación Patiño",
+          en: "Patiño Foundation Program",
+        },
+      },
+    ],
   },
   {
     slug: "taiwan",
@@ -2473,6 +3929,92 @@ export const scholarshipCountries: ScholarshipCatalogItem[] = [
       en: "Scholarships, technology, languages and academic programs.",
     },
     accent: "#E30613",
+    opportunities: [
+      {
+        slug: "taiwan-international-graduate-program-tigp",
+        title: {
+          es: "Taiwan International Graduate Program (TIGP)",
+          en: "Taiwan International Graduate Program (TIGP)",
+        },
+        body: {
+          es: "El Taiwan International Graduate Program (TIGP) es un programa internacional de doctorado desarrollado por Academia Sinica, en colaboración con las principales universidades de Taiwán.",
+          en: "The Taiwan International Graduate Program (TIGP) is an international doctoral program developed by Academia Sinica, in collaboration with Taiwan's leading universities.",
+        },
+        contentSections: [
+          {
+            paragraphs: [
+              {
+                es: "El Taiwan International Graduate Program (TIGP) es un programa internacional de doctorado desarrollado por Academia Sinica, en colaboración con las principales universidades de Taiwán. Su objetivo es formar investigadores de excelencia mediante programas impartidos completamente en inglés en diversas áreas científicas y tecnológicas.",
+                en: "The Taiwan International Graduate Program (TIGP) is an international doctoral program developed by Academia Sinica, in collaboration with Taiwan's leading universities. Its objective is to train excellent researchers through programs taught completely in English in various scientific and technological fields.",
+              },
+            ],
+            bullets: [
+              {
+                text: {
+                  es: "Programas de doctorado en ciencias, ingeniería, biotecnología, medicina, inteligencia artificial, ciencias ambientales y otras áreas de investigación.",
+                  en: "Doctoral programs in science, engineering, biotechnology, medicine, artificial intelligence, environmental sciences and other research areas.",
+                },
+              },
+              {
+                text: {
+                  es: "Los estudiantes realizan sus investigaciones en Academia Sinica y obtienen el grado de doctor en colaboración con una universidad asociada.",
+                  en: "Students conduct their research at Academia Sinica and obtain the doctoral degree in collaboration with a partner university.",
+                },
+              },
+              {
+                text: {
+                  es: "El programa ofrece apoyo financiero conforme a la convocatoria vigente, que puede incluir estipendio mensual, apoyo para matrícula y financiamiento para actividades de investigación.",
+                  en: "The program offers financial support according to the current call, which may include a monthly stipend, tuition support and funding for research activities.",
+                },
+              },
+              {
+                text: {
+                  es: "Las convocatorias se publican anualmente y los programas, beneficios y requisitos pueden variar en cada edición.",
+                  en: "Calls are published annually, and programs, benefits and requirements may vary in each edition.",
+                },
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "Requisitos principales",
+              en: "Main requirements",
+            },
+            bullets: [
+              {
+                text: {
+                  es: "Contar con un título universitario que permita el ingreso a estudios de doctorado.",
+                  en: "Hold a university degree that allows admission to doctoral studies.",
+                },
+              },
+              {
+                text: {
+                  es: "Cumplir con los requisitos académicos y de idioma establecidos por el programa seleccionado.",
+                  en: "Meet the academic and language requirements established by the selected program.",
+                },
+              },
+              {
+                text: {
+                  es: "Presentar una solicitud completa mediante el sistema oficial de admisiones del TIGP.",
+                  en: "Submit a complete application through the official TIGP admissions system.",
+                },
+              },
+              {
+                text: {
+                  es: "Demostrar interés y potencial para desarrollar investigación científica de alto nivel.",
+                  en: "Demonstrate interest and potential to develop high-level scientific research.",
+                },
+              },
+            ],
+          },
+        ],
+        href: "https://tigp.sinica.edu.tw/",
+        linkLabel: {
+          es: "Taiwan TIGP",
+          en: "Taiwan TIGP",
+        },
+      },
+    ],
   },
   {
     slug: "turquia",
@@ -2484,6 +4026,80 @@ export const scholarshipCountries: ScholarshipCatalogItem[] = [
       en: "International scholarships, mobility and academic cooperation.",
     },
     accent: "#003770",
+    opportunities: [
+      {
+        slug: "turkiye-scholarships-turkiye-burslari",
+        title: {
+          es: "Türkiye Scholarships (Türkiye Bursları)",
+          en: "Türkiye Scholarships (Türkiye Bursları)",
+        },
+        body: {
+          es: "Las Türkiye Scholarships (Türkiye Bursları) son el programa oficial de becas del Gobierno de Türkiye, administrado por la Presidencia para los Turcos en el Extranjero y las Comunidades Afines (YTB).",
+          en: "Türkiye Scholarships (Türkiye Bursları) are the official scholarship program of the Government of Türkiye, administered by the Presidency for Turks Abroad and Related Communities (YTB).",
+        },
+        contentSections: [
+          {
+            paragraphs: [
+              {
+                es: "Las Türkiye Scholarships (Türkiye Bursları) son el programa oficial de becas del Gobierno de Türkiye, administrado por la Presidencia para los Turcos en el Extranjero y las Comunidades Afines (YTB). Su objetivo es brindar oportunidades de formación académica a estudiantes internacionales mediante estudios en las principales universidades de Türkiye.",
+                en: "Türkiye Scholarships (Türkiye Bursları) are the official scholarship program of the Government of Türkiye, administered by the Presidency for Turks Abroad and Related Communities (YTB). Its objective is to provide academic training opportunities to international students through studies at Türkiye's leading universities.",
+              },
+            ],
+            bullets: [
+              {
+                text: {
+                  es: "Becas para realizar estudios de pregrado, maestría, doctorado, investigación y otros programas académicos especializados.",
+                  en: "Scholarships to pursue undergraduate, master's, doctoral, research and other specialized academic programs.",
+                },
+              },
+              {
+                text: {
+                  es: "Los beneficios pueden incluir asignación universitaria, matrícula, estipendio mensual, alojamiento, seguro médico, curso de idioma turco, pasajes internacionales y actividades académicas, sociales y culturales.",
+                  en: "Benefits may include university placement, tuition, monthly stipend, accommodation, health insurance, Turkish language course, international airfare and academic, social and cultural activities.",
+                },
+              },
+              {
+                text: {
+                  es: "Las convocatorias se publican anualmente y los programas, beneficios y requisitos pueden variar en cada edición.",
+                  en: "Calls are published annually, and programs, benefits and requirements may vary in each edition.",
+                },
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "Requisitos principales",
+              en: "Main requirements",
+            },
+            bullets: [
+              {
+                text: {
+                  es: "Cumplir con los requisitos académicos y de edad establecidos para el nivel de estudios solicitado.",
+                  en: "Meet the academic and age requirements established for the requested level of study.",
+                },
+              },
+              {
+                text: {
+                  es: "Presentar la documentación requerida mediante el sistema oficial de postulación.",
+                  en: "Submit the required documentation through the official application system.",
+                },
+              },
+              {
+                text: {
+                  es: "Demostrar un buen desempeño académico y cumplir con los criterios de selección del programa.",
+                  en: "Demonstrate good academic performance and meet the program's selection criteria.",
+                },
+              },
+            ],
+          },
+        ],
+        href: "https://www.turkiyeburslari.gov.tr/",
+        linkLabel: {
+          es: "Programa oficial",
+          en: "Official program",
+        },
+      },
+    ],
   },
 ];
 
@@ -2498,6 +4114,130 @@ export const scholarshipOrganizations: ScholarshipCatalogItem[] = [
       en: "Calls and special programs linked to ABE.",
     },
     accent: "#E30613",
+    opportunities: [
+      {
+        slug: "programa-becas-masta-agencia-boliviana-espacial",
+        title: {
+          es: "Programa de Becas MASTA - Agencia Boliviana Espacial",
+          en: "MASTA Scholarship Program - Bolivian Space Agency",
+        },
+        body: {
+          es: "El Master in Space Technology Applications (MASTA) es un programa internacional de maestría desarrollado por el Regional Centre for Space Science and Technology Education in Asia and the Pacific (RCSSTEAP), en colaboración con Beihang University y el China Scholarship Council (CSC).",
+          en: "The Master in Space Technology Applications (MASTA) is an international master's program developed by the Regional Centre for Space Science and Technology Education in Asia and the Pacific (RCSSTEAP), in collaboration with Beihang University and the China Scholarship Council (CSC).",
+        },
+        contentSections: [
+          {
+            paragraphs: [
+              {
+                es: "El Master in Space Technology Applications (MASTA) es un programa internacional de maestría desarrollado por el Regional Centre for Space Science and Technology Education in Asia and the Pacific (RCSSTEAP), en colaboración con Beihang University y el China Scholarship Council (CSC). En Bolivia, las convocatorias son coordinadas por la Agencia Boliviana Espacial (ABE).",
+                en: "The Master in Space Technology Applications (MASTA) is an international master's program developed by the Regional Centre for Space Science and Technology Education in Asia and the Pacific (RCSSTEAP), in collaboration with Beihang University and the China Scholarship Council (CSC). In Bolivia, calls are coordinated by the Bolivian Space Agency (ABE).",
+              },
+            ],
+            bullets: [
+              {
+                text: {
+                  es: "Becas dirigidas a profesionales bolivianos interesados en especializarse en ciencia, tecnología y aplicaciones espaciales.",
+                  en: "Scholarships aimed at Bolivian professionals interested in specializing in space science, technology and applications.",
+                },
+              },
+              {
+                text: {
+                  es: "Programa académico impartido en inglés en la Universidad de Beihang, China.",
+                  en: "Academic program taught in English at Beihang University, China.",
+                },
+              },
+              {
+                text: {
+                  es: "Áreas de formación que pueden incluir:",
+                  en: "Training areas may include:",
+                },
+                children: [
+                  {
+                    text: {
+                      es: "Teledetección y Sistemas de Información Geográfica.",
+                      en: "Remote Sensing and Geographic Information Systems.",
+                    },
+                  },
+                  {
+                    text: {
+                      es: "Sistemas Globales de Navegación por Satélite.",
+                      en: "Global Navigation Satellite Systems.",
+                    },
+                  },
+                  {
+                    text: {
+                      es: "Gestión de Proyectos Espaciales.",
+                      en: "Space Project Management.",
+                    },
+                  },
+                  {
+                    text: {
+                      es: "Tecnología de Microsatélites.",
+                      en: "Microsatellite Technology.",
+                    },
+                  },
+                ],
+              },
+              {
+                text: {
+                  es: "Los beneficios pueden incluir matrícula, alojamiento, estipendio, seguro médico y otros apoyos establecidos en la convocatoria vigente.",
+                  en: "Benefits may include tuition, accommodation, stipend, health insurance and other support established in the current call.",
+                },
+              },
+              {
+                text: {
+                  es: "Las convocatorias, el número de becas y las áreas disponibles pueden variar en cada edición.",
+                  en: "Calls, the number of scholarships and available areas may vary in each edition.",
+                },
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "Requisitos principales",
+              en: "Main requirements",
+            },
+            bullets: [
+              {
+                text: {
+                  es: "Ser profesional boliviano y contar con un título universitario de licenciatura o equivalente.",
+                  en: "Be a Bolivian professional and hold a bachelor's degree or equivalent university degree.",
+                },
+              },
+              {
+                text: {
+                  es: "Tener formación académica relacionada con ingeniería, ciencias, tecnología, telecomunicaciones, geografía u otras áreas afines al programa seleccionado.",
+                  en: "Have academic training related to engineering, sciences, technology, telecommunications, geography or other areas related to the selected program.",
+                },
+              },
+              {
+                text: {
+                  es: "Cumplir con los requisitos académicos, profesionales, lingüísticos y documentales establecidos en la convocatoria vigente.",
+                  en: "Meet the academic, professional, language and documentation requirements established in the current call.",
+                },
+              },
+              {
+                text: {
+                  es: "Presentar la postulación mediante el procedimiento de preselección definido por la Agencia Boliviana Espacial.",
+                  en: "Submit the application through the preselection procedure defined by the Bolivian Space Agency.",
+                },
+              },
+              {
+                text: {
+                  es: "Superar las etapas de evaluación nacional y la selección final realizada por las instituciones responsables del programa.",
+                  en: "Pass the national evaluation stages and the final selection carried out by the institutions responsible for the program.",
+                },
+              },
+            ],
+          },
+        ],
+        href: "https://www.abe.bo/estudiantes/becasmaestria/",
+        linkLabel: {
+          es: "Convocatorias MASTA - ABE",
+          en: "MASTA Calls - ABE",
+        },
+      },
+    ],
   },
   {
     slug: "banco-mundial",
@@ -2509,6 +4249,176 @@ export const scholarshipOrganizations: ScholarshipCatalogItem[] = [
       en: "Scholarships, research and global development opportunities.",
     },
     accent: "#003770",
+    opportunities: [
+      {
+        slug: "robert-s-mcnamara-fellowships-program-rsmfp",
+        title: {
+          es: "Robert S. McNamara Fellowships Program (RSMFP)",
+          en: "Robert S. McNamara Fellowships Program (RSMFP)",
+        },
+        body: {
+          es: "El Robert S. McNamara Fellowships Program (RSMFP) es un programa del Banco Mundial que conecta a jóvenes investigadores de países en desarrollo con economistas e investigadores de la Vicepresidencia de Economía del Desarrollo (DEC).",
+          en: "The Robert S. McNamara Fellowships Program (RSMFP) is a World Bank program that connects young researchers from developing countries with economists and researchers from the Development Economics Vice Presidency (DEC).",
+        },
+        contentSections: [
+          {
+            paragraphs: [
+              {
+                es: "El Robert S. McNamara Fellowships Program (RSMFP) es un programa del Banco Mundial que conecta a jóvenes investigadores de países en desarrollo con economistas e investigadores de la Vicepresidencia de Economía del Desarrollo (DEC). Su objetivo es fortalecer la investigación aplicada y generar evidencia para apoyar el diseño de políticas públicas orientadas al desarrollo.",
+                en: "The Robert S. McNamara Fellowships Program (RSMFP) is a World Bank program that connects young researchers from developing countries with economists and researchers from the Development Economics Vice Presidency (DEC). Its objective is to strengthen applied research and generate evidence to support the design of development-oriented public policies.",
+              },
+            ],
+            bullets: [
+              {
+                text: {
+                  es: "Los becarios desarrollan proyectos de investigación en la sede del Banco Mundial en Washington, D.C., bajo la supervisión de investigadores del Banco Mundial.",
+                  en: "Fellows develop research projects at World Bank headquarters in Washington, D.C., under the supervision of World Bank researchers.",
+                },
+              },
+              {
+                text: {
+                  es: "Ofrece formación en metodologías de investigación, análisis econométrico y participación en proyectos de alto impacto para el desarrollo internacional.",
+                  en: "It offers training in research methodologies, econometric analysis and participation in high-impact projects for international development.",
+                },
+              },
+              {
+                text: {
+                  es: "Las convocatorias, beneficios y requisitos se publican periódicamente y pueden variar en cada edición.",
+                  en: "Calls, benefits and requirements are published periodically and may vary in each edition.",
+                },
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "Requisitos principales",
+              en: "Main requirements",
+            },
+            bullets: [
+              {
+                text: {
+                  es: "Contar con estudios de maestría o estar cursando un doctorado en Economía o un campo relacionado.",
+                  en: "Have master's studies or be pursuing a doctorate in Economics or a related field.",
+                },
+              },
+              {
+                text: {
+                  es: "Demostrar interés y experiencia en investigación aplicada al desarrollo.",
+                  en: "Demonstrate interest and experience in development-related applied research.",
+                },
+              },
+              {
+                text: {
+                  es: "Poseer un buen dominio del idioma inglés.",
+                  en: "Have a good command of English.",
+                },
+              },
+              {
+                text: {
+                  es: "Cumplir con los requisitos establecidos en la convocatoria vigente.",
+                  en: "Meet the requirements established in the current call.",
+                },
+              },
+            ],
+          },
+        ],
+        href: "https://www.worldbank.org/en/programs/scholarships/brief/robert-s-mcnamara-fellowships-program",
+        linkLabel: {
+          es: "Programa oficial",
+          en: "Official program",
+        },
+      },
+      {
+        slug: "joint-japan-world-bank-graduate-scholarship-program",
+        title: {
+          es: "Joint Japan / World Bank Graduate Scholarship Program (JJ/WBGSP)",
+          en: "Joint Japan / World Bank Graduate Scholarship Program (JJ/WBGSP)",
+        },
+        body: {
+          es: "El Joint Japan / World Bank Graduate Scholarship Program (JJ/WBGSP) es un programa del Banco Mundial, financiado por el Gobierno de Japón, que ofrece becas completas para profesionales de países en desarrollo interesados en cursar programas de maestría.",
+          en: "The Joint Japan / World Bank Graduate Scholarship Program (JJ/WBGSP) is a World Bank program funded by the Government of Japan that offers full scholarships for professionals from developing countries interested in pursuing master's programs.",
+        },
+        contentSections: [
+          {
+            paragraphs: [
+              {
+                es: "El Joint Japan / World Bank Graduate Scholarship Program (JJ/WBGSP) es un programa del Banco Mundial, financiado por el Gobierno de Japón, que ofrece becas completas para profesionales de países en desarrollo interesados en cursar programas de maestría.",
+                en: "The Joint Japan / World Bank Graduate Scholarship Program (JJ/WBGSP) is a World Bank program funded by the Government of Japan that offers full scholarships for professionals from developing countries interested in pursuing master's programs.",
+              },
+            ],
+            bullets: [
+              {
+                text: {
+                  es: "Becas para realizar estudios de maestría en áreas vinculadas con el desarrollo, como economía, políticas públicas, salud pública, infraestructura, gestión ambiental, cambio climático, agricultura, desarrollo urbano, gestión del agua y otras disciplinas afines.",
+                  en: "Scholarships to pursue master's studies in development-related areas such as economics, public policy, public health, infrastructure, environmental management, climate change, agriculture, urban development, water management and other related disciplines.",
+                },
+              },
+              {
+                text: {
+                  es: "Dirigidas a profesionales de países en desarrollo con experiencia laboral y compromiso demostrado con el desarrollo económico y social de su país.",
+                  en: "Aimed at professionals from developing countries with work experience and demonstrated commitment to the economic and social development of their country.",
+                },
+              },
+              {
+                text: {
+                  es: "Los programas elegibles se imparten en universidades participantes de Estados Unidos, Europa, África, Oceanía y Japón.",
+                  en: "Eligible programs are taught at participating universities in the United States, Europe, Africa, Oceania and Japan.",
+                },
+              },
+              {
+                text: {
+                  es: "Los beneficios pueden incluir matrícula, estipendio mensual, pasajes internacionales, seguro médico y apoyo para gastos de viaje, conforme a la convocatoria vigente.",
+                  en: "Benefits may include tuition, monthly stipend, international airfare, health insurance and travel expense support, according to the current call.",
+                },
+              },
+              {
+                text: {
+                  es: "Para postular, es obligatorio haber obtenido previamente la admisión a uno de los programas de maestría participantes.",
+                  en: "To apply, it is mandatory to have previously obtained admission to one of the participating master's programs.",
+                },
+              },
+              {
+                text: {
+                  es: "Al finalizar sus estudios, los becarios se comprometen a regresar a su país de origen para contribuir a su desarrollo.",
+                  en: "After completing their studies, scholarship recipients commit to returning to their country of origin to contribute to its development.",
+                },
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "Requisitos principales",
+              en: "Main requirements",
+            },
+            bullets: [
+              {
+                text: {
+                  es: "Ser ciudadano de un país en desarrollo miembro del Banco Mundial.",
+                  en: "Be a citizen of a World Bank member developing country.",
+                },
+              },
+              {
+                text: {
+                  es: "Contar con un título universitario y experiencia profesional relacionada con el desarrollo.",
+                  en: "Hold a university degree and have professional experience related to development.",
+                },
+              },
+              {
+                text: {
+                  es: "Cumplir con los requisitos académicos y documentales establecidos por el Banco Mundial y la universidad seleccionada.",
+                  en: "Meet the academic and documentation requirements established by the World Bank and the selected university.",
+                },
+              },
+            ],
+          },
+        ],
+        href: "https://www.worldbank.org/en/programs/scholarships/jj-wbgsp",
+        linkLabel: {
+          es: "Programa JJ/WBGSP",
+          en: "JJ/WBGSP Program",
+        },
+      },
+    ],
   },
   {
     slug: "egpp",
@@ -2520,6 +4430,151 @@ export const scholarshipOrganizations: ScholarshipCatalogItem[] = [
       en: "Program-managed information and calls.",
     },
     accent: "#E30613",
+    opportunities: [
+      {
+        slug: "convocatorias-internacionales-becas-egpp",
+        title: {
+          es: "Convocatorias Internacionales de Becas - Escuela de Gestión Pública Plurinacional (EGPP)",
+          en: "International Scholarship Calls - Plurinational School of Public Management (EGPP)",
+        },
+        body: {
+          es: "La Escuela de Gestión Pública Plurinacional (EGPP) es la entidad del Estado Plurinacional de Bolivia encargada de coordinar y canalizar las postulaciones a diversas becas internacionales ofrecidas por gobiernos, organismos multilaterales e instituciones de cooperación.",
+          en: "The Plurinational School of Public Management (EGPP) is the institution of the Plurinational State of Bolivia responsible for coordinating and channeling applications to various international scholarships offered by governments, multilateral organizations and cooperation institutions.",
+        },
+        contentSections: [
+          {
+            paragraphs: [
+              {
+                es: "La Escuela de Gestión Pública Plurinacional (EGPP) es la entidad del Estado Plurinacional de Bolivia encargada de coordinar y canalizar las postulaciones a diversas becas internacionales ofrecidas por gobiernos, organismos multilaterales e instituciones de cooperación.",
+                en: "The Plurinational School of Public Management (EGPP) is the institution of the Plurinational State of Bolivia responsible for coordinating and channeling applications to various international scholarships offered by governments, multilateral organizations and cooperation institutions.",
+              },
+            ],
+            bullets: [
+              {
+                text: {
+                  es: "Publica de manera permanente convocatorias de pregrado, maestría, doctorado, investigación, cursos de especialización y programas de capacitación en diferentes países.",
+                  en: "It permanently publishes calls for undergraduate, master's, doctoral, research, specialization courses and training programs in different countries.",
+                },
+              },
+              {
+                text: {
+                  es: "Canaliza postulaciones para programas promovidos por gobiernos y organismos internacionales, entre ellos China, Corea, Japón, México, la Organización de los Estados Americanos (OEA) y otros países e instituciones cooperantes.",
+                  en: "It channels applications for programs promoted by governments and international organizations, including China, Korea, Japan, Mexico, the Organization of American States (OAS) and other cooperating countries and institutions.",
+                },
+              },
+              {
+                text: {
+                  es: "La EGPP verifica el cumplimiento de los requisitos establecidos por el Gobierno de Bolivia y por la institución patrocinadora, remitiendo posteriormente las postulaciones al organismo correspondiente.",
+                  en: "EGPP verifies compliance with the requirements established by the Government of Bolivia and by the sponsoring institution, subsequently forwarding applications to the corresponding organization.",
+                },
+              },
+              {
+                text: {
+                  es: "La selección final y la otorgación de las becas son realizadas exclusivamente por el país u organismo oferente.",
+                  en: "Final selection and scholarship granting are carried out exclusively by the offering country or organization.",
+                },
+              },
+              {
+                text: {
+                  es: "Las convocatorias, requisitos y áreas de estudio se actualizan periódicamente conforme a la oferta internacional vigente.",
+                  en: "Calls, requirements and fields of study are updated periodically according to the current international offer.",
+                },
+              },
+            ],
+          },
+          {
+            heading: {
+              es: "Requisitos principales",
+              en: "Main requirements",
+            },
+            bullets: [
+              {
+                text: {
+                  es: "Cumplir con los requisitos establecidos por la EGPP y por la convocatoria internacional correspondiente.",
+                  en: "Meet the requirements established by EGPP and by the corresponding international call.",
+                },
+              },
+              {
+                text: {
+                  es: "Presentar la documentación dentro de los plazos oficiales.",
+                  en: "Submit the documentation within the official deadlines.",
+                },
+              },
+              {
+                text: {
+                  es: "Satisfacer las condiciones académicas, profesionales y lingüísticas exigidas por el organismo patrocinador.",
+                  en: "Satisfy the academic, professional and language conditions required by the sponsoring organization.",
+                },
+              },
+            ],
+          },
+        ],
+        href: "https://egpp.gob.bo/oferta-de-becas/",
+        linkLabel: {
+          es: "Portal EGPP",
+          en: "EGPP Portal",
+        },
+      },
+    ],
+  },
+  {
+    slug: "oea",
+    type: "organization",
+    name: { es: "OEA", en: "OAS" },
+    region: { es: "Organismo internacional", en: "International organization" },
+    summary: {
+      es: "Becas y programas de cooperación académica de la Organización de los Estados Americanos.",
+      en: "Scholarships and academic cooperation programs from the Organization of American States.",
+    },
+    accent: "#003770",
+    opportunities: [
+      {
+        slug: "portal-becas-oea",
+        title: {
+          es: "Portal de Becas OEA",
+          en: "OAS Scholarship Portal",
+        },
+        body: {
+          es: "La Organización de los Estados Americanos ofrece programas de becas y oportunidades de formación para ciudadanos de sus Estados Miembros, orientados al fortalecimiento académico, profesional y regional.",
+          en: "The Organization of American States offers scholarship programs and training opportunities for citizens of its Member States, aimed at academic, professional and regional development.",
+        },
+        contentSections: [
+          {
+            paragraphs: [
+              {
+                es: "La OEA difunde oportunidades de becas, capacitación y cooperación académica en alianza con universidades e instituciones internacionales. Las convocatorias, áreas de estudio, modalidades y beneficios pueden variar según cada programa.",
+                en: "The OAS shares scholarship, training and academic cooperation opportunities in partnership with universities and international institutions. Calls, fields of study, formats and benefits may vary depending on each program.",
+              },
+            ],
+            bullets: [
+              {
+                text: {
+                  es: "Programas dirigidos a ciudadanos de Estados Miembros de la OEA.",
+                  en: "Programs aimed at citizens of OAS Member States.",
+                },
+              },
+              {
+                text: {
+                  es: "Oportunidades de formación, posgrado, capacitación profesional y cooperación académica.",
+                  en: "Training, graduate study, professional development and academic cooperation opportunities.",
+                },
+              },
+              {
+                text: {
+                  es: "Los requisitos, beneficios y fechas deben revisarse en cada convocatoria oficial.",
+                  en: "Requirements, benefits and dates should be reviewed in each official call.",
+                },
+              },
+            ],
+          },
+        ],
+        href: "https://www.oas.org/es/becas/",
+        linkLabel: {
+          es: "Portal oficial de Becas OEA",
+          en: "Official OAS Scholarship Portal",
+        },
+      },
+    ],
   },
   {
     slug: "union-europea",

@@ -853,6 +853,60 @@ html[data-theme="light"] .dric-scholarship-detail-page .dric-site-footer .dric-s
   color: rgba(255, 255, 255, 0.68) !important;
 }
 
+.dric-scholarship-org-track {
+  margin-block: -2rem;
+  padding-block: 2rem;
+  scrollbar-width: none;
+  scroll-padding-inline: 0;
+  scroll-snap-type: x mandatory;
+}
+
+.dric-scholarship-org-track::-webkit-scrollbar {
+  display: none;
+}
+
+.dric-scholarship-org-slide {
+  width: min(86vw, 21rem);
+  scroll-snap-align: start;
+}
+
+.dric-scholarship-org-slide .dric-scholarship-option {
+  height: 100%;
+}
+
+.dric-scholarship-org-hint {
+  margin-top: 2rem;
+  letter-spacing: 0;
+}
+
+@media (min-width: 768px) {
+  .dric-scholarship-org-slide {
+    width: calc((100% - 1.25rem) / 2);
+  }
+}
+
+@media (min-width: 1280px) {
+  .dric-scholarship-org-slide {
+    width: calc((100% - 5rem) / 5);
+  }
+
+  .dric-scholarship-org-arrow-left {
+    left: -3.7rem;
+  }
+
+  .dric-scholarship-org-arrow-right {
+    right: -3.7rem;
+  }
+
+  .dric-scholarship-org-hint {
+    display: none;
+  }
+}
+
+html[data-theme="light"] .dric-scholarship-index-page .dric-scholarship-org-hint {
+  color: rgba(15, 23, 42, 0.72) !important;
+}
+
 .dric-scholarship-detail-page .dric-neon-country-title {
   font-family: var(--font-poiret-one), "Arial Black", Impact, sans-serif;
   font-size: clamp(2.7rem, 7vw, 4.5rem);
