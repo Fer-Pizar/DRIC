@@ -77,18 +77,34 @@ export default async function CampusLifePage({ params }: Props) {
     {
       title: isEnglish ? "Libraries and learning spaces" : "Bibliotecas y espacios de aprendizaje",
       text: isEnglish
-        ? "Academic life is supported by learning spaces, research culture and university services."
-        : "La vida académica se fortalece mediante espacios de aprendizaje, cultura investigativa y servicios universitarios.",
+        ? "Provides access to books, theses, scientific articles and academic publications from its faculties and research centers, promoting the "
+        : "Facilita el acceso a libros, tesis, artículos científicos y publicaciones académicas de sus facultades y centros de investigación, promoviendo la ",
+      strongText: isEnglish
+        ? "consultation, dissemination and access to academic and scientific knowledge for the university community."
+        : "consulta, difusión y acceso al conocimiento académico y científico de la comunidad universitaria.",
       image: "/images/campus-life/library.png",
+      href: "http://bibliotecas.umss.edu.bo/site/php/index.php",
     },
     {
-      title: isEnglish ? "Faculties and knowledge areas" : "Facultades y áreas de conocimiento",
+      title: isEnglish ? "Faculties and careers" : "Facultades y carreras",
       text: isEnglish
-        ? "UMSS brings together faculties, institutes and academic units that support professional formation."
-        : "La UMSS integra facultades, institutos y unidades académicas que sostienen la formación profesional.",
+        ? "UMSS has a wide diversity of faculties covering different areas of knowledge, offering academic training in sciences, technology, health, humanities, social sciences and other disciplines. This variety strengthens a multidisciplinary and diverse university community."
+        : "La UMSS cuenta con una amplia diversidad de facultades que abarcan distintas áreas del conocimiento, ofreciendo formación académica en ciencias, tecnología, salud, humanidades, ciencias sociales y otras disciplinas. Esta variedad fortalece una comunidad universitaria multidisciplinaria y diversa.",
+      strongText: null,
       image: "/images/campus-life/faculties.png",
+      href: "https://www.umss.edu.bo/facultades/",
     },
   ];
+
+  const museumSection = {
+    eyebrow: isEnglish ? "History" : "Historia",
+    title: "INIAM Museo UMSS",
+    text: isEnglish
+      ? "Founded in 1951 as the Archaeological and Ethnographic Museum of UMSS, it gave rise in 1963 to Bolivia's first School of Anthropology and Archaeology. In 1980, it was consolidated as the Institute of Anthropological Research and Archaeological Museum (INIAM-UMSS)."
+      : "Fundado en 1951 como Museo Arqueológico y Etnográfico de la UMSS, dio origen en 1963 a la primera Escuela de Antropología y Arqueología de Bolivia. En 1980 fue consolidado como el Instituto de Investigaciones Antropológicas y Museo Arqueológico (INIAM-UMSS).",
+    image: "/images/campus-life/muse.png",
+    href: "https://museo.umss.edu.bo/",
+  };
 
   return (
     <main className="dric-theme-page dric-campus-life-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
@@ -229,25 +245,65 @@ export default async function CampusLifePage({ params }: Props) {
           </div>
 
           <div className="mt-16 space-y-10">
-            {magazineSections.map((section, index) => (
-              <div
-                key={section.title}
-                className="grid overflow-hidden rounded-[2.5rem] border border-white/10 bg-white/[0.06] shadow-2xl shadow-black/25 backdrop-blur-xl lg:grid-cols-2"
-              >
-                <div className={index % 2 === 1 ? "relative h-[420px] lg:order-2" : "relative h-[420px]"}>
-                  <Image src={section.image} alt={section.title} fill className="object-cover" />
-                </div>
+            {magazineSections.map((section, index) => {
+              const content = (
+                <>
+                  <div className={index % 2 === 1 ? "relative h-[420px] lg:order-2" : "relative h-[420px]"}>
+                    <Image src={section.image} alt={section.title} fill className="object-cover" />
+                  </div>
 
-                <div className="flex flex-col justify-center p-8 md:p-12">
-                  <p className="text-sm font-bold uppercase tracking-[0.25em] text-[#003770]">
-                    {index === 0 ? t.features : index === 1 ? t.strengths : t.other}
-                  </p>
-                  <h3 className="mt-5 text-4xl font-semibold tracking-[-0.05em]">{section.title}</h3>
-                  <p className="mt-6 text-sm leading-8 text-white/62">{section.text}</p>
+                  <div className="flex flex-col justify-center p-8 md:p-12">
+                    <p className="text-sm font-bold uppercase tracking-[0.25em] text-[#003770]">
+                      {index === 0 ? t.features : index === 1 ? t.strengths : t.other}
+                    </p>
+                    <h3 className="mt-5 text-4xl font-semibold tracking-[-0.05em]">{section.title}</h3>
+                    <p className="mt-6 text-sm leading-8 text-white/62">
+                      {section.text}
+                      {section.strongText ? <strong>{section.strongText}</strong> : null}
+                    </p>
+                  </div>
+                </>
+              );
+
+              return section.href ? (
+                <Link
+                  key={section.title}
+                  href={section.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="grid overflow-hidden rounded-[2.5rem] border border-white/10 bg-white/[0.06] text-white shadow-2xl shadow-black/25 backdrop-blur-xl transition duration-500 hover:-translate-y-1 hover:border-white/25 lg:grid-cols-2"
+                >
+                  {content}
+                </Link>
+              ) : (
+                <div
+                  key={section.title}
+                  className="grid overflow-hidden rounded-[2.5rem] border border-white/10 bg-white/[0.06] shadow-2xl shadow-black/25 backdrop-blur-xl lg:grid-cols-2"
+                >
+                  {content}
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
+
+          <Link
+            href={museumSection.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-10 grid overflow-hidden rounded-[2.5rem] border border-white/10 bg-white/[0.06] text-white shadow-2xl shadow-black/25 backdrop-blur-xl transition duration-500 hover:-translate-y-1 hover:border-white/25 lg:grid-cols-2"
+          >
+            <div className="relative h-[420px]">
+              <Image src={museumSection.image} alt={museumSection.title} fill className="object-cover" />
+            </div>
+
+            <div className="flex flex-col justify-center p-8 md:p-12">
+              <p className="text-sm font-bold uppercase tracking-[0.25em] text-[#E30613]">
+                {museumSection.eyebrow}
+              </p>
+              <h3 className="mt-5 text-4xl font-semibold tracking-[-0.05em]">{museumSection.title}</h3>
+              <p className="mt-6 text-sm leading-8 text-white/62">{museumSection.text}</p>
+            </div>
+          </Link>
 
           <div className="mt-20 overflow-hidden rounded-[2.5rem] bg-[#020617] text-white shadow-2xl shadow-slate-300/60">
             <div className="grid gap-0 lg:grid-cols-[0.95fr_1.05fr]">

@@ -19,10 +19,13 @@ const content = {
     phone: "Teléfono o WhatsApp",
     topic: "Motivo de la cita",
     date: "Fecha sugerida",
-    time: "Hora sugerida",
     message: "Describe tu consulta",
+    consent:
+      "Acepto que mis datos sean usados únicamente para gestionar esta solicitud de cita.",
     button: "Preparar solicitud",
-    note: "Se abrirá tu aplicación de correo con el mensaje listo para enviar.",
+    sending: "Enviando solicitud...",
+    success: "Tu solicitud fue enviada correctamente. La DRIC recibirá el mensaje por correo electrónico.",
+    error: "No se pudo enviar la solicitud. Inténtalo nuevamente en unos minutos.",
     topics: [
       "Convenios",
       "Becas y movilidad",
@@ -41,10 +44,13 @@ const content = {
     phone: "Phone or WhatsApp",
     topic: "Appointment topic",
     date: "Suggested date",
-    time: "Suggested time",
     message: "Describe your request",
+    consent:
+      "I agree that my data will be used only to manage this appointment request.",
     button: "Prepare request",
-    note: "Your email app will open with the message ready to send.",
+    sending: "Sending request...",
+    success: "Your request was sent successfully. DRIC will receive the message by email.",
+    error: "The request could not be sent. Please try again in a few minutes.",
     topics: [
       "Agreements",
       "Scholarships and mobility",
@@ -54,6 +60,8 @@ const content = {
     ],
   },
 };
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://127.0.0.1:8000/api";
 
 export default function AgendarCitaPage({ params }: Props) {
   const [locale, setLocale] = useState<"es" | "en">("es");
@@ -71,50 +79,50 @@ export default function AgendarCitaPage({ params }: Props) {
     phone: "",
     topic: "",
     date: "",
-    time: "",
     message: "",
+    consent: false,
   });
+  const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
 
   const updateField = (field: string, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    const subject =
-      locale === "es"
-        ? `Solicitud de cita DRIC - ${form.name}`
-        : `DRIC appointment request - ${form.name}`;
+    setStatus("sending");
 
-    const body =
-      locale === "es"
-        ? `
-Nombre completo: ${form.name}
-Correo electrónico: ${form.email}
-Teléfono / WhatsApp: ${form.phone}
-Motivo de la cita: ${form.topic}
-Fecha sugerida: ${form.date}
-Hora sugerida: ${form.time}
+    try {
+      const response = await fetch(`${API_BASE_URL}/appointments`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...form,
+          locale,
+        }),
+      });
 
-Consulta:
-${form.message}
-`
-        : `
-Full name: ${form.name}
-Email address: ${form.email}
-Phone / WhatsApp: ${form.phone}
-Appointment topic: ${form.topic}
-Suggested date: ${form.date}
-Suggested time: ${form.time}
+      if (!response.ok) {
+        throw new Error("Appointment request failed");
+      }
 
-Request:
-${form.message}
-`;
-
-    window.location.href = `mailto:dric@umss.edu?subject=${encodeURIComponent(
-      subject
-    )}&body=${encodeURIComponent(body)}`;
+      setForm({
+        name: "",
+        email: "",
+        phone: "",
+        topic: "",
+        date: "",
+        message: "",
+        consent: false,
+      });
+      setStatus("success");
+    } catch {
+      setStatus("error");
+    }
   };
 
   return (
@@ -138,11 +146,6 @@ ${form.message}
               {t.intro}
             </p>
 
-            <div className="dric-appointment-note mt-8 rounded-3xl border border-white/10 bg-white/[0.04] p-5 shadow-2xl backdrop-blur-xl sm:mt-10 sm:p-6">
-              <p className="dric-appointment-muted text-sm leading-7 text-white/60 sm:text-base">
-                {t.note}
-              </p>
-            </div>
           </div>
 
           <form
@@ -162,7 +165,6 @@ ${form.message}
               </select>
 
               <input type="date" value={form.date} onChange={(e) => updateField("date", e.target.value)} className="dric-appointment-field min-w-0 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3.5 text-base outline-none focus:border-[#003770] sm:px-5 sm:py-4" />
-              <input type="time" value={form.time} onChange={(e) => updateField("time", e.target.value)} className="dric-appointment-field min-w-0 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3.5 text-base outline-none focus:border-[#003770] sm:px-5 sm:py-4" />
             </div>
 
             <textarea
@@ -174,12 +176,37 @@ ${form.message}
               className="dric-appointment-field mt-4 min-h-44 w-full min-w-0 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3.5 text-base outline-none focus:border-[#003770] sm:mt-5 sm:px-5 sm:py-4"
             />
 
+            <label className="mt-5 flex items-start gap-3 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3.5 text-sm leading-6 text-white/70 sm:px-5">
+              <input
+                required
+                type="checkbox"
+                checked={form.consent}
+                onChange={(e) => setForm((prev) => ({ ...prev, consent: e.target.checked }))}
+                className="mt-1 h-4 w-4 rounded border-white/30 bg-transparent accent-[#E30613]"
+              />
+              <span>{t.consent}</span>
+            </label>
+
             <button
               type="submit"
+              disabled={status === "sending"}
               className="dric-appointment-submit mt-5 w-full rounded-full border border-white/20 bg-[#003770] px-6 py-4 text-base font-semibold text-white shadow-[0_0_40px_rgba(0,55,112,0.18)] transition hover:scale-[1.01] hover:bg-[#E30613] sm:mt-6 sm:px-8 sm:text-lg"
             >
-              {t.button}
+              {status === "sending" ? t.sending : t.button}
             </button>
+
+            {status === "success" || status === "error" ? (
+              <p
+                className={`mt-4 rounded-2xl border px-4 py-3 text-sm leading-6 ${
+                  status === "success"
+                    ? "border-emerald-300/30 bg-emerald-400/10 text-emerald-100"
+                    : "border-red-300/30 bg-red-400/10 text-red-100"
+                }`}
+                role="status"
+              >
+                {status === "success" ? t.success : t.error}
+              </p>
+            ) : null}
           </form>
         </div>
       </section>
