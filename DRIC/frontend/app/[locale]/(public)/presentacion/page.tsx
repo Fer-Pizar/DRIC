@@ -15,6 +15,61 @@ type Props = {
 export default async function PresentacionPage({ params }: Props) {
   const { locale } = await params;
   const isEnglish = locale === "en";
+  const copy = isEnglish
+    ? {
+        imageAltTeam: "DRIC UMSS team",
+        imageAltDirector: "DRIC Director",
+        historyText:
+          "The Directorate of International Relations and Agreements was created on January 7, 1988, with the rank of Secretariat. In 1995 it was established as a Department, and in November 1997 the current Directorate was created.",
+        created: "Created",
+        currentDirectorate: "Current Directorate",
+        cooperation: "Cooperation",
+        mission:
+          "To promote, coordinate and channel international and national cooperation, as well as UMSS interinstitutional coordination, in support of teaching and learning processes, scientific and technological research, social engagement and institutional strengthening.",
+        purpose:
+          "The main purpose of the Directorate of International Relations and Agreements of Universidad Mayor de San Simón is to explore international cooperation and interinstitutional coordination opportunities in an organized and systematic way.",
+        structureTitle: "DRIC Directorate",
+        structureDescription:
+          "DRIC reports directly to the Rector's Office. To fulfill its functions, it is structured as follows:",
+        executiveDirectorate: "Executive Directorate",
+        agreementsDepartment: "Department of Agreements, Mobility and Scholarships",
+        projectsDepartment: "Department of Internationalization and Projects",
+        director: "Director: Mgr. Omar Morales Delgadillo",
+        agreementsTeamTitle: "Agreements, Mobility and Scholarships",
+        agreementsTeamPeople: [
+          "Head of Department: Mgr. Giovanna Maldonado Moscoso",
+          "Mgr. Silvia del Pilar Arze",
+        ],
+        projectsTeamTitle: "Internationalization and Projects",
+        projectsTeamPeople: ["Head of Department: Mgr. Daniel Vasquez Torrez", "Eng. John Medina"],
+      }
+    : {
+        imageAltTeam: "Equipo DRIC UMSS",
+        imageAltDirector: "Director DRIC",
+        historyText:
+          "La Dirección de Relaciones Internacionales y Convenios fue creada el 7 de enero de 1988, con el rango de Secretaría. El año 1995 se instituye como Departamento y en noviembre de 1997 se crea la actual Dirección.",
+        created: "Creación",
+        currentDirectorate: "Dirección actual",
+        cooperation: "Cooperación",
+        mission:
+          "Promover, coordinar y canalizar la cooperación internacional y nacional, así como la coordinación interinstitucional de la UMSS, en beneficio de los procesos de enseñanza-aprendizaje, investigación científica y tecnológica, interacción social y fortalecimiento institucional.",
+        purpose:
+          "Es propósito fundamental de la Dirección de Relaciones Internacionales y Convenios de la Universidad Mayor de San Simón explorar de manera organizada y sistemática las oportunidades de cooperación internacional y de coordinación interinstitucional.",
+        structureTitle: "Dirección DRIC",
+        structureDescription:
+          "La DRIC depende directamente del Rectorado. Para el cumplimiento de sus funciones, se estructura de la siguiente manera:",
+        executiveDirectorate: "Dirección Ejecutiva",
+        agreementsDepartment: "Departamento de Convenios, Movilidad y Becas",
+        projectsDepartment: "Departamento de Internacionalización y Proyectos",
+        director: "Director: Mgr. Omar Morales Delgadillo",
+        agreementsTeamTitle: "Convenios, Movilidad y Becas",
+        agreementsTeamPeople: [
+          "Jefe del departamento: Mgr. Giovanna Maldonado Moscoso",
+          "Mgr. Silvia del Pilar Arze",
+        ],
+        projectsTeamTitle: "Internacionalización y Proyectos",
+        projectsTeamPeople: ["Jefe del Departamento: Mgr. Daniel Vasquez Torrez", "Ing. John Medina"],
+      };
 
   return (
     <main className="dric-presentation-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
@@ -58,7 +113,7 @@ export default async function PresentacionPage({ params }: Props) {
               <div className="relative h-[260px] bg-slate-200 sm:h-[340px] md:h-[420px]">
                 <Image
                   src="/images/presentation/dric-team.JPG"
-                  alt="Equipo DRIC UMSS"
+                  alt={copy.imageAltTeam}
                   fill
                   className="object-cover"
                 />
@@ -81,13 +136,13 @@ export default async function PresentacionPage({ params }: Props) {
               </h2>
 
               <p className="mx-auto mt-5 max-w-3xl text-sm leading-7 text-white/68 sm:text-base md:mt-6 md:leading-8 lg:mx-0">
-                La Dirección de Relaciones Internacionales y Convenios fue creada el 7 de enero de 1988, con el rango de Secretaría. El año 1995 se instituye como Departamento y en noviembre de 1997 se crea la actual Dirección.
+                {copy.historyText}
               </p>
 
               <div className="mt-8 grid gap-4 sm:grid-cols-3">
-                <MiniStat icon={<PublicRoundedIcon />} title="1988" text="Creación" />
-                <MiniStat icon={<AccountBalanceRoundedIcon />} title="1997" text="Dirección actual" />
-                <MiniStat icon={<GroupsRoundedIcon />} title="UMSS" text="Cooperación" />
+                <MiniStat icon={<PublicRoundedIcon />} title="1988" text={copy.created} />
+                <MiniStat icon={<AccountBalanceRoundedIcon />} title="1997" text={copy.currentDirectorate} />
+                <MiniStat icon={<GroupsRoundedIcon />} title="UMSS" text={copy.cooperation} />
               </div>
             </div>
           </div>
@@ -95,13 +150,13 @@ export default async function PresentacionPage({ params }: Props) {
           <div className="mt-14 grid gap-5 md:mt-24 md:grid-cols-2 md:gap-7">
             <InfoCard
               title={isEnglish ? "Mission" : "Misión"}
-              text="Promover, coordinar y canalizar la cooperación internacional y nacional, así como la coordinación interinstitucional de la UMSS, en beneficio de los procesos de enseñanza-aprendizaje, investigación científica y tecnológica, interacción social y fortalecimiento institucional."
+              text={copy.mission}
               color="#E30613"
             />
 
             <InfoCard
               title={isEnglish ? "Purpose" : "Propósito"}
-              text="Es propósito fundamental de la Dirección de Relaciones Internacionales y Convenios de la Universidad Mayor de San Simón explorar de manera organizada y sistemática las oportunidades de cooperación internacional y de coordinación interinstitucional."
+              text={copy.purpose}
               color="#003770"
             />
           </div>
@@ -119,7 +174,7 @@ export default async function PresentacionPage({ params }: Props) {
               <div className="relative h-[360px] bg-slate-200 sm:h-[560px] lg:h-[821px]">
                 <Image
                   src="/images/presentation/director.JPG"
-                  alt="Director DRIC"
+                  alt={copy.imageAltDirector}
                   fill
                   className="object-cover"
                 />
@@ -142,22 +197,22 @@ export default async function PresentacionPage({ params }: Props) {
                 </p>
 
                 <h2 className="mt-4 text-3xl font-semibold leading-tight tracking-[-0.025em] sm:text-4xl md:mt-5 md:text-5xl md:tracking-[-0.05em]">
-                  Dirección DRIC
+                  {copy.structureTitle}
                 </h2>
 
                 <p className="mt-5 text-sm leading-7 text-white/68 md:mt-6">
-                  La DRIC depende directamente del Rectorado. Para el cumplimiento de sus funciones, se estructura de la siguiente manera:
+                  {copy.structureDescription}
                 </p>
 
                 <ul className="mt-6 space-y-3 text-sm leading-7 text-white/68">
-                  <li>• Dirección Ejecutiva</li>
-                  <li>• Departamento de Convenios, Movilidad y Becas</li>
-                  <li>• Departamento de Internacionalización y Proyectos</li>
+                  <li>• {copy.executiveDirectorate}</li>
+                  <li>• {copy.agreementsDepartment}</li>
+                  <li>• {copy.projectsDepartment}</li>
                 </ul>
 
                 <div className="mt-8 rounded-2xl border border-white/10 bg-white/[0.06] p-5 md:rounded-3xl md:p-6">
                   <h3 className="break-words text-xl font-bold leading-tight tracking-[-0.02em] sm:text-2xl md:tracking-[-0.04em]">
-                    Director: Mgr. Omar Morales Delgadillo
+                    {copy.director}
                   </h3>
 
                   <div className="mt-5 space-y-3 text-sm text-white/70">
@@ -174,15 +229,12 @@ export default async function PresentacionPage({ params }: Props) {
 
                 <div className="mt-8 grid gap-5 md:grid-cols-2">
                   <StaffBlock
-                    title="Convenios, Movilidad y Becas"
-                    people={[
-                      "Jefe del departamento: Mgr. Giovanna Maldonado Moscoso",
-                      "Mgr. Silvia del Pilar Arze",
-                    ]}
+                    title={copy.agreementsTeamTitle}
+                    people={copy.agreementsTeamPeople}
                   />
                   <StaffBlock
-                    title="Internacionalización y Proyectos"
-                    people={["Jefe del Departamento: Mgr. Daniel Vasquez Torrez", "Ing. John Medina"]}
+                    title={copy.projectsTeamTitle}
+                    people={copy.projectsTeamPeople}
                   />
                 </div>
               </div>

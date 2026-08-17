@@ -23,7 +23,7 @@ const content = {
         title: "Convenios UMSS",
         description:
           "Acuerdos institucionales supervisados por la DRIC para fortalecer la cooperación académica, científica y administrativa.",
-        href: "/convenios/umss",
+        href: "https://conveniosdric.umss.edu.bo/convenios",
         image: "/images/agreements/convenios-umss.png",
       },
       {
@@ -56,7 +56,7 @@ const content = {
         title: "UMSS Agreements",
         description:
           "Institutional agreements supervised by DRIC to strengthen academic, scientific, and administrative cooperation.",
-        href: "/convenios/umss",
+        href: "https://conveniosdric.umss.edu.bo/convenios",
         image: "/images/agreements/convenios-umss.png",
       },
       {
@@ -140,36 +140,40 @@ export default async function ConveniosPage({ params }: Props) {
           </div>
 
           <div className="mt-24 grid gap-8 lg:grid-cols-3">
-            {t.cards.map((card) => (
-              <Link
-                key={card.title}
-                href={`/${locale}${card.href}`}
-                className="group overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.04] shadow-2xl backdrop-blur transition duration-500 hover:-translate-y-3 hover:scale-[1.02] hover:border-cyan-300/60 hover:shadow-[0_0_55px_rgba(0,55,112,0.18)]"
-              >
-                <div className="relative h-64 overflow-hidden">
-                  <img
-                    src={card.image}
-                    alt={card.title}
-                    className="h-full w-full object-cover transition duration-700 group-hover:scale-110 group-hover:brightness-110"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-transparent to-transparent" />
-                </div>
+            {t.cards.map((card) => {
+              const href = card.href.startsWith("http") ? card.href : `/${locale}${card.href}`;
 
-                <div className="p-8">
-                  <h2 className="text-3xl font-light leading-tight transition group-hover:text-cyan-300">
-                    {card.title}
-                  </h2>
+              return (
+                <Link
+                  key={card.title}
+                  href={href}
+                  className="group flex h-full flex-col overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.04] shadow-2xl backdrop-blur transition duration-500 hover:-translate-y-3 hover:scale-[1.02] hover:border-cyan-300/60 hover:shadow-[0_0_55px_rgba(0,55,112,0.18)]"
+                >
+                  <div className="relative h-64 overflow-hidden">
+                    <img
+                      src={card.image}
+                      alt={card.title}
+                      className="h-full w-full object-cover transition duration-700 group-hover:scale-110 group-hover:brightness-110"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-transparent to-transparent" />
+                  </div>
 
-                  <p className="mt-5 text-base leading-relaxed text-white/55">
-                    {card.description}
-                  </p>
+                  <div className="flex flex-1 flex-col p-8">
+                    <h2 className="text-3xl font-light leading-tight transition group-hover:text-cyan-300">
+                      {card.title}
+                    </h2>
 
-                  <span className="mt-8 inline-flex text-sm font-semibold uppercase tracking-[0.25em] text-red-300 transition group-hover:text-cyan-300">
-                    {t.mainButton}
-                  </span>
-                </div>
-              </Link>
-            ))}
+                    <p className="mt-5 text-base leading-relaxed text-white/55">
+                      {card.description}
+                    </p>
+
+                    <span className="mt-auto inline-flex self-center pt-8 text-center text-sm font-semibold uppercase tracking-[0.25em] text-red-300 transition group-hover:text-cyan-300">
+                      {t.mainButton}
+                    </span>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>
