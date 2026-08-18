@@ -106,7 +106,7 @@ export default async function ConveniosPage({ params }: Props) {
 
               <div className="mt-14 flex justify-center">
                 <Link
-                  href={`/${locale}/convenios/procedimiento`}
+                  href="https://dric.umss.edu.bo/wp-content/uploads/2021/11/proconv.pdf"
                   className="inline-flex items-center gap-3 rounded-full border border-cyan-300/30 bg-white/[0.03] px-8 py-4 text-sm font-medium tracking-wide text-cyan-200 backdrop-blur-xl transition-all duration-300 hover:scale-[1.02] hover:border-cyan-300 hover:bg-cyan-300/10 hover:text-white hover:shadow-[0_0_40px_rgba(0,55,112,0.20)]"
                 >
                   <span>{t.procedure}</span>
