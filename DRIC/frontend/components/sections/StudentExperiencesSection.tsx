@@ -170,7 +170,7 @@ export default function StudentExperiencesSection({ locale }: Props) {
             {t.comments.map((item) => (
               <article
                 key={item.name}
-                className="min-w-[86%] snap-center rounded-2xl border border-white/10 bg-white/[0.03] p-5 shadow-2xl transition duration-300 hover:-translate-y-3 hover:border-cyan-200/35 hover:bg-white/[0.05] sm:min-w-[68%] sm:p-7 md:min-w-[560px] md:rounded-3xl md:p-10 lg:min-w-[620px]"
+                className="flex min-w-[86%] snap-center flex-col rounded-2xl border border-white/10 bg-white/[0.03] p-5 shadow-2xl transition duration-300 hover:-translate-y-3 hover:border-cyan-200/35 hover:bg-white/[0.05] sm:min-w-[68%] sm:p-7 md:min-w-[560px] md:rounded-3xl md:p-10 lg:min-w-[620px]"
             >
               <div className="mb-6 h-14 w-14 overflow-hidden rounded-full bg-gradient-to-br from-white/30 to-white/5 md:mb-8 md:h-20 md:w-20">
                 {"image" in item && item.image ? (
@@ -185,14 +185,17 @@ export default function StudentExperiencesSection({ locale }: Props) {
               </div>
               <h3 className="text-xl font-semibold leading-tight sm:text-2xl md:text-3xl">{item.name}</h3>
               <p className="mt-2 text-white/45">{item.role}</p>
-              <span className="dric-testimonials-country mt-4 inline-flex rounded-full border border-cyan-200/20 bg-cyan-200/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-100 shadow-[0_0_24px_rgba(103,232,249,0.08)] backdrop-blur">
+              <span className="dric-testimonials-country mt-4 inline-flex self-start rounded-full border border-cyan-200/20 bg-cyan-200/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-100 shadow-[0_0_24px_rgba(103,232,249,0.08)] backdrop-blur">
                 {item.country}
               </span>
               <div className="my-6 h-px bg-white/10" />
               <p className="dric-testimonials-quote text-justify text-sm leading-relaxed text-white/65 sm:text-base md:text-lg">
                 “{item.comment}”
               </p>
-              <p className="mt-6 text-lg text-yellow-400 md:mt-8 md:text-xl">5.0 ★★★★★</p>
+              <p className="dric-testimonials-rating mt-auto pt-6 text-lg md:pt-8 md:text-xl">
+                <span className="dric-testimonials-rating-score">5.0</span>{" "}
+                <span className="dric-testimonials-rating-stars">★★★★★</span>
+              </p>
             </article>
             ))}
           </div>

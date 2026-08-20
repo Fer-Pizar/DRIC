@@ -866,22 +866,11 @@ html[data-theme="light"] .dric-scholarship-detail-page .dric-site-footer .dric-s
 }
 
 .dric-testimonials-carousel {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(103, 232, 249, 0.45) rgba(255, 255, 255, 0.08);
+  scrollbar-width: none;
 }
 
 .dric-testimonials-carousel::-webkit-scrollbar {
-  height: 8px;
-}
-
-.dric-testimonials-carousel::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 999px;
-}
-
-.dric-testimonials-carousel::-webkit-scrollbar-thumb {
-  background: linear-gradient(90deg, #67e8f9, #E30613);
-  border-radius: 999px;
+  display: none;
 }
 
 .dric-testimonials-arrow {
@@ -907,10 +896,6 @@ html[data-theme="light"] .dric-scholarship-detail-page .dric-site-footer .dric-s
 
 .dric-testimonials-rating {
   color: #ffd84d;
-  text-shadow:
-    0 1px 0 #8a5a00,
-    0 0 10px rgba(255, 216, 77, 0.32),
-    0 0 22px rgba(255, 180, 0, 0.18);
 }
 
 .dric-testimonials-rating-score {
@@ -923,8 +908,8 @@ html[data-theme="light"] .dric-scholarship-detail-page .dric-site-footer .dric-s
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
-  filter: drop-shadow(0 2px 1px rgba(97, 53, 0, 0.5))
-    drop-shadow(0 0 9px rgba(255, 211, 64, 0.28));
+  filter: drop-shadow(0 1px 0 rgba(97, 53, 0, 0.36))
+    drop-shadow(0 0 6px rgba(255, 211, 64, 0.22));
   letter-spacing: 0.03em;
 }
 
