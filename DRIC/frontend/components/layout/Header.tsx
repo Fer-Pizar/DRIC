@@ -8,6 +8,53 @@ import { useEffect, useState } from "react";
 import { Menu, Moon, Sun, Languages } from "lucide-react";
 import { useLocale } from "next-intl";
 import MobileMenu from "./MobileMenu";
+import { mobilityData, slugifyProgramTitle } from "@/app/[locale]/(public)/becas-movilidad/movilidad-pasantias/data";
+
+const LANGUAGE_SCROLL_KEY = "dric-language-scroll-y";
+
+function getLocalizedPath(pathname: string, locale: string, nextLocale: "es" | "en") {
+  const nextPath = pathname.startsWith(`/${locale}`)
+    ? pathname.replace(`/${locale}`, `/${nextLocale}`)
+    : `/${nextLocale}/inicio`;
+
+  const mobilityDetailPrefix = `/${locale}/becas-movilidad/movilidad-pasantias/`;
+
+  if (!pathname.startsWith(mobilityDetailPrefix)) {
+    return nextPath;
+  }
+
+  const currentSlug = pathname.slice(mobilityDetailPrefix.length);
+  const currentData = locale === "en" ? mobilityData.en : mobilityData.es;
+  const nextData = nextLocale === "en" ? mobilityData.en : mobilityData.es;
+
+  const tracks = [
+    {
+      id: "estudiantes",
+      currentPrograms: currentData.studentPrograms,
+      nextPrograms: nextData.studentPrograms,
+    },
+    {
+      id: "docentes-administrativos",
+      currentPrograms: currentData.staffPrograms,
+      nextPrograms: nextData.staffPrograms,
+    },
+  ];
+
+  for (const track of tracks) {
+    const programIndex = track.currentPrograms.findIndex(
+      (program) => slugifyProgramTitle(program.title, track.id) === currentSlug,
+    );
+
+    if (programIndex >= 0) {
+      return `/${nextLocale}/becas-movilidad/movilidad-pasantias/${slugifyProgramTitle(
+        track.nextPrograms[programIndex].title,
+        track.id,
+      )}`;
+    }
+  }
+
+  return nextPath;
+}
 
 export default function Header() {
   const [open, setOpen] = useState(false);
@@ -26,6 +73,20 @@ export default function Header() {
     document.documentElement.dataset.theme = initialTheme;
   }, []);
 
+  useEffect(() => {
+    const savedScroll = sessionStorage.getItem(LANGUAGE_SCROLL_KEY);
+
+    if (!savedScroll) {
+      return;
+    }
+
+    sessionStorage.removeItem(LANGUAGE_SCROLL_KEY);
+
+    requestAnimationFrame(() => {
+      window.scrollTo({ top: Number(savedScroll), behavior: "instant" });
+    });
+  }, [pathname]);
+
   const toggleTheme = () => {
     const nextTheme = theme === "dark" ? "light" : "dark";
 
@@ -36,12 +97,11 @@ export default function Header() {
 
   const toggleLanguage = () => {
     const nextLocale = locale === "es" ? "en" : "es";
+    const nextPath = getLocalizedPath(pathname, locale, nextLocale);
+    const nextUrl = `${nextPath}${window.location.search}${window.location.hash}`;
 
-    const nextPath = pathname.startsWith(`/${locale}`)
-      ? pathname.replace(`/${locale}`, `/${nextLocale}`)
-      : `/${nextLocale}/inicio`;
-
-    router.push(nextPath);
+    sessionStorage.setItem(LANGUAGE_SCROLL_KEY, String(window.scrollY));
+    router.push(nextUrl, { scroll: false });
   };
 
   const handleLogoClick = (event: MouseEvent<HTMLAnchorElement>) => {

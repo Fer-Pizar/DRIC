@@ -115,13 +115,9 @@ export default async function MembresiasPage({ params }: Props) {
                   overflow: "hidden",
                 }}
               >
-                <div className="dric-memberships-card-inner group relative min-h-[290px] bg-white/[0.06] p-8 transition duration-500 hover:-translate-y-1">
+                <div className="dric-memberships-card-inner group relative flex min-h-[430px] flex-col bg-white/[0.06] p-8 transition duration-500 hover:-translate-y-1">
                   <div className="absolute right-6 top-6 h-20 w-20 rounded-full bg-[#003770]/10 blur-2xl" />
-                  <div
-                    className={`absolute left-0 h-1 w-full bg-gradient-to-r from-[#E30613] via-[#003770] to-[#ffffff] ${
-                      item.name === "PADOR" ? "bottom-2" : "bottom-0"
-                    }`}
-                  />
+                  <div className="absolute bottom-0 left-0 h-1 w-full bg-gradient-to-r from-[#E30613] via-[#003770] to-[#ffffff]" />
 
                   <div className="flex h-32 w-full items-center justify-center">
                     <Image
@@ -146,7 +142,7 @@ export default async function MembresiasPage({ params }: Props) {
                   </p>
 
                   {item.name === "PADOR" ? (
-                    <div className="dric-memberships-note mt-2 rounded-2xl border border-amber-200/30 bg-amber-50/10 px-4 py-3">
+                    <div className="dric-memberships-note mt-auto rounded-2xl border border-amber-200/30 bg-amber-50/10 px-4 py-3">
                       <p className="text-xs font-medium leading-6 text-white/62">
                         {copy.padorText}
                       </p>
@@ -159,7 +155,7 @@ export default async function MembresiasPage({ params }: Props) {
                       </a>
                     </div>
                   ) : (
-                    <Link href={item.url} target="_blank" className="mt-6 inline-flex">
+                    <Link href={item.url} target="_blank" className="mx-auto mt-auto inline-flex">
                       <Button
                         className="dric-memberships-card-button"
                         variant="outlined"

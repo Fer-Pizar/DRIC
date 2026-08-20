@@ -16,8 +16,86 @@ type Props = {
   }>;
 };
 
+const projectsCopy = {
+  es: {
+    title: "Proyectos",
+    intro:
+      "Gestionamos, asesoramos y facilitamos solicitudes de proyectos con financiamiento nacional e internacional, fortaleciendo la cooperación académica, científica e institucional de la Universidad Mayor de San Simón.",
+    procedure: "Procedimiento UMSS",
+    contact: "Contactar DRIC",
+    cards: [
+      {
+        title: "Proyectos Internacionales",
+        description:
+          "Proyectos desarrollados con cooperación internacional en la UMSS, orientados a investigación, innovación, fortalecimiento institucional y vinculación global.",
+        href: "https://conveniosdric.umss.edu.bo/proyectos",
+        image: "/images/hero/hero-dric.jpg",
+        icon: "world" as const,
+        button: "Ver proyectos",
+      },
+      {
+        title: "Apoyo Financiero",
+        description:
+          "Información sobre convocatorias, oportunidades de financiamiento y recursos para fortalecer iniciativas académicas e institucionales.",
+        href: "apoyo-financiero",
+        image: "/images/agreements/international-flags.jpg",
+        icon: "finance" as const,
+        button: "Ver convocatorias",
+      },
+    ],
+    finance: {
+      eyebrow: "Convocatorias y recursos",
+      title: "Apoyo Financiero",
+      description:
+        "Espacio para publicar oportunidades de financiamiento, documentos PDF, guías, formularios y enlaces relevantes para la comunidad universitaria.",
+      docsTitle: "Documentos disponibles",
+      docsDescription:
+        "Próximamente conectado con la base de datos para listar PDFs descargables desde el CMS.",
+      button: "Ver documentos",
+    },
+  },
+  en: {
+    title: "Projects",
+    intro:
+      "We manage, advise on, and support project requests with national and international funding, strengthening the academic, scientific, and institutional cooperation of Universidad Mayor de San Simón.",
+    procedure: "UMSS Procedure",
+    contact: "Contact DRIC",
+    cards: [
+      {
+        title: "International Projects",
+        description:
+          "Projects developed through international cooperation at UMSS, focused on research, innovation, institutional strengthening, and global engagement.",
+        href: "https://conveniosdric.umss.edu.bo/proyectos",
+        image: "/images/hero/hero-dric.jpg",
+        icon: "world" as const,
+        button: "View projects",
+      },
+      {
+        title: "Financial Support",
+        description:
+          "Information about calls for proposals, funding opportunities, and resources to strengthen academic and institutional initiatives.",
+        href: "apoyo-financiero",
+        image: "/images/agreements/international-flags.jpg",
+        icon: "finance" as const,
+        button: "View calls",
+      },
+    ],
+    finance: {
+      eyebrow: "Calls and resources",
+      title: "Financial Support",
+      description:
+        "A space for publishing funding opportunities, PDF documents, guides, forms, and relevant links for the university community.",
+      docsTitle: "Available documents",
+      docsDescription:
+        "Soon to be connected to the database to list downloadable PDFs from the CMS.",
+      button: "View documents",
+    },
+  },
+};
+
 export default async function ProyectosPage({ params }: Props) {
   const { locale } = await params;
+  const text = locale === "en" ? projectsCopy.en : projectsCopy.es;
 
   return (
     <main className="dric-theme-page dric-projects-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
@@ -34,15 +112,15 @@ export default async function ProyectosPage({ params }: Props) {
             </p>
 
             <h1 className="text-5xl font-light uppercase leading-[0.9] tracking-[-0.07em] text-white md:text-7xl lg:text-8xl">
-              Proyectos
+              {text.title}
             </h1>
 
             <p className="mt-8 max-w-3xl text-base leading-8 text-white/72 md:text-lg">
-              Gestionamos, asesoramos y facilitamos solicitudes de proyectos con financiamiento nacional e internacional, fortaleciendo la cooperación académica, científica e institucional de la Universidad Mayor de San Simón.
+              {text.intro}
             </p>
 
             <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-              <Link href={`/${locale}/normativas`} className="inline-flex">
+              <Link href="https://dric.umss.edu.bo/wp-content/uploads/2021/11/proconv.pdf" className="inline-flex">
                 <Button
                   variant="contained"
                   endIcon={<PictureAsPdfRoundedIcon />}
@@ -56,7 +134,7 @@ export default async function ProyectosPage({ params }: Props) {
                     boxShadow: "0 18px 45px rgba(227,6,19,0.35)",
                   }}
                 >
-                  Procedimiento UMSS
+                  {text.procedure}
                 </Button>
               </Link>
 
@@ -76,70 +154,27 @@ export default async function ProyectosPage({ params }: Props) {
                     backdropFilter: "blur(14px)",
                   }}
                 >
-                  Contactar DRIC
+                  {text.contact}
                 </Button>
               </Link>
             </div>
           </div>
 
           <div className="mt-20 grid gap-8 lg:grid-cols-2">
-            <ProjectCard
-              locale={locale}
-              title="Proyectos Internacionales"
-              description="Proyectos desarrollados con cooperación internacional en la UMSS, orientados a investigación, innovación, fortalecimiento institucional y vinculación global."
-              href={`/${locale}/proyectos#internacionales`}
-              image="/images/hero/hero-dric.jpg"
-              icon="world"
-              button="Ver proyectos"
-            />
-
-            <ProjectCard
-              locale={locale}
-              title="Apoyo Financiero"
-              description="Información sobre convocatorias, oportunidades de financiamiento y recursos para fortalecer iniciativas académicas e institucionales."
-              href={`/${locale}/proyectos#apoyo-financiero`}
-              image="/images/agreements/international-flags.jpg"
-              icon="finance"
-              button="Ver convocatorias"
-            />
-          </div>
-        </div>
-      </section>
-
-      <section id="internacionales" className="dric-projects-section relative isolate overflow-hidden px-5 py-24 text-white md:px-10 lg:px-12">
-        <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(227,6,19,0.24),transparent_34%),radial-gradient(circle_at_center_right,rgba(0,55,112,0.28),transparent_38%),linear-gradient(145deg,#020617_0%,#07111f_50%,#10070b_100%)]" />
-        <div className="absolute right-[-8rem] top-20 -z-10 h-[430px] w-[430px] rounded-full bg-cyan-300/10 blur-[135px]" />
-
-        <div className="mx-auto max-w-7xl">
-          <div className="mb-12 max-w-3xl">
-            <p className="text-sm font-bold uppercase tracking-[0.25em] text-[#E30613]">
-              Cooperación internacional
-            </p>
-
-            <h2 className="mt-4 text-4xl font-semibold tracking-[-0.04em] md:text-5xl">
-              Proyectos Internacionales
-            </h2>
-
-            <p className="mt-5 text-lg leading-8 text-white/68">
-              Este apartado centraliza iniciativas gestionadas mediante cooperación internacional, articulando alianzas, financiamiento y capacidades institucionales.
-            </p>
-          </div>
-
-          <div className="grid gap-5 md:grid-cols-3">
-            {[
-              "Gestión de cooperación académica",
-              "Seguimiento de proyectos",
-              "Vinculación con instituciones extranjeras",
-            ].map((item) => (
-              <div key={item} className="dric-projects-info-card rounded-3xl border border-white/10 bg-white/[0.06] p-7 shadow-2xl shadow-black/20 backdrop-blur-xl">
-                <PublicRoundedIcon sx={{ color: "#E30613", fontSize: 34 }} />
-
-                <h3 className="mt-5 text-xl font-bold">{item}</h3>
-
-                <p className="mt-3 text-sm leading-7 text-white/62">
-                  Información editable desde el CMS para mantener el contenido actualizado y consistente.
-                </p>
-              </div>
+            {text.cards.map((card) => (
+              <ProjectCard
+                key={card.title}
+                title={card.title}
+                description={card.description}
+                href={
+                  card.href === "apoyo-financiero"
+                    ? `/${locale}/proyectos/apoyo-financiero`
+                    : card.href
+                }
+                image={card.image}
+                icon={card.icon}
+                button={card.button}
+              />
             ))}
           </div>
         </div>
@@ -154,28 +189,28 @@ export default async function ProyectosPage({ params }: Props) {
             <div className="grid gap-10 lg:grid-cols-[1fr_0.8fr] lg:items-center">
               <div>
                 <p className="text-sm font-bold uppercase tracking-[0.25em] text-cyan-300">
-                  Convocatorias y recursos
+                  {text.finance.eyebrow}
                 </p>
 
                 <h2 className="mt-4 text-4xl font-semibold tracking-[-0.04em] md:text-5xl">
-                  Apoyo Financiero
+                  {text.finance.title}
                 </h2>
 
                 <p className="mt-5 text-lg leading-8 text-white/68">
-                  Espacio para publicar oportunidades de financiamiento, documentos PDF, guías, formularios y enlaces relevantes para la comunidad universitaria.
+                  {text.finance.description}
                 </p>
               </div>
 
               <div className="dric-projects-doc-card rounded-[1.5rem] bg-[#020617] p-7 text-white">
                 <PictureAsPdfRoundedIcon sx={{ color: "#E30613", fontSize: 38 }} />
 
-                <h3 className="mt-5 text-2xl font-bold">Documentos disponibles</h3>
+                <h3 className="mt-5 text-2xl font-bold">{text.finance.docsTitle}</h3>
 
                 <p className="mt-3 text-sm leading-7 text-white/65">
-                  Próximamente conectado con la base de datos para listar PDFs descargables desde el CMS.
+                  {text.finance.docsDescription}
                 </p>
 
-                <Link href={`/${locale}/normativas`} className="inline-flex">
+                <Link href={`/${locale}/proyectos/apoyo-financiero`} className="inline-flex">
                   <Button
                     variant="contained"
                     sx={{
@@ -188,7 +223,7 @@ export default async function ProyectosPage({ params }: Props) {
                       "&:hover": { backgroundColor: "#e5e7eb" },
                     }}
                   >
-                    Ver documentos
+                    {text.finance.button}
                   </Button>
                 </Link>
               </div>
@@ -210,7 +245,6 @@ function ProjectCard({
   icon,
   button,
 }: {
-  locale: string;
   title: string;
   description: string;
   href: string;
@@ -219,46 +253,48 @@ function ProjectCard({
   button: string;
 }) {
   return (
-    <Card
-      className="dric-projects-feature-card"
-      sx={{
-        borderRadius: "32px",
-        overflow: "hidden",
-        background: "rgba(255,255,255,0.08)",
-        border: "1px solid rgba(255,255,255,0.12)",
-        backdropFilter: "blur(18px)",
-        boxShadow: "0 28px 80px rgba(0,0,0,0.28)",
-        color: "white",
-      }}
-    >
-      <div className="relative h-72 overflow-hidden">
-        <Image
-          src={image}
-          alt={title}
-          fill
-          className="object-cover opacity-85 transition duration-700 hover:scale-105"
-        />
+    <Link href={href} className="block h-full">
+      <Card
+        className="dric-projects-feature-card h-full"
+        sx={{
+          borderRadius: "32px",
+          overflow: "hidden",
+          background: "rgba(255,255,255,0.08)",
+          border: "1px solid rgba(255,255,255,0.12)",
+          backdropFilter: "blur(18px)",
+          boxShadow: "0 28px 80px rgba(0,0,0,0.28)",
+          color: "white",
+        }}
+      >
+        <div className="relative h-72 overflow-hidden">
+          <Image
+            src={image}
+            alt={title}
+            fill
+            className="object-cover opacity-85 transition duration-700 hover:scale-105"
+          />
 
-        <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-[#020617]/20 to-transparent" />
-      </div>
-
-      <CardContent sx={{ p: { xs: 4, md: 5 } }}>
-        <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10">
-          {icon === "world" ? (
-            <PublicRoundedIcon sx={{ color: "#ffffff" }} />
-          ) : (
-            <AccountBalanceRoundedIcon sx={{ color: "#ffffff" }} />
-          )}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-[#020617]/20 to-transparent" />
         </div>
 
-        <h2 className="text-3xl font-semibold tracking-[-0.04em]">{title}</h2>
+        <CardContent sx={{ p: { xs: 4, md: 5 } }}>
+          <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10">
+            {icon === "world" ? (
+              <PublicRoundedIcon sx={{ color: "#ffffff" }} />
+            ) : (
+              <AccountBalanceRoundedIcon sx={{ color: "#ffffff" }} />
+            )}
+          </div>
 
-        <p className="mt-4 min-h-[88px] text-sm leading-7 text-white/65">
-          {description}
-        </p>
+          <h2 className="text-3xl font-semibold tracking-[-0.04em]">{title}</h2>
 
-        <Link href={href} className="inline-flex">
+          <p className="mt-4 min-h-[88px] text-sm leading-7 text-white/65">
+            {description}
+          </p>
+
+          <span className="inline-flex">
           <Button
+            component="span"
             className="dric-projects-card-button"
             variant="outlined"
             endIcon={<ArrowForwardRoundedIcon />}
@@ -279,8 +315,9 @@ function ProjectCard({
           >
             {button}
           </Button>
-        </Link>
-      </CardContent>
-    </Card>
+          </span>
+        </CardContent>
+      </Card>
+    </Link>
   );
 }
