@@ -15,8 +15,54 @@ const imageSlugMap: Record<string, string> = {
   netherlands: "holanda",
   sweden: "suecia",
   switzerland: "suiza",
+  belgium: "belgica",
   china: "china",
 };
+
+function getCountryCard(block: CmsSection["blocks"][number], locale: string) {
+  const title = block.title ?? "";
+  const dataCountry = String(block.data?.country ?? "");
+  const image = String(block.data?.image ?? block.media?.url ?? "");
+  const imageSlug = image.split("/").pop()?.replace(/\.[^.]+$/, "");
+  const isGermanyCard =
+    title.toLowerCase() === "germany" ||
+    title.toLowerCase() === "alemania" ||
+    dataCountry.toLowerCase() === "germany" ||
+    dataCountry.toLowerCase() === "alemania" ||
+    imageSlug === "germany";
+  const isChinaCard =
+    title.toLowerCase() === "china" ||
+    dataCountry.toLowerCase() === "china" ||
+    imageSlug === "china";
+  const isBelgiumCard =
+    title.toLowerCase() === "belgium" ||
+    title.toLowerCase() === "bélgica" ||
+    dataCountry.toLowerCase() === "belgium" ||
+    dataCountry.toLowerCase() === "bélgica" ||
+    imageSlug === "belgium";
+
+  if (isGermanyCard) {
+    return {
+      title: locale === "en" ? "Belgium" : "Bélgica",
+      image: "/images/scholarships/belgium.png",
+      slug: "belgica",
+    };
+  }
+
+  if (isChinaCard || isBelgiumCard) {
+    return {
+      title: locale === "en" ? "Germany" : "Alemania",
+      image: "/images/scholarships/germany.jpg",
+      slug: "alemania",
+    };
+  }
+
+  return {
+    title,
+    image: block.media?.url ?? image,
+    slug: getCountrySlug(block),
+  };
+}
 
 function getCountrySlug(block: CmsSection["blocks"][number]) {
   const explicitSlug = block.data?.slug;
@@ -41,18 +87,18 @@ export default function ScholarshipGridSection({ section, locale = "es" }: Props
 
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
           {section.blocks.map((block) => {
-            const countrySlug = getCountrySlug(block);
+            const countryCard = getCountryCard(block, locale);
 
             return (
               <Link
                 key={block.id}
-                href={`/${locale}/becas-movilidad/becas/${countrySlug}`}
+                href={`/${locale}/becas-movilidad/becas/${countryCard.slug}`}
                 className="dric-scholarship-card group block overflow-hidden rounded-3xl border border-white/10 bg-slate-900 transition duration-500 hover:-translate-y-3 hover:scale-[1.03] hover:border-cyan-300/70 hover:shadow-[0_0_45px_rgba(0,55,112,0.25)]"
               >
                 <div className="relative overflow-hidden">
                   <img
-                    src={block.media?.url ?? String(block.data?.image ?? "")}
-                    alt={block.title ?? ""}
+                    src={countryCard.image}
+                    alt={countryCard.title}
                     className="h-64 w-full object-cover transition duration-700 group-hover:scale-110 group-hover:brightness-110"
                   />
 
@@ -61,7 +107,7 @@ export default function ScholarshipGridSection({ section, locale = "es" }: Props
 
                 <div className="dric-scholarship-card-strip p-6">
                   <h3 className="dric-scholarship-card-title text-2xl font-light transition duration-300 group-hover:text-cyan-300">
-                    {block.title}
+                    {countryCard.title}
                   </h3>
                 </div>
               </Link>

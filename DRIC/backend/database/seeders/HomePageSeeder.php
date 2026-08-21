@@ -114,7 +114,7 @@ class HomePageSeeder extends Seeder
                     'summary' => 'Access scholarship, mobility, and academic exchange opportunities.',
                 ],
                 'blocks' => [
-                    ['country' => 'Alemania', 'country_en' => 'Germany', 'image' => '/images/scholarships/germany.jpg'],
+                    ['country' => 'Bélgica', 'country_en' => 'Belgium', 'image' => '/images/scholarships/belgium.png'],
                     ['country' => 'Francia', 'country_en' => 'France', 'image' => '/images/scholarships/france.jpg'],
                     ['country' => 'Corea del Sur', 'country_en' => 'South Korea', 'image' => '/images/scholarships/south-korea.jpg'],
                     ['country' => 'Italia', 'country_en' => 'Italy', 'image' => '/images/scholarships/italy.jpg'],
@@ -122,7 +122,7 @@ class HomePageSeeder extends Seeder
                     ['country' => 'Holanda', 'country_en' => 'Netherlands', 'image' => '/images/scholarships/netherlands.jpg'],
                     ['country' => 'Suecia', 'country_en' => 'Sweden', 'image' => '/images/scholarships/sweden.jpg'],
                     ['country' => 'Suiza', 'country_en' => 'Switzerland', 'image' => '/images/scholarships/switzerland.jpg'],
-                    ['country' => 'China', 'country_en' => 'China', 'image' => '/images/scholarships/china.jpg'],
+                    ['country' => 'Alemania', 'country_en' => 'Germany', 'image' => '/images/scholarships/germany.jpg'],
                 ],
             ],
             [

@@ -18,6 +18,7 @@ const content = {
         name: "Naïs Mampaey",
         role: "Estudiante de intercambio",
         country: "Bélgica",
+        ratingDate: "Agosto 2026",
         image: "/images/testimonials/mais.jpg",
         comment:
           "Realicé una pasantía médica en Bolivia durante dos meses: un mes en pediatría y un mes en ginecología. Durante la pasantía conocimos a muchos internos y médicos amables, apasionados por su trabajo. Fue interesante ver las diferencias entre la atención médica en Bolivia y Bélgica. Los fines de semana viajamos y vimos muchos lugares hermosos como el Salar de Uyuni, Sucre, Potosí, Toro Toro, La Paz y Trinidad. ¡Bolivia realmente lo tiene todo!",
@@ -26,6 +27,7 @@ const content = {
         name: "Wannes Loobuyck",
         role: "Estudiante de intercambio",
         country: "Bélgica",
+        ratingDate: "Agosto 2026",
         image: "/images/testimonials/wannes.jpg",
         comment:
           "Llegué a Bolivia como estudiante de intercambio para realizar una pasantía en el hospital y realmente valió la pena. Las personas aquí son muy amables y siempre les gusta ayudarte. En el hospital vimos muchas patologías que no vemos en Bélgica. También nos gustó mucho la comida de aquí, ¡muy rico! ¡Gracias Bolivia!",
@@ -34,6 +36,7 @@ const content = {
         name: "Kato Vandoorne",
         role: "Estudiante de intercambio",
         country: "Bélgica",
+        ratingDate: "Agosto 2026",
         image: "/images/testimonials/kato.jpg",
         comment:
           "Realicé una pasantía médica de dos meses en dos hospitales diferentes de Cochabamba. Fue muy interesante ver las diferencias con los hospitales de Bélgica. El intercambio también fue una experiencia muy bonita fuera del hospital. Conocimos a muchas personas amables, comimos buena comida local y pudimos viajar por la hermosa Bolivia. ¡Realmente recomiendo a todos hacer un intercambio internacional!",
@@ -49,6 +52,7 @@ const content = {
         name: "Naïs Mampaey",
         role: "Exchange student",
         country: "Belgium",
+        ratingDate: "August 2026",
         image: "/images/testimonials/mais.jpg",
         comment:
           "I did a medical internship in Bolivia for two months, one month pediatrics and one month gynecology. In the internship we met a lot of friendly interns and doctors who were passionate about their jobs. It was interesting to see the differences between the healthcare in Bolivia and Belgium. In the weekends we travelled, we saw a lot of beautiful places like Salar de Uyuni, Sucre, Potosí, Toro Toro, La Paz and Trinidad. Bolivia really has everything!",
@@ -57,6 +61,7 @@ const content = {
         name: "Wannes Loobuyck",
         role: "Exchange student",
         country: "Belgium",
+        ratingDate: "August 2026",
         image: "/images/testimonials/wannes.jpg",
         comment:
           "I came to Bolivia as an exchange student to do internship in the hospital and it was totally worth it! The people here are very friendly and they like to help you everytime. In the hospital we saw many pathologies we dont see in Belgium. We also really liked the food here, muy rico!!! Gracias Bolivia!",
@@ -65,6 +70,7 @@ const content = {
         name: "Kato Vandoorne",
         role: "Exchange student",
         country: "Belgium",
+        ratingDate: "August 2026",
         image: "/images/testimonials/kato.jpg",
         comment:
           "I did a two month medical internship in two different hospitals in Cochabamba. It was very interesting to see the differences with the hospitals in Belgium. The exchange was also a very nice experience outside of the hospital. We met a lot of friendly people, ate good local food and could travel in the beautiful Bolivia. I really recommend everyone to do an international exchange!",
@@ -170,15 +176,15 @@ export default function StudentExperiencesSection({ locale }: Props) {
             {t.comments.map((item) => (
               <article
                 key={item.name}
-                className="flex min-w-[86%] snap-center flex-col rounded-2xl border border-white/10 bg-white/[0.03] p-5 shadow-2xl transition duration-300 hover:-translate-y-3 hover:border-cyan-200/35 hover:bg-white/[0.05] sm:min-w-[68%] sm:p-7 md:min-w-[560px] md:rounded-3xl md:p-10 lg:min-w-[620px]"
+                className="flex w-[84vw] shrink-0 snap-center flex-col rounded-2xl border border-white/10 bg-white/[0.03] p-5 shadow-2xl transition duration-300 hover:-translate-y-3 hover:border-cyan-200/35 hover:bg-white/[0.05] sm:w-[68%] sm:p-7 md:w-[560px] md:rounded-3xl md:p-10 lg:w-[620px]"
             >
-              <div className="mb-6 h-14 w-14 overflow-hidden rounded-full bg-gradient-to-br from-white/30 to-white/5 md:mb-8 md:h-20 md:w-20">
+              <div className="mb-6 h-[5.5rem] w-[5.5rem] overflow-hidden rounded-full bg-gradient-to-br from-white/30 to-white/5 md:mb-8 md:h-29 md:w-29">
                 {"image" in item && item.image ? (
                   <Image
                     src={item.image}
                     alt={item.name}
-                    width={80}
-                    height={80}
+                    width={100}
+                    height={100}
                     className="h-full w-full object-cover"
                   />
                 ) : null}
@@ -193,8 +199,11 @@ export default function StudentExperiencesSection({ locale }: Props) {
                 “{item.comment}”
               </p>
               <p className="dric-testimonials-rating mt-auto pt-6 text-lg md:pt-8 md:text-xl">
-                <span className="dric-testimonials-rating-score">5.0</span>{" "}
                 <span className="dric-testimonials-rating-stars">★★★★★</span>
+                <span className="mx-2 align-middle text-sm text-white/35 md:text-base">・</span>
+                <span className="align-middle text-sm text-white/45 md:text-base">
+                  {item.ratingDate}
+                </span>
               </p>
             </article>
             ))}
