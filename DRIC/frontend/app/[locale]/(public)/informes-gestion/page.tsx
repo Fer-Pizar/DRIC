@@ -75,9 +75,6 @@ export default async function InformesGestionPage({ params }: Props) {
       <Header />
 
       <section className="dric-reports-hero relative isolate px-5 pb-20 pt-36 md:px-10 lg:px-12">
-        <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(227,6,19,0.40),transparent_34%),radial-gradient(circle_at_top_right,rgba(0,55,112,0.48),transparent_36%),linear-gradient(135deg,#020617_0%,#08111f_45%,#12070a_100%)]" />
-        <div className="dric-reports-hero-glow absolute bottom-0 left-1/2 -z-10 h-[360px] w-[560px] -translate-x-1/2 rounded-full bg-white/10 blur-[150px]" />
-
         <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
           <div>
             <p
@@ -136,9 +133,6 @@ export default async function InformesGestionPage({ params }: Props) {
       </section>
 
       <section className="dric-reports-section relative isolate overflow-hidden px-5 py-20 text-white md:px-10 lg:px-12">
-        <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(227,6,19,0.22),transparent_34%),radial-gradient(circle_at_center_right,rgba(0,55,112,0.30),transparent_38%),linear-gradient(145deg,#020617_0%,#07111f_50%,#12070a_100%)]" />
-        <div className="absolute right-[-9rem] top-16 -z-10 h-[430px] w-[430px] rounded-full bg-cyan-300/10 blur-[135px]" />
-
         <div className="mx-auto max-w-7xl">
           <div className="mb-12 grid gap-6 lg:grid-cols-[1fr_0.8fr] lg:items-end">
             <div>
@@ -176,7 +170,7 @@ export default async function InformesGestionPage({ params }: Props) {
             </div>
           </div>
 
-          <div className="grid gap-7 md:grid-cols-2 xl:grid-cols-3">
+          <div className="grid gap-7 sm:grid-cols-2 xl:grid-cols-3">
             {t.reports.map((report) => (
               <Card
                 className="dric-reports-card"

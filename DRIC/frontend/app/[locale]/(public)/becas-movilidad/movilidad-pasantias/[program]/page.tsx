@@ -102,14 +102,11 @@ export default async function MobilityProgramDetailPage({ params }: Props) {
     .slice(0, 3);
 
   return (
-    <main className="dric-theme-page dric-mobility-page dric-mobility-programs-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
+    <main className="dric-theme-page dric-mobility-page dric-mobility-detail-page dric-mobility-programs-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
       <Header />
 
-      <section className="dric-mobility-hero relative isolate px-5 pb-20 pt-36 md:px-10 lg:px-12">
-        <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(227,6,19,0.34),transparent_34%),radial-gradient(circle_at_top_right,rgba(34,211,238,0.22),transparent_36%),linear-gradient(135deg,#020617_0%,#08111f_45%,#12070a_100%)]" />
-        <div className="dric-mobility-hero-glow absolute left-1/2 top-24 -z-10 h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-white/10 blur-[140px]" />
-
-        <div className="mx-auto max-w-7xl">
+      <section className="dric-mobility-hero relative isolate px-5 pb-16 pt-44 sm:pt-36 md:px-10 md:pb-20 lg:px-12">
+        <div className="mx-auto max-w-7xl min-w-0">
           <Link href={`/${locale}/becas-movilidad/movilidad-pasantias`} className="inline-flex">
             <Button
               className="dric-mobility-card-button"
@@ -129,8 +126,8 @@ export default async function MobilityProgramDetailPage({ params }: Props) {
             </Button>
           </Link>
 
-          <div className="mt-14 grid gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:items-end">
-            <div>
+          <div className="mt-10 grid min-w-0 gap-8 sm:mt-14 lg:grid-cols-[0.95fr_1.05fr] lg:items-end lg:gap-10">
+            <div className="min-w-0">
               <p className="mb-5 inline-flex rounded-full border border-white/15 bg-white/10 px-5 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-white/80 backdrop-blur">
                 DRIC · UMSS
               </p>
@@ -139,14 +136,14 @@ export default async function MobilityProgramDetailPage({ params }: Props) {
                 {match.program.tag}
               </p>
 
-              <h1 className="max-w-5xl text-4xl font-light uppercase leading-[0.95] tracking-[-0.06em] text-white md:text-6xl lg:text-7xl">
+              <h1 className="max-w-5xl break-words text-[2.35rem] font-light uppercase leading-[1.02] tracking-normal text-white [overflow-wrap:anywhere] sm:text-4xl sm:leading-[0.95] sm:tracking-[-0.06em] md:text-6xl lg:text-7xl">
                 {match.program.title}
               </h1>
             </div>
 
-            <aside className="dric-mobility-track-panel rounded-[2rem] border border-white/12 bg-white/[0.07] p-7 shadow-2xl shadow-black/25 backdrop-blur-xl">
-              <div className="flex items-center gap-4">
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#E30613] text-white shadow-xl shadow-[#E30613]/20">
+            <aside className="dric-mobility-track-panel min-w-0 rounded-[2rem] border border-white/12 bg-white/[0.07] p-6 shadow-2xl shadow-black/25 backdrop-blur-xl sm:p-7">
+              <div className="flex min-w-0 items-center gap-4">
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-[#E30613] text-white shadow-xl shadow-[#E30613]/20">
                   {match.track.icon === "student" ? (
                     <SchoolRoundedIcon sx={{ fontSize: 30 }} />
                   ) : (
@@ -154,11 +151,11 @@ export default async function MobilityProgramDetailPage({ params }: Props) {
                   )}
                 </div>
 
-                <div>
+                <div className="min-w-0">
                   <p className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-200">
                     {copy.audience}
                   </p>
-                  <h2 className="mt-1 text-2xl font-semibold tracking-[-0.03em]">
+                  <h2 className="mt-1 break-words text-2xl font-semibold tracking-[-0.03em] [overflow-wrap:anywhere]">
                     {match.track.title}
                   </h2>
                 </div>
@@ -171,8 +168,6 @@ export default async function MobilityProgramDetailPage({ params }: Props) {
       </section>
 
       <section className="dric-mobility-section relative isolate overflow-hidden px-5 py-20 text-white md:px-10 lg:px-12">
-        <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(227,6,19,0.18),transparent_34%),radial-gradient(circle_at_center_right,rgba(0,55,112,0.30),transparent_38%),linear-gradient(145deg,#020617_0%,#07111f_50%,#12070a_100%)]" />
-
         <div className="mx-auto grid max-w-7xl gap-7 lg:grid-cols-[1fr_0.72fr]">
           <article className="dric-mobility-track-heading rounded-[2rem] border border-white/10 bg-white/[0.06] p-7 shadow-2xl shadow-black/20 backdrop-blur-xl md:p-10">
             <div className="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10">

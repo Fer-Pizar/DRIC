@@ -89,9 +89,6 @@ export default async function BecasPage({ params }: Props) {
       <Header />
 
       <section className="relative isolate px-5 pb-16 pt-36 md:px-10 md:pb-20 lg:px-12">
-        <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(227,6,19,0.34),transparent_34%),radial-gradient(circle_at_top_right,rgba(0,55,112,0.46),transparent_36%),linear-gradient(135deg,#020617_0%,#08111f_48%,#12070a_100%)]" />
-        <div className="dric-scholarship-index-hero-glow absolute left-1/2 top-24 -z-10 h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-white/10 blur-[140px]" />
-
         <div className="mx-auto max-w-7xl">
           <p className="mb-5 inline-flex rounded-full border border-white/15 bg-white/10 px-5 py-2 text-xs font-semibold uppercase tracking-[0.26em] text-white/80 backdrop-blur">
             {language === "en" ? "Scholarship calls" : "Convocatoria de becas"}
@@ -112,8 +109,6 @@ export default async function BecasPage({ params }: Props) {
       </section>
 
       <section className="relative isolate overflow-hidden px-5 py-16 text-white md:px-10 md:py-20 lg:px-12">
-        <div className="absolute inset-0 -z-20 bg-[linear-gradient(180deg,#020617_0%,#07111f_48%,#020617_100%)]" />
-
         <div className="mx-auto max-w-7xl">
           <div className="mb-10 flex flex-col gap-4 md:mb-12 md:flex-row md:items-end md:justify-between">
             <div>

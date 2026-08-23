@@ -20,13 +20,10 @@ export default async function MovilidadPasantiasPage({ params }: Props) {
   const text = locale === "en" ? mobilityData.en : mobilityData.es;
 
   return (
-    <main className="dric-theme-page dric-mobility-page dric-mobility-programs-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
+    <main className="dric-theme-page dric-mobility-page dric-mobility-landing-page dric-mobility-programs-page dric-mobility-programs-index-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
       <Header />
 
-      <section className="dric-mobility-hero relative isolate px-5 pb-20 pt-36 md:px-10 lg:px-12">
-        <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(227,6,19,0.36),transparent_34%),radial-gradient(circle_at_top_right,rgba(0,55,112,0.48),transparent_36%),linear-gradient(135deg,#020617_0%,#08111f_45%,#12070a_100%)]" />
-        <div className="dric-mobility-hero-glow absolute left-1/2 top-24 -z-10 h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-white/10 blur-[140px]" />
-
+      <section className="dric-mobility-hero relative isolate px-5 pb-20 pt-28 md:px-10 md:pt-30 lg:px-12 lg:pt-32">
         <div className="mx-auto max-w-7xl">
           <Link href={`/${locale}/becas-movilidad`} className="inline-flex">
             <Button
@@ -115,8 +112,6 @@ function MobilityTrack({
 }) {
   return (
     <section id={id} className="dric-mobility-section relative isolate overflow-hidden px-5 py-20 text-white md:px-10 lg:px-12">
-      <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(227,6,19,0.18),transparent_34%),radial-gradient(circle_at_center_right,rgba(0,55,112,0.30),transparent_38%),linear-gradient(145deg,#020617_0%,#07111f_50%,#12070a_100%)]" />
-
       <div className="mx-auto max-w-7xl">
         <div className="dric-mobility-track-heading mb-12 grid gap-8 rounded-[2rem] border border-white/10 bg-white/[0.06] p-7 shadow-2xl shadow-black/20 backdrop-blur-xl md:p-9 lg:grid-cols-[auto_1fr] lg:items-center">
           <div className="flex h-20 w-20 items-center justify-center rounded-[1.7rem] bg-[#E30613] text-white shadow-2xl shadow-[#E30613]/20">

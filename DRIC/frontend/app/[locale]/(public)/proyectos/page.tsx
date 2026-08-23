@@ -102,9 +102,6 @@ export default async function ProyectosPage({ params }: Props) {
       <Header />
 
       <section className="dric-projects-hero relative isolate overflow-hidden px-5 pb-20 pt-36 md:px-10 lg:px-12">
-        <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(227,6,19,0.34),transparent_35%),radial-gradient(circle_at_top_right,rgba(0,55,112,0.32),transparent_36%),linear-gradient(135deg,#020617_0%,#08111f_48%,#12070a_100%)]" />
-        <div className="dric-projects-hero-glow absolute left-1/2 top-20 -z-10 h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-white/10 blur-[130px]" />
-
         <div className="mx-auto max-w-7xl">
           <div className="max-w-4xl">
             <p className="mb-5 inline-flex rounded-full border border-white/15 bg-white/10 px-5 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-white/80 backdrop-blur">
@@ -181,9 +178,6 @@ export default async function ProyectosPage({ params }: Props) {
       </section>
 
       <section id="apoyo-financiero" className="dric-projects-section relative isolate overflow-hidden px-5 py-24 text-white md:px-10 lg:px-12">
-        <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_right,rgba(227,6,19,0.20),transparent_34%),radial-gradient(circle_at_bottom_left,rgba(0,55,112,0.34),transparent_38%),linear-gradient(145deg,#020617_0%,#07111f_50%,#12070a_100%)]" />
-        <div className="absolute left-[-10rem] bottom-[-8rem] -z-10 h-[460px] w-[460px] rounded-full bg-blue-400/10 blur-[140px]" />
-
         <div className="mx-auto max-w-7xl">
           <div className="dric-projects-finance-panel rounded-[2rem] border border-white/10 bg-white/[0.06] p-8 shadow-2xl shadow-black/25 backdrop-blur-xl md:p-12">
             <div className="grid gap-10 lg:grid-cols-[1fr_0.8fr] lg:items-center">

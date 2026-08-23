@@ -72,12 +72,16 @@ export default async function PresentacionPage({ params }: Props) {
       };
 
   return (
-    <main className="dric-presentation-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
+    <main
+      className="dric-presentation-page min-h-screen overflow-x-hidden bg-[#020617] text-white"
+      style={{ background: "#020617" }}
+    >
       <Header />
 
-      <section className="dric-presentation-content relative isolate px-4 pb-16 pt-32 sm:px-5 md:px-10 md:pb-20 md:pt-36 lg:px-12">
-        <div className="dric-presentation-hero-bg absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(227,6,19,0.42),transparent_34%),radial-gradient(circle_at_top_right,rgba(0,55,112,0.50),transparent_36%),linear-gradient(135deg,#020617_0%,#08111f_45%,#12070a_100%)]" />
-
+      <section
+        className="dric-presentation-content relative isolate px-4 pb-16 pt-32 sm:px-5 md:px-10 md:pb-20 md:pt-36 lg:px-12"
+        style={{ background: "#020617" }}
+      >
         <div className="mx-auto max-w-7xl text-center md:text-left">
           <p className="mb-5 inline-flex max-w-full rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-white/80 backdrop-blur sm:px-5 sm:tracking-[0.28em]">
             DRIC · UMSS
@@ -95,10 +99,10 @@ export default async function PresentacionPage({ params }: Props) {
         </div>
       </section>
 
-      <section className="dric-presentation-content relative isolate overflow-hidden px-4 py-14 text-white sm:px-5 md:px-10 md:py-20 lg:px-12">
-        <div className="dric-presentation-body-bg absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(227,6,19,0.22),transparent_34%),radial-gradient(circle_at_center_right,rgba(0,55,112,0.34),transparent_38%),linear-gradient(145deg,#020617_0%,#07111f_48%,#12070a_100%)]" />
-        <div className="absolute left-1/2 top-32 -z-10 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-cyan-300/10 blur-[150px]" />
-
+      <section
+        className="dric-presentation-content relative isolate overflow-hidden px-4 py-14 text-white sm:px-5 md:px-10 md:py-20 lg:px-12"
+        style={{ background: "#020617" }}
+      >
         <div className="mx-auto max-w-7xl">
           <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
             <Card

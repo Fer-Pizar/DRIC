@@ -117,9 +117,6 @@ export default async function ApoyoFinancieroPage({ params }: Props) {
       <Header />
 
       <section className="dric-projects-hero relative isolate overflow-hidden px-5 pb-20 pt-36 md:px-10 lg:px-12">
-        <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(227,6,19,0.26),transparent_35%),radial-gradient(circle_at_top_right,rgba(34,211,238,0.18),transparent_35%),linear-gradient(135deg,#020617_0%,#08111f_48%,#14070b_100%)]" />
-        <div className="dric-projects-hero-glow absolute left-1/2 top-20 -z-10 h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-white/10 blur-[130px]" />
-
         <div className="mx-auto max-w-7xl">
           <Link href={`/${locale}/proyectos`} className="inline-flex">
             <Button
@@ -171,8 +168,6 @@ export default async function ApoyoFinancieroPage({ params }: Props) {
       </section>
 
       <section className="dric-projects-section relative isolate overflow-hidden px-5 py-20 text-white md:px-10 lg:px-12">
-        <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_right,rgba(0,55,112,0.28),transparent_38%),radial-gradient(circle_at_bottom_left,rgba(227,6,19,0.20),transparent_34%),linear-gradient(145deg,#020617_0%,#07111f_52%,#12070a_100%)]" />
-
         <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[1fr_0.8fr]">
           <article className="dric-funding-panel rounded-[2rem] border border-white/10 bg-white/[0.06] p-7 shadow-2xl shadow-black/25 backdrop-blur-xl md:p-10">
             <h2 className="text-3xl font-semibold tracking-[-0.04em] md:text-4xl">

@@ -34,9 +34,6 @@ export default function NewsExplorer({ locale, news }: Props) {
 
   return (
     <section className="relative isolate overflow-hidden px-5 py-20 text-white md:px-10 lg:px-12">
-      <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(227,6,19,0.22),transparent_34%),radial-gradient(circle_at_center_right,rgba(0,55,112,0.30),transparent_38%),linear-gradient(145deg,#020617_0%,#07111f_50%,#12070a_100%)]" />
-      <div className="absolute right-[-9rem] top-16 -z-10 h-[430px] w-[430px] rounded-full bg-cyan-300/10 blur-[135px]" />
-
       <div className="mx-auto max-w-7xl">
         <div className="mb-12 grid gap-8 lg:grid-cols-[1fr_0.75fr] lg:items-end">
           <div>
@@ -59,7 +56,7 @@ export default function NewsExplorer({ locale, news }: Props) {
           </div>
         </div>
 
-        <div className="grid gap-7 lg:grid-cols-3">
+        <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
           {filteredNews.map((item, index) => (
             <Card
               key={item.title}

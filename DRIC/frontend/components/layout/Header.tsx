@@ -149,10 +149,10 @@ export default function Header() {
 
             <button
               type="button"
-              onClick={() => setOpen(true)}
+              onClick={() => setOpen((isOpen) => !isOpen)}
               className="dric-site-header-button inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/10 text-white transition hover:bg-white/20 sm:h-10 sm:w-10"
-              aria-label="Open menu"
-              title="Open menu"
+              aria-label={open ? "Close menu" : "Open menu"}
+              title={open ? "Close menu" : "Open menu"}
             >
               <Menu className="h-6 w-6" />
             </button>

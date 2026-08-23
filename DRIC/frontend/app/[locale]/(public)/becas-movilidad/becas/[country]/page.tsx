@@ -36,6 +36,22 @@ const cmsReadyItems = [
   },
 ];
 
+function getMobileLinkLabel({
+  country,
+  language,
+  label,
+}: {
+  country: string;
+  language: "es" | "en";
+  label: { es: string; en: string };
+}) {
+  if (country === "irlanda" && label.en.includes("GOI-IES")) {
+    return language === "en" ? "GOI-IES Scholarship" : "Beca GOI-IES";
+  }
+
+  return label[language];
+}
+
 export default async function ScholarshipDestinationPage({ params }: Props) {
   const { locale, country } = await params;
   const language = locale === "en" ? "en" : "es";
@@ -52,12 +68,6 @@ export default async function ScholarshipDestinationPage({ params }: Props) {
       <Header />
 
       <section className="relative isolate px-5 pb-20 pt-36 md:px-10 lg:px-12">
-        <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(227,6,19,0.34),transparent_34%),radial-gradient(circle_at_top_right,rgba(0,55,112,0.46),transparent_36%),linear-gradient(135deg,#020617_0%,#08111f_48%,#12070a_100%)]" />
-        <div
-          className="absolute right-[-8rem] top-24 -z-10 h-[420px] w-[420px] rounded-full blur-[140px]"
-          style={{ backgroundColor: `${item.accent}24` }}
-        />
-
         <div className="mx-auto max-w-7xl">
           <Link
             href={`/${locale}/becas-movilidad/becas`}
@@ -105,8 +115,6 @@ export default async function ScholarshipDestinationPage({ params }: Props) {
       </section>
 
       <section className="relative isolate overflow-hidden px-5 py-16 text-white md:px-10 md:py-20 lg:px-12">
-        <div className="absolute inset-0 -z-20 bg-[linear-gradient(180deg,#020617_0%,#07111f_48%,#020617_100%)]" />
-
         <div className="mx-auto max-w-7xl">
           {opportunities.length > 0 ? (
             <>
@@ -204,11 +212,18 @@ export default async function ScholarshipDestinationPage({ params }: Props) {
                             href={link.href}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="dric-scholarship-program-link inline-flex items-center gap-4 rounded-full p-[1px] text-base font-normal text-white transition hover:scale-[1.02] md:text-xl"
+                            className="dric-scholarship-program-link inline-flex max-w-full items-center gap-3 rounded-full p-[1px] text-sm font-normal text-white transition hover:scale-[1.02] sm:text-base md:text-xl"
                           >
-                            <span className="inline-flex items-center gap-4 rounded-full px-6 py-3 backdrop-blur-xl md:px-7">
-                              {link.label[language]}
-                              <OpenInNewRoundedIcon className="text-[1.45em]" />
+                            <span className="inline-flex max-w-full items-center justify-between gap-3 rounded-full px-5 py-3 text-left backdrop-blur-xl sm:px-6 md:px-7">
+                              <span className="hidden sm:inline">{link.label[language]}</span>
+                              <span className="sm:hidden">
+                                {getMobileLinkLabel({
+                                  country,
+                                  language,
+                                  label: link.label,
+                                })}
+                              </span>
+                              <OpenInNewRoundedIcon className="shrink-0 text-[1.35em]" />
                             </span>
                           </a>
                         ))}

@@ -61,13 +61,10 @@ export default async function BecasMovilidadPage({ params }: Props) {
   ];
 
   return (
-    <main className="dric-theme-page dric-mobility-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
+    <main className="dric-theme-page dric-mobility-page dric-scholarships-hub-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
       <Header />
 
-      <section className="dric-mobility-hero relative isolate px-5 pb-20 pt-36 md:px-10 lg:px-12">
-        <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(227,6,19,0.42),transparent_34%),radial-gradient(circle_at_top_right,rgba(0,55,112,0.50),transparent_36%),linear-gradient(135deg,#020617_0%,#08111f_45%,#12070a_100%)]" />
-        <div className="dric-mobility-hero-glow absolute left-1/2 top-24 -z-10 h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-white/10 blur-[140px]" />
-
+      <section className="dric-mobility-hero relative isolate px-5 pb-10 pt-36 md:px-10 md:pb-12 lg:px-12">
         <div className="mx-auto max-w-7xl">
           <p className="mb-5 inline-flex rounded-full border border-white/15 bg-white/10 px-5 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-white/80 backdrop-blur">
             DRIC · UMSS
@@ -91,10 +88,7 @@ export default async function BecasMovilidadPage({ params }: Props) {
         </div>
       </section>
 
-      <section className="dric-mobility-section relative isolate overflow-hidden px-5 py-20 text-white md:px-10 lg:px-12">
-        <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(227,6,19,0.22),transparent_34%),radial-gradient(circle_at_center_right,rgba(0,55,112,0.30),transparent_38%),linear-gradient(145deg,#020617_0%,#07111f_50%,#12070a_100%)]" />
-        <div className="absolute right-[-9rem] top-12 -z-10 h-[430px] w-[430px] rounded-full bg-cyan-300/10 blur-[135px]" />
-
+      <section className="dric-mobility-section relative isolate overflow-hidden px-5 pb-20 pt-8 text-white md:px-10 md:pt-10 lg:px-12 lg:pt-12">
         <div className="mx-auto max-w-7xl">
           <div className="mb-14 max-w-3xl">
             <p className="text-sm font-bold uppercase tracking-[0.25em] text-[#E30613]">

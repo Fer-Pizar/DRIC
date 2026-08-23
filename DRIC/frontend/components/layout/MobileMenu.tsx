@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { X } from "lucide-react";
 import { useLocale } from "next-intl";
+import { useEffect } from "react";
 
 type MobileMenuProps = {
   open: boolean;
@@ -28,11 +29,23 @@ const menuItems = [
 export default function MobileMenu({ open, onClose }: MobileMenuProps) {
   const locale = useLocale() as "es" | "en";
 
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [open]);
+
   if (!open) return null;
 
   return (
-    <div className="dric-mobile-menu fixed inset-0 z-[999] h-dvh overflow-y-auto bg-[#020617]/96 text-white backdrop-blur-2xl xl:overflow-hidden">
-      <div className="dric-mobile-menu-bg pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(227,6,19,0.28),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(0,55,112,0.34),transparent_36%)]" />
+    <div className="dric-mobile-menu fixed inset-0 z-[999] h-dvh overflow-y-auto text-white backdrop-blur-2xl xl:overflow-hidden">
 
       <div className="relative mx-auto flex min-h-dvh w-full max-w-6xl flex-col px-5 py-5 sm:px-7 md:px-10 xl:h-dvh xl:min-h-0">
         <div className="dric-mobile-menu-header flex items-center justify-between gap-4 pb-5">
