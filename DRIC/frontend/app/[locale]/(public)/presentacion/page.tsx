@@ -72,16 +72,10 @@ export default async function PresentacionPage({ params }: Props) {
       };
 
   return (
-    <main
-      className="dric-presentation-page min-h-screen overflow-x-hidden bg-[#020617] text-white"
-      style={{ background: "#020617" }}
-    >
+    <main className="dric-presentation-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
       <Header />
 
-      <section
-        className="dric-presentation-content relative isolate px-4 pb-16 pt-32 sm:px-5 md:px-10 md:pb-20 md:pt-36 lg:px-12"
-        style={{ background: "#020617" }}
-      >
+      <section className="dric-presentation-content relative isolate px-4 pb-16 pt-32 sm:px-5 md:px-10 md:pb-20 md:pt-36 lg:px-12">
         <div className="mx-auto max-w-7xl text-center md:text-left">
           <p className="mb-5 inline-flex max-w-full rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-white/80 backdrop-blur sm:px-5 sm:tracking-[0.28em]">
             DRIC · UMSS
@@ -99,10 +93,7 @@ export default async function PresentacionPage({ params }: Props) {
         </div>
       </section>
 
-      <section
-        className="dric-presentation-content relative isolate overflow-hidden px-4 py-14 text-white sm:px-5 md:px-10 md:py-20 lg:px-12"
-        style={{ background: "#020617" }}
-      >
+      <section className="dric-presentation-content relative isolate overflow-hidden px-4 py-14 text-white sm:px-5 md:px-10 md:py-20 lg:px-12">
         <div className="mx-auto max-w-7xl">
           <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
             <Card

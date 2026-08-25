@@ -45,13 +45,13 @@ export default function NewsExplorer({ locale, news }: Props) {
             </h2>
           </div>
 
-          <div className="flex items-center rounded-full border border-white/10 bg-white/[0.06] px-5 py-3 shadow-2xl shadow-black/20 backdrop-blur-xl">
+          <div className="dric-news-search flex items-center rounded-full border border-white/10 bg-white/[0.06] px-5 py-3 shadow-2xl shadow-black/20 backdrop-blur-xl">
             <SearchRoundedIcon sx={{ color: "#003770", mr: 1.5 }} />
             <input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder={locale === "en" ? "Search news..." : "Buscar noticias..."}
-              className="w-full bg-transparent text-sm text-white outline-none placeholder:text-white/42"
+              className="dric-news-search-input w-full bg-transparent text-sm text-white outline-none placeholder:text-white/42"
             />
           </div>
         </div>
@@ -60,6 +60,7 @@ export default function NewsExplorer({ locale, news }: Props) {
           {filteredNews.map((item, index) => (
             <Card
               key={item.title}
+              className="h-full"
               sx={{
                 borderRadius: "32px",
                 overflow: "hidden",
@@ -69,7 +70,7 @@ export default function NewsExplorer({ locale, news }: Props) {
                 color: "white",
               }}
             >
-              <div className="relative flex min-h-[420px] flex-col bg-white/[0.06] p-8">
+              <div className="relative flex h-full min-h-[420px] flex-col bg-white/[0.06] p-8">
                 <div className="absolute inset-x-0 top-0 h-2 bg-gradient-to-r from-[#E30613] via-[#003770] to-[#E30613]" />
 
                 <Chip
@@ -95,7 +96,7 @@ export default function NewsExplorer({ locale, news }: Props) {
                   {item.excerpt}
                 </p>
 
-                <div className="mt-8 pt-2">
+                <div className="mt-auto pt-8">
                   <Link href={`/${locale}/noticias/${index + 1}`} className="inline-flex">
                     <Button
                       variant="outlined"

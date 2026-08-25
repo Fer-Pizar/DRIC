@@ -111,7 +111,7 @@ export default function MobileMenu({ open, onClose }: MobileMenuProps) {
           </nav>
         </div>
 
-        <div className="dric-mobile-menu-footer pb-1 text-[0.65rem] uppercase tracking-[0.2em] text-white/35 sm:text-xs">
+        <div className="dric-mobile-menu-footer pb-1 text-[0.65rem] uppercase tracking-[0.2em] text-white/35 sm:text-xs xl:absolute xl:bottom-5 xl:left-10 xl:z-10 xl:pb-0">
           Universidad Mayor de San Simón · DRIC
         </div>
       </div>

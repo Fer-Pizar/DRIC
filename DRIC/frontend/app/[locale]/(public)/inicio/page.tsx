@@ -128,7 +128,7 @@ export default async function InicioPage({ params }: Props) {
       : [];
 
   return (
-    <main className="dric-theme-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
+    <main className="dric-theme-page dric-home-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
       <Header />
       <SectionRenderer sections={sectionsBeforeFaq} locale={locale} />
       <StudentExperiencesSection locale={locale as "es" | "en"} />

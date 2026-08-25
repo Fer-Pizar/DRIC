@@ -195,12 +195,14 @@ export default async function ProyectosPage({ params }: Props) {
                 </p>
               </div>
 
-              <div className="dric-projects-doc-card rounded-[1.5rem] bg-[#020617] p-7 text-white">
+              <div className="dric-projects-doc-card rounded-[1.5rem] bg-[#020617] p-7">
                 <PictureAsPdfRoundedIcon sx={{ color: "#E30613", fontSize: 38 }} />
 
-                <h3 className="mt-5 text-2xl font-bold">{text.finance.docsTitle}</h3>
+                <h3 className="dric-projects-doc-title mt-5 text-2xl font-bold">
+                  {text.finance.docsTitle}
+                </h3>
 
-                <p className="mt-3 text-sm leading-7 text-white/65">
+                <p className="dric-projects-doc-copy mt-3 text-sm leading-7">
                   {text.finance.docsDescription}
                 </p>
 

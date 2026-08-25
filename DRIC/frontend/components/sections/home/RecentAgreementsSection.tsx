@@ -14,6 +14,9 @@ export default function RecentAgreementsSection({
   section,
   locale = "es",
 }: Props) {
+  const eyebrow =
+    locale === "en" ? "International Cooperation" : "Cooperación internacional";
+
   return (
     <section className="relative overflow-hidden px-6 py-24 md:px-10 lg:px-16">
       {/* Background cinematic blur */}
@@ -30,8 +33,8 @@ export default function RecentAgreementsSection({
           transition={{ duration: 0.8 }}
           className="mb-16"
         >
-          <p className="mb-4 text-sm uppercase tracking-[0.3em] text-cyan-300">
-            International Cooperation
+          <p className="dric-recent-agreements-eyebrow mb-4 text-sm uppercase tracking-[0.3em] text-cyan-300">
+            {eyebrow}
           </p>
 
           <h2 className="max-w-3xl text-4xl font-bold leading-tight text-white md:text-6xl">
@@ -128,12 +131,13 @@ export default function RecentAgreementsSection({
 
                   {/* Content */}
                   <div className="absolute bottom-0 left-0 z-10 p-8">
-                    <p className="mb-3 text-xs uppercase tracking-[0.25em] text-cyan-300">
+                    <p className="dric-recent-agreement-kicker mb-3 text-xs uppercase tracking-[0.25em] text-cyan-300">
                       DRIC UMSS
                     </p>
 
                     <h3
                       className="
+                        dric-recent-agreement-title
                         max-w-xs
                         text-3xl
                         font-semibold

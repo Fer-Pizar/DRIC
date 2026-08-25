@@ -129,7 +129,7 @@ export default function StudentExperiencesSection({ locale }: Props) {
   };
 
   return (
-    <section className="bg-[#020617] px-4 py-16 text-white sm:px-6 md:py-24">
+    <section className="dric-student-experiences-section bg-[#020617] px-4 py-16 text-white sm:px-6 md:py-24">
       <div className="mx-auto max-w-7xl">
         <div className="grid items-center gap-8 md:gap-12 lg:grid-cols-2">
           <div className="relative h-[240px] overflow-hidden rounded-2xl border border-white/10 bg-white/5 sm:h-[320px] md:h-[360px] md:rounded-3xl">
@@ -176,7 +176,7 @@ export default function StudentExperiencesSection({ locale }: Props) {
             {t.comments.map((item) => (
               <article
                 key={item.name}
-                className="flex w-[84vw] shrink-0 snap-center flex-col rounded-2xl border border-white/10 bg-white/[0.03] p-5 shadow-2xl transition duration-300 hover:-translate-y-3 hover:border-cyan-200/35 hover:bg-white/[0.05] sm:w-[68%] sm:p-7 md:w-[560px] md:rounded-3xl md:p-10 lg:w-[620px]"
+                className="dric-testimonial-card flex w-[84vw] shrink-0 snap-center flex-col rounded-2xl border border-white/10 bg-white/[0.03] p-5 shadow-2xl transition duration-300 hover:-translate-y-3 hover:border-cyan-200/35 hover:bg-white/[0.05] sm:w-[68%] sm:p-7 md:w-[560px] md:rounded-3xl md:p-10 lg:w-[620px]"
             >
               <div className="mb-6 h-[5.5rem] w-[5.5rem] overflow-hidden rounded-full bg-gradient-to-br from-white/30 to-white/5 md:mb-8 md:h-29 md:w-29">
                 {"image" in item && item.image ? (
