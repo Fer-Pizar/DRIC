@@ -36,22 +36,6 @@ const cmsReadyItems = [
   },
 ];
 
-function getMobileLinkLabel({
-  country,
-  language,
-  label,
-}: {
-  country: string;
-  language: "es" | "en";
-  label: { es: string; en: string };
-}) {
-  if (country === "irlanda" && label.en.includes("GOI-IES")) {
-    return language === "en" ? "GOI-IES Scholarship" : "Beca GOI-IES";
-  }
-
-  return label[language];
-}
-
 export default async function ScholarshipDestinationPage({ params }: Props) {
   const { locale, country } = await params;
   const language = locale === "en" ? "en" : "es";
@@ -212,19 +196,10 @@ export default async function ScholarshipDestinationPage({ params }: Props) {
                             href={link.href}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="dric-scholarship-program-link inline-flex max-w-full items-center gap-3 rounded-full p-[1px] text-sm font-normal text-white transition hover:scale-[1.02] sm:text-base md:text-xl"
+                            className="dric-scholarship-program-link inline-flex max-w-full items-center justify-center gap-3 rounded-full px-5 py-3 text-left text-sm font-normal text-white transition hover:scale-[1.02] sm:px-6 sm:text-base md:px-7 md:text-xl"
                           >
-                            <span className="inline-flex max-w-full items-center justify-between gap-3 rounded-full px-5 py-3 text-left backdrop-blur-xl sm:px-6 md:px-7">
-                              <span className="hidden sm:inline">{link.label[language]}</span>
-                              <span className="sm:hidden">
-                                {getMobileLinkLabel({
-                                  country,
-                                  language,
-                                  label: link.label,
-                                })}
-                              </span>
-                              <OpenInNewRoundedIcon className="shrink-0 text-[1.35em]" />
-                            </span>
+                            {link.label[language]}
+                            <OpenInNewRoundedIcon className="shrink-0 text-[1.35em]" />
                           </a>
                         ))}
                       </div>

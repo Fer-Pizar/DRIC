@@ -19,7 +19,7 @@ export default async function BecasMovilidadPage({ params }: Props) {
 
   const cards = [
     {
-      title: isEnglish ? "Undergraduate and postgraduate scholarships" : "Becas de posgrado y pregrado",
+      title: isEnglish ? "Undergraduate and postgraduate scholarships" : "Becas de pregrado y posgrado",
       description: isEnglish
         ? "Scholarship opportunities offered by governments, universities and international organizations."
         : "Programas de becas ofertados por gobiernos, universidades y organismos internacionales.",
@@ -80,7 +80,7 @@ export default async function BecasMovilidadPage({ params }: Props) {
             {isEnglish ? "Scholarships and Mobility" : "Becas y Movilidad"}
           </h1>
 
-          <p className="mt-8 max-w-3xl text-base leading-8 text-white/70 md:text-lg">
+          <p className="dric-scholarships-hub-hero-copy mt-8 max-w-3xl text-base leading-8 text-white/70 md:text-lg">
             {isEnglish
               ? "DRIC promotes academic internationalization through scholarships, mobility programs, internships, calls and institutional guidance for national and international communities."
               : "La DRIC impulsa la internacionalización académica mediante becas, programas de movilidad, pasantías, convocatorias y orientación institucional para la comunidad nacional e internacional."}
@@ -91,7 +91,7 @@ export default async function BecasMovilidadPage({ params }: Props) {
       <section className="dric-mobility-section relative isolate overflow-hidden px-5 pb-20 pt-8 text-white md:px-10 md:pt-10 lg:px-12 lg:pt-12">
         <div className="mx-auto max-w-7xl">
           <div className="mb-14 max-w-3xl">
-            <p className="text-sm font-bold uppercase tracking-[0.25em] text-[#E30613]">
+            <p className="dric-scholarships-hub-eyebrow text-sm font-bold uppercase tracking-[0.25em]">
               {isEnglish ? "Explore opportunities" : "Explora oportunidades"}
             </p>
 

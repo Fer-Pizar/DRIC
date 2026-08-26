@@ -133,7 +133,7 @@ function MobilityTrack({
         </div>
 
         <div className="grid gap-5 lg:grid-cols-2">
-          {programs.map((program, index) => (
+          {programs.map((program) => (
             <Link
               key={`${trackId}-${program.title}`}
               href={`/${locale}/becas-movilidad/movilidad-pasantias/${slugifyProgramTitle(program.title, trackId)}`}
@@ -141,9 +141,6 @@ function MobilityTrack({
             >
               <article className="dric-mobility-program-card group h-full rounded-[2rem] border border-white/10 bg-white/[0.055] p-6 shadow-2xl shadow-black/20 backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-[#E30613]/45 hover:bg-white/[0.075] md:p-7">
               <div className="flex flex-wrap items-center gap-3">
-                <span className="dric-mobility-program-number text-xs font-bold uppercase tracking-[0.25em] text-cyan-200">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
                 <span className="rounded-full border border-cyan-200/20 bg-cyan-200/10 px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-cyan-100">
                   {program.tag}
                 </span>

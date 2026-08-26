@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
 import PublicRoundedIcon from "@mui/icons-material/PublicRounded";
@@ -66,7 +66,43 @@ function CatalogCard({
 
 export default function ScholarshipOrgCarousel({ items, locale }: Props) {
   const trackRef = useRef<HTMLDivElement>(null);
+  const [canScrollPrevious, setCanScrollPrevious] = useState(false);
+  const [canScrollNext, setCanScrollNext] = useState(false);
   const language = locale === "en" ? "en" : "es";
+
+  const updateScrollState = useCallback(() => {
+    const track = trackRef.current;
+
+    if (!track) {
+      setCanScrollPrevious(false);
+      setCanScrollNext(false);
+      return;
+    }
+
+    const maxScrollLeft = track.scrollWidth - track.clientWidth;
+    const threshold = 2;
+
+    setCanScrollPrevious(track.scrollLeft > threshold);
+    setCanScrollNext(track.scrollLeft < maxScrollLeft - threshold);
+  }, []);
+
+  useEffect(() => {
+    const track = trackRef.current;
+
+    if (!track) {
+      return;
+    }
+
+    const animationFrame = requestAnimationFrame(updateScrollState);
+    track.addEventListener("scroll", updateScrollState, { passive: true });
+    window.addEventListener("resize", updateScrollState);
+
+    return () => {
+      cancelAnimationFrame(animationFrame);
+      track.removeEventListener("scroll", updateScrollState);
+      window.removeEventListener("resize", updateScrollState);
+    };
+  }, [items.length, updateScrollState]);
 
   const scrollNext = () => {
     const track = trackRef.current;
@@ -96,23 +132,27 @@ export default function ScholarshipOrgCarousel({ items, locale }: Props) {
 
   return (
     <div className="dric-scholarship-org-carousel relative">
-      <button
-        type="button"
-        onClick={scrollPrevious}
-        className="dric-scholarship-org-arrow dric-scholarship-org-arrow-left absolute left-0 top-1/2 z-10 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white shadow-2xl shadow-black/30 backdrop-blur-xl transition hover:border-fuchsia-300/80 hover:bg-fuchsia-400/18 hover:text-fuchsia-100 xl:flex"
-        aria-label={language === "en" ? "Show previous organizations" : "Ver organismos anteriores"}
-      >
-        <ArrowForwardRoundedIcon className="rotate-180" />
-      </button>
+      {canScrollPrevious ? (
+        <button
+          type="button"
+          onClick={scrollPrevious}
+          className="dric-scholarship-org-arrow dric-scholarship-org-arrow-left absolute left-0 top-1/2 z-10 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white shadow-2xl shadow-black/30 backdrop-blur-xl transition hover:border-fuchsia-300/80 hover:bg-fuchsia-400/18 hover:text-fuchsia-100 xl:flex"
+          aria-label={language === "en" ? "Show previous organizations" : "Ver organismos anteriores"}
+        >
+          <ArrowForwardRoundedIcon className="rotate-180" />
+        </button>
+      ) : null}
 
-      <button
-        type="button"
-        onClick={scrollNext}
-        className="dric-scholarship-org-arrow dric-scholarship-org-arrow-right absolute right-0 top-1/2 z-10 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white shadow-2xl shadow-black/30 backdrop-blur-xl transition hover:border-fuchsia-300/80 hover:bg-fuchsia-400/18 hover:text-fuchsia-100 xl:flex"
-        aria-label={language === "en" ? "Show more organizations" : "Ver más organismos"}
-      >
-        <ArrowForwardRoundedIcon />
-      </button>
+      {canScrollNext ? (
+        <button
+          type="button"
+          onClick={scrollNext}
+          className="dric-scholarship-org-arrow dric-scholarship-org-arrow-right absolute right-0 top-1/2 z-10 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white shadow-2xl shadow-black/30 backdrop-blur-xl transition hover:border-fuchsia-300/80 hover:bg-fuchsia-400/18 hover:text-fuchsia-100 xl:flex"
+          aria-label={language === "en" ? "Show more organizations" : "Ver más organismos"}
+        >
+          <ArrowForwardRoundedIcon />
+        </button>
+      ) : null}
 
       <div
         ref={trackRef}

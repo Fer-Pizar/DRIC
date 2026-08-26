@@ -169,7 +169,7 @@ export default async function ApoyoFinancieroPage({ params }: Props) {
 
       <section className="dric-projects-section relative isolate overflow-hidden px-5 py-20 text-white md:px-10 lg:px-12">
         <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[1fr_0.8fr]">
-          <article className="dric-funding-panel rounded-[2rem] border border-white/10 bg-white/[0.06] p-7 shadow-2xl shadow-black/25 backdrop-blur-xl md:p-10">
+          <article className="dric-funding-panel flex flex-col rounded-[2rem] border border-white/10 bg-white/[0.06] p-7 shadow-2xl shadow-black/25 backdrop-blur-xl md:p-10">
             <h2 className="text-3xl font-semibold tracking-[-0.04em] md:text-4xl">
               {text.sectionTitle}
             </h2>
@@ -182,7 +182,7 @@ export default async function ApoyoFinancieroPage({ params }: Props) {
 
             <Link
               href="https://www.gov.br/cnpq/pt-br/assuntos/noticias/cnpq-em-acao/prosul-pepe-mujica-vai-financiar-projetos-para-fortalecer-a-infraestrutura-cientifica-da-america-latina"
-              className="mt-9 inline-flex"
+              className="mt-auto flex justify-center pt-9"
             >
               <Button
                 variant="contained"

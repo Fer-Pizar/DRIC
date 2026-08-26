@@ -82,7 +82,7 @@ export default async function ConveniosPage({ params }: Props) {
   const t = content[locale as "es" | "en"] ?? content.es;
 
   return (
-    <main className="dric-theme-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
+    <main className="dric-theme-page dric-agreements-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
       <Header />
 
       <section className="relative px-6 pb-28 pt-44">
@@ -91,7 +91,7 @@ export default async function ConveniosPage({ params }: Props) {
         <div className="mx-auto max-w-7xl">
           <div className="grid items-center gap-14 lg:grid-cols-[1.1fr_0.9fr]">
             <div>
-              <p className="mb-5 text-sm uppercase tracking-[0.35em] text-cyan-300">
+              <p className="dric-agreements-hero-eyebrow mb-5 text-sm uppercase tracking-[0.35em]">
                 {t.eyebrow}
               </p>
 
