@@ -1,37 +1,15 @@
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import NewsExplorer from "@/components/news/NewsExplorer";
+import { getNews } from "@/lib/news/newsCatalog";
 
 type Props = {
   params: Promise<{ locale: string }>;
 };
 
-const news = [
-  {
-    title: "Movilidad académica administrativa: experiencia de Jimmy Delgado en la UNJU, Argentina",
-    date: "Dic 4, 2024",
-    category: "Movilidad académica",
-    excerpt:
-      "Del 18 al 22 de noviembre de 2024, Jimmy Delgado Villca vivió una enriquecedora experiencia académica internacional.",
-  },
-  {
-    title: "Movilidad académica programa Escala Docente de AUGM – Montevideo, Uruguay",
-    date: "Nov 29, 2024",
-    category: "Cooperación internacional",
-    excerpt:
-      "Docentes de la UMSS fortalecen vínculos académicos mediante programas internacionales de movilidad.",
-  },
-  {
-    title: "Participación de la UMSS en las 31° Jornadas de Jóvenes Investigadores de la AUGM",
-    date: "Nov 13, 2024",
-    category: "Investigación",
-    excerpt:
-      "La UMSS estuvo presente en un importante espacio regional de investigación universitaria.",
-  },
-];
-
 export default async function NoticiasPage({ params }: Props) {
   const { locale } = await params;
+  const news = getNews(locale);
 
   return (
     <main className="dric-theme-page dric-news-page min-h-screen overflow-x-hidden bg-[#020617] text-white">

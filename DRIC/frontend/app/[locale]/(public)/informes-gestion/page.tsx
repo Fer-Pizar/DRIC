@@ -20,7 +20,7 @@ const content = {
       "Consulta los informes institucionales de la Dirección de Relaciones Internacionales y Convenios, organizados por gestión para fortalecer la transparencia y el acceso público a la información.",
     archiveLabel: "Archivo DRIC",
     archiveDescription:
-      "Los documentos estarán conectados al CMS para descarga directa en PDF.",
+      "Una colección histórica de gestiones institucionales preparada para consulta pública y descarga documental.",
     exploreLabel: "Explorar documentos",
     archiveTitle: "Archivo de informes",
     searchPlaceholder: "Buscar informe...",
@@ -45,7 +45,7 @@ const content = {
       "Review the institutional reports of the Directorate of International Relations and Agreements, organized by year to strengthen transparency and public access to information.",
     archiveLabel: "DRIC Archive",
     archiveDescription:
-      "The documents will be connected to the CMS for direct PDF downloads.",
+      "A historical collection of institutional terms prepared for public consultation and document downloads.",
     exploreLabel: "Explore documents",
     archiveTitle: "Reports archive",
     searchPlaceholder: "Search report...",
@@ -173,63 +173,76 @@ export default async function InformesGestionPage({ params }: Props) {
           <div className="grid gap-7 sm:grid-cols-2 xl:grid-cols-3">
             {t.reports.map((report) => (
               <Card
-                className="dric-reports-card"
+                className="dric-reports-card dric-reports-book-card"
                 key={report.year}
                 sx={{
-                  borderRadius: "30px",
+                  borderRadius: "26px",
                   overflow: "hidden",
-                  background: "rgba(255,255,255,0.06)",
-                  border: "1px solid rgba(255,255,255,0.10)",
-                  boxShadow: "0 24px 70px rgba(0,0,0,0.24)",
+                  background: "transparent",
+                  border: "0",
+                  boxShadow: "none",
                   color: "white",
                 }}
               >
-                <div className="relative h-48 overflow-hidden bg-[#020617] p-7 text-white">
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(227,6,19,0.6),transparent_36%),radial-gradient(circle_at_bottom_right,rgba(0,55,112,0.7),transparent_40%)]" />
-                  <div className="dric-reports-cover-accent absolute left-0 top-0 h-full w-24 bg-[#E30613]" />
+                <div className="dric-reports-book-shell">
+                  <div className="dric-reports-book-cover relative min-h-[285px] overflow-hidden p-7 text-white">
+                    <div className="dric-reports-book-spine">
+                      <span>{report.year}</span>
+                    </div>
+                    <div className="dric-reports-book-edge" />
 
-                  <div className="relative">
-                    <p className="text-xs font-bold uppercase tracking-[0.24em] text-white/65">
-                      {t.coverEyebrow}
+                    <div className="relative z-10 ml-12 flex min-h-[230px] flex-col">
+                      <p className="text-xs font-bold uppercase tracking-[0.24em] text-white/68">
+                        {t.coverEyebrow}
+                      </p>
+
+                      <h3 className="mt-4 max-w-xs text-2xl font-black leading-tight tracking-[-0.04em]">
+                        {t.coverTitle}
+                      </h3>
+
+                      <div className="mt-auto">
+                        <p className="dric-reports-book-year">{report.year}</p>
+                        <div className="mt-4 h-px w-20 bg-white/45" />
+                        <p className="mt-4 text-xs font-bold uppercase tracking-[0.22em] text-white/62">
+                          {report.title}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="dric-reports-card-body p-7">
+                    <p className="text-sm font-bold uppercase tracking-[0.22em] text-[#67e8f9]">
+                      {t.yearLabel} {report.year}
                     </p>
 
-                    <h3 className="mt-3 max-w-xs text-2xl font-black leading-tight tracking-[-0.04em]">
-                      {t.coverTitle}
+                    <h3 className="mt-3 text-2xl font-bold tracking-[-0.04em] text-white">
+                      {report.title}
                     </h3>
+
+                    <div className="mt-5 flex items-center gap-2 text-sm font-semibold text-white/58">
+                      <CalendarMonthRoundedIcon sx={{ fontSize: 19, color: "#E30613" }} />
+                      {report.date}
+                    </div>
+
+                    <Link href={`/${locale}/normativas`} className="mt-7 inline-flex">
+                      <Button
+                        className="dric-reports-download-button"
+                        variant="contained"
+                        endIcon={<DownloadRoundedIcon />}
+                        sx={{
+                          borderRadius: "999px",
+                          px: 3,
+                          py: 1.1,
+                          background: "linear-gradient(135deg,#0f766e,#003770)",
+                          textTransform: "none",
+                          fontWeight: 800,
+                          boxShadow: "0 14px 34px rgba(14,116,144,0.22)",
+                        }}
+                      >
+                        {t.downloadLabel}
+                      </Button>
+                    </Link>
                   </div>
-                </div>
-
-                <div className="dric-reports-card-body p-7">
-                  <p className="text-sm font-bold uppercase tracking-[0.22em] text-[#003770]">
-                    {t.yearLabel} {report.year}
-                  </p>
-
-                  <h3 className="mt-3 text-2xl font-bold tracking-[-0.04em] text-white">
-                    {report.title}
-                  </h3>
-
-                  <div className="mt-5 flex items-center gap-2 text-sm font-semibold text-white/58">
-                    <CalendarMonthRoundedIcon sx={{ fontSize: 19, color: "#E30613" }} />
-                    {report.date}
-                  </div>
-
-                  <Link href={`/${locale}/normativas`} className="mt-7 inline-flex">
-                    <Button
-                      variant="contained"
-                      endIcon={<DownloadRoundedIcon />}
-                      sx={{
-                        borderRadius: "999px",
-                        px: 3,
-                        py: 1.1,
-                        background: "linear-gradient(135deg,#E30613,#E30613)",
-                        textTransform: "none",
-                        fontWeight: 800,
-                        boxShadow: "0 14px 34px rgba(227,6,19,0.22)",
-                      }}
-                    >
-                      {t.downloadLabel}
-                    </Button>
-                  </Link>
                 </div>
               </Card>
             ))}

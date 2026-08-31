@@ -113,7 +113,7 @@ function MobilityTrack({
   return (
     <section id={id} className="dric-mobility-section relative isolate overflow-hidden px-5 py-20 text-white md:px-10 lg:px-12">
       <div className="mx-auto max-w-7xl">
-        <div className="dric-mobility-track-heading mb-12 grid gap-8 rounded-[2rem] border border-white/10 bg-white/[0.06] p-7 shadow-2xl shadow-black/20 backdrop-blur-xl md:p-9 lg:grid-cols-[auto_1fr] lg:items-center">
+        <div className="dric-mobility-track-heading mb-12 grid gap-8 lg:grid-cols-[auto_1fr] lg:items-center">
           <div className="flex h-20 w-20 items-center justify-center rounded-[1.7rem] bg-[#E30613] text-white shadow-2xl shadow-[#E30613]/20">
             {icon === "student" ? (
               <SchoolRoundedIcon sx={{ fontSize: 38 }} />

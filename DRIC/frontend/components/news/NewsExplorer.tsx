@@ -10,10 +10,13 @@ import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
 import CalendarMonthRoundedIcon from "@mui/icons-material/CalendarMonthRounded";
 
 type NewsItem = {
+  id: string;
   title: string;
   date: string;
+  publishedAt: string;
   category: string;
   excerpt: string;
+  href: string;
 };
 
 type Props = {
@@ -57,9 +60,9 @@ export default function NewsExplorer({ locale, news }: Props) {
         </div>
 
         <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
-          {filteredNews.map((item, index) => (
+          {filteredNews.map((item) => (
             <Card
-              key={item.title}
+              key={item.id}
               className="h-full"
               sx={{
                 borderRadius: "32px",
@@ -74,12 +77,19 @@ export default function NewsExplorer({ locale, news }: Props) {
                 <div className="absolute inset-x-0 top-0 h-2 bg-gradient-to-r from-[#E30613] via-[#003770] to-[#E30613]" />
 
                 <Chip
+                  className="dric-news-card-category"
                   label={item.category}
                   sx={{
-                    borderRadius: "999px",
-                    backgroundColor: "rgba(0,55,112,0.08)",
-                    color: "#003770",
+                    backgroundColor: "transparent",
+                    alignSelf: "center",
+                    color: "#E30613",
                     fontWeight: 800,
+                    ".MuiChip-label": {
+                      px: 0,
+                      textDecoration: "underline",
+                      textDecorationThickness: "1.5px",
+                      textUnderlineOffset: "4px",
+                    },
                   }}
                 />
 
@@ -87,7 +97,7 @@ export default function NewsExplorer({ locale, news }: Props) {
                   {item.title}
                 </h3>
 
-                <div className="mt-5 flex items-center gap-2 text-sm font-semibold text-[#E30613]">
+                <div className="dric-news-card-date mt-5 flex items-center gap-2 text-sm font-semibold text-[#E30613]">
                   <CalendarMonthRoundedIcon sx={{ fontSize: 18 }} />
                   {item.date}
                 </div>
@@ -97,8 +107,9 @@ export default function NewsExplorer({ locale, news }: Props) {
                 </p>
 
                 <div className="mt-auto pt-8">
-                  <Link href={`/${locale}/noticias/${index + 1}`} className="inline-flex">
+                  <Link href={item.href} className="inline-flex">
                     <Button
+                      className="dric-news-card-button"
                       variant="outlined"
                       endIcon={<ArrowForwardRoundedIcon />}
                       sx={{
