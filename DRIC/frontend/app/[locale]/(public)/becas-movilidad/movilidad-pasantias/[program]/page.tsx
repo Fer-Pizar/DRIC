@@ -6,10 +6,13 @@ import Button from "@mui/material/Button";
 import AdminPanelSettingsRoundedIcon from "@mui/icons-material/AdminPanelSettingsRounded";
 import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 import CalendarMonthRoundedIcon from "@mui/icons-material/CalendarMonthRounded";
+import ChecklistRoundedIcon from "@mui/icons-material/ChecklistRounded";
 import DescriptionRoundedIcon from "@mui/icons-material/DescriptionRounded";
+import LinkRoundedIcon from "@mui/icons-material/LinkRounded";
 import OpenInNewRoundedIcon from "@mui/icons-material/OpenInNewRounded";
 import PublicRoundedIcon from "@mui/icons-material/PublicRounded";
 import SchoolRoundedIcon from "@mui/icons-material/SchoolRounded";
+import TravelExploreRoundedIcon from "@mui/icons-material/TravelExploreRounded";
 import WorkRoundedIcon from "@mui/icons-material/WorkRounded";
 import { mobilityData, slugifyProgramTitle, type Program } from "../data";
 
@@ -35,10 +38,14 @@ const detailCopy = {
     related: "Más programas relacionados",
     cms: "Contenido listo para conectar al CMS administrativo",
     contact: "Contactar DRIC",
-    callsTitle: "Convocatorias por Convenios Interinstitucionales",
+    callsTitle: "Convocatorias vigentes y fenecidas",
     benefits: "Beneficio",
     documents: "Documentos",
+    links: "Enlaces",
     deadline: "Plazo de postulación",
+    conditions: "Condiciones de participación",
+    details: "Guía del programa",
+    officialLink: "Enlace oficial",
   },
   en: {
     back: "Back to mobility",
@@ -46,10 +53,14 @@ const detailCopy = {
     related: "More related programs",
     cms: "Content ready to connect to the admin CMS",
     contact: "Contact DRIC",
-    callsTitle: "Calls through Interinstitutional Agreements",
+    callsTitle: "Current and past calls",
     benefits: "Benefit",
     documents: "Documents",
+    links: "Links",
     deadline: "Application deadline",
+    conditions: "Participation conditions",
+    details: "Program guide",
+    officialLink: "Official link",
   },
 };
 
@@ -174,6 +185,74 @@ export default async function MobilityProgramDetailPage({ params }: Props) {
           </article>
 
           <aside className="space-y-7">
+            {match.program.highlights?.length ? (
+              <div className="dric-mobility-program-card rounded-[2rem] border border-white/10 bg-white/[0.055] p-7 shadow-2xl shadow-black/20 backdrop-blur-xl">
+                <div className="mb-5 flex items-center gap-3">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white/10 text-cyan-200">
+                    <TravelExploreRoundedIcon />
+                  </div>
+                  <h2 className="text-xl font-semibold tracking-[-0.03em]">
+                    {isEnglish ? "At a glance" : "Datos clave"}
+                  </h2>
+                </div>
+
+                <dl className="grid gap-3">
+                  {match.program.highlights.map((item) => (
+                    <div
+                      key={item.label}
+                      className="rounded-3xl border border-white/10 bg-[#020617]/40 p-4"
+                    >
+                      <dt className="text-xs font-bold uppercase tracking-[0.18em] text-cyan-200">
+                        {item.label}
+                      </dt>
+                      <dd className="mt-2 text-sm leading-6 text-white/72">{item.value}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+            ) : null}
+
+            {match.program.conditions.length ? (
+              <div className="dric-mobility-program-card rounded-[2rem] border border-white/10 bg-white/[0.055] p-7 shadow-2xl shadow-black/20 backdrop-blur-xl">
+                <div className="mb-5 flex items-center gap-3">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white/10 text-[#E30613]">
+                    <ChecklistRoundedIcon />
+                  </div>
+                  <h2 className="text-xl font-semibold tracking-[-0.03em]">{copy.conditions}</h2>
+                </div>
+
+                <ul className="space-y-3">
+                  {match.program.conditions.map((condition) => (
+                    <li key={condition} className="flex gap-3 text-sm leading-7 text-white/66">
+                      <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#E30613]" />
+                      <span>{condition}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
+
+            {match.program.reference ? (
+              <a
+                href={match.program.reference.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block"
+              >
+                <div className="dric-mobility-program-card rounded-[2rem] border border-white/10 bg-white/[0.055] p-7 shadow-2xl shadow-black/20 backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-cyan-200/40">
+                  <p className="text-xs font-bold uppercase tracking-[0.22em] text-cyan-200">
+                    {copy.officialLink}
+                  </p>
+                  <div className="mt-5 flex items-center justify-between gap-4">
+                    <h2 className="text-2xl font-semibold tracking-[-0.03em]">
+                      {match.program.reference.label}
+                    </h2>
+                    <OpenInNewRoundedIcon sx={{ color: "#67e8f9" }} />
+                  </div>
+                </div>
+              </a>
+            ) : null}
+
             <Link href={`/${locale}/contacto`} className="block">
               <div className="dric-mobility-program-card rounded-[2rem] border border-white/10 bg-white/[0.055] p-7 shadow-2xl shadow-black/20 backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-cyan-200/40">
                 <p className="text-xs font-bold uppercase tracking-[0.22em] text-cyan-200">
@@ -187,6 +266,45 @@ export default async function MobilityProgramDetailPage({ params }: Props) {
             </Link>
           </aside>
         </div>
+
+        {match.program.sections?.length ? (
+          <div className="mx-auto mt-12 max-w-7xl">
+            <div className="mb-6 max-w-3xl">
+              <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#E30613]">
+                {match.program.tag}
+              </p>
+              <h2 className="mt-3 text-3xl font-semibold tracking-[-0.04em] md:text-4xl">
+                {copy.details}
+              </h2>
+            </div>
+
+            <div className="grid gap-5 lg:grid-cols-3">
+              {match.program.sections.map((section) => (
+                <article
+                  key={section.title}
+                  className="dric-mobility-program-card rounded-[2rem] border border-white/10 bg-white/[0.055] p-6 shadow-2xl shadow-black/20 backdrop-blur-xl md:p-7"
+                >
+                  <h3 className="text-2xl font-semibold tracking-[-0.04em]">{section.title}</h3>
+
+                  {section.body ? (
+                    <p className="mt-5 text-sm leading-7 text-white/66">{section.body}</p>
+                  ) : null}
+
+                  {section.items?.length ? (
+                    <ul className="mt-5 space-y-3">
+                      {section.items.map((item) => (
+                        <li key={item} className="flex gap-3 text-sm leading-7 text-white/66">
+                          <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-200" />
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : null}
+                </article>
+              ))}
+            </div>
+          </div>
+        ) : null}
 
         {match.program.calls?.length ? (
           <div className="mx-auto mt-12 max-w-7xl">
@@ -204,7 +322,7 @@ export default async function MobilityProgramDetailPage({ params }: Props) {
                   key={`${call.title}-${index}`}
                   className="dric-mobility-call-card group relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.055] p-6 shadow-2xl shadow-black/20 backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-cyan-200/45 hover:bg-white/[0.075] md:p-7"
                 >
-                  <span className="absolute inset-x-7 top-0 h-1 rounded-b-full bg-gradient-to-r from-[#E30613] via-cyan-200 to-transparent opacity-80" />
+                  <span className="absolute inset-x-7 top-0 h-1 rounded-b-full bg-gradient-to-r from-[#b1040f] via-cyan-200 to-transparent opacity-90" />
 
                   <h3 className="pt-4 text-2xl font-semibold leading-tight tracking-[-0.04em] text-white">
                     {call.title}
@@ -219,6 +337,10 @@ export default async function MobilityProgramDetailPage({ params }: Props) {
 
                     {call.documents?.length ? (
                       <InfoBlock title={copy.documents} items={call.documents} icon="document" />
+                    ) : null}
+
+                    {call.links?.length ? (
+                      <LinkBlock title={copy.links} links={call.links} />
                     ) : null}
 
                     {call.deadline ? (
@@ -267,6 +389,41 @@ export default async function MobilityProgramDetailPage({ params }: Props) {
 
       <Footer />
     </main>
+  );
+}
+
+function LinkBlock({
+  title,
+  links,
+}: {
+  title: string;
+  links: Array<{
+    label: string;
+    href: string;
+  }>;
+}) {
+  return (
+    <div className="rounded-3xl border border-white/10 bg-[#020617]/40 p-5">
+      <div className="mb-3 flex items-center gap-2 text-sm font-bold text-white">
+        <LinkRoundedIcon sx={{ color: "#67e8f9", fontSize: 20 }} />
+        {title}
+      </div>
+
+      <div className="flex flex-wrap gap-2">
+        {links.map((link) => (
+          <a
+            key={`${link.label}-${link.href}`}
+            href={link.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex max-w-full items-center gap-2 rounded-full border border-cyan-200/20 bg-cyan-200/10 px-4 py-2 text-sm font-semibold leading-6 text-cyan-50 transition hover:border-cyan-200/45 hover:bg-cyan-200/15"
+          >
+            <span className="min-w-0 break-words [overflow-wrap:anywhere]">{link.label}</span>
+            <OpenInNewRoundedIcon className="shrink-0" sx={{ fontSize: 17 }} />
+          </a>
+        ))}
+      </div>
+    </div>
   );
 }
 

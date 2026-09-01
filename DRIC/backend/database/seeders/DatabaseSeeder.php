@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
             PageSeeder::class,
             HomePageSeeder::class,
             ScholarshipBecasPageSeeder::class,
+            MobilityPasantiasPageSeeder::class,
         ]);
     }
 }

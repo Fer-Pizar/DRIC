@@ -183,9 +183,9 @@ class HomePageSeeder extends Seeder
                     'summary' => 'Learn about recent national and international cooperation actions.',
                 ],
                 'blocks' => [
-                    ['title_es' => 'Cooperación académica internacional', 'title_en' => 'International academic cooperation', 'image' => '/images/agreements/agreement-1.jpg'],
+                    ['title_es' => 'Cooperación académica internacional', 'title_en' => 'International academic cooperation', 'image' => '/images/agreements/agreement-1.jpg', 'link_url' => '/internacionalizacion'],
                     ['title_es' => 'Alianzas estratégicas', 'title_en' => 'Strategic partnerships', 'image' => '/images/agreements/agreement-2.jpg'],
-                    ['title_es' => 'Vinculación institucional', 'title_en' => 'Institutional relations', 'image' => '/images/agreements/agreement-3.jpg'],
+                    ['title_es' => 'Vinculación institucional', 'title_en' => 'Institutional relations', 'image' => '/images/agreements/agreement-3.jpg', 'link_url' => 'https://conveniosdric.umss.edu.bo/convenios'],
                 ],
             ],
             [

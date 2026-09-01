@@ -68,11 +68,13 @@ export default function RecentAgreementsSection({
               .toLowerCase()
               .normalize("NFD")
               .replace(/[\u0300-\u036f]/g, "");
-            const href =
-              normalizedSlug === "alianzas-estrategicas" ||
+            const rawHref =
+              block.link_url ??
+              (normalizedSlug === "alianzas-estrategicas" ||
               normalizedSlug === "strategic-partnerships"
                 ? `/${locale}/membresias`
-                : `/${locale}/convenios/${slug}`;
+                : `/${locale}/convenios/${slug}`);
+            const href = resolveLocalizedHref(rawHref, locale);
 
             return (
               <motion.div
@@ -173,4 +175,16 @@ export default function RecentAgreementsSection({
       </div>
     </section>
   );
+}
+
+function resolveLocalizedHref(href: string, locale: string): string {
+  if (href.startsWith("http") || href.startsWith(`/${locale}/`)) {
+    return href;
+  }
+
+  if (href.startsWith("/")) {
+    return `/${locale}${href}`;
+  }
+
+  return href;
 }

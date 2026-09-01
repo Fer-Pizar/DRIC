@@ -1794,8 +1794,8 @@ html[data-theme="light"] .dric-mobility-programs-index-page .dric-mobility-secti
   background: transparent !important;
   border-color: transparent !important;
   box-shadow:
-    0 0 18px rgba(197, 157, 255, 0.18),
-    0 0 42px rgba(84, 36, 187, 0.12),
+    0 0 18px rgba(103, 232, 249, 0.14),
+    0 0 42px rgba(227, 6, 19, 0.1),
     0 30px 80px rgba(0, 0, 0, 0.24) !important;
 }
 
@@ -1805,7 +1805,7 @@ html[data-theme="light"] .dric-mobility-programs-index-page .dric-mobility-secti
   inset: 0;
   border-radius: inherit;
   padding: 1px;
-  background: linear-gradient(180deg, #c59dff 0%, #111a82 100%);
+  background: linear-gradient(180deg, rgba(103, 232, 249, 0.82) 0%, rgba(227, 6, 19, 0.72) 48%, rgba(0, 55, 112, 0.92) 100%);
   pointer-events: none;
   -webkit-mask:
     linear-gradient(#000 0 0) content-box,
@@ -1821,8 +1821,8 @@ html[data-theme="light"] .dric-mobility-programs-index-page .dric-mobility-secti
   background: transparent !important;
   border-color: transparent !important;
   box-shadow:
-    0 0 22px rgba(197, 157, 255, 0.24),
-    0 0 52px rgba(84, 36, 187, 0.16),
+    0 0 22px rgba(103, 232, 249, 0.2),
+    0 0 52px rgba(227, 6, 19, 0.16),
     0 34px 86px rgba(0, 0, 0, 0.28) !important;
 }
 
@@ -1837,6 +1837,21 @@ html[data-theme="light"] .dric-mobility-programs-index-page .dric-mobility-progr
 html[data-theme="light"] .dric-mobility-programs-index-page .dric-mobility-program-card:hover {
   background: transparent !important;
   border-color: transparent !important;
+}
+
+html[data-theme="light"] .dric-mobility-programs-index-page .dric-mobility-program-card::before {
+  background: linear-gradient(180deg, rgba(8, 145, 178, 0.58) 0%, rgba(227, 6, 19, 0.42) 48%, rgba(0, 55, 112, 0.5) 100%);
+}
+
+html[data-theme="light"] .dric-mobility-programs-index-page .dric-mobility-program-tag {
+  background: rgba(8, 145, 178, 0.09) !important;
+  border-color: rgba(8, 145, 178, 0.22) !important;
+  color: #0e7490 !important;
+}
+
+html[data-theme="light"] .dric-mobility-programs-index-page .dric-mobility-condition-panel {
+  background: rgba(255, 255, 255, 0.46) !important;
+  border-color: rgba(255, 255, 255, 0.74) !important;
 }
 
 .dric-mobility-programs-index-page .dric-mobility-track-heading,

@@ -18,6 +18,8 @@ class SectionResource extends JsonResource
         return [
             'id' => $this->id,
             'type' => $this->section_type ?? $this->layout,
+            'section_key' => $this->section_key,
+            'section_type' => $this->section_type,
             'layout' => $this->layout,
             'sort_order' => $this->sort_order,
             'settings' => $this->settings ?? [],
