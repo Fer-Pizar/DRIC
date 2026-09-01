@@ -17,9 +17,13 @@ class MediaAssetResource extends JsonResource
 
         return [
             'id' => $this->id,
-            'type' => $this->type,
-            'url' => $this->storage_path,
-            'alt' => $translation?->alt_text,
+            'file_name' => $this->file_name,
+            'file_path' => $this->file_path,
+            'mime_type' => $this->mime_type,
+            'file_size' => $this->file_size,
+            'disk' => $this->disk,
+            'url' => $this->file_path ? $request->getSchemeAndHttpHost().'/storage/'.ltrim($this->file_path, '/') : null,
+            'alt_text' => $translation?->alt_text,
             'caption' => $translation?->caption,
         ];
     }

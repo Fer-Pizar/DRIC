@@ -49,6 +49,11 @@
             color: #fff;
         }
 
+        .btn-content {
+            background: #164194;
+            color: #fff;
+        }
+
         form {
             display: grid;
             gap: 20px;
@@ -87,7 +92,12 @@
     <div class="container">
         <div class="header">
             <h1>Editar página</h1>
-            <a href="{{ route('admin.pages.index') }}" class="btn btn-secondary">Volver</a>
+            <div>
+                @if ($page->slug === 'presentacion')
+                    <a href="{{ route('admin.pages.presentation.edit', $page) }}" class="btn btn-content">Editar contenido</a>
+                @endif
+                <a href="{{ route('admin.pages.index') }}" class="btn btn-secondary">Volver</a>
+            </div>
         </div>
 
         <form action="{{ route('admin.pages.update', $page) }}" method="POST">

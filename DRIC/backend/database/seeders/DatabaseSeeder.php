@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
             LanguageSeeder::class,
             PageSeeder::class,
             HomePageSeeder::class,
+            PresentationPageSeeder::class,
             ScholarshipBecasPageSeeder::class,
             MobilityPasantiasPageSeeder::class,
         ]);

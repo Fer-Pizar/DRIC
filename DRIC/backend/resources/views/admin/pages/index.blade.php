@@ -77,6 +77,14 @@
             text-decoration: none;
         }
 
+        .btn-content {
+            background: #164194;
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 6px;
+            text-decoration: none;
+        }
+
         .alert {
             padding: 12px 16px;
             border-radius: 8px;
@@ -203,6 +211,9 @@
                                 <td>{{ $page->parent?->slug ?? '—' }}</td>
                                 <td>
                                     <a href="{{ route('admin.pages.edit', $page) }}" class="btn-edit">Editar</a>
+                                    @if ($page->slug === 'presentacion')
+                                        <a href="{{ route('admin.pages.presentation.edit', $page) }}" class="btn-content">Editar contenido</a>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
