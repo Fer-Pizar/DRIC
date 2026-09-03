@@ -96,6 +96,24 @@
                 @if ($page->slug === 'presentacion')
                     <a href="{{ route('admin.pages.presentation.edit', $page) }}" class="btn btn-content">Editar contenido</a>
                 @endif
+                @if ($page->slug === 'convenios')
+                    <a href="{{ route('admin.pages.agreements.edit', $page) }}" class="btn btn-content">Editar contenido</a>
+                @endif
+                @if ($page->slug === 'convenios-otros')
+                    <a href="{{ route('admin.agreement-lists.edit', 'otros') }}" class="btn btn-content">Editar contenido</a>
+                @endif
+                @if ($page->slug === 'convenios-ceub-gobierno')
+                    <a href="{{ route('admin.agreement-lists.edit', 'ceub-gobierno') }}" class="btn btn-content">Editar contenido</a>
+                @endif
+                @if ($page->slug === 'proyectos')
+                    <a href="{{ route('admin.pages.projects.edit', $page) }}" class="btn btn-content">Editar contenido</a>
+                @endif
+                @if ($page->slug === 'proyectos-apoyo-financiero')
+                    <a href="{{ route('admin.project-funding.edit') }}" class="btn btn-content">Editar contenido</a>
+                @endif
+                @if ($page->slug === 'membresias')
+                    <a href="{{ route('admin.pages.memberships.edit', $page) }}" class="btn btn-content">Editar contenido</a>
+                @endif
                 <a href="{{ route('admin.pages.index') }}" class="btn btn-secondary">Volver</a>
             </div>
         </div>

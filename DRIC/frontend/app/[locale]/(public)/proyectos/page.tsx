@@ -2,6 +2,8 @@ import Link from "next/link";
 import Image from "next/image";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import { getOptionalPageBySlug } from "@/lib/api/pages";
+import type { CmsBlock, CmsPage } from "@/types/cms";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
@@ -22,7 +24,6 @@ const projectsCopy = {
     intro:
       "Gestionamos, asesoramos y facilitamos solicitudes de proyectos con financiamiento nacional e internacional, fortaleciendo la cooperación académica, científica e institucional de la Universidad Mayor de San Simón.",
     procedure: "Procedimiento UMSS",
-    contact: "Contactar DRIC",
     cards: [
       {
         title: "Proyectos Internacionales",
@@ -43,23 +44,12 @@ const projectsCopy = {
         button: "Ver convocatorias",
       },
     ],
-    finance: {
-      eyebrow: "Convocatorias y recursos",
-      title: "Apoyo Financiero",
-      description:
-        "Espacio para publicar oportunidades de financiamiento, documentos PDF, guías, formularios y enlaces relevantes para la comunidad universitaria.",
-      docsTitle: "Documentos disponibles",
-      docsDescription:
-        "Próximamente conectado con la base de datos para listar PDFs descargables desde el CMS.",
-      button: "Ver documentos",
-    },
   },
   en: {
     title: "Projects",
     intro:
       "We manage, advise on, and support project requests with national and international funding, strengthening the academic, scientific, and institutional cooperation of Universidad Mayor de San Simón.",
     procedure: "UMSS Procedure",
-    contact: "Contact DRIC",
     cards: [
       {
         title: "International Projects",
@@ -80,22 +70,14 @@ const projectsCopy = {
         button: "View calls",
       },
     ],
-    finance: {
-      eyebrow: "Calls and resources",
-      title: "Financial Support",
-      description:
-        "A space for publishing funding opportunities, PDF documents, guides, forms, and relevant links for the university community.",
-      docsTitle: "Available documents",
-      docsDescription:
-        "Soon to be connected to the database to list downloadable PDFs from the CMS.",
-      button: "View documents",
-    },
   },
 };
 
 export default async function ProyectosPage({ params }: Props) {
   const { locale } = await params;
-  const text = locale === "en" ? projectsCopy.en : projectsCopy.es;
+  const activeLocale = locale === "en" ? "en" : "es";
+  const cmsPage = await getOptionalPageBySlug("proyectos", activeLocale);
+  const text = mergeProjectsCopy(projectsCopy[activeLocale], cmsPage);
 
   return (
     <main className="dric-theme-page dric-projects-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
@@ -117,7 +99,7 @@ export default async function ProyectosPage({ params }: Props) {
             </p>
 
             <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-              <Link href="https://dric.umss.edu.bo/wp-content/uploads/2021/11/proconv.pdf" className="inline-flex">
+              <Link href={text.procedureHref} className="inline-flex">
                 <Button
                   variant="contained"
                   endIcon={<PictureAsPdfRoundedIcon />}
@@ -132,26 +114,6 @@ export default async function ProyectosPage({ params }: Props) {
                   }}
                 >
                   {text.procedure}
-                </Button>
-              </Link>
-
-              <Link href={`/${locale}/contacto`} className="inline-flex">
-                <Button
-                  className="dric-projects-outline-button"
-                  variant="outlined"
-                  endIcon={<ArrowForwardRoundedIcon />}
-                  sx={{
-                    borderRadius: "999px",
-                    px: 4,
-                    py: 1.4,
-                    color: "white",
-                    borderColor: "rgba(255,255,255,0.24)",
-                    textTransform: "none",
-                    fontWeight: 700,
-                    backdropFilter: "blur(14px)",
-                  }}
-                >
-                  {text.contact}
                 </Button>
               </Link>
             </div>
@@ -177,60 +139,49 @@ export default async function ProyectosPage({ params }: Props) {
         </div>
       </section>
 
-      <section id="apoyo-financiero" className="dric-projects-section relative isolate overflow-hidden px-5 py-24 text-white md:px-10 lg:px-12">
-        <div className="mx-auto max-w-7xl">
-          <div className="dric-projects-finance-panel rounded-[2rem] border border-white/10 bg-white/[0.06] p-8 shadow-2xl shadow-black/25 backdrop-blur-xl md:p-12">
-            <div className="grid gap-10 lg:grid-cols-[1fr_0.8fr] lg:items-center">
-              <div>
-                <p className="text-sm font-bold uppercase tracking-[0.25em] text-cyan-300">
-                  {text.finance.eyebrow}
-                </p>
-
-                <h2 className="mt-4 text-4xl font-semibold tracking-[-0.04em] md:text-5xl">
-                  {text.finance.title}
-                </h2>
-
-                <p className="mt-5 text-lg leading-8 text-white/68">
-                  {text.finance.description}
-                </p>
-              </div>
-
-              <div className="dric-projects-doc-card rounded-[1.5rem] bg-[#020617] p-7">
-                <PictureAsPdfRoundedIcon sx={{ color: "#E30613", fontSize: 38 }} />
-
-                <h3 className="dric-projects-doc-title mt-5 text-2xl font-bold">
-                  {text.finance.docsTitle}
-                </h3>
-
-                <p className="dric-projects-doc-copy mt-3 text-sm leading-7">
-                  {text.finance.docsDescription}
-                </p>
-
-                <Link href={`/${locale}/proyectos/apoyo-financiero`} className="inline-flex">
-                  <Button
-                    variant="contained"
-                    sx={{
-                      mt: 4,
-                      borderRadius: "999px",
-                      backgroundColor: "#ffffff",
-                      color: "#020617",
-                      textTransform: "none",
-                      fontWeight: 800,
-                      "&:hover": { backgroundColor: "#e5e7eb" },
-                    }}
-                  >
-                    {text.finance.button}
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       <Footer />
     </main>
   );
+}
+
+function mergeProjectsCopy(defaults: (typeof projectsCopy)["es"], page: CmsPage | null) {
+  const hero = section(page, "projects.hero");
+  const procedure = block(page, "projects.procedure");
+  const cards = [1, 2].map((index) => {
+    const fallback = defaults.cards[index - 1];
+    const cmsCard = block(page, `projects.card.${index}`);
+
+    return {
+      title: cmsCard?.title || fallback.title,
+      description: cmsCard?.summary || fallback.description,
+      href: dataString(cmsCard, "href") || fallback.href,
+      image: cmsCard?.media?.url || fallback.image,
+      icon: dataString(cmsCard, "icon") === "finance" ? "finance" as const : fallback.icon,
+      button: cmsCard?.cta_label || fallback.button,
+    };
+  });
+
+  return {
+    title: page?.title || hero?.title || defaults.title,
+    intro: hero?.summary || page?.summary || defaults.intro,
+    procedure: procedure?.title || defaults.procedure,
+    procedureHref: procedure?.media?.url || dataString(procedure, "url") || "https://dric.umss.edu.bo/wp-content/uploads/2021/11/proconv.pdf",
+    cards,
+  };
+}
+
+function section(page: CmsPage | null, key: string) {
+  return page?.sections.find((item) => item.section_key === key);
+}
+
+function block(page: CmsPage | null, key: string): CmsBlock | undefined {
+  return page?.sections.flatMap((item) => item.blocks).find((item) => item.link_url === key);
+}
+
+function dataString(block: CmsBlock | undefined, key: string): string | null {
+  const value = block?.data?.[key];
+
+  return typeof value === "string" && value.trim() ? value : null;
 }
 
 function ProjectCard({

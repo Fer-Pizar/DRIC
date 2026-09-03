@@ -6,6 +6,8 @@ import AccountBalanceRoundedIcon from "@mui/icons-material/AccountBalanceRounded
 import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 import OpenInNewRoundedIcon from "@mui/icons-material/OpenInNewRounded";
 import PictureAsPdfRoundedIcon from "@mui/icons-material/PictureAsPdfRounded";
+import { getOptionalPageBySlug } from "@/lib/api/pages";
+import type { CmsBlock, CmsPage, CmsSection } from "@/types/cms";
 
 type Props = {
   params: Promise<{
@@ -109,8 +111,14 @@ const copy = {
 export default async function ApoyoFinancieroPage({ params }: Props) {
   const { locale } = await params;
   const isEnglish = locale === "en";
-  const text = isEnglish ? copy.en : copy.es;
-  const areas = isEnglish ? strategicAreas.en : strategicAreas.es;
+  const cmsPage = await getOptionalPageBySlug("proyectos-apoyo-financiero", isEnglish ? "en" : "es");
+  const text = mergeFundingCopy(
+    isEnglish ? copy.en : copy.es,
+    isEnglish ? strategicAreas.en : strategicAreas.es,
+    cmsPage,
+  );
+  const areas = text.areas;
+  const documents = cmsDocumentLinks(cmsPage).length ? cmsDocumentLinks(cmsPage) : documentLinks;
 
   return (
     <main className="dric-theme-page dric-projects-page dric-funding-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
@@ -118,7 +126,7 @@ export default async function ApoyoFinancieroPage({ params }: Props) {
 
       <section className="dric-projects-hero relative isolate overflow-hidden px-5 pb-20 pt-36 md:px-10 lg:px-12">
         <div className="mx-auto max-w-7xl">
-          <Link href={`/${locale}/proyectos`} className="inline-flex">
+            <Link href={`/${locale}/proyectos`} className="inline-flex">
             <Button
               className="dric-projects-outline-button"
               variant="outlined"
@@ -181,7 +189,7 @@ export default async function ApoyoFinancieroPage({ params }: Props) {
             </div>
 
             <Link
-              href="https://www.gov.br/cnpq/pt-br/assuntos/noticias/cnpq-em-acao/prosul-pepe-mujica-vai-financiar-projetos-para-fortalecer-a-infraestrutura-cientifica-da-america-latina"
+              href={text.moreInfoHref}
               className="mt-auto flex justify-center pt-9"
             >
               <Button
@@ -232,7 +240,7 @@ export default async function ApoyoFinancieroPage({ params }: Props) {
               <p className="mt-3 text-sm leading-7 text-white/62">{text.docsIntro}</p>
 
               <div className="mt-6 grid gap-3">
-                {documentLinks.map((document) => (
+                {documents.map((document) => (
                   <Link
                     key={document.href}
                     href={document.href}
@@ -256,6 +264,68 @@ export default async function ApoyoFinancieroPage({ params }: Props) {
       <Footer />
     </main>
   );
+}
+
+function mergeFundingCopy(defaults: (typeof copy)["es"], defaultAreas: string[], page: CmsPage | null) {
+  const hero = section(page, "projects.funding.hero");
+  const content = section(page, "projects.funding.content");
+  const sidebar = section(page, "projects.funding.sidebar");
+  const docs = section(page, "projects.funding.documents");
+  const total = block(page, "projects.funding.metric.total");
+  const augm = block(page, "projects.funding.metric.augm");
+  const moreInfo = block(page, "projects.funding.official-info");
+
+  return {
+    ...defaults,
+    eyebrow: hero?.subtitle || defaults.eyebrow,
+    title: page?.title || hero?.title || defaults.title,
+    subtitle: hero?.summary || page?.summary || defaults.subtitle,
+    back: defaults.back,
+    total: total?.title || defaults.total,
+    totalLabel: total?.summary || defaults.totalLabel,
+    augm: augm?.title || defaults.augm,
+    augmLabel: augm?.summary || defaults.augmLabel,
+    openLabel: sidebar?.subtitle || defaults.openLabel,
+    sectionTitle: content?.title || defaults.sectionTitle,
+    paragraphs: lines(content?.summary).length ? lines(content?.summary) : defaults.paragraphs,
+    areasTitle: sidebar?.title || defaults.areasTitle,
+    areas: lines(sidebar?.summary).length ? lines(sidebar?.summary) : defaultAreas,
+    docsTitle: docs?.title || defaults.docsTitle,
+    docsIntro: docs?.summary || defaults.docsIntro,
+    moreInfo: moreInfo?.title || defaults.moreInfo,
+    moreInfoHref: dataString(moreInfo, "href") || "https://www.gov.br/cnpq/pt-br/assuntos/noticias/cnpq-em-acao/prosul-pepe-mujica-vai-financiar-projetos-para-fortalecer-a-infraestrutura-cientifica-da-america-latina",
+  };
+}
+
+function cmsDocumentLinks(page: CmsPage | null) {
+  return (
+    section(page, "projects.funding.documents")
+      ?.blocks.filter((item) => item.type === "funding_document")
+      .map((item) => ({
+        es: item.title ?? "",
+        en: item.title ?? "",
+        href: dataString(item, "href") ?? "",
+      }))
+      .filter((item) => item.es && item.href) ?? []
+  );
+}
+
+function section(page: CmsPage | null, key: string): CmsSection | undefined {
+  return page?.sections.find((item) => item.section_key === key);
+}
+
+function block(page: CmsPage | null, key: string): CmsBlock | undefined {
+  return page?.sections.flatMap((item) => item.blocks).find((item) => item.link_url === key);
+}
+
+function lines(value: string | null | undefined): string[] {
+  return value?.split(/\r?\n/).map((item) => item.trim()).filter(Boolean) ?? [];
+}
+
+function dataString(block: CmsBlock | undefined, key: string): string | null {
+  const value = block?.data?.[key];
+
+  return typeof value === "string" && value.trim() ? value : null;
 }
 
 function Metric({ value, label }: { value: string; label: string }) {

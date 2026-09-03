@@ -1,6 +1,8 @@
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import Link from "next/link";
+import { getOptionalPageBySlug } from "@/lib/api/pages";
+import type { CmsBlock, CmsPage, CmsSection } from "@/types/cms";
 
 type Props = {
   params: Promise<{
@@ -79,7 +81,10 @@ const content = {
 
 export default async function ConveniosPage({ params }: Props) {
   const { locale } = await params;
-  const t = content[locale as "es" | "en"] ?? content.es;
+  const language = locale === "en" ? "en" : "es";
+  const fallback = content[language];
+  const cmsPage = await getOptionalPageBySlug("convenios", locale);
+  const t = mergeAgreementContent(fallback, cmsPage);
 
   return (
     <main className="dric-theme-page dric-agreements-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
@@ -106,7 +111,7 @@ export default async function ConveniosPage({ params }: Props) {
 
               <div className="mt-14 flex justify-center">
                 <Link
-                  href="https://dric.umss.edu.bo/wp-content/uploads/2021/11/proconv.pdf"
+                  href={t.procedureHref}
                   className="inline-flex items-center gap-3 rounded-full border border-cyan-300/30 bg-white/[0.03] px-8 py-4 text-sm font-medium tracking-wide text-cyan-200 backdrop-blur-xl transition-all duration-300 hover:scale-[1.02] hover:border-cyan-300 hover:bg-cyan-300/10 hover:text-white hover:shadow-[0_0_40px_rgba(0,55,112,0.20)]"
                 >
                   <span>{t.procedure}</span>
@@ -132,7 +137,7 @@ export default async function ConveniosPage({ params }: Props) {
 
             <div className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-4 shadow-2xl backdrop-blur">
               <img
-                src="/images/agreements/international-flags.jpg"
+                src={t.heroImage}
                 alt={t.title}
                 className="h-[430px] w-full rounded-[1.5rem] object-cover"
               />
@@ -181,4 +186,78 @@ export default async function ConveniosPage({ params }: Props) {
       <Footer />
     </main>
   );
+}
+
+type AgreementCard = {
+  title: string;
+  description: string;
+  href: string;
+  image: string;
+};
+
+type AgreementContent = {
+  eyebrow: string;
+  title: string;
+  intro1: string;
+  intro2: string;
+  mainButton: string;
+  procedure: string;
+  procedureHref: string;
+  heroImage: string;
+  cards: AgreementCard[];
+};
+
+function mergeAgreementContent(fallback: Omit<AgreementContent, "procedureHref" | "heroImage">, page: CmsPage | null): AgreementContent {
+  if (!page) {
+    return {
+      ...fallback,
+      procedureHref: "https://dric.umss.edu.bo/wp-content/uploads/2021/11/proconv.pdf",
+      heroImage: "/images/agreements/international-flags.jpg",
+    };
+  }
+
+  const hero = findSection(page, "agreements.hero");
+  const procedure = findBlock(page, "agreements.procedure");
+  const actionLabel = findBlock(page, "agreements.card-action");
+  const heroImage = findBlock(page, "agreements.hero-image");
+  const cards = [1, 2, 3].map((index) => {
+    const fallbackCard = fallback.cards[index - 1];
+    const block = findBlock(page, `agreements.card.${index}`);
+
+    return {
+      title: block?.title || fallbackCard.title,
+      description: block?.summary || fallbackCard.description,
+      href: stringData(block, "href", fallbackCard.href),
+      image: block?.media?.url || fallbackCard.image,
+    };
+  });
+
+  return {
+    ...fallback,
+    eyebrow: hero?.subtitle || fallback.eyebrow,
+    title: page.title || hero?.title || fallback.title,
+    intro1: hero?.summary || fallback.intro1,
+    intro2: hero?.body || fallback.intro2,
+    mainButton: actionLabel?.title || fallback.mainButton,
+    procedure: procedure?.title || fallback.procedure,
+    procedureHref: stringData(procedure, "url", procedure?.media?.url || "https://dric.umss.edu.bo/wp-content/uploads/2021/11/proconv.pdf"),
+    heroImage: heroImage?.media?.url || "/images/agreements/international-flags.jpg",
+    cards,
+  };
+}
+
+function findSection(page: CmsPage, key: string): CmsSection | undefined {
+  return page.sections.find((section) => section.section_key === key);
+}
+
+function findBlock(page: CmsPage, key: string): CmsBlock | undefined {
+  return page.sections
+    .flatMap((section) => section.blocks ?? [])
+    .find((block) => block.link_url === key);
+}
+
+function stringData(block: CmsBlock | undefined, key: string, fallback: string): string {
+  const value = block?.data?.[key];
+
+  return typeof value === "string" && value.trim() ? value : fallback;
 }

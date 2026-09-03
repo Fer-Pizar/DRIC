@@ -16,12 +16,13 @@ use App\Support\PagePermissionMap;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 
 class PresentationContentController extends Controller
 {
     private const MAX_IMAGE_KB = 3072;
+    private const CLEAN_LABEL_REGEX = '/\A[\p{L}\s.,]+\z/u';
 
     public function edit(Page $page): View
     {
@@ -44,7 +45,17 @@ class PresentationContentController extends Controller
     {
         $this->authorizePresentationAccess($page);
 
-        $validated = $request->validate($this->rules(), $this->messages(), $this->attributes());
+        $validator = Validator::make($request->all(), $this->rules(), $this->messages(), $this->attributes());
+
+        $validator->after(function ($validator) use ($request): void {
+            foreach ($this->lines((string) $request->input('director_emails', '')) as $email) {
+                if (! filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    $validator->errors()->add('director_emails', "El correo '{$email}' no tiene un formato válido.");
+                }
+            }
+        });
+
+        $validated = $validator->validate();
 
         DB::transaction(function () use ($request, $validated, $page): void {
             $page->update([
@@ -172,23 +183,23 @@ class PresentationContentController extends Controller
         $localized = [];
 
         foreach (['es', 'en'] as $locale) {
-            $localized["{$locale}.hero_title"] = ['required', 'string', 'max:160'];
+            $localized["{$locale}.hero_title"] = ['required', 'string', 'max:160', 'regex:'.self::CLEAN_LABEL_REGEX];
             $localized["{$locale}.hero_summary"] = ['required', 'string', 'max:600'];
-            $localized["{$locale}.history_badge"] = ['required', 'string', 'max:80'];
-            $localized["{$locale}.history_title"] = ['required', 'string', 'max:180'];
+            $localized["{$locale}.history_badge"] = ['required', 'string', 'max:80', 'regex:'.self::CLEAN_LABEL_REGEX];
+            $localized["{$locale}.history_title"] = ['required', 'string', 'max:180', 'regex:'.self::CLEAN_LABEL_REGEX];
             $localized["{$locale}.history_text"] = ['required', 'string', 'max:1800'];
-            $localized["{$locale}.mission_title"] = ['required', 'string', 'max:80'];
+            $localized["{$locale}.mission_title"] = ['required', 'string', 'max:80', 'regex:'.self::CLEAN_LABEL_REGEX];
             $localized["{$locale}.mission_text"] = ['required', 'string', 'max:1800'];
-            $localized["{$locale}.purpose_title"] = ['required', 'string', 'max:80'];
+            $localized["{$locale}.purpose_title"] = ['required', 'string', 'max:80', 'regex:'.self::CLEAN_LABEL_REGEX];
             $localized["{$locale}.purpose_text"] = ['required', 'string', 'max:1800'];
-            $localized["{$locale}.structure_badge"] = ['required', 'string', 'max:80'];
-            $localized["{$locale}.structure_title"] = ['required', 'string', 'max:160'];
+            $localized["{$locale}.structure_badge"] = ['required', 'string', 'max:80', 'regex:'.self::CLEAN_LABEL_REGEX];
+            $localized["{$locale}.structure_title"] = ['required', 'string', 'max:160', 'regex:'.self::CLEAN_LABEL_REGEX];
             $localized["{$locale}.structure_description"] = ['required', 'string', 'max:1200'];
             $localized["{$locale}.structure_items"] = ['required', 'string', 'max:1000'];
-            $localized["{$locale}.director_name"] = ['required', 'string', 'max:160'];
-            $localized["{$locale}.agreements_team_title"] = ['required', 'string', 'max:160'];
+            $localized["{$locale}.director_name"] = ['required', 'string', 'max:160', 'regex:'.self::CLEAN_LABEL_REGEX];
+            $localized["{$locale}.agreements_team_title"] = ['required', 'string', 'max:160', 'regex:'.self::CLEAN_LABEL_REGEX];
             $localized["{$locale}.agreements_team_people"] = ['required', 'string', 'max:1000'];
-            $localized["{$locale}.projects_team_title"] = ['required', 'string', 'max:160'];
+            $localized["{$locale}.projects_team_title"] = ['required', 'string', 'max:160', 'regex:'.self::CLEAN_LABEL_REGEX];
             $localized["{$locale}.projects_team_people"] = ['required', 'string', 'max:1000'];
         }
 
@@ -205,6 +216,7 @@ class PresentationContentController extends Controller
             'required' => 'Este campo es obligatorio.',
             'string' => 'Este campo debe contener texto.',
             'max' => 'Este campo supera el tamaño permitido.',
+            'regex' => 'Este campo solo puede contener letras, espacios, puntos y comas. No uses números ni símbolos especiales.',
             'file' => 'Debes subir un archivo válido.',
             'mimes' => 'Ese formato no está permitido. Solo se aceptan imágenes JPG o PNG.',
             'team_image.max' => 'La imagen del equipo es demasiado pesada. El tamaño máximo permitido es 3 MB.',
@@ -237,7 +249,7 @@ class PresentationContentController extends Controller
                 'structure_title' => $this->sectionValue($page, 'presentation.structure', 'es', 'title', 'Dirección DRIC'),
                 'structure_description' => $this->sectionValue($page, 'presentation.structure', 'es', 'summary', 'La DRIC depende directamente del Rectorado. Para el cumplimiento de sus funciones, se estructura de la siguiente manera:'),
                 'structure_items' => $this->blockLines($page, 'presentation.structure-items', 'items_es', ['Dirección Ejecutiva', 'Departamento de Convenios, Movilidad y Becas', 'Departamento de Internacionalización y Proyectos']),
-                'director_name' => $this->blockValue($page, 'presentation.director', 'es', 'title', 'Director: Mgr. Omar Morales Delgadillo'),
+                'director_name' => $this->blockValue($page, 'presentation.director', 'es', 'title', 'Director, Mgr. Omar Morales Delgadillo'),
                 'agreements_team_title' => $this->blockValue($page, 'presentation.agreements-team', 'es', 'title', 'Convenios, Movilidad y Becas'),
                 'agreements_team_people' => $this->blockLines($page, 'presentation.agreements-team', 'people_es', ['Jefe del departamento: Mgr. Giovanna Maldonado Moscoso', 'Mgr. Silvia del Pilar Arze']),
                 'projects_team_title' => $this->blockValue($page, 'presentation.projects-team', 'es', 'title', 'Internacionalización y Proyectos'),
@@ -257,7 +269,7 @@ class PresentationContentController extends Controller
                 'structure_title' => $this->sectionValue($page, 'presentation.structure', 'en', 'title', 'DRIC Directorate'),
                 'structure_description' => $this->sectionValue($page, 'presentation.structure', 'en', 'summary', 'DRIC reports directly to the Rector\'s Office. To fulfill its functions, it is structured as follows:'),
                 'structure_items' => $this->blockLines($page, 'presentation.structure-items', 'items_en', ['Executive Directorate', 'Department of Agreements, Mobility and Scholarships', 'Department of Internationalization and Projects']),
-                'director_name' => $this->blockValue($page, 'presentation.director', 'en', 'title', 'Director: Mgr. Omar Morales Delgadillo'),
+                'director_name' => $this->blockValue($page, 'presentation.director', 'en', 'title', 'Director, Mgr. Omar Morales Delgadillo'),
                 'agreements_team_title' => $this->blockValue($page, 'presentation.agreements-team', 'en', 'title', 'Agreements, Mobility and Scholarships'),
                 'agreements_team_people' => $this->blockLines($page, 'presentation.agreements-team', 'people_en', ['Head of Department: Mgr. Giovanna Maldonado Moscoso', 'Mgr. Silvia del Pilar Arze']),
                 'projects_team_title' => $this->blockValue($page, 'presentation.projects-team', 'en', 'title', 'Internationalization and Projects'),

@@ -101,8 +101,8 @@ class PresentationPageSeeder extends Seeder
         ]);
 
         $this->upsertBlock($structure, 'presentation.director', 'director', 2, $languages, [
-            'es' => ['title' => 'Director: Mgr. Omar Morales Delgadillo', 'summary' => null],
-            'en' => ['title' => 'Director: Mgr. Omar Morales Delgadillo', 'summary' => null],
+            'es' => ['title' => 'Director, Mgr. Omar Morales Delgadillo', 'summary' => null],
+            'en' => ['title' => 'Director, Mgr. Omar Morales Delgadillo', 'summary' => null],
         ], [
             'emails' => ['director-dric@umss.edu.bo', 'rrii@umss.edu.bo'],
         ]);

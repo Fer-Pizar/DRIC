@@ -1,5 +1,7 @@
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import { getOptionalPageBySlug } from "@/lib/api/pages";
+import type { CmsBlock, CmsPage } from "@/types/cms";
 import GovernmentAgreementsList, { type GovernmentAgreementSection } from "./GovernmentAgreementsList";
 import OtherAgreementsList from "./OtherAgreementsList";
 
@@ -12,7 +14,13 @@ type Props = {
 
 type Locale = "es" | "en";
 
-const otherAgreements = [
+type OtherAgreement = {
+  es: string;
+  en: string;
+  href: string;
+};
+
+const otherAgreements: OtherAgreement[] = [
   {
     es: "Convenio Interinstitucional entre el Gobierno Autónomo Departamental de Cochabamba y la Universidad Mayor de San Simón para el Programa de Becas Individuales - PBI 2022",
     en: "Interinstitutional Agreement between the Autonomous Departmental Government of Cochabamba and Universidad Mayor de San Simón for the Individual Scholarship Program - PBI 2022",
@@ -518,13 +526,58 @@ const labels = {
   },
 };
 
+function getDocumentBlocks(page: CmsPage | null, sectionKey: string): CmsBlock[] {
+  return (
+    page?.sections
+      .find((section) => section.section_key === sectionKey)
+      ?.blocks.filter((block) => block.type === "agreement_document") ?? []
+  );
+}
+
+function cmsOtherAgreements(page: CmsPage | null): OtherAgreement[] {
+  return getDocumentBlocks(page, "agreements.other.documents")
+    .map((block) => ({
+      es: block.title?.trim() ?? "",
+      en: block.title?.trim() ?? "",
+      href: typeof block.data?.href === "string" ? block.data.href : "",
+    }))
+    .filter((agreement) => agreement.es && agreement.href);
+}
+
+function cmsGovernmentSections(
+  page: CmsPage | null,
+  fallbackTitle: string,
+): GovernmentAgreementSection[] {
+  const documents = getDocumentBlocks(page, "agreements.government.documents")
+    .map((block) => ({
+      title: block.title?.trim() ?? "",
+      href: typeof block.data?.href === "string" ? block.data.href : "",
+    }))
+    .filter((agreement) => agreement.title && agreement.href);
+
+  if (!documents.length) {
+    return [];
+  }
+
+  return [
+    {
+      title: page?.sections.find((section) => section.section_key === "agreements.government.documents")?.title
+        ?? fallbackTitle,
+      agreements: documents,
+    },
+  ];
+}
+
 export default async function AgreementDetailPage({ params }: Props) {
   const { locale, slug } = await params;
   const activeLocale: Locale = locale === "en" ? "en" : "es";
   const t = labels[activeLocale];
 
   if (slug === "ceub-gobierno") {
-    const totalGovernmentAgreements = governmentAgreementSections.reduce(
+    const cmsPage = await getOptionalPageBySlug("convenios-ceub-gobierno", activeLocale);
+    const managedSections = cmsGovernmentSections(cmsPage, t.governmentTitle);
+    const sections = managedSections.length ? managedSections : governmentAgreementSections;
+    const totalGovernmentAgreements = sections.reduce(
       (total, section) => total + section.agreements.length,
       0,
     );
@@ -560,7 +613,7 @@ export default async function AgreementDetailPage({ params }: Props) {
               noResults={t.noResults}
               searchLabel={t.searchLabel}
               searchPlaceholder={t.searchPlaceholder}
-              sections={governmentAgreementSections}
+              sections={sections}
             />
           </div>
         </section>
@@ -594,6 +647,10 @@ export default async function AgreementDetailPage({ params }: Props) {
     );
   }
 
+  const cmsPage = await getOptionalPageBySlug("convenios-otros", activeLocale);
+  const managedOtherAgreements = cmsOtherAgreements(cmsPage);
+  const agreements = managedOtherAgreements.length ? managedOtherAgreements : otherAgreements;
+
   return (
     <main className="dric-other-agreements-page min-h-screen overflow-x-hidden">
       <Header />
@@ -613,13 +670,13 @@ export default async function AgreementDetailPage({ params }: Props) {
             <div className="dric-other-agreements-intro rounded-[28px] p-6 backdrop-blur-2xl md:p-8">
               <p className="dric-other-agreements-muted text-base leading-8 md:text-lg">{t.intro}</p>
               <div className="dric-other-agreements-count mt-6 inline-flex rounded-full px-5 py-2 text-sm font-bold">
-                {otherAgreements.length} {t.count}
+                {agreements.length} {t.count}
               </div>
             </div>
           </div>
 
           <OtherAgreementsList
-            agreements={otherAgreements}
+            agreements={agreements}
             locale={activeLocale}
             noResults={t.noResults}
             searchLabel={t.searchLabel}

@@ -14,6 +14,11 @@ class DatabaseSeeder extends Seeder
             PageSeeder::class,
             HomePageSeeder::class,
             PresentationPageSeeder::class,
+            AgreementPageSeeder::class,
+            AgreementArchivePageSeeder::class,
+            ProjectPageSeeder::class,
+            ProjectFundingPageSeeder::class,
+            MembershipPageSeeder::class,
             ScholarshipBecasPageSeeder::class,
             MobilityPasantiasPageSeeder::class,
         ]);

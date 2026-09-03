@@ -8,6 +8,7 @@
         :root {
             --blue: #164194;
             --red: #b5121b;
+            --red-dark: #7f0010;
             --ink: #172033;
             --muted: #647084;
             --line: #e5e9f0;
@@ -116,8 +117,9 @@
 
         .alert-error {
             background: #fff1f2;
-            border: 1px solid #fecdd3;
-            color: #9f1239;
+            border: 1px solid #b91c1c;
+            color: var(--red-dark);
+            font-weight: 800;
         }
 
         form {
@@ -181,6 +183,23 @@
             font-size: 12px;
             font-weight: 500;
             line-height: 1.45;
+        }
+
+        .field-error,
+        .live-error {
+            color: var(--red-dark);
+            font-size: 12px;
+            font-weight: 800;
+            line-height: 1.45;
+        }
+
+        .live-error:empty {
+            display: none;
+        }
+
+        .is-invalid {
+            border-color: var(--red-dark) !important;
+            box-shadow: 0 0 0 3px rgba(127, 0, 16, 0.10);
         }
 
         .image-grid {
@@ -284,12 +303,12 @@
                                 <label>
                                     Título
                                     <input type="text" name="{{ $locale }}[hero_title]" value="{{ old($locale.'.hero_title', $content[$locale]['hero_title']) }}">
-                                    @error($locale.'.hero_title')<span class="hint">{{ $message }}</span>@enderror
+                                    @error($locale.'.hero_title')<span class="field-error">{{ $message }}</span>@enderror
                                 </label>
                                 <label>
                                     Descripción
                                     <textarea name="{{ $locale }}[hero_summary]">{{ old($locale.'.hero_summary', $content[$locale]['hero_summary']) }}</textarea>
-                                    @error($locale.'.hero_summary')<span class="hint">{{ $message }}</span>@enderror
+                                    @error($locale.'.hero_summary')<span class="field-error">{{ $message }}</span>@enderror
                                 </label>
                             </div>
                         </div>
@@ -310,17 +329,17 @@
                                 <label>
                                     Categoría
                                     <input type="text" name="{{ $locale }}[history_badge]" value="{{ old($locale.'.history_badge', $content[$locale]['history_badge']) }}">
-                                    @error($locale.'.history_badge')<span class="hint">{{ $message }}</span>@enderror
+                                    @error($locale.'.history_badge')<span class="field-error">{{ $message }}</span>@enderror
                                 </label>
                                 <label>
                                     Título
                                     <input type="text" name="{{ $locale }}[history_title]" value="{{ old($locale.'.history_title', $content[$locale]['history_title']) }}">
-                                    @error($locale.'.history_title')<span class="hint">{{ $message }}</span>@enderror
+                                    @error($locale.'.history_title')<span class="field-error">{{ $message }}</span>@enderror
                                 </label>
                                 <label>
                                     Texto
                                     <textarea name="{{ $locale }}[history_text]">{{ old($locale.'.history_text', $content[$locale]['history_text']) }}</textarea>
-                                    @error($locale.'.history_text')<span class="hint">{{ $message }}</span>@enderror
+                                    @error($locale.'.history_text')<span class="field-error">{{ $message }}</span>@enderror
                                 </label>
                             </div>
                         </div>
@@ -341,22 +360,22 @@
                                 <label>
                                     Título de misión
                                     <input type="text" name="{{ $locale }}[mission_title]" value="{{ old($locale.'.mission_title', $content[$locale]['mission_title']) }}">
-                                    @error($locale.'.mission_title')<span class="hint">{{ $message }}</span>@enderror
+                                    @error($locale.'.mission_title')<span class="field-error">{{ $message }}</span>@enderror
                                 </label>
                                 <label>
                                     Texto de misión
                                     <textarea name="{{ $locale }}[mission_text]">{{ old($locale.'.mission_text', $content[$locale]['mission_text']) }}</textarea>
-                                    @error($locale.'.mission_text')<span class="hint">{{ $message }}</span>@enderror
+                                    @error($locale.'.mission_text')<span class="field-error">{{ $message }}</span>@enderror
                                 </label>
                                 <label>
                                     Título de propósito
                                     <input type="text" name="{{ $locale }}[purpose_title]" value="{{ old($locale.'.purpose_title', $content[$locale]['purpose_title']) }}">
-                                    @error($locale.'.purpose_title')<span class="hint">{{ $message }}</span>@enderror
+                                    @error($locale.'.purpose_title')<span class="field-error">{{ $message }}</span>@enderror
                                 </label>
                                 <label>
                                     Texto de propósito
                                     <textarea name="{{ $locale }}[purpose_text]">{{ old($locale.'.purpose_text', $content[$locale]['purpose_text']) }}</textarea>
-                                    @error($locale.'.purpose_text')<span class="hint">{{ $message }}</span>@enderror
+                                    @error($locale.'.purpose_text')<span class="field-error">{{ $message }}</span>@enderror
                                 </label>
                             </div>
                         </div>
@@ -377,47 +396,47 @@
                                 <label>
                                     Categoría
                                     <input type="text" name="{{ $locale }}[structure_badge]" value="{{ old($locale.'.structure_badge', $content[$locale]['structure_badge']) }}">
-                                    @error($locale.'.structure_badge')<span class="hint">{{ $message }}</span>@enderror
+                                    @error($locale.'.structure_badge')<span class="field-error">{{ $message }}</span>@enderror
                                 </label>
                                 <label>
                                     Título de estructura
                                     <input type="text" name="{{ $locale }}[structure_title]" value="{{ old($locale.'.structure_title', $content[$locale]['structure_title']) }}">
-                                    @error($locale.'.structure_title')<span class="hint">{{ $message }}</span>@enderror
+                                    @error($locale.'.structure_title')<span class="field-error">{{ $message }}</span>@enderror
                                 </label>
                                 <label>
                                     Descripción
                                     <textarea name="{{ $locale }}[structure_description]">{{ old($locale.'.structure_description', $content[$locale]['structure_description']) }}</textarea>
-                                    @error($locale.'.structure_description')<span class="hint">{{ $message }}</span>@enderror
+                                    @error($locale.'.structure_description')<span class="field-error">{{ $message }}</span>@enderror
                                 </label>
                                 <label>
                                     Áreas de la estructura
                                     <textarea name="{{ $locale }}[structure_items]">{{ old($locale.'.structure_items', $content[$locale]['structure_items']) }}</textarea>
-                                    @error($locale.'.structure_items')<span class="hint">{{ $message }}</span>@enderror
+                                    @error($locale.'.structure_items')<span class="field-error">{{ $message }}</span>@enderror
                                 </label>
                                 <label>
                                     Director
                                     <input type="text" name="{{ $locale }}[director_name]" value="{{ old($locale.'.director_name', $content[$locale]['director_name']) }}">
-                                    @error($locale.'.director_name')<span class="hint">{{ $message }}</span>@enderror
+                                    @error($locale.'.director_name')<span class="field-error">{{ $message }}</span>@enderror
                                 </label>
                                 <label>
                                     Título del equipo de convenios
                                     <input type="text" name="{{ $locale }}[agreements_team_title]" value="{{ old($locale.'.agreements_team_title', $content[$locale]['agreements_team_title']) }}">
-                                    @error($locale.'.agreements_team_title')<span class="hint">{{ $message }}</span>@enderror
+                                    @error($locale.'.agreements_team_title')<span class="field-error">{{ $message }}</span>@enderror
                                 </label>
                                 <label>
                                     Personas del equipo de convenios
                                     <textarea name="{{ $locale }}[agreements_team_people]">{{ old($locale.'.agreements_team_people', $content[$locale]['agreements_team_people']) }}</textarea>
-                                    @error($locale.'.agreements_team_people')<span class="hint">{{ $message }}</span>@enderror
+                                    @error($locale.'.agreements_team_people')<span class="field-error">{{ $message }}</span>@enderror
                                 </label>
                                 <label>
                                     Título del equipo de internacionalización
                                     <input type="text" name="{{ $locale }}[projects_team_title]" value="{{ old($locale.'.projects_team_title', $content[$locale]['projects_team_title']) }}">
-                                    @error($locale.'.projects_team_title')<span class="hint">{{ $message }}</span>@enderror
+                                    @error($locale.'.projects_team_title')<span class="field-error">{{ $message }}</span>@enderror
                                 </label>
                                 <label>
                                     Personas del equipo de internacionalización
                                     <textarea name="{{ $locale }}[projects_team_people]">{{ old($locale.'.projects_team_people', $content[$locale]['projects_team_people']) }}</textarea>
-                                    @error($locale.'.projects_team_people')<span class="hint">{{ $message }}</span>@enderror
+                                    @error($locale.'.projects_team_people')<span class="field-error">{{ $message }}</span>@enderror
                                 </label>
                             </div>
                         </div>
@@ -430,7 +449,7 @@
                         Correos visibles
                         <textarea name="director_emails">{{ old('director_emails', $content['director_emails']) }}</textarea>
                         <span class="hint">Escribe un correo por línea.</span>
-                        @error('director_emails')<span class="hint">{{ $message }}</span>@enderror
+                        @error('director_emails')<span class="field-error">{{ $message }}</span>@enderror
                     </label>
                 </div>
             </section>
@@ -453,7 +472,7 @@
                             Imagen del equipo
                             <input type="file" name="team_image" accept=".jpg,.jpeg,.png,image/jpeg,image/png">
                             <span class="hint">No se eliminará la imagen anterior hasta guardar una nueva.</span>
-                            @error('team_image')<span class="hint">{{ $message }}</span>@enderror
+                            @error('team_image')<span class="field-error">{{ $message }}</span>@enderror
                         </label>
                     </div>
 
@@ -469,7 +488,7 @@
                             Imagen del director
                             <input type="file" name="director_image" accept=".jpg,.jpeg,.png,image/jpeg,image/png">
                             <span class="hint">No se eliminará la imagen anterior hasta guardar una nueva.</span>
-                            @error('director_image')<span class="hint">{{ $message }}</span>@enderror
+                            @error('director_image')<span class="field-error">{{ $message }}</span>@enderror
                         </label>
                     </div>
                 </div>
@@ -481,5 +500,115 @@
             </div>
         </form>
     </main>
+    <script>
+        const cleanLabelPattern = /^[\p{L}\s.,]+$/u;
+        const cleanFieldNames = [
+            "hero_title",
+            "history_badge",
+            "history_title",
+            "mission_title",
+            "purpose_title",
+            "structure_badge",
+            "structure_title",
+            "director_name",
+            "agreements_team_title",
+            "projects_team_title",
+        ];
+
+        function ensureLiveError(field) {
+            let message = field.parentElement.querySelector(".live-error");
+
+            if (!message) {
+                message = document.createElement("span");
+                message.className = "live-error";
+                field.insertAdjacentElement("afterend", message);
+            }
+
+            return message;
+        }
+
+        function forbiddenCharacters(value) {
+            return [...new Set([...value].filter((character) => character.trim() && !/[\p{L}.,]/u.test(character)))];
+        }
+
+        function validateCleanField(field) {
+            const message = ensureLiveError(field);
+            const value = field.value.trim();
+
+            field.classList.remove("is-invalid");
+            message.textContent = "";
+
+            if (!value) {
+                return;
+            }
+
+            if (/\d/u.test(value)) {
+                field.classList.add("is-invalid");
+                message.textContent = "No uses números en nombres, títulos o listas.";
+                return;
+            }
+
+            if (!cleanLabelPattern.test(value)) {
+                const invalid = forbiddenCharacters(value).join(" ");
+                field.classList.add("is-invalid");
+                message.textContent = invalid
+                    ? `Solo se permiten letras, espacios, puntos y comas. Quita: ${invalid}`
+                    : "Solo se permiten letras, espacios, puntos y comas.";
+            }
+        }
+
+        function validateEmailList(field) {
+            const message = ensureLiveError(field);
+            const invalidEmail = field.value
+                .split(/\r?\n/)
+                .map((line) => line.trim())
+                .filter(Boolean)
+                .find((email) => !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email));
+
+            field.classList.toggle("is-invalid", Boolean(invalidEmail));
+            message.textContent = invalidEmail ? `Corrige este correo: ${invalidEmail}` : "";
+        }
+
+        function validateImage(field) {
+            const message = ensureLiveError(field);
+            const file = field.files?.[0];
+
+            field.classList.remove("is-invalid");
+            message.textContent = "";
+
+            if (!file) {
+                return;
+            }
+
+            if (!["image/jpeg", "image/png"].includes(file.type)) {
+                field.classList.add("is-invalid");
+                message.textContent = "Ese formato no está permitido. Solo se aceptan imágenes JPG o PNG.";
+                return;
+            }
+
+            if (file.size > 3 * 1024 * 1024) {
+                field.classList.add("is-invalid");
+                message.textContent = "La imagen es demasiado pesada. El tamaño máximo permitido es 3 MB.";
+            }
+        }
+
+        document.querySelectorAll("input[type='text'], textarea").forEach((field) => {
+            const shouldValidate = cleanFieldNames.some((name) => field.name.includes(`[${name}]`));
+
+            if (shouldValidate) {
+                field.addEventListener("input", () => validateCleanField(field));
+                field.addEventListener("blur", () => validateCleanField(field));
+            }
+
+            if (field.name === "director_emails") {
+                field.addEventListener("input", () => validateEmailList(field));
+                field.addEventListener("blur", () => validateEmailList(field));
+            }
+        });
+
+        document.querySelectorAll("input[type='file']").forEach((field) => {
+            field.addEventListener("change", () => validateImage(field));
+        });
+    </script>
 </body>
 </html>

@@ -1,17 +1,29 @@
 import Link from "next/link";
-import Image from "next/image";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import Card from "@mui/material/Card";
 import Button from "@mui/material/Button";
 import ArrowOutwardRoundedIcon from "@mui/icons-material/ArrowOutwardRounded";
 import PublicRoundedIcon from "@mui/icons-material/PublicRounded";
+import { getOptionalPageBySlug } from "@/lib/api/pages";
+import type { CmsBlock, CmsPage, CmsSection } from "@/types/cms";
 
 type Props = {
   params: Promise<{ locale: string }>;
 };
 
-const memberships = [
+type Membership = {
+  name: string;
+  nameEn?: string;
+  full: { es: string; en: string };
+  url: string;
+  logo?: string;
+  extraInfoEnabled?: boolean;
+  padorText?: string;
+  extraInfoEmail?: string;
+};
+
+const memberships: Membership[] = [
   { name: "AUF", full: { es: "Agencia Universitaria de la Francofonía", en: "University Agency of La Francophonie" }, url: "https://www.auf.org/", logo: "/images/memberships/auf.png" },
   { name: "AUGM", full: { es: "Asociación de Universidades Grupo Montevideo", en: "Association of Universities of the Montevideo Group" }, url: "https://grupomontevideo.org/", logo: "/images/memberships/augm.png" },
   { name: "UNAI", full: { es: "Impacto Académico de las Naciones Unidas", en: "United Nations Academic Impact" }, url: "https://www.un.org/es/academicimpact", logo: "/images/memberships/unai.png" },
@@ -19,7 +31,14 @@ const memberships = [
   { name: "CRISCOS", full: { es: "Consejo de Rectores por la Integración de la Subregión Centro Oeste de Sudamérica", en: "Council of Rectors for the Integration of the Central-Western South American Subregion" }, url: "https://criscos.unju.edu.ar/", logo: "/images/memberships/criscos.png" },
   { name: "CLACSO", full: { es: "Consejo Latinoamericano de Ciencias Sociales", en: "Latin American Council of Social Sciences" }, url: "https://www.clacso.org/", logo: "/images/memberships/clacso.png" },
   { name: "UNAMAZ", full: { es: "Asociación de Universidades Amazónicas", en: "Association of Amazonian Universities" }, url: "https://www.unamaz.org/es", logo: "/images/memberships/unamaz.png" },
-  { name: "PADOR", full: { es: "Servicios de Registro en Línea de Ayuda Europea", en: "European Aid Online Registration Services" }, url: "#", logo: "/images/memberships/pador.png" },
+  {
+    name: "PADOR",
+    full: { es: "Servicios de Registro en Línea de Ayuda Europea", en: "European Aid Online Registration Services" },
+    url: "",
+    logo: "/images/memberships/pador.png",
+    extraInfoEnabled: true,
+    extraInfoEmail: "dric@umss.edu",
+  },
   { name: "Comisión Europea", nameEn: "European Commission", full: { es: "Programas y cooperación internacional de la Unión Europea", en: "European Union international cooperation and programs" }, url: "https://commission.europa.eu/index_es", logo: "/images/memberships/comision-europea.png" },
   { name: "Universia", full: { es: "Plataforma iberoamericana que conecta universidades, estudiantes, instituciones y oportunidades académicas internacionales.", en: "Ibero-American platform connecting universities, students, institutions and international academic opportunities." }, url: "https://www.universia.net/", logo: "/images/memberships/universia.png" },
 ];
@@ -27,8 +46,9 @@ const memberships = [
 export default async function MembresiasPage({ params }: Props) {
   const { locale } = await params;
   const isEnglish = locale === "en";
+  const cmsPage = await getOptionalPageBySlug("membresias", isEnglish ? "en" : "es");
 
-  const copy = {
+  const copy = mergeMembershipCopy({
     title: isEnglish ? "Memberships" : "Membresías",
     summary: isEnglish
       ? "Universidad Mayor de San Simón participates in international networks, associations and programs that strengthen academic, scientific and institutional cooperation."
@@ -37,19 +57,14 @@ export default async function MembresiasPage({ params }: Props) {
     sectionTitle: isEnglish
       ? "Partnerships connecting UMSS with the world"
       : "Alianzas que conectan a la UMSS con el mundo",
-    sectionText: isEnglish
-      ? "Each membership can redirect to its official website and later be managed from the CMS."
-      : "Cada membresía puede redirigir a su sitio oficial y ser administrada posteriormente desde el CMS.",
-    padorText: isEnglish
-      ? "For more information about PADOR registration, contact:"
-      : "Para mayor información sobre el registro PADOR, contactar a:",
     visitSite: isEnglish ? "Visit site" : "Visitar sitio",
-    visitUniversia: isEnglish ? "Visit Universia" : "Visitar Universia",
     infoTitle: isEnglish ? "Institutional information" : "Información institucional",
     infoText: isEnglish
       ? "For more information about institutional records, memberships or participation in international networks, contact the Directorate of International Relations and Agreements."
       : "Para mayor información sobre registros, membresías institucionales o participación en redes internacionales, contactar con la Dirección de Relaciones Internacionales y Convenios.",
-  };
+  }, cmsPage);
+  const cmsItems = cmsMemberships(cmsPage, isEnglish);
+  const membershipItems = cmsItems.length ? cmsItems : memberships;
 
   return (
     <main className="dric-theme-page dric-memberships-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
@@ -79,7 +94,7 @@ export default async function MembresiasPage({ params }: Props) {
 
       <section className="dric-memberships-section relative isolate overflow-hidden px-5 py-24 text-white md:px-10 lg:px-12">
         <div className="mx-auto max-w-7xl">
-          <div className="mb-14 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+          <div className="mb-14 flex flex-col gap-5 md:flex-row md:items-end">
             <div>
               <p className="text-sm font-bold uppercase tracking-[0.25em] text-[#E30613]">
                 {copy.kicker}
@@ -89,14 +104,10 @@ export default async function MembresiasPage({ params }: Props) {
                 {copy.sectionTitle}
               </h2>
             </div>
-
-            <p className="max-w-md text-sm leading-7 text-white/68">
-              {copy.sectionText}
-            </p>
           </div>
 
           <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-            {memberships.map((item) => (
+            {membershipItems.map((item) => (
               <Card
                 className="dric-memberships-card"
                 key={item.name}
@@ -114,13 +125,17 @@ export default async function MembresiasPage({ params }: Props) {
                   <div className="absolute bottom-0 left-0 h-1 w-full bg-gradient-to-r from-[#E30613] via-[#003770] to-[#ffffff]" />
 
                   <div className="flex h-32 w-full items-center justify-center">
-                    <Image
-                      src={item.logo}
-                      alt={`${isEnglish ? item.nameEn ?? item.name : item.name} logo`}
-                      width={220}
-                      height={96}
-                      className="h-auto max-h-24 w-auto max-w-[220px] object-contain"
-                    />
+                    {item.logo ? (
+                      <img
+                        src={item.logo}
+                        alt={`${isEnglish ? item.nameEn ?? item.name : item.name} logo`}
+                        className="h-auto max-h-24 w-auto max-w-[220px] object-contain"
+                      />
+                    ) : (
+                      <div className="flex h-24 w-24 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white/70">
+                        <PublicRoundedIcon sx={{ fontSize: 42 }} />
+                      </div>
+                    )}
                   </div>
 
                   <h3 className="mt-6 text-2xl font-bold tracking-[-0.04em] text-white">
@@ -135,21 +150,29 @@ export default async function MembresiasPage({ params }: Props) {
                     {item.full[isEnglish ? "en" : "es"]}
                   </p>
 
-                  {item.name === "PADOR" ? (
+                  {item.extraInfoEnabled ? (
                     <div className="dric-memberships-note mt-auto rounded-2xl border border-amber-200/30 bg-amber-50/10 px-4 py-3">
                       <p className="text-xs font-medium leading-6 text-white/62">
-                        {copy.padorText}
+                        {item.padorText || defaultExtraInfoText(item.name, isEnglish)}
                       </p>
 
-                      <a
-                        href="mailto:dric@umss.edu"
-                        className="mt-1 block font-semibold text-cyan-300 hover:underline"
-                      >
-                        dric@umss.edu
-                      </a>
+                      {item.extraInfoEmail ? (
+                        <a
+                          href={`mailto:${item.extraInfoEmail}`}
+                          className="mt-1 block font-semibold text-cyan-300 hover:underline"
+                        >
+                          {item.extraInfoEmail}
+                        </a>
+                      ) : null}
                     </div>
-                  ) : (
-                    <Link href={item.url} target="_blank" className="mx-auto mt-auto inline-flex">
+                  ) : null}
+
+                  {item.url ? (
+                    <Link
+                      href={item.url}
+                      target="_blank"
+                      className={`mx-auto inline-flex ${item.extraInfoEnabled ? "mt-5" : "mt-auto"}`}
+                    >
                       <Button
                         className="dric-memberships-card-button"
                         variant="outlined"
@@ -168,10 +191,10 @@ export default async function MembresiasPage({ params }: Props) {
                           },
                         }}
                       >
-                        {item.name === "Universia" ? copy.visitUniversia : copy.visitSite}
+                        {copy.visitSite}
                       </Button>
                     </Link>
-                  )}
+                  ) : null}
                 </div>
               </Card>
             ))}
@@ -198,4 +221,88 @@ export default async function MembresiasPage({ params }: Props) {
       <Footer />
     </main>
   );
+}
+
+function mergeMembershipCopy(defaults: {
+  title: string;
+  summary: string;
+  kicker: string;
+  sectionTitle: string;
+  visitSite: string;
+  infoTitle: string;
+  infoText: string;
+}, page: CmsPage | null) {
+  const hero = section(page, "memberships.hero");
+  const list = section(page, "memberships.list");
+  const info = section(page, "memberships.info");
+
+  return {
+    ...defaults,
+    title: page?.title || hero?.title || defaults.title,
+    summary: hero?.summary || page?.summary || defaults.summary,
+    kicker: list?.subtitle || defaults.kicker,
+    sectionTitle: list?.title || defaults.sectionTitle,
+    infoTitle: info?.title || defaults.infoTitle,
+    infoText: info?.summary || defaults.infoText,
+  };
+}
+
+function cmsMemberships(page: CmsPage | null, isEnglish: boolean): Membership[] {
+  return (
+    section(page, "memberships.list")
+      ?.blocks.filter((block) => block.type === "membership_item")
+      .map((block) => {
+        const name = block.title?.trim() ?? "";
+        const logo = block.media?.url || dataString(block, "logo") || "";
+
+        return {
+          name,
+          nameEn: isEnglish ? name : undefined,
+          full: { es: block.summary?.trim() ?? "", en: block.summary?.trim() ?? "" },
+          url: dataString(block, "url") || "",
+          logo: publicAssetUrl(logo),
+          extraInfoEnabled: dataBoolean(block, "extra_info_enabled"),
+          padorText: block.body?.trim() || undefined,
+          extraInfoEmail: dataString(block, "extra_info_email") || undefined,
+        };
+      })
+      .filter((item) => item.name && item.full.es) ?? []
+  );
+}
+
+function section(page: CmsPage | null, key: string): CmsSection | undefined {
+  return page?.sections.find((item) => item.section_key === key);
+}
+
+function dataString(block: CmsBlock, key: string): string | null {
+  const value = block.data?.[key];
+
+  return typeof value === "string" && value.trim() ? value : null;
+}
+
+function dataBoolean(block: CmsBlock, key: string): boolean {
+  return block.data?.[key] === true;
+}
+
+function defaultExtraInfoText(name: string, isEnglish: boolean): string {
+  if (name !== "PADOR") return "";
+
+  return isEnglish
+    ? "For more information about PADOR registration, contact:"
+    : "Para mayor información sobre el registro PADOR, contactar a:";
+}
+
+function publicAssetUrl(path: string): string | undefined {
+  if (!path) return undefined;
+  if (/^https?:\/\//i.test(path)) return path;
+  if (!path.startsWith("/storage/")) return path;
+
+  return `${backendBaseUrl()}${path}`;
+}
+
+function backendBaseUrl(): string {
+  const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://127.0.0.1:8000/api";
+  const backendBase = process.env.NEXT_PUBLIC_BACKEND_URL ?? apiBase.replace(/\/api\/?$/, "");
+
+  return backendBase.replace(/\/$/, "");
 }
