@@ -6,6 +6,7 @@ import AccountBalanceRoundedIcon from "@mui/icons-material/AccountBalanceRounded
 import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 import OpenInNewRoundedIcon from "@mui/icons-material/OpenInNewRounded";
 import PictureAsPdfRoundedIcon from "@mui/icons-material/PictureAsPdfRounded";
+import { publicAssetHref } from "@/lib/api/assets";
 import { getOptionalPageBySlug } from "@/lib/api/pages";
 import type { CmsBlock, CmsPage, CmsSection } from "@/types/cms";
 
@@ -118,7 +119,8 @@ export default async function ApoyoFinancieroPage({ params }: Props) {
     cmsPage,
   );
   const areas = text.areas;
-  const documents = cmsDocumentLinks(cmsPage).length ? cmsDocumentLinks(cmsPage) : documentLinks;
+  const cmsDocuments = cmsDocumentLinks(cmsPage);
+  const documents = hasCmsSection(cmsPage, "projects.funding.documents") ? cmsDocuments : documentLinks;
 
   return (
     <main className="dric-theme-page dric-projects-page dric-funding-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
@@ -293,7 +295,10 @@ function mergeFundingCopy(defaults: (typeof copy)["es"], defaultAreas: string[],
     docsTitle: docs?.title || defaults.docsTitle,
     docsIntro: docs?.summary || defaults.docsIntro,
     moreInfo: moreInfo?.title || defaults.moreInfo,
-    moreInfoHref: dataString(moreInfo, "href") || "https://www.gov.br/cnpq/pt-br/assuntos/noticias/cnpq-em-acao/prosul-pepe-mujica-vai-financiar-projetos-para-fortalecer-a-infraestrutura-cientifica-da-america-latina",
+    moreInfoHref: publicAssetHref(
+      dataString(moreInfo, "href"),
+      "https://www.gov.br/cnpq/pt-br/assuntos/noticias/cnpq-em-acao/prosul-pepe-mujica-vai-financiar-projetos-para-fortalecer-a-infraestrutura-cientifica-da-america-latina",
+    ),
   };
 }
 
@@ -304,10 +309,14 @@ function cmsDocumentLinks(page: CmsPage | null) {
       .map((item) => ({
         es: item.title ?? "",
         en: item.title ?? "",
-        href: dataString(item, "href") ?? "",
+        href: publicAssetHref(dataString(item, "href"), ""),
       }))
       .filter((item) => item.es && item.href) ?? []
   );
+}
+
+function hasCmsSection(page: CmsPage | null, key: string): boolean {
+  return Boolean(section(page, key));
 }
 
 function section(page: CmsPage | null, key: string): CmsSection | undefined {

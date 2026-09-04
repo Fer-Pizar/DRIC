@@ -22,9 +22,13 @@ type NewsItem = {
 type Props = {
   locale: string;
   news: NewsItem[];
+  kicker?: string;
+  title?: string;
+  searchPlaceholder?: string;
+  readMoreLabel?: string;
 };
 
-export default function NewsExplorer({ locale, news }: Props) {
+export default function NewsExplorer({ locale, news, kicker, title, searchPlaceholder, readMoreLabel }: Props) {
   const [query, setQuery] = useState("");
 
   const filteredNews = useMemo(() => {
@@ -41,10 +45,10 @@ export default function NewsExplorer({ locale, news }: Props) {
         <div className="mb-12 grid gap-8 lg:grid-cols-[1fr_0.75fr] lg:items-end">
           <div>
             <p className="text-sm font-bold uppercase tracking-[0.25em] text-[#E30613]">
-              {locale === "en" ? "Explore" : "Explorar"}
+              {kicker || (locale === "en" ? "Explore" : "Explorar")}
             </p>
             <h2 className="mt-4 text-4xl font-semibold tracking-[-0.04em] md:text-5xl">
-              {locale === "en" ? "Latest institutional updates" : "Últimas noticias institucionales"}
+              {title || (locale === "en" ? "Latest institutional updates" : "Últimas noticias institucionales")}
             </h2>
           </div>
 
@@ -53,7 +57,7 @@ export default function NewsExplorer({ locale, news }: Props) {
             <input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder={locale === "en" ? "Search news..." : "Buscar noticias..."}
+              placeholder={searchPlaceholder || (locale === "en" ? "Search news..." : "Buscar noticias...")}
               className="dric-news-search-input w-full bg-transparent text-sm text-white outline-none placeholder:text-white/42"
             />
           </div>
@@ -122,7 +126,7 @@ export default function NewsExplorer({ locale, news }: Props) {
                         fontWeight: 800,
                       }}
                     >
-                      {locale === "en" ? "Read more" : "Leer más"}
+                      {readMoreLabel || (locale === "en" ? "Read more" : "Leer más")}
                     </Button>
                   </Link>
                 </div>

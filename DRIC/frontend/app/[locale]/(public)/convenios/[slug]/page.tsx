@@ -1,5 +1,6 @@
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import { publicAssetHref } from "@/lib/api/assets";
 import { getOptionalPageBySlug } from "@/lib/api/pages";
 import type { CmsBlock, CmsPage } from "@/types/cms";
 import GovernmentAgreementsList, { type GovernmentAgreementSection } from "./GovernmentAgreementsList";
@@ -539,7 +540,7 @@ function cmsOtherAgreements(page: CmsPage | null): OtherAgreement[] {
     .map((block) => ({
       es: block.title?.trim() ?? "",
       en: block.title?.trim() ?? "",
-      href: typeof block.data?.href === "string" ? block.data.href : "",
+      href: publicAssetHref(typeof block.data?.href === "string" ? block.data.href : "", ""),
     }))
     .filter((agreement) => agreement.es && agreement.href);
 }
@@ -551,7 +552,7 @@ function cmsGovernmentSections(
   const documents = getDocumentBlocks(page, "agreements.government.documents")
     .map((block) => ({
       title: block.title?.trim() ?? "",
-      href: typeof block.data?.href === "string" ? block.data.href : "",
+      href: publicAssetHref(typeof block.data?.href === "string" ? block.data.href : "", ""),
     }))
     .filter((agreement) => agreement.title && agreement.href);
 
@@ -568,6 +569,10 @@ function cmsGovernmentSections(
   ];
 }
 
+function hasCmsSection(page: CmsPage | null, key: string): boolean {
+  return Boolean(page?.sections.find((section) => section.section_key === key));
+}
+
 export default async function AgreementDetailPage({ params }: Props) {
   const { locale, slug } = await params;
   const activeLocale: Locale = locale === "en" ? "en" : "es";
@@ -576,7 +581,7 @@ export default async function AgreementDetailPage({ params }: Props) {
   if (slug === "ceub-gobierno") {
     const cmsPage = await getOptionalPageBySlug("convenios-ceub-gobierno", activeLocale);
     const managedSections = cmsGovernmentSections(cmsPage, t.governmentTitle);
-    const sections = managedSections.length ? managedSections : governmentAgreementSections;
+    const sections = hasCmsSection(cmsPage, "agreements.government.documents") ? managedSections : governmentAgreementSections;
     const totalGovernmentAgreements = sections.reduce(
       (total, section) => total + section.agreements.length,
       0,
@@ -649,7 +654,7 @@ export default async function AgreementDetailPage({ params }: Props) {
 
   const cmsPage = await getOptionalPageBySlug("convenios-otros", activeLocale);
   const managedOtherAgreements = cmsOtherAgreements(cmsPage);
-  const agreements = managedOtherAgreements.length ? managedOtherAgreements : otherAgreements;
+  const agreements = hasCmsSection(cmsPage, "agreements.other.documents") ? managedOtherAgreements : otherAgreements;
 
   return (
     <main className="dric-other-agreements-page min-h-screen overflow-x-hidden">

@@ -16,6 +16,7 @@ use App\Support\PagePermissionMap;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
@@ -318,7 +319,16 @@ class MembershipContentController extends Controller
         ContentBlock::query()
             ->where('section_id', $section->id)
             ->when($keptIds !== [], fn ($query) => $query->whereNotIn('id', $keptIds))
-            ->update(['is_active' => false]);
+            ->with('mediaAsset')
+            ->get()
+            ->each(function (ContentBlock $block): void {
+                if ($block->mediaAsset) {
+                    Storage::disk($block->mediaAsset->disk ?? 'public')->delete($block->mediaAsset->file_path);
+                    $block->mediaAsset->delete();
+                }
+
+                $block->delete();
+            });
     }
 
     private function storeMedia(Request $request, string $field, string $prefix): MediaAsset

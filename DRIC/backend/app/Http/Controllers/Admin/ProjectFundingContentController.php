@@ -330,7 +330,7 @@ class ProjectFundingContentController extends Controller
         ContentBlock::query()
             ->where('section_id', $section->id)
             ->when($keptIds !== [], fn ($query) => $query->whereNotIn('id', $keptIds))
-            ->update(['is_active' => false]);
+            ->delete();
     }
 
     private function upsertSection(Page $page, string $key, string $type, int $sortOrder): Section

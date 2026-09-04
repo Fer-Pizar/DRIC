@@ -5,6 +5,7 @@ import Card from "@mui/material/Card";
 import Button from "@mui/material/Button";
 import ArrowOutwardRoundedIcon from "@mui/icons-material/ArrowOutwardRounded";
 import PublicRoundedIcon from "@mui/icons-material/PublicRounded";
+import { publicAssetUrl } from "@/lib/api/assets";
 import { getOptionalPageBySlug } from "@/lib/api/pages";
 import type { CmsBlock, CmsPage, CmsSection } from "@/types/cms";
 
@@ -64,7 +65,7 @@ export default async function MembresiasPage({ params }: Props) {
       : "Para mayor información sobre registros, membresías institucionales o participación en redes internacionales, contactar con la Dirección de Relaciones Internacionales y Convenios.",
   }, cmsPage);
   const cmsItems = cmsMemberships(cmsPage, isEnglish);
-  const membershipItems = cmsItems.length ? cmsItems : memberships;
+  const membershipItems = hasCmsSection(cmsPage, "memberships.list") ? cmsItems : memberships;
 
   return (
     <main className="dric-theme-page dric-memberships-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
@@ -270,6 +271,10 @@ function cmsMemberships(page: CmsPage | null, isEnglish: boolean): Membership[] 
   );
 }
 
+function hasCmsSection(page: CmsPage | null, key: string): boolean {
+  return Boolean(section(page, key));
+}
+
 function section(page: CmsPage | null, key: string): CmsSection | undefined {
   return page?.sections.find((item) => item.section_key === key);
 }
@@ -290,19 +295,4 @@ function defaultExtraInfoText(name: string, isEnglish: boolean): string {
   return isEnglish
     ? "For more information about PADOR registration, contact:"
     : "Para mayor información sobre el registro PADOR, contactar a:";
-}
-
-function publicAssetUrl(path: string): string | undefined {
-  if (!path) return undefined;
-  if (/^https?:\/\//i.test(path)) return path;
-  if (!path.startsWith("/storage/")) return path;
-
-  return `${backendBaseUrl()}${path}`;
-}
-
-function backendBaseUrl(): string {
-  const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://127.0.0.1:8000/api";
-  const backendBase = process.env.NEXT_PUBLIC_BACKEND_URL ?? apiBase.replace(/\/api\/?$/, "");
-
-  return backendBase.replace(/\/$/, "");
 }

@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import { publicAssetHref } from "@/lib/api/assets";
 import { getOptionalPageBySlug } from "@/lib/api/pages";
 import type { CmsBlock, CmsPage } from "@/types/cms";
 import Card from "@mui/material/Card";
@@ -155,7 +156,7 @@ function mergeProjectsCopy(defaults: (typeof projectsCopy)["es"], page: CmsPage 
       title: cmsCard?.title || fallback.title,
       description: cmsCard?.summary || fallback.description,
       href: dataString(cmsCard, "href") || fallback.href,
-      image: cmsCard?.media?.url || fallback.image,
+      image: publicAssetHref(cmsCard?.media?.url, fallback.image),
       icon: dataString(cmsCard, "icon") === "finance" ? "finance" as const : fallback.icon,
       button: cmsCard?.cta_label || fallback.button,
     };
@@ -165,7 +166,10 @@ function mergeProjectsCopy(defaults: (typeof projectsCopy)["es"], page: CmsPage 
     title: page?.title || hero?.title || defaults.title,
     intro: hero?.summary || page?.summary || defaults.intro,
     procedure: procedure?.title || defaults.procedure,
-    procedureHref: procedure?.media?.url || dataString(procedure, "url") || "https://dric.umss.edu.bo/wp-content/uploads/2021/11/proconv.pdf",
+    procedureHref: publicAssetHref(
+      procedure?.media?.url || dataString(procedure, "url"),
+      "https://dric.umss.edu.bo/wp-content/uploads/2021/11/proconv.pdf",
+    ),
     cards,
   };
 }

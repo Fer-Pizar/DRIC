@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\AgreementContentController;
 use App\Http\Controllers\Admin\AgreementListContentController;
 use App\Http\Controllers\Admin\MembershipContentController;
+use App\Http\Controllers\Admin\NewsContentController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\PresentationContentController;
@@ -26,6 +27,8 @@ Route::get('project-funding-content', [ProjectFundingContentController::class, '
 Route::put('project-funding-content', [ProjectFundingContentController::class, 'update'])->name('project-funding.update');
 Route::get('pages/{page}/membership-content', [MembershipContentController::class, 'edit'])->name('pages.memberships.edit');
 Route::put('pages/{page}/membership-content', [MembershipContentController::class, 'update'])->name('pages.memberships.update');
+Route::get('pages/{page}/news-content', [NewsContentController::class, 'edit'])->name('pages.news.edit');
+Route::put('pages/{page}/news-content', [NewsContentController::class, 'update'])->name('pages.news.update');
 Route::resource('pages', PageController::class)->except(['show', 'destroy']);
 Route::resource('roles', RoleController::class)->except(['show']);
 Route::resource('permissions', PermissionController::class)->only(['index', 'create', 'store', 'destroy']);

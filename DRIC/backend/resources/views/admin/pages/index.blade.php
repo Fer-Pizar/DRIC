@@ -232,6 +232,9 @@
                                     @if ($page->slug === 'membresias')
                                         <a href="{{ route('admin.pages.memberships.edit', $page) }}" class="btn-content">Editar contenido</a>
                                     @endif
+                                    @if ($page->slug === 'noticias')
+                                        <a href="{{ route('admin.pages.news.edit', $page) }}" class="btn-content">Editar contenido</a>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach

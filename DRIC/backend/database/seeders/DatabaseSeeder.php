@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             ProjectPageSeeder::class,
             ProjectFundingPageSeeder::class,
             MembershipPageSeeder::class,
+            NewsPageSeeder::class,
             ScholarshipBecasPageSeeder::class,
             MobilityPasantiasPageSeeder::class,
         ]);

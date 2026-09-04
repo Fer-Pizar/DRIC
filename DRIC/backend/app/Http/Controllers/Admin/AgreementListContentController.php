@@ -119,7 +119,7 @@ class AgreementListContentController extends Controller
             ContentBlock::query()
                 ->where('section_id', $section->id)
                 ->when($keptIds !== [], fn ($query) => $query->whereNotIn('id', $keptIds))
-                ->update(['is_active' => false]);
+                ->delete();
         });
 
         return redirect()

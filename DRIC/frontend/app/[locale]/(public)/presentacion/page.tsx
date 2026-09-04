@@ -7,6 +7,7 @@ import EmailRoundedIcon from "@mui/icons-material/EmailRounded";
 import AccountBalanceRoundedIcon from "@mui/icons-material/AccountBalanceRounded";
 import GroupsRoundedIcon from "@mui/icons-material/GroupsRounded";
 import PublicRoundedIcon from "@mui/icons-material/PublicRounded";
+import { publicAssetHref } from "@/lib/api/assets";
 import { getOptionalPageBySlug } from "@/lib/api/pages";
 import type { CmsBlock, CmsPage, CmsSection } from "@/types/cms";
 
@@ -336,8 +337,8 @@ function mergePresentationContent(fallback: PresentationCopy, page: CmsPage | nu
     agreementsTeamPeople: arrayData(agreementsTeam, `people_${suffix}`, fallback.agreementsTeamPeople),
     projectsTeamTitle: projectsTeam?.title || fallback.projectsTeamTitle,
     projectsTeamPeople: arrayData(projectsTeam, `people_${suffix}`, fallback.projectsTeamPeople),
-    teamImage: historyImage?.media?.url || fallback.teamImage,
-    directorImage: directorImage?.media?.url || fallback.directorImage,
+    teamImage: publicAssetHref(historyImage?.media?.url, fallback.teamImage),
+    directorImage: publicAssetHref(directorImage?.media?.url, fallback.directorImage),
   };
 }
 

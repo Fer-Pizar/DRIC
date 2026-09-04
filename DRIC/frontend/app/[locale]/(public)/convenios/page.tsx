@@ -1,6 +1,7 @@
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import Link from "next/link";
+import { publicAssetHref } from "@/lib/api/assets";
 import { getOptionalPageBySlug } from "@/lib/api/pages";
 import type { CmsBlock, CmsPage, CmsSection } from "@/types/cms";
 
@@ -228,7 +229,7 @@ function mergeAgreementContent(fallback: Omit<AgreementContent, "procedureHref" 
       title: block?.title || fallbackCard.title,
       description: block?.summary || fallbackCard.description,
       href: stringData(block, "href", fallbackCard.href),
-      image: block?.media?.url || fallbackCard.image,
+      image: publicAssetHref(block?.media?.url, fallbackCard.image),
     };
   });
 
@@ -240,8 +241,11 @@ function mergeAgreementContent(fallback: Omit<AgreementContent, "procedureHref" 
     intro2: hero?.body || fallback.intro2,
     mainButton: actionLabel?.title || fallback.mainButton,
     procedure: procedure?.title || fallback.procedure,
-    procedureHref: stringData(procedure, "url", procedure?.media?.url || "https://dric.umss.edu.bo/wp-content/uploads/2021/11/proconv.pdf"),
-    heroImage: heroImage?.media?.url || "/images/agreements/international-flags.jpg",
+    procedureHref: publicAssetHref(
+      stringData(procedure, "url", procedure?.media?.url || "https://dric.umss.edu.bo/wp-content/uploads/2021/11/proconv.pdf"),
+      "https://dric.umss.edu.bo/wp-content/uploads/2021/11/proconv.pdf",
+    ),
+    heroImage: publicAssetHref(heroImage?.media?.url, "/images/agreements/international-flags.jpg"),
     cards,
   };
 }
