@@ -23,6 +23,7 @@ class PagePermissionMap
             'inicio' => 'editar.inicio',
             'presentacion' => 'editar.presentacion',
             'informes-gestion' => 'editar.informes_gestion',
+            'validar-certificado' => 'editar.validar_certificado',
         ];
     }
 

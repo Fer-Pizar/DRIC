@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import ArticleRoundedIcon from "@mui/icons-material/ArticleRounded";
 import DownloadRoundedIcon from "@mui/icons-material/DownloadRounded";
+import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import TuneRoundedIcon from "@mui/icons-material/TuneRounded";
 import type { RegulationItem } from "@/lib/regulations/regulationsCatalog";
@@ -71,7 +72,7 @@ export default function RegulationsExplorer({ locale, regulations }: Props) {
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder={t.search}
-            className="w-full bg-transparent text-sm text-white outline-none placeholder:text-white/35"
+            className="dric-regulations-search-field w-full bg-transparent text-sm text-white outline-none placeholder:text-white/35"
           />
         </label>
 
@@ -79,21 +80,27 @@ export default function RegulationsExplorer({ locale, regulations }: Props) {
           <span className="flex items-center text-white/55">
             <TuneRoundedIcon sx={{ fontSize: 16 }} />
           </span>
-          <select
-            value={category}
-            onChange={(event) =>
-              setCategory(event.target.value as "all" | RegulationItem["categoryKey"])
-            }
-            aria-label={t.category}
-            className="dric-regulations-category-select min-w-[170px] bg-transparent text-xs font-bold uppercase tracking-[0.18em] text-white outline-none"
-          >
-            <option value="all">{t.all}</option>
-            {categoryOrder.map((key) => (
-              <option key={key} value={key}>
-                {t.groups[key]}
-              </option>
-            ))}
-          </select>
+          <span className="relative inline-flex min-w-[170px] items-center">
+            <select
+              value={category}
+              onChange={(event) =>
+                setCategory(event.target.value as "all" | RegulationItem["categoryKey"])
+              }
+              aria-label={t.category}
+              className="dric-regulations-category-select w-full appearance-none bg-transparent pr-8 text-xs font-bold uppercase tracking-[0.18em] text-white outline-none"
+            >
+              <option value="all">{t.all}</option>
+              {categoryOrder.map((key) => (
+                <option key={key} value={key}>
+                  {t.groups[key]}
+                </option>
+              ))}
+            </select>
+            <KeyboardArrowDownRoundedIcon
+              className="pointer-events-none absolute right-0"
+              sx={{ fontSize: 20 }}
+            />
+          </span>
         </label>
       </div>
 

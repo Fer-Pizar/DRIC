@@ -10,7 +10,9 @@ class CertificateVerification extends Model
         'code',
         'full_name',
         'certificate_type',
+        'certificate_type_en',
         'description',
+        'description_en',
         'issue_date',
         'is_active',
     ];

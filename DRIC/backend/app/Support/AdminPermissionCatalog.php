@@ -36,6 +36,7 @@ class AdminPermissionCatalog
                     'editar.inicio' => 'Editar Inicio',
                     'editar.presentacion' => 'Editar Presentación',
                     'editar.informes_gestion' => 'Editar Informes de gestión',
+                    'editar.validar_certificado' => 'Editar Verificación de certificados',
                 ],
             ],
         ];
@@ -86,6 +87,7 @@ class AdminPermissionCatalog
                     'editar.inicio',
                     'editar.presentacion',
                     'editar.informes_gestion',
+                    'editar.validar_certificado',
                 ],
             ],
         ];

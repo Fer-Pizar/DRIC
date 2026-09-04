@@ -235,6 +235,15 @@
                                     @if ($page->slug === 'noticias')
                                         <a href="{{ route('admin.pages.news.edit', $page) }}" class="btn-content">Editar contenido</a>
                                     @endif
+                                    @if ($page->slug === 'normativas')
+                                        <a href="{{ route('admin.pages.normatives.edit', $page) }}" class="btn-content">Editar contenido</a>
+                                    @endif
+                                    @if ($page->slug === 'informes-gestion')
+                                        <a href="{{ route('admin.pages.reports.edit', $page) }}" class="btn-content">Editar contenido</a>
+                                    @endif
+                                    @if ($page->slug === 'validar-certificado')
+                                        <a href="{{ route('admin.pages.certificates.edit', $page) }}" class="btn-content">Editar contenido</a>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach

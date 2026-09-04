@@ -33,6 +33,8 @@ class RolePermissionSeeder extends Seeder
             $role->syncPermissions($roleData['permissions']);
         }
 
+        $admin = Role::where('name', 'Admin')->where('guard_name', 'web')->first();
+
         $adminEmail = env('DRIC_ADMIN_EMAIL');
 
         if ($adminEmail) {

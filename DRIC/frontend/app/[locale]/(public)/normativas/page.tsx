@@ -1,7 +1,10 @@
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import RegulationsExplorer from "@/components/regulations/RegulationsExplorer";
-import { getRegulations } from "@/lib/regulations/regulationsCatalog";
+import { publicAssetHref } from "@/lib/api/assets";
+import { getOptionalPageBySlug } from "@/lib/api/pages";
+import { getRegulations, type RegulationCategory, type RegulationItem } from "@/lib/regulations/regulationsCatalog";
+import type { CmsBlock, CmsPage } from "@/types/cms";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -25,8 +28,9 @@ const content = {
 export default async function NormativasPage({ params }: Props) {
   const { locale } = await params;
   const language = locale === "en" ? "en" : "es";
-  const t = content[language];
-  const regulations = getRegulations(language);
+  const cmsPage = await getOptionalPageBySlug("normativas", language);
+  const t = cmsContent(cmsPage, language);
+  const regulations = cmsRegulations(cmsPage, language) ?? getRegulations(language);
 
   return (
     <main className="dric-theme-page dric-regulations-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
@@ -57,4 +61,72 @@ export default async function NormativasPage({ params }: Props) {
       <Footer />
     </main>
   );
+}
+
+function cmsContent(page: CmsPage | null, locale: "es" | "en") {
+  const hero = page?.sections.find((section) => section.section_key === "regulations.hero");
+
+  return {
+    eyebrow: hero?.subtitle || page?.seo?.meta_title || content[locale].eyebrow,
+    title: page?.title || hero?.title || content[locale].title,
+    intro: hero?.summary || page?.summary || content[locale].intro,
+  };
+}
+
+function cmsRegulations(page: CmsPage | null, locale: "es" | "en"): RegulationItem[] | null {
+  const blocks = page?.sections
+    .find((section) => section.section_key === "regulations.list")
+    ?.blocks
+    .filter((block) => block.type === "regulation_document");
+
+  if (!blocks?.length) {
+    return null;
+  }
+
+  const items = blocks
+    .map((block) => regulationFromBlock(block, locale))
+    .filter((item): item is RegulationItem => Boolean(item));
+
+  return items.length ? items : null;
+}
+
+function regulationFromBlock(block: CmsBlock, locale: "es" | "en"): RegulationItem | null {
+  if (!block.title) {
+    return null;
+  }
+
+  const categoryKey = dataString(block, "category") as RegulationCategory | null;
+
+  if (!categoryKey || !["primero", "segundo", "tercero"].includes(categoryKey)) {
+    return null;
+  }
+
+  return {
+    id: String(block.id),
+    code: dataString(block, "code") || "",
+    title: block.title,
+    category: dataString(block, `category_label_${locale}`) || categoryLabels[locale][categoryKey],
+    categoryKey,
+    categoryUrl: dataString(block, "category_url") || `https://dric.umss.edu.bo/document-category/${categoryKey}/`,
+    downloadUrl: publicAssetHref(dataString(block, "download_url")),
+  };
+}
+
+const categoryLabels = {
+  es: {
+    primero: "Primero",
+    segundo: "Segundo",
+    tercero: "Tercero",
+  },
+  en: {
+    primero: "First",
+    segundo: "Second",
+    tercero: "Third",
+  },
+};
+
+function dataString(block: CmsBlock, key: string): string | null {
+  const value = block.data?.[key];
+
+  return typeof value === "string" && value.trim() ? value : null;
 }

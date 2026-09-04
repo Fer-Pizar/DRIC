@@ -13,6 +13,7 @@ class CertificateVerificationController extends Controller
     {
         $validated = $request->validate([
             'code' => ['required', 'string', 'size:7', 'alpha_num'],
+            'locale' => ['nullable', 'in:es,en'],
         ]);
 
         $certificate = CertificateVerification::query()
@@ -26,12 +27,18 @@ class CertificateVerificationController extends Controller
             ], 404);
         }
 
+        $locale = $validated['locale'] ?? 'es';
+
         return response()->json([
             'data' => [
                 'code' => $certificate->code,
                 'full_name' => $certificate->full_name,
-                'certificate_type' => $certificate->certificate_type,
-                'description' => $certificate->description,
+                'certificate_type' => $locale === 'en'
+                    ? ($certificate->certificate_type_en ?: $certificate->certificate_type)
+                    : $certificate->certificate_type,
+                'description' => $locale === 'en'
+                    ? ($certificate->description_en ?: $certificate->description)
+                    : $certificate->description,
                 'issue_date' => $certificate->issue_date?->format('Y-m-d'),
             ],
         ]);

@@ -1,12 +1,13 @@
-import Link from "next/link";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import Card from "@mui/material/Card";
 import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
 import DownloadRoundedIcon from "@mui/icons-material/DownloadRounded";
 import CalendarMonthRoundedIcon from "@mui/icons-material/CalendarMonthRounded";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
+import { publicAssetHref } from "@/lib/api/assets";
+import { getOptionalPageBySlug } from "@/lib/api/pages";
+import type { CmsBlock, CmsPage } from "@/types/cms";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -68,7 +69,11 @@ const content = {
 export default async function InformesGestionPage({ params }: Props) {
   const { locale } = await params;
   const isEnglish = locale === "en";
-  const t = content[locale as "es" | "en"] ?? content.es;
+  const language = isEnglish ? "en" : "es";
+  const cmsPage = await getOptionalPageBySlug("informes-gestion", language);
+  const t = cmsContent(cmsPage, language);
+  const reports = cmsReports(cmsPage) ?? t.reports;
+  const archiveRange = reportRange(reports);
 
   return (
     <main className="dric-theme-page dric-reports-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
@@ -122,7 +127,7 @@ export default async function InformesGestionPage({ params }: Props) {
                   : "text-5xl tracking-[-0.06em]"
               }`}
             >
-              2017—2023
+              {archiveRange}
             </p>
 
             <p className="mt-4 text-sm leading-7 text-white/65">
@@ -145,33 +150,18 @@ export default async function InformesGestionPage({ params }: Props) {
               </h2>
             </div>
 
-            <div className="dric-reports-search rounded-full border border-white/10 bg-white/[0.06] p-2 shadow-2xl shadow-black/20 backdrop-blur-xl">
-              <TextField
-                fullWidth
+            <label className="dric-reports-search flex items-center rounded-full border border-white/10 bg-white/[0.06] px-5 py-4 shadow-2xl shadow-black/20 backdrop-blur-xl">
+              <SearchRoundedIcon sx={{ mr: 1.5, color: "#003770", fontSize: 30 }} />
+              <input
+                type="search"
                 placeholder={t.searchPlaceholder}
-                variant="outlined"
-                slotProps={{
-                  input: {
-                    startAdornment: (
-                      <SearchRoundedIcon sx={{ mr: 1.5, color: "#003770" }} />
-                    ),
-                  },
-                }}
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: "999px",
-                    backgroundColor: "#ffffff",
-                    "& fieldset": { borderColor: "transparent" },
-                    "&:hover fieldset": { borderColor: "transparent" },
-                    "&.Mui-focused fieldset": { borderColor: "#003770" },
-                  },
-                }}
+                className="dric-reports-search-input w-full bg-transparent text-base text-white outline-none placeholder:text-white/42"
               />
-            </div>
+            </label>
           </div>
 
           <div className="grid gap-7 sm:grid-cols-2 xl:grid-cols-3">
-            {t.reports.map((report) => (
+            {reports.map((report) => (
               <Card
                 className="dric-reports-card dric-reports-book-card"
                 key={report.year}
@@ -224,7 +214,12 @@ export default async function InformesGestionPage({ params }: Props) {
                       {report.date}
                     </div>
 
-                    <Link href={`/${locale}/normativas`} className="mt-7 inline-flex">
+                    <a
+                      href={report.downloadUrl}
+                      target={report.downloadUrl === "#" ? undefined : "_blank"}
+                      rel={report.downloadUrl === "#" ? undefined : "noreferrer"}
+                      className="mt-7 inline-flex"
+                    >
                       <Button
                         className="dric-reports-download-button"
                         variant="contained"
@@ -241,7 +236,7 @@ export default async function InformesGestionPage({ params }: Props) {
                       >
                         {t.downloadLabel}
                       </Button>
-                    </Link>
+                    </a>
                   </div>
                 </div>
               </Card>
@@ -253,4 +248,91 @@ export default async function InformesGestionPage({ params }: Props) {
       <Footer />
     </main>
   );
+}
+
+type ReportItem = {
+  title: string;
+  date: string;
+  year: string;
+  downloadUrl: string;
+};
+
+function cmsContent(page: CmsPage | null, locale: "es" | "en") {
+  const fallback = content[locale];
+  const hero = page?.sections.find((section) => section.section_key === "reports.hero");
+  const archive = page?.sections.find((section) => section.section_key === "reports.archive");
+  const settings = archive?.settings ?? {};
+
+  return {
+    eyebrow: hero?.subtitle || fallback.eyebrow,
+    title: page?.title || hero?.title || fallback.title,
+    intro: hero?.summary || page?.summary || fallback.intro,
+    archiveLabel: settingString(settings, `archive_label_${locale}`) || fallback.archiveLabel,
+    archiveDescription: hero?.body || fallback.archiveDescription,
+    exploreLabel: archive?.subtitle || fallback.exploreLabel,
+    archiveTitle: archive?.title || fallback.archiveTitle,
+    searchPlaceholder: archive?.summary || fallback.searchPlaceholder,
+    coverEyebrow: settingString(settings, `cover_eyebrow_${locale}`) || fallback.coverEyebrow,
+    coverTitle: settingString(settings, `cover_title_${locale}`) || fallback.coverTitle,
+    yearLabel: settingString(settings, `year_label_${locale}`) || fallback.yearLabel,
+    downloadLabel: settingString(settings, `download_label_${locale}`) || fallback.downloadLabel,
+    reports: fallback.reports.map((report) => ({ ...report, downloadUrl: "#" })),
+  };
+}
+
+function cmsReports(page: CmsPage | null): ReportItem[] | null {
+  const blocks = page?.sections
+    .find((section) => section.section_key === "reports.archive")
+    ?.blocks
+    .filter((block) => block.type === "management_report");
+
+  if (!blocks?.length) {
+    return null;
+  }
+
+  const reports = blocks
+    .map(reportFromBlock)
+    .filter((report): report is ReportItem => Boolean(report))
+    .sort((a, b) => Number(b.year) - Number(a.year));
+
+  return reports.length ? reports : null;
+}
+
+function reportFromBlock(block: CmsBlock): ReportItem | null {
+  const year = dataString(block, "year");
+
+  if (!block.title || !year) {
+    return null;
+  }
+
+  return {
+    title: block.title,
+    date: block.cta_label || "",
+    year,
+    downloadUrl: publicAssetHref(dataString(block, "download_url")),
+  };
+}
+
+function reportRange(reports: ReportItem[]): string {
+  const years = reports
+    .map((report) => Number(report.year))
+    .filter((year) => Number.isFinite(year));
+
+  if (!years.length) {
+    return "2017—2023";
+  }
+
+  return `${Math.min(...years)}—${Math.max(...years)}`;
+}
+
+function settingString(settings: Record<string, unknown>, key: string): string | null {
+  const value = settings[key];
+
+  return typeof value === "string" && value.trim() ? value : null;
+}
+
+function dataString(block: CmsBlock, key: string): string | null {
+  const value = block.data?.[key];
+
+  return typeof value === "string" && value.trim() ? value : null;
 }
