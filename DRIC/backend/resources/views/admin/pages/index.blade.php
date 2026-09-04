@@ -243,7 +243,7 @@
             </div>
 
             <div class="pagination">
-                {{ $pages->links() }}
+                {{ $pages->links('admin.partials.pagination') }}
             </div>
         @else
             <div class="empty">

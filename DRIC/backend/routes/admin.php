@@ -29,6 +29,8 @@ Route::get('pages/{page}/membership-content', [MembershipContentController::clas
 Route::put('pages/{page}/membership-content', [MembershipContentController::class, 'update'])->name('pages.memberships.update');
 Route::get('pages/{page}/news-content', [NewsContentController::class, 'edit'])->name('pages.news.edit');
 Route::put('pages/{page}/news-content', [NewsContentController::class, 'update'])->name('pages.news.update');
+Route::get('news/{news}/detail', [NewsContentController::class, 'editDetail'])->name('news.detail.edit');
+Route::put('news/{news}/detail', [NewsContentController::class, 'updateDetail'])->name('news.detail.update');
 Route::resource('pages', PageController::class)->except(['show', 'destroy']);
 Route::resource('roles', RoleController::class)->except(['show']);
 Route::resource('permissions', PermissionController::class)->only(['index', 'create', 'store', 'destroy']);

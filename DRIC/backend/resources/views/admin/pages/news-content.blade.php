@@ -21,6 +21,7 @@
         .btn-primary { background: var(--blue); color: #fff; }
         .btn-secondary { background: #e8edf5; color: var(--ink); }
         .btn-danger { background: #fff1f2; color: var(--red-dark); }
+        .btn-detail { background: #eef4ff; color: var(--blue); }
         .alert { border-radius: 14px; margin-bottom: 18px; padding: 14px 16px; }
         .alert-success { background: #e8f8ee; border: 1px solid #bde8c9; color: #176534; }
         .alert-error { background: #fff1f2; border: 1px solid #b91c1c; color: var(--red-dark); font-weight: 800; }
@@ -119,7 +120,14 @@
                         <div class="news-row">
                             <div class="row-header">
                                 <h3>Noticia <span class="row-number">{{ $loop->iteration }}</span></h3>
-                                <button class="btn btn-danger" type="button" data-remove-row>Quitar</button>
+                                <div class="actions">
+                                    @if (! empty($item['id']))
+                                        <a class="btn btn-detail" href="{{ route('admin.news.detail.edit', $item['id']) }}">Detalle de la noticia</a>
+                                    @else
+                                        <span class="hint">Guarda primero para editar el detalle.</span>
+                                    @endif
+                                    <button class="btn btn-danger" type="button" data-remove-row>Quitar</button>
+                                </div>
                             </div>
                             <input type="hidden" data-name="id" name="news[{{ $index }}][id]" value="{{ $item['id'] ?? '' }}">
                             <div class="news-fields">
@@ -177,9 +185,9 @@
                                     @error('news.'.$index.'.excerpt_en')<span class="field-error">{{ $message }}</span>@enderror
                                 </label>
                                 <label class="full">
-                                    Enlace de la noticia
-                                    <input type="text" data-name="href" name="news[{{ $index }}][href]" value="{{ $item['href'] ?? '' }}" placeholder="/noticias/1 o https://sitio.edu.bo/noticia">
-                                    <span class="hint">Usa una URL completa o una ruta interna que empiece con /.</span>
+                                    URL de la noticia
+                                    <input type="text" data-name="href" name="news[{{ $index }}][href]" value="{{ $item['href'] ?? '' }}" placeholder="/noticias/titulo-de-la-noticia">
+                                    <span class="hint">Si se deja vacío, se creará automáticamente con el título en español. También puedes usar una URL completa.</span>
                                     @error('news.'.$index.'.href')<span class="field-error">{{ $message }}</span>@enderror
                                 </label>
                             </div>
@@ -201,7 +209,10 @@
         <div class="news-row">
             <div class="row-header">
                 <h3>Noticia <span class="row-number"></span></h3>
-                <button class="btn btn-danger" type="button" data-remove-row>Quitar</button>
+                <div class="actions">
+                    <span class="hint">Guarda primero para editar el detalle.</span>
+                    <button class="btn btn-danger" type="button" data-remove-row>Quitar</button>
+                </div>
             </div>
             <input type="hidden" data-name="id" value="">
             <div class="news-fields">
@@ -215,7 +226,7 @@
                 <label class="full">Fecha de publicación<input type="date" data-name="published_at" value="{{ now()->toDateString() }}"><span class="hint">Se usa para ordenar y mantener la fecha real de publicación.</span></label>
                 <label>Resumen en español<textarea data-name="excerpt_es"></textarea></label>
                 <label>Resumen en inglés<textarea data-name="excerpt_en"></textarea></label>
-                <label class="full">Enlace de la noticia<input type="text" data-name="href" value="" placeholder="/noticias/1 o https://sitio.edu.bo/noticia"><span class="hint">Usa una URL completa o una ruta interna que empiece con /.</span></label>
+                <label class="full">URL de la noticia<input type="text" data-name="href" value="" placeholder="/noticias/titulo-de-la-noticia"><span class="hint">Si se deja vacío, se creará automáticamente con el título en español. También puedes usar una URL completa.</span></label>
             </div>
         </div>
     </template>

@@ -96,7 +96,7 @@
             </table>
         </div>
 
-        <div class="pagination">{{ $users->links() }}</div>
+        <div class="pagination">{{ $users->links('admin.partials.pagination') }}</div>
     </main>
 </body>
 </html>

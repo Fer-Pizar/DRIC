@@ -504,23 +504,23 @@ export const newsCatalog: NewsRecord[] = [
 export function getNews(locale: string): NewsItem[] {
   const language: Locale = locale === "en" ? "en" : "es";
 
-  return newsCatalog.map((item, index) => ({
+  return newsCatalog.map((item) => ({
     id: item.id,
     title: item.title[language],
     date: item.date[language],
     publishedAt: item.publishedAt,
     category: item.category[language],
     excerpt: item.excerpt[language],
-    href: `/${language}/noticias/${index + 1}`,
+    href: `/${language}/noticias/${item.id}`,
   }));
 }
 
-export function getNewsRecordByNumber(newsNumber: string) {
-  const index = Number(newsNumber) - 1;
+export function getNewsRecordBySlug(newsSlug: string) {
+  const numericIndex = Number(newsSlug) - 1;
 
-  if (!Number.isInteger(index) || index < 0) {
-    return null;
+  if (Number.isInteger(numericIndex) && numericIndex >= 0) {
+    return newsCatalog[numericIndex] ?? null;
   }
 
-  return newsCatalog[index] ?? null;
+  return newsCatalog.find((item) => item.id === newsSlug) ?? null;
 }
