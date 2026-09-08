@@ -21,7 +21,7 @@ function CatalogCard({
   locale: string;
 }) {
   const language = locale === "en" ? "en" : "es";
-  const href = `/${locale}/becas-movilidad/becas/${item.slug}`;
+  const href = localizedHref(item.href ?? `/becas-movilidad/becas/${item.slug}`, locale);
 
   return (
     <article className="dric-scholarship-option group relative min-h-[250px] overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.055] p-6 text-white shadow-2xl shadow-black/20 backdrop-blur-xl transition duration-500 hover:-translate-y-1 hover:border-white/25 hover:bg-white/[0.085] md:p-7">
@@ -62,6 +62,14 @@ function CatalogCard({
       </div>
     </article>
   );
+}
+
+function localizedHref(href: string, locale: string): string {
+  if (href.startsWith("http://") || href.startsWith("https://") || href.startsWith("mailto:")) {
+    return href;
+  }
+
+  return `/${locale}/${href.replace(/^\/+/, "")}`;
 }
 
 export default function ScholarshipOrgCarousel({ items, locale }: Props) {

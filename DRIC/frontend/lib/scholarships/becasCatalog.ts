@@ -13,6 +13,7 @@ export type ScholarshipCatalogItem = {
     es: string;
     en: string;
   };
+  href?: string;
   accent: string;
   children?: ScholarshipCatalogItem[];
   opportunities?: ScholarshipOpportunity[];

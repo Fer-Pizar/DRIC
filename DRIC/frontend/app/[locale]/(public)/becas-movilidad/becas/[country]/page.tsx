@@ -7,9 +7,16 @@ import CalendarMonthRoundedIcon from "@mui/icons-material/CalendarMonthRounded";
 import DescriptionRoundedIcon from "@mui/icons-material/DescriptionRounded";
 import LinkRoundedIcon from "@mui/icons-material/LinkRounded";
 import OpenInNewRoundedIcon from "@mui/icons-material/OpenInNewRounded";
-import PublicRoundedIcon from "@mui/icons-material/PublicRounded";
-import WorkspacePremiumRoundedIcon from "@mui/icons-material/WorkspacePremiumRounded";
-import { findScholarshipCatalogItem } from "@/lib/scholarships/becasCatalog";
+import { getOptionalPageBySlug } from "@/lib/api/pages";
+import {
+  findScholarshipCatalogItem,
+  type ScholarshipCatalogItem,
+  type ScholarshipOpportunity,
+  type ScholarshipOpportunityBullet,
+  type ScholarshipOpportunitySection,
+  type ScholarshipOpportunityLink,
+} from "@/lib/scholarships/becasCatalog";
+import type { CmsBlock, CmsPage } from "@/types/cms";
 
 type Props = {
   params: Promise<{
@@ -39,7 +46,10 @@ const cmsReadyItems = [
 export default async function ScholarshipDestinationPage({ params }: Props) {
   const { locale, country } = await params;
   const language = locale === "en" ? "en" : "es";
-  const item = findScholarshipCatalogItem(country);
+  const staticItem = findScholarshipCatalogItem(country);
+  const cmsPage = await getOptionalPageBySlug("becas", language);
+  const cmsItem = cmsPage ? cmsCatalogItem(cmsPage, country, language, staticItem) : null;
+  const item = cmsItem ?? staticItem;
 
   if (!item) {
     notFound();
@@ -61,39 +71,14 @@ export default async function ScholarshipDestinationPage({ params }: Props) {
             {language === "en" ? "Back to scholarships" : "Volver a becas"}
           </Link>
 
-          <div className="grid gap-10 lg:grid-cols-[1fr_0.72fr] lg:items-end">
-            <div>
-              <h1 className="dric-neon-country-title max-w-5xl">
-                {item.name[language]}
-              </h1>
+          <div>
+            <h1 className="dric-neon-country-title max-w-5xl">
+              {item.name[language]}
+            </h1>
 
-              <p className="mt-7 max-w-3xl text-base leading-8 text-white/68 md:text-lg">
-                {item.summary[language]}
-              </p>
-            </div>
-
-            <aside className="rounded-[2rem] border border-white/10 bg-white/[0.06] p-6 shadow-2xl shadow-black/20 backdrop-blur-xl md:p-8">
-              <div
-                className="flex h-16 w-16 items-center justify-center rounded-3xl text-white shadow-xl shadow-black/20"
-                style={{ backgroundColor: item.accent }}
-              >
-                {item.type === "country" ? <PublicRoundedIcon /> : <WorkspacePremiumRoundedIcon />}
-              </div>
-
-              <p className="mt-6 text-xs font-bold uppercase tracking-[0.22em] text-white/45">
-                {item.region[language]}
-              </p>
-
-              <h2 className="mt-3 text-2xl font-semibold tracking-[-0.03em]">
-                {language === "en" ? "CMS-ready section" : "Sección lista para CMS"}
-              </h2>
-
-              <p className="mt-4 text-sm leading-7 text-white/60">
-                {language === "en"
-                  ? "This view is prepared so the admin can later publish active calls, files, dates and official links."
-                  : "Esta vista queda preparada para que el administrador publique convocatorias activas, archivos, fechas y enlaces oficiales."}
-              </p>
-            </aside>
+            <p className="mt-7 max-w-3xl text-base leading-8 text-white/68 md:text-lg">
+              {item.summary[language]}
+            </p>
           </div>
         </div>
       </section>
@@ -114,7 +99,19 @@ export default async function ScholarshipDestinationPage({ params }: Props) {
               </div>
 
               <div className="mx-auto flex max-w-6xl flex-col gap-8">
-                {opportunities.map((opportunity) => (
+                {opportunities.map((opportunity) => {
+                  const links = opportunity.links?.length
+                    ? opportunity.links
+                    : opportunity.href && opportunity.href !== "#"
+                      ? [
+                          {
+                            href: opportunity.href,
+                            label: opportunity.linkLabel,
+                          },
+                        ]
+                      : [];
+
+                  return (
                   <article
                     key={opportunity.slug}
                     className="dric-scholarship-program-card group relative overflow-hidden rounded-[2rem] p-[1px] shadow-2xl shadow-black/25 transition duration-500 hover:-translate-y-1"
@@ -130,13 +127,13 @@ export default async function ScholarshipDestinationPage({ params }: Props) {
                             <section key={`${opportunity.slug}-section-${sectionIndex}`} className="space-y-3">
                               {section.heading ? (
                                 <h4 className="text-left text-xl font-semibold text-white md:text-2xl">
-                                  {section.heading[language]}
+                                  {renderInline(section.heading[language])}
                                 </h4>
                               ) : null}
 
                               {section.paragraphs?.map((paragraph, paragraphIndex) => (
                                 <p key={`${opportunity.slug}-paragraph-${paragraphIndex}`}>
-                                  {paragraph[language]}
+                                  {renderInline(paragraph[language])}
                                 </p>
                               ))}
 
@@ -147,11 +144,11 @@ export default async function ScholarshipDestinationPage({ params }: Props) {
                                       {bullet.label ? (
                                         <>
                                           <span className="font-semibold text-white">
-                                            {bullet.label[language]}:
+                                            {renderInline(bullet.label[language])}:
                                           </span>{" "}
                                         </>
                                       ) : null}
-                                      <span>{bullet.text[language]}</span>
+                                      <span>{renderInline(bullet.text[language])}</span>
                                       {bullet.children ? (
                                         <ul className="mt-2 space-y-1 pl-5">
                                           {bullet.children.map((child, childIndex) => (
@@ -162,11 +159,11 @@ export default async function ScholarshipDestinationPage({ params }: Props) {
                                               {child.label ? (
                                                 <>
                                                   <span className="font-semibold text-white">
-                                                    {child.label[language]}:
+                                                    {renderInline(child.label[language])}:
                                                   </span>{" "}
                                                 </>
                                               ) : null}
-                                              <span>{child.text[language]}</span>
+                                              <span>{renderInline(child.text[language])}</span>
                                             </li>
                                           ))}
                                         </ul>
@@ -178,34 +175,34 @@ export default async function ScholarshipDestinationPage({ params }: Props) {
                             </section>
                           ))
                         ) : (
-                          <p>{opportunity.body[language]}</p>
+                          <p>{renderInline(opportunity.body[language])}</p>
                         )}
                       </div>
 
-                      <div className="dric-scholarship-program-divider mt-10" />
+                      {links.length > 0 ? (
+                        <>
+                          <div className="dric-scholarship-program-divider mt-10" />
 
-                      <div className="mt-7 flex flex-wrap justify-center gap-4">
-                        {(opportunity.links ?? [
-                          {
-                            href: opportunity.href,
-                            label: opportunity.linkLabel,
-                          },
-                        ]).map((link) => (
-                          <a
-                            key={link.href}
-                            href={link.href}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="dric-scholarship-program-link inline-flex max-w-full items-center justify-center gap-3 rounded-full px-5 py-3 text-left text-sm font-normal text-white transition hover:scale-[1.02] sm:px-6 sm:text-base md:px-7 md:text-xl"
-                          >
-                            {link.label[language]}
-                            <OpenInNewRoundedIcon className="shrink-0 text-[1.35em]" />
-                          </a>
-                        ))}
-                      </div>
+                          <div className="mt-7 flex flex-wrap justify-center gap-4">
+                            {links.map((link) => (
+                              <a
+                                key={link.href}
+                                href={link.href}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="dric-scholarship-program-link inline-flex max-w-full items-center justify-center gap-3 rounded-full px-5 py-3 text-left text-sm font-normal text-white transition hover:scale-[1.02] sm:px-6 sm:text-base md:px-7 md:text-xl"
+                              >
+                                {link.label[language]}
+                                <OpenInNewRoundedIcon className="shrink-0 text-[1.35em]" />
+                              </a>
+                            ))}
+                          </div>
+                        </>
+                      ) : null}
                     </div>
                   </article>
-                ))}
+                );
+                })}
               </div>
             </>
           ) : (
@@ -249,4 +246,177 @@ export default async function ScholarshipDestinationPage({ params }: Props) {
       <Footer />
     </main>
   );
+}
+
+function cmsCatalogItem(
+  page: CmsPage,
+  requestedSlug: string,
+  language: "es" | "en",
+  staticItem?: ScholarshipCatalogItem,
+): ScholarshipCatalogItem | null {
+  const block = page.sections
+    .flatMap((section) => section.blocks)
+    .find((candidate) => {
+      const slug = stringValue(candidate.data.slug);
+      const linkSlug = candidate.link_url?.split("/").filter(Boolean).pop();
+
+      return slug === requestedSlug || linkSlug === requestedSlug;
+    });
+
+  if (!block) {
+    return null;
+  }
+
+  const type = block.block_type === "organization" || block.type === "organization" ? "organization" : "country";
+  const name = block.title ?? requestedSlug;
+  const summary = block.summary ?? "";
+  const cmsDetailWasEdited = block.data.detail_edited === true;
+  const cmsDetail = cmsOpportunities(block);
+  const region = language === "en"
+    ? stringValue(block.data.region_en) || block.subtitle || ""
+    : stringValue(block.data.region_es) || block.subtitle || "";
+
+  return {
+    slug: stringValue(block.data.slug) || requestedSlug,
+    type,
+    name: {
+      es: name,
+      en: name,
+    },
+    region: {
+      es: region,
+      en: region,
+    },
+    summary: {
+      es: summary,
+      en: summary,
+    },
+    href: stringValue(block.data.href) || block.link_url || `/becas-movilidad/becas/${requestedSlug}`,
+    accent: stringValue(block.data.accent) || (type === "country" ? "#003770" : "#E30613"),
+    opportunities: cmsDetailWasEdited ? cmsDetail : (staticItem?.opportunities ?? cmsDetail),
+  };
+}
+
+function cmsOpportunities(block: CmsBlock): ScholarshipOpportunity[] {
+  const rawItems = Array.isArray(block.data.opportunities) ? block.data.opportunities : [];
+
+  return rawItems
+    .map((rawItem, index): ScholarshipOpportunity | null => {
+      if (!isRecord(rawItem)) {
+        return null;
+      }
+
+      const title = localizedRecord(rawItem.title, stringValue(rawItem.title_es) || `Contenido ${index + 1}`);
+      const body = localizedRecord(rawItem.body, stringValue(rawItem.body_es));
+      const links = cmsLinks(rawItem.links);
+      const firstLink = links[0] ?? {
+        href: stringValue(rawItem.href) || "#",
+        label: localizedRecord(rawItem.linkLabel ?? rawItem.link_label, "Ver enlace"),
+      };
+
+      return {
+        slug: stringValue(rawItem.slug) || stringValue(rawItem.id) || `contenido-${index + 1}`,
+        title,
+        body,
+        href: firstLink.href,
+        linkLabel: firstLink.label,
+        links,
+        contentSections: cmsContentSections(rawItem.contentSections ?? rawItem.content_sections),
+      };
+    })
+    .filter((item): item is ScholarshipOpportunity => item !== null);
+}
+
+function cmsLinks(value: unknown): ScholarshipOpportunityLink[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value
+    .map((link) => {
+      if (!isRecord(link)) {
+        return null;
+      }
+
+      const href = stringValue(link.href);
+      const label = localizedRecord(link.label, stringValue(link.label_es) || "Ver enlace");
+
+      return href && label.es ? { href, label } : null;
+    })
+    .filter((link): link is NonNullable<ScholarshipOpportunity["links"]>[number] => link !== null);
+}
+
+function cmsContentSections(value: unknown): ScholarshipOpportunitySection[] | undefined {
+  if (!Array.isArray(value)) {
+    return undefined;
+  }
+
+  return value
+    .map((section): ScholarshipOpportunitySection | null => {
+      if (!isRecord(section)) {
+        return null;
+      }
+
+      const paragraphs = Array.isArray(section.paragraphs)
+        ? section.paragraphs.map((paragraph) => localizedRecord(paragraph, "")).filter((paragraph) => paragraph.es || paragraph.en)
+        : undefined;
+      const bullets = Array.isArray(section.bullets)
+        ? section.bullets
+            .map((bullet): ScholarshipOpportunityBullet | null => {
+              if (!isRecord(bullet)) {
+                return null;
+              }
+
+              return {
+                label: isRecord(bullet.label) ? localizedRecord(bullet.label, "") : undefined,
+                text: localizedRecord(bullet.text, stringValue(bullet.text_es)),
+              };
+            })
+            .filter((bullet): bullet is NonNullable<ScholarshipOpportunitySection["bullets"]>[number] => Boolean(bullet?.text.es || bullet?.text.en))
+        : undefined;
+
+      return paragraphs?.length || bullets?.length
+        ? {
+            heading: section.heading ? localizedRecord(section.heading, "") : undefined,
+            paragraphs,
+            bullets,
+          }
+        : null;
+    })
+    .filter((section): section is ScholarshipOpportunitySection => section !== null);
+}
+
+function localizedRecord(value: unknown, fallback: string): { es: string; en: string } {
+  if (isRecord(value)) {
+    const es = stringValue(value.es) || fallback;
+    const en = stringValue(value.en) || es;
+
+    return { es, en };
+  }
+
+  return { es: fallback, en: fallback };
+}
+
+function renderInline(text: string) {
+  const parts = text.split(/(\*\*[^*]+\*\*|_[^_]+_)/g);
+
+  return parts.map((part, index) => {
+    if (part.startsWith("**") && part.endsWith("**")) {
+      return <strong key={`${part}-${index}`}>{part.slice(2, -2)}</strong>;
+    }
+
+    if (part.startsWith("_") && part.endsWith("_")) {
+      return <em key={`${part}-${index}`}>{part.slice(1, -1)}</em>;
+    }
+
+    return part;
+  });
+}
+
+function stringValue(value: unknown): string {
+  return typeof value === "string" ? value : "";
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return Boolean(value && typeof value === "object" && !Array.isArray(value));
 }

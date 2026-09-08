@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { ReactNode } from "react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import Card from "@mui/material/Card";
@@ -8,6 +9,8 @@ import FlightTakeoffRoundedIcon from "@mui/icons-material/FlightTakeoffRounded";
 import EmojiEventsRoundedIcon from "@mui/icons-material/EmojiEventsRounded";
 import InfoRoundedIcon from "@mui/icons-material/InfoRounded";
 import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
+import { getOptionalPageBySlug } from "@/lib/api/pages";
+import type { CmsBlock, CmsPage, CmsSection } from "@/types/cms";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -16,16 +19,33 @@ type Props = {
 export default async function BecasMovilidadPage({ params }: Props) {
   const { locale } = await params;
   const isEnglish = locale === "en";
+  const cmsPage = await getOptionalPageBySlug("becas-movilidad", isEnglish ? "en" : "es");
 
-  const cards = [
+  const t = mergeScholarshipHubCopy({
+    badge: "DRIC · UMSS",
+    title: isEnglish ? "Scholarships and Mobility" : "Becas y Movilidad",
+    intro: isEnglish
+      ? "DRIC promotes academic internationalization through scholarships, mobility programs, internships, calls and institutional guidance for national and international communities."
+      : "La DRIC impulsa la internacionalización académica mediante becas, programas de movilidad, pasantías, convocatorias y orientación institucional para la comunidad nacional e internacional.",
+    exploreBadge: isEnglish ? "Explore opportunities" : "Explora oportunidades",
+    exploreTitle: isEnglish
+      ? "International academic pathways"
+      : "Rutas académicas internacionales",
+    exploreIntro: isEnglish
+      ? "This section brings together scholarships, mobility, internships, calls and institutional information to guide the university community."
+      : "Esta sección reúne becas, movilidad, pasantías, convocatorias e información institucional para orientar a la comunidad universitaria.",
+  }, cmsPage);
+
+  const cards = cmsCards(cmsPage, [
     {
       title: isEnglish ? "Undergraduate and postgraduate scholarships" : "Becas de pregrado y posgrado",
       description: isEnglish
         ? "Scholarship opportunities offered by governments, universities and international organizations."
         : "Programas de becas ofertados por gobiernos, universidades y organismos internacionales.",
-      href: `/${locale}/becas-movilidad/becas`,
+      href: "/becas-movilidad/becas",
       label: isEnglish ? "View scholarships" : "Ver becas",
       icon: <SchoolRoundedIcon />,
+      iconKey: "school",
       accent: "#E30613",
     },
     {
@@ -33,9 +53,10 @@ export default async function BecasMovilidadPage({ params }: Props) {
       description: isEnglish
         ? "Academic, teaching, student and administrative mobility programs."
         : "Programas de movilidad docente, estudiantil, administrativa y pasantías internacionales.",
-      href: `/${locale}/becas-movilidad/movilidad-pasantias`,
+      href: "/becas-movilidad/movilidad-pasantias",
       label: isEnglish ? "View programs" : "Ver programas",
       icon: <FlightTakeoffRoundedIcon />,
+      iconKey: "flight",
       accent: "#003770",
     },
     {
@@ -43,9 +64,10 @@ export default async function BecasMovilidadPage({ params }: Props) {
       description: isEnglish
         ? "Calls, courses, contests and academic opportunities for the university community."
         : "Convocatorias, cursos, concursos y oportunidades académicas para la comunidad universitaria.",
-      href: `/${locale}/becas-movilidad/premios-eventos-cursos-concursos`,
+      href: "/becas-movilidad/premios-eventos-cursos-concursos",
       label: isEnglish ? "View calls" : "Ver convocatorias",
       icon: <EmojiEventsRoundedIcon />,
+      iconKey: "awards",
       accent: "#E30613",
     },
     {
@@ -53,12 +75,13 @@ export default async function BecasMovilidadPage({ params }: Props) {
       description: isEnglish
         ? "Useful information, procedures and guidance for national and international visitors."
         : "Información útil, trámites y orientación para ciudadanos nacionales y extranjeros.",
-      href: `/${locale}/becas-movilidad/informacion-nacionales-extranjeros`,
+      href: "/becas-movilidad/informacion-nacionales-extranjeros",
       label: isEnglish ? "View information" : "Ver información",
       icon: <InfoRoundedIcon />,
+      iconKey: "info",
       accent: "#003770",
     },
-  ];
+  ]);
 
   return (
     <main className="dric-theme-page dric-mobility-page dric-scholarships-hub-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
@@ -67,7 +90,7 @@ export default async function BecasMovilidadPage({ params }: Props) {
       <section className="dric-mobility-hero relative isolate px-5 pb-10 pt-36 md:px-10 md:pb-12 lg:px-12">
         <div className="mx-auto max-w-7xl">
           <p className="mb-5 inline-flex rounded-full border border-white/15 bg-white/10 px-5 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-white/80 backdrop-blur">
-            DRIC · UMSS
+            {t.badge}
           </p>
 
           <h1
@@ -77,13 +100,11 @@ export default async function BecasMovilidadPage({ params }: Props) {
                 : "text-5xl leading-[0.9] tracking-[-0.07em] md:text-7xl lg:text-7xl"
             }`}
           >
-            {isEnglish ? "Scholarships and Mobility" : "Becas y Movilidad"}
+            {t.title}
           </h1>
 
           <p className="dric-scholarships-hub-hero-copy mt-8 max-w-3xl text-base leading-8 text-white/70 md:text-lg">
-            {isEnglish
-              ? "DRIC promotes academic internationalization through scholarships, mobility programs, internships, calls and institutional guidance for national and international communities."
-              : "La DRIC impulsa la internacionalización académica mediante becas, programas de movilidad, pasantías, convocatorias y orientación institucional para la comunidad nacional e internacional."}
+            {t.intro}
           </p>
         </div>
       </section>
@@ -92,19 +113,15 @@ export default async function BecasMovilidadPage({ params }: Props) {
         <div className="mx-auto max-w-7xl">
           <div className="mb-14 max-w-3xl">
             <p className="dric-scholarships-hub-eyebrow text-sm font-bold uppercase tracking-[0.25em]">
-              {isEnglish ? "Explore opportunities" : "Explora oportunidades"}
+              {t.exploreBadge}
             </p>
 
             <h2 className="mt-4 text-4xl font-semibold tracking-[-0.04em] md:text-5xl">
-              {isEnglish
-                ? "International academic pathways"
-                : "Rutas académicas internacionales"}
+              {t.exploreTitle}
             </h2>
 
             <p className="mt-5 text-sm leading-7 text-white/68 md:text-base">
-              {isEnglish
-                ? "This section is prepared to later connect with the CMS and allow administrators to update scholarships, links, PDFs and opportunities directly from the database."
-                : "Esta sección está preparada para conectarse posteriormente con el CMS y permitir que el administrador actualice becas, enlaces, PDFs y oportunidades directamente desde la base de datos."}
+              {t.exploreIntro}
             </p>
           </div>
 
@@ -149,7 +166,7 @@ export default async function BecasMovilidadPage({ params }: Props) {
                     {card.description}
                   </p>
 
-                  <Link href={card.href} className="mt-10 inline-flex">
+                  <Link href={localizedHref(card.href, locale)} className="mt-10 inline-flex">
                     <Button
                       className="dric-mobility-card-button"
                       variant="outlined"
@@ -181,4 +198,78 @@ export default async function BecasMovilidadPage({ params }: Props) {
       <Footer />
     </main>
   );
+}
+
+function mergeScholarshipHubCopy(defaults: {
+  badge: string;
+  title: string;
+  intro: string;
+  exploreBadge: string;
+  exploreTitle: string;
+  exploreIntro: string;
+}, page: CmsPage | null) {
+  const hero = section(page, "scholarship_hub.hero");
+  const explore = section(page, "scholarship_hub.explore");
+
+  return {
+    badge: hero?.subtitle || page?.menu_label || defaults.badge,
+    title: page?.title || hero?.title || defaults.title,
+    intro: hero?.summary || page?.summary || defaults.intro,
+    exploreBadge: explore?.subtitle || defaults.exploreBadge,
+    exploreTitle: explore?.title || defaults.exploreTitle,
+    exploreIntro: explore?.summary || defaults.exploreIntro,
+  };
+}
+
+function cmsCards(
+  page: CmsPage | null,
+  defaults: Array<{
+    title: string;
+    description: string;
+    href: string;
+    label: string;
+    icon: ReactNode;
+    iconKey: string;
+    accent: string;
+  }>
+) {
+  const cards = section(page, "scholarship_hub.cards")?.blocks.filter((item) => item.type === "scholarship_hub_card") ?? [];
+
+  if (cards.length < 4) return defaults;
+
+  return cards.slice(0, 4).map((card, index) => ({
+    title: card.title || defaults[index]?.title || "",
+    description: card.summary || defaults[index]?.description || "",
+    href: dataString(card, "href") || defaults[index]?.href || "#",
+    label: card.cta_label || defaults[index]?.label || "",
+    icon: iconForCard(dataString(card, "icon") || defaults[index]?.iconKey || "info"),
+    iconKey: dataString(card, "icon") || defaults[index]?.iconKey || "info",
+    accent: dataString(card, "accent") || defaults[index]?.accent || "#003770",
+  }));
+}
+
+function iconForCard(icon: string) {
+  if (icon === "school") return <SchoolRoundedIcon />;
+  if (icon === "flight") return <FlightTakeoffRoundedIcon />;
+  if (icon === "awards") return <EmojiEventsRoundedIcon />;
+
+  return <InfoRoundedIcon />;
+}
+
+function localizedHref(href: string, locale: string): string {
+  if (href.startsWith("http://") || href.startsWith("https://") || href.startsWith("mailto:")) {
+    return href;
+  }
+
+  return `/${locale}/${href.replace(/^\/+/, "")}`;
+}
+
+function section(page: CmsPage | null, key: string): CmsSection | undefined {
+  return page?.sections.find((item) => item.section_key === key);
+}
+
+function dataString(block: CmsBlock | undefined, key: string): string | null {
+  const value = block?.data?.[key];
+
+  return typeof value === "string" && value.trim() ? value : null;
 }

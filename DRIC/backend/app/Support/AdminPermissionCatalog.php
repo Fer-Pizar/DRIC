@@ -37,6 +37,8 @@ class AdminPermissionCatalog
                     'editar.presentacion' => 'Editar Presentación',
                     'editar.informes_gestion' => 'Editar Informes de gestión',
                     'editar.validar_certificado' => 'Editar Verificación de certificados',
+                    'editar.contacto' => 'Editar Contacto',
+                    'editar.campus_life' => 'Editar Campus Life',
                 ],
             ],
         ];
@@ -88,6 +90,8 @@ class AdminPermissionCatalog
                     'editar.presentacion',
                     'editar.informes_gestion',
                     'editar.validar_certificado',
+                    'editar.contacto',
+                    'editar.campus_life',
                 ],
             ],
         ];

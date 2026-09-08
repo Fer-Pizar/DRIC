@@ -14,6 +14,8 @@ import PublicRoundedIcon from "@mui/icons-material/PublicRounded";
 import SchoolRoundedIcon from "@mui/icons-material/SchoolRounded";
 import TravelExploreRoundedIcon from "@mui/icons-material/TravelExploreRounded";
 import WorkRoundedIcon from "@mui/icons-material/WorkRounded";
+import { getOptionalPageBySlug } from "@/lib/api/pages";
+import type { CmsBlock, CmsPage, CmsSection } from "@/types/cms";
 import { mobilityData, slugifyProgramTitle, type Program } from "../data";
 
 type Props = {
@@ -36,8 +38,6 @@ const detailCopy = {
     back: "Volver a movilidad",
     overview: "Resumen del programa",
     related: "Más programas relacionados",
-    cms: "Contenido listo para conectar al CMS administrativo",
-    contact: "Contactar DRIC",
     callsTitle: "Convocatorias vigentes y fenecidas",
     benefits: "Beneficio",
     documents: "Documentos",
@@ -51,8 +51,6 @@ const detailCopy = {
     back: "Back to mobility",
     overview: "Program overview",
     related: "More related programs",
-    cms: "Content ready to connect to the admin CMS",
-    contact: "Contact DRIC",
     callsTitle: "Current and past calls",
     benefits: "Benefit",
     documents: "Documents",
@@ -67,7 +65,12 @@ const detailCopy = {
 export default async function MobilityProgramDetailPage({ params }: Props) {
   const { locale, program } = await params;
   const isEnglish = locale === "en";
-  const text = isEnglish ? mobilityData.en : mobilityData.es;
+  const fallbackText = isEnglish ? mobilityData.en : mobilityData.es;
+  const cmsPage = await getOptionalPageBySlug("movilidad-pasantias", locale);
+  const text = withCanonicalProgramSlugs(
+    mergeMobilityCmsContent(fallbackText, cmsPage, locale),
+    mobilityData.es,
+  );
   const copy = isEnglish ? detailCopy.en : detailCopy.es;
 
   const tracks: TrackRecord[] = [
@@ -92,7 +95,7 @@ export default async function MobilityProgramDetailPage({ params }: Props) {
       track.programs.map((item) => ({
         program: item,
         track,
-        slug: slugifyProgramTitle(item.title, track.id),
+        slug: programSlug(item, track.id),
       })),
     )
     .find((item) => item.slug === program);
@@ -178,10 +181,6 @@ export default async function MobilityProgramDetailPage({ params }: Props) {
             <p className="mt-6 text-base leading-8 text-white/68 md:text-lg">
               {match.program.summary}
             </p>
-
-            <div className="dric-mobility-cyan-note mt-8 rounded-3xl border border-cyan-200/20 bg-cyan-200/10 px-5 py-4 text-sm font-semibold leading-7 text-cyan-50">
-              {copy.cms}
-            </div>
           </article>
 
           <aside className="space-y-7">
@@ -253,17 +252,6 @@ export default async function MobilityProgramDetailPage({ params }: Props) {
               </a>
             ) : null}
 
-            <Link href={`/${locale}/contacto`} className="block">
-              <div className="dric-mobility-program-card rounded-[2rem] border border-white/10 bg-white/[0.055] p-7 shadow-2xl shadow-black/20 backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-cyan-200/40">
-                <p className="text-xs font-bold uppercase tracking-[0.22em] text-cyan-200">
-                  DRIC · UMSS
-                </p>
-                <div className="mt-5 flex items-center justify-between gap-4">
-                  <h2 className="text-2xl font-semibold tracking-[-0.03em]">{copy.contact}</h2>
-                  <OpenInNewRoundedIcon sx={{ color: "#67e8f9" }} />
-                </div>
-              </div>
-            </Link>
           </aside>
         </div>
 
@@ -373,7 +361,7 @@ export default async function MobilityProgramDetailPage({ params }: Props) {
               {relatedPrograms.map((item) => (
                 <Link
                   key={item.title}
-                  href={`/${locale}/becas-movilidad/movilidad-pasantias/${slugifyProgramTitle(item.title, match.track.id)}`}
+                  href={programHref(locale, item, match.track.id)}
                   className="dric-mobility-program-card group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.055] p-5 shadow-xl shadow-black/15 backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-cyan-200/40"
                 >
                   <span className="absolute inset-y-5 left-0 w-1 rounded-r-full bg-gradient-to-b from-[#E30613] to-cyan-200 opacity-80 transition duration-300 group-hover:opacity-100" />
@@ -455,4 +443,235 @@ function InfoBlock({
       </ul>
     </div>
   );
+}
+
+type MobilityLandingText = {
+  back: string;
+  eyebrow: string;
+  title: string;
+  intro: string;
+  students: string;
+  studentsIntro: string;
+  staff: string;
+  staffIntro: string;
+  conditions: string;
+  studentPrograms: Program[];
+  staffPrograms: Program[];
+};
+
+function mergeMobilityCmsContent(fallbackText: MobilityLandingText, cmsPage: CmsPage | null, locale: string): MobilityLandingText {
+  if (!cmsPage) {
+    return fallbackText;
+  }
+
+  const studentSection = findTrackSection(cmsPage, "estudiantes");
+  const staffSection = findTrackSection(cmsPage, "docentes-administrativos");
+
+  return {
+    ...fallbackText,
+    title: cmsPage.title || fallbackText.title,
+    intro: cmsPage.summary || fallbackText.intro,
+    students: studentSection?.title || fallbackText.students,
+    studentsIntro: studentSection?.summary || fallbackText.studentsIntro,
+    staff: staffSection?.title || fallbackText.staff,
+    staffIntro: staffSection?.summary || fallbackText.staffIntro,
+    studentPrograms: programsFromCmsBlocks(studentSection, fallbackText.studentPrograms, "estudiantes", locale),
+    staffPrograms: programsFromCmsBlocks(staffSection, fallbackText.staffPrograms, "docentes-administrativos", locale),
+  };
+}
+
+function findTrackSection(cmsPage: CmsPage, trackId: string): CmsSection | undefined {
+  return cmsPage.sections?.find((section) => {
+    const sectionTrackId = stringValue(section.settings?.track_id);
+    return sectionTrackId === trackId || section.section_key === `mobility.${trackId}`;
+  });
+}
+
+function withCanonicalProgramSlugs(text: MobilityLandingText, canonicalText: MobilityLandingText): MobilityLandingText {
+  return {
+    ...text,
+    studentPrograms: withTrackCanonicalSlugs(text.studentPrograms, canonicalText.studentPrograms, "estudiantes"),
+    staffPrograms: withTrackCanonicalSlugs(text.staffPrograms, canonicalText.staffPrograms, "docentes-administrativos"),
+  };
+}
+
+function withTrackCanonicalSlugs(programs: Program[], canonicalPrograms: Program[], trackId: string): Program[] {
+  return programs.map((program, index) => ({
+    ...program,
+    slug: program.slug || canonicalPrograms[index]?.slug || slugifyProgramTitle(canonicalPrograms[index]?.title || program.title, trackId),
+  }));
+}
+
+function programsFromCmsBlocks(section: CmsSection | undefined, fallbackPrograms: Program[], trackId: string, locale: string): Program[] {
+  const blocks = section?.blocks?.filter((block) => block.type === "mobility_program" || block.block_type === "mobility_program") ?? [];
+
+  if (blocks.length === 0) {
+    return fallbackPrograms;
+  }
+
+  return blocks.map((block, index) => {
+    const slug = stringValue(block.data?.slug) || block.link_url?.split("/").filter(Boolean).pop() || "";
+    const fallback =
+      fallbackPrograms.find((program) => programSlugCandidates(program, trackId).includes(slug)) ??
+      fallbackPrograms[index];
+    const detailWasEdited = block.data?.detail_edited === true;
+    const localizedConditions = stringArray(block.data?.[`conditions_${locale}`]);
+    const defaultConditions = stringArray(block.data?.conditions);
+    const conditions = localizedConditions.length > 0 ? localizedConditions : defaultConditions;
+
+    return {
+      ...(fallback ?? {
+        title: "",
+        summary: "",
+        conditions: [],
+        tag: "",
+      }),
+      title: block.title || fallback?.title || slug || "",
+      summary: block.summary || fallback?.summary || "",
+      tag: block.subtitle || stringValue(block.data?.tag) || fallback?.tag || "",
+      slug: slug || fallback?.slug || slugifyProgramTitle(block.title || fallback?.title || "", trackId),
+      href: block.link_url || stringValue(block.data?.href) || fallback?.href,
+      conditions: conditions.length > 0 ? conditions : fallback?.conditions ?? [],
+      highlights: detailWasEdited ? cmsHighlights(block, locale) : fallback?.highlights,
+      sections: detailWasEdited ? cmsSections(block, locale) : fallback?.sections,
+      reference: detailWasEdited ? cmsReference(block, locale) : fallback?.reference,
+      calls: detailWasEdited ? cmsCalls(block, locale) : fallback?.calls,
+    };
+  });
+}
+
+function cmsHighlights(block: CmsBlock, locale: string): Program["highlights"] {
+  const value = block.data?.highlights;
+  if (!Array.isArray(value)) return undefined;
+
+  const items = value
+    .map((item) => {
+      if (!isRecord(item)) return null;
+      const label = localizedString(item.label, locale);
+      const value = localizedString(item.value, locale);
+      return label && value ? { label, value } : null;
+    })
+    .filter((item): item is { label: string; value: string } => item !== null);
+
+  return items.length ? items : undefined;
+}
+
+function cmsSections(block: CmsBlock, locale: string): Program["sections"] {
+  const value = block.data?.sections;
+  if (!Array.isArray(value)) return undefined;
+
+  const sections = value
+    .map((item): NonNullable<Program["sections"]>[number] | null => {
+      if (!isRecord(item)) return null;
+      const title = localizedString(item.title, locale);
+      const body = localizedString(item.body, locale);
+      const items = localizedArray(item.items, locale);
+      return title ? { title, body: body || undefined, items: items.length ? items : undefined } : null;
+    })
+    .filter((item): item is NonNullable<Program["sections"]>[number] => item !== null);
+
+  return sections.length ? sections : undefined;
+}
+
+function cmsReference(block: CmsBlock, locale: string): Program["reference"] {
+  const reference = block.data?.reference;
+  if (!isRecord(reference)) return undefined;
+
+  const href = stringValue(reference.href);
+  const label = localizedString(reference.label, locale);
+
+  return href && label ? { href, label } : undefined;
+}
+
+function cmsCalls(block: CmsBlock, locale: string): Program["calls"] {
+  const value = block.data?.calls;
+  if (!Array.isArray(value)) return undefined;
+
+  const calls = value
+    .map((item): NonNullable<Program["calls"]>[number] | null => {
+      if (!isRecord(item)) return null;
+      const title = localizedString(item.title, locale);
+      const description = localizedString(item.description, locale);
+      const links = cmsLinks(item.links, locale);
+
+      return title && description
+        ? {
+            title,
+            description,
+            benefits: localizedArray(item.benefits, locale),
+            documents: localizedArray(item.documents, locale),
+            deadline: localizedString(item.deadline, locale),
+            note: localizedString(item.note, locale),
+            links: links.length ? links : undefined,
+          }
+        : null;
+    })
+    .filter((item): item is NonNullable<Program["calls"]>[number] => item !== null);
+
+  return calls.length ? calls : undefined;
+}
+
+function cmsLinks(value: unknown, locale: string): NonNullable<NonNullable<Program["calls"]>[number]["links"]> {
+  if (!Array.isArray(value)) return [];
+
+  return value
+    .map((item) => {
+      if (!isRecord(item)) return null;
+      const href = stringValue(item.href);
+      const label = localizedString(item.label, locale);
+      return href && label ? { href, label } : null;
+    })
+    .filter((item): item is { label: string; href: string } => item !== null);
+}
+
+function localizedString(value: unknown, locale: string): string {
+  if (isRecord(value)) {
+    return stringValue(value[locale]) || stringValue(value.es) || stringValue(value.en);
+  }
+
+  return stringValue(value);
+}
+
+function localizedArray(value: unknown, locale: string): string[] {
+  if (isRecord(value)) {
+    const localized = stringArray(value[locale]);
+    return localized.length ? localized : stringArray(value.es).length ? stringArray(value.es) : stringArray(value.en);
+  }
+
+  return stringArray(value);
+}
+
+function stringArray(value: unknown): string[] {
+  return Array.isArray(value) ? value.filter((item): item is string => typeof item === "string" && item.trim().length > 0) : [];
+}
+
+function programHref(locale: string, program: Program, trackId: string): string {
+  const href = program.href || `/becas-movilidad/movilidad-pasantias/${programSlug(program, trackId)}`;
+
+  if (href.startsWith("http://") || href.startsWith("https://")) {
+    return href;
+  }
+
+  const cleanHref = href.startsWith("/") ? href : `/${href}`;
+  return `/${locale}${cleanHref}`;
+}
+
+function programSlug(program: Program, trackId: string): string {
+  return program.slug || slugifyProgramTitle(program.title, trackId);
+}
+
+function programSlugCandidates(program: Program, trackId: string): string[] {
+  return [
+    program.slug,
+    program.href?.split("/").filter(Boolean).pop(),
+    slugifyProgramTitle(program.title, trackId),
+  ].filter((value): value is string => typeof value === "string" && value.length > 0);
+}
+
+function stringValue(value: unknown): string {
+  return typeof value === "string" && value.trim() ? value : "";
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return Boolean(value && typeof value === "object" && !Array.isArray(value));
 }

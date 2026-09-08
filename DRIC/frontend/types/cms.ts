@@ -50,6 +50,7 @@ export type CmsPage = {
   status: string;
   title?: string | null;
   menu_label?: string | null;
+  subtitle?: string | null;
   summary?: string | null;
   seo: {
   meta_title?: string | null;

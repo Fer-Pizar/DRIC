@@ -11,6 +11,7 @@
         'main' => 'Principal',
         'content' => 'Contenido',
         'legal' => 'Legal',
+        'mobility_catalog' => 'Catálogo de movilidad',
     ];
 @endphp
 
@@ -229,6 +230,18 @@
                                     @if ($page->slug === 'proyectos-apoyo-financiero')
                                         <a href="{{ route('admin.project-funding.edit') }}" class="btn-content">Editar contenido</a>
                                     @endif
+                                    @if ($page->slug === 'becas-movilidad')
+                                        <a href="{{ route('admin.pages.scholarship-hub.edit', $page) }}" class="btn-content">Editar contenido</a>
+                                    @endif
+                                    @if ($page->slug === 'becas')
+                                        <a href="{{ route('admin.pages.scholarship-becas.edit', $page) }}" class="btn-content">Editar contenido</a>
+                                    @endif
+                                    @if ($page->slug === 'movilidad-pasantias')
+                                        <a href="{{ route('admin.pages.mobility-pasantias.edit', $page) }}" class="btn-content">Editar contenido</a>
+                                    @endif
+                                    @if ($page->slug === 'premios-eventos-cursos-concursos')
+                                        <a href="{{ route('admin.pages.awards-opportunities.edit', $page) }}" class="btn-content">Editar contenido</a>
+                                    @endif
                                     @if ($page->slug === 'membresias')
                                         <a href="{{ route('admin.pages.memberships.edit', $page) }}" class="btn-content">Editar contenido</a>
                                     @endif
@@ -243,6 +256,12 @@
                                     @endif
                                     @if ($page->slug === 'validar-certificado')
                                         <a href="{{ route('admin.pages.certificates.edit', $page) }}" class="btn-content">Editar contenido</a>
+                                    @endif
+                                    @if ($page->slug === 'contacto')
+                                        <a href="{{ route('admin.pages.contact.edit', $page) }}" class="btn-content">Editar contenido</a>
+                                    @endif
+                                    @if ($page->slug === 'campus-life')
+                                        <a href="{{ route('admin.pages.campus-life.edit', $page) }}" class="btn-content">Editar contenido</a>
                                     @endif
                                 </td>
                             </tr>

@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { Menu, Moon, Sun, Languages } from "lucide-react";
 import { useLocale } from "next-intl";
 import MobileMenu from "./MobileMenu";
-import { mobilityData, slugifyProgramTitle } from "@/app/[locale]/(public)/becas-movilidad/movilidad-pasantias/data";
+import { mobilityData, slugifyProgramTitle, type Program } from "@/app/[locale]/(public)/becas-movilidad/movilidad-pasantias/data";
 
 const LANGUAGE_SCROLL_KEY = "dric-language-scroll-y";
 
@@ -26,34 +26,54 @@ function getLocalizedPath(pathname: string, locale: string, nextLocale: "es" | "
   const currentSlug = pathname.slice(mobilityDetailPrefix.length);
   const currentData = locale === "en" ? mobilityData.en : mobilityData.es;
   const nextData = nextLocale === "en" ? mobilityData.en : mobilityData.es;
+  const currentStudentPrograms = currentData.studentPrograms as Program[];
+  const currentStaffPrograms = currentData.staffPrograms as Program[];
+  const nextStudentPrograms = nextData.studentPrograms as Program[];
+  const nextStaffPrograms = nextData.staffPrograms as Program[];
+  const canonicalStudentPrograms = mobilityData.es.studentPrograms as Program[];
+  const canonicalStaffPrograms = mobilityData.es.staffPrograms as Program[];
 
   const tracks = [
     {
       id: "estudiantes",
-      currentPrograms: currentData.studentPrograms,
-      nextPrograms: nextData.studentPrograms,
+      currentPrograms: currentStudentPrograms,
+      nextPrograms: nextStudentPrograms,
+      canonicalPrograms: canonicalStudentPrograms,
     },
     {
       id: "docentes-administrativos",
-      currentPrograms: currentData.staffPrograms,
-      nextPrograms: nextData.staffPrograms,
+      currentPrograms: currentStaffPrograms,
+      nextPrograms: nextStaffPrograms,
+      canonicalPrograms: canonicalStaffPrograms,
     },
   ];
 
   for (const track of tracks) {
     const programIndex = track.currentPrograms.findIndex(
-      (program) => slugifyProgramTitle(program.title, track.id) === currentSlug,
+      (program) => programSlugCandidates(program, track.id).includes(currentSlug),
     );
 
     if (programIndex >= 0) {
-      return `/${nextLocale}/becas-movilidad/movilidad-pasantias/${slugifyProgramTitle(
-        track.nextPrograms[programIndex].title,
-        track.id,
-      )}`;
+      const nextProgram = track.nextPrograms[programIndex];
+      const canonicalProgram = track.canonicalPrograms[programIndex];
+      const nextSlug =
+        nextProgram?.slug ||
+        canonicalProgram?.slug ||
+        slugifyProgramTitle(canonicalProgram?.title || nextProgram?.title || currentSlug, track.id);
+
+      return `/${nextLocale}/becas-movilidad/movilidad-pasantias/${nextSlug}`;
     }
   }
 
   return nextPath;
+}
+
+function programSlugCandidates(program: { title: string; slug?: string; href?: string }, trackId: string) {
+  return [
+    program.slug,
+    program.href?.split("/").filter(Boolean).pop(),
+    slugifyProgramTitle(program.title, trackId),
+  ].filter((value): value is string => typeof value === "string" && value.length > 0);
 }
 
 export default function Header() {

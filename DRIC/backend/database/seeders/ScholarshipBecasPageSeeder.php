@@ -36,10 +36,10 @@ class ScholarshipBecasPageSeeder extends Seeder
         PageTranslation::updateOrCreate(
             ['page_id' => $page->id, 'language_id' => $es->id],
             [
-                'title' => 'Becas',
+                'title' => 'Explora becas por destino',
                 'menu_title' => 'Becas',
-                'subtitle' => 'Explora becas por destino',
-                'summary' => 'Catalogo organizado de países, programas y organismos internacionales.',
+                'subtitle' => 'Convocatoria de becas',
+                'summary' => 'Un catálogo claro y organizado de países y programas internacionales.',
                 'body' => null,
             ]
         );
@@ -47,10 +47,10 @@ class ScholarshipBecasPageSeeder extends Seeder
         PageTranslation::updateOrCreate(
             ['page_id' => $page->id, 'language_id' => $en->id],
             [
-                'title' => 'Scholarships',
+                'title' => 'Explore scholarships by destination',
                 'menu_title' => 'Scholarships',
-                'subtitle' => 'Explore scholarships by destination',
-                'summary' => 'Organized catalog of countries, programs and international organizations.',
+                'subtitle' => 'Scholarship calls',
+                'summary' => 'A clear, organized catalog of countries and international programs.',
                 'body' => null,
             ]
         );
@@ -59,9 +59,18 @@ class ScholarshipBecasPageSeeder extends Seeder
             ['page_id' => $page->id, 'section_key' => 'scholarship.catalog'],
             [
                 'section_type' => 'scholarship_catalog',
-                'layout' => 'directory_grid',
                 'settings' => ['editable' => true],
                 'sort_order' => 1,
+                'is_active' => true,
+            ]
+        );
+
+        $organizationSection = Section::updateOrCreate(
+            ['page_id' => $page->id, 'section_key' => 'scholarship.organizations'],
+            [
+                'section_type' => 'scholarship_organizations',
+                'settings' => ['editable' => true],
+                'sort_order' => 2,
                 'is_active' => true,
             ]
         );
@@ -69,9 +78,9 @@ class ScholarshipBecasPageSeeder extends Seeder
         SectionTranslation::updateOrCreate(
             ['section_id' => $section->id, 'language_id' => $es->id],
             [
-                'title' => 'Directorio alfabético',
-                'subtitle' => 'Países, programas y organismos',
-                'summary' => 'Cada registro puede convertirse en una ficha editable con convocatorias, requisitos, enlaces y PDFs.',
+                'title' => 'Programas Internacionales',
+                'subtitle' => 'Países',
+                'summary' => null,
                 'body' => null,
             ]
         );
@@ -79,16 +88,43 @@ class ScholarshipBecasPageSeeder extends Seeder
         SectionTranslation::updateOrCreate(
             ['section_id' => $section->id, 'language_id' => $en->id],
             [
-                'title' => 'Alphabetical directory',
-                'subtitle' => 'Countries, programs and organizations',
-                'summary' => 'Each record can become an editable profile with calls, requirements, links and PDFs.',
+                'title' => 'International Programs',
+                'subtitle' => 'Countries',
+                'summary' => null,
                 'body' => null,
             ]
         );
 
+        SectionTranslation::updateOrCreate(
+            ['section_id' => $organizationSection->id, 'language_id' => $es->id],
+            [
+                'title' => 'Otros canales de becas',
+                'subtitle' => 'Programas y organismos',
+                'summary' => null,
+                'body' => null,
+            ]
+        );
+
+        SectionTranslation::updateOrCreate(
+            ['section_id' => $organizationSection->id, 'language_id' => $en->id],
+            [
+                'title' => 'Other scholarship channels',
+                'subtitle' => 'Programs and organizations',
+                'summary' => null,
+                'body' => null,
+            ]
+        );
+
+        ContentBlock::query()
+            ->where('section_id', $section->id)
+            ->where('block_type', 'organization')
+            ->delete();
+
         foreach ($this->catalogItems() as $index => $item) {
+            $targetSection = $item['type'] === 'organization' ? $organizationSection : $section;
+
             $block = ContentBlock::updateOrCreate(
-                ['section_id' => $section->id, 'link_url' => $item['link_url']],
+                ['section_id' => $targetSection->id, 'link_url' => $item['link_url']],
                 [
                     'block_type' => $item['type'],
                     'sort_order' => $index + 1,

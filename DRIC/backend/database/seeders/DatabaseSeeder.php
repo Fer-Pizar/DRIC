@@ -23,8 +23,12 @@ class DatabaseSeeder extends Seeder
             NewsPageSeeder::class,
             NormativePageSeeder::class,
             ReportPageSeeder::class,
+            ContactPageSeeder::class,
+            CampusLifePageSeeder::class,
+            ScholarshipHubPageSeeder::class,
             ScholarshipBecasPageSeeder::class,
             MobilityPasantiasPageSeeder::class,
+            AwardsOpportunityPageSeeder::class,
         ]);
     }
 }

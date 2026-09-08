@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { use, useMemo, useState, type ReactNode } from "react";
+import { use, useEffect, useMemo, useState, type ReactNode } from "react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
@@ -15,6 +15,8 @@ import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
 import PublicRoundedIcon from "@mui/icons-material/PublicRounded";
 import SchoolRoundedIcon from "@mui/icons-material/SchoolRounded";
 import WorkRoundedIcon from "@mui/icons-material/WorkRounded";
+import { getOptionalPageBySlug } from "@/lib/api/pages";
+import type { CmsBlock, CmsPage } from "@/types/cms";
 
 type Locale = "es" | "en";
 
@@ -427,18 +429,35 @@ function iconForCategory(category: string) {
 export default function PremiosEventosCursosConcursosPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = use(params);
   const language: Locale = locale === "en" ? "en" : "es";
-  const t = copy[language];
+  const [cmsPage, setCmsPage] = useState<CmsPage | null>(null);
+  const pageContent = useMemo(() => mergeCmsContent(language, cmsPage), [cmsPage, language]);
+  const t = pageContent.copy;
   const [activeCategory, setActiveCategory] = useState("all");
+
+  useEffect(() => {
+    let isMounted = true;
+
+    getOptionalPageBySlug("premios-eventos-cursos-concursos", language).then((page) => {
+      if (isMounted) {
+        setCmsPage(page);
+      }
+    });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [language]);
+
   const categories = useMemo(
-    () => Array.from(new Set(opportunities.map((item) => item.category[language]))),
-    [language],
+    () => Array.from(new Set(pageContent.opportunities.map((item) => item.category[language]))),
+    [language, pageContent.opportunities],
   );
   const filteredOpportunities = useMemo(
     () =>
       activeCategory === "all"
-        ? opportunities
-        : opportunities.filter((item) => item.category[language] === activeCategory),
-    [activeCategory, language],
+        ? pageContent.opportunities
+        : pageContent.opportunities.filter((item) => item.category[language] === activeCategory),
+    [activeCategory, language, pageContent.opportunities],
   );
   const featured = filteredOpportunities.slice(0, 3);
   const archived = activeCategory === "all" ? filteredOpportunities.slice(3) : filteredOpportunities;
@@ -672,4 +691,119 @@ function InfoList({
       </ul>
     </div>
   );
+}
+
+function mergeCmsContent(language: Locale, cmsPage: CmsPage | null): { copy: typeof copy.es; opportunities: Opportunity[] } {
+  const fallbackCopy = copy[language];
+
+  if (!cmsPage) {
+    return { copy: fallbackCopy, opportunities };
+  }
+
+  const hero = cmsPage.sections?.find((section) => section.section_key === "awards_opportunities.hero");
+  const list = cmsPage.sections?.find((section) => section.section_key === "awards_opportunities.items");
+  const blocks = list?.blocks?.filter((block) => block.type === "awards_opportunity" || block.block_type === "awards_opportunity") ?? [];
+
+  return {
+    copy: {
+      ...fallbackCopy,
+      eyebrow: hero?.subtitle || cmsPage.subtitle || fallbackCopy.eyebrow,
+      title: hero?.title || cmsPage.title || fallbackCopy.title,
+      intro: hero?.summary || cmsPage.summary || fallbackCopy.intro,
+    },
+    opportunities: blocks.length ? blocks.map((block) => opportunityFromBlock(block, language)) : opportunities,
+  };
+}
+
+function opportunityFromBlock(block: CmsBlock, language: Locale): Opportunity {
+  return {
+    title: localizedRecord(block.title || localizedString(block.data?.title, language)),
+    category: localizedRecord(block.subtitle || localizedString(block.data?.category, language), block.data?.category),
+    audience: localizedRecord(localizedString(block.data?.audience, language), block.data?.audience),
+    summary: localizedRecord(block.summary || localizedString(block.data?.summary, language)),
+    dates: localizedOptionalRecord(block.data?.dates),
+    deadline: localizedOptionalRecord(block.data?.deadline),
+    location: localizedOptionalRecord(block.data?.location),
+    format: localizedOptionalRecord(block.data?.format),
+    details: localizedItems(block.data?.details),
+    benefits: localizedItems(block.data?.benefits),
+    requirements: localizedItems(block.data?.requirements),
+    documents: localizedItems(block.data?.documents),
+    links: cmsLinks(block.data?.links),
+    contact: stringValue(block.data?.contact),
+  };
+}
+
+function localizedRecord(current: string, original?: unknown): LocalizedText {
+  if (isRecord(original)) {
+    const es = stringValue(original.es) || current;
+    const en = stringValue(original.en) || es;
+
+    return { es, en };
+  }
+
+  return { es: current, en: current };
+}
+
+function localizedOptionalRecord(value: unknown): LocalizedText | undefined {
+  if (!isRecord(value)) {
+    return undefined;
+  }
+
+  const es = stringValue(value.es);
+  const en = stringValue(value.en) || es;
+
+  return es || en ? { es: es || en, en } : undefined;
+}
+
+function localizedItems(value: unknown): LocalizedText[] {
+  if (isRecord(value)) {
+    const es = stringArray(value.es);
+    const en = stringArray(value.en);
+    const length = Math.max(es.length, en.length);
+
+    return Array.from({ length }, (_, index) => ({
+      es: es[index] || en[index] || "",
+      en: en[index] || es[index] || "",
+    })).filter((item) => item.es || item.en);
+  }
+
+  return [];
+}
+
+function cmsLinks(value: unknown): Opportunity["links"] {
+  if (!Array.isArray(value)) {
+    return undefined;
+  }
+
+  const links = value
+    .map((item) => {
+      if (!isRecord(item)) return null;
+      const href = stringValue(item.href);
+      const label = localizedRecord(localizedString(item.label, "es"), item.label);
+      return href && label.es ? { href, label } : null;
+    })
+    .filter((item): item is { href: string; label: LocalizedText } => item !== null);
+
+  return links.length ? links : undefined;
+}
+
+function localizedString(value: unknown, language: Locale): string {
+  if (isRecord(value)) {
+    return stringValue(value[language]) || stringValue(value.es) || stringValue(value.en);
+  }
+
+  return stringValue(value);
+}
+
+function stringArray(value: unknown): string[] {
+  return Array.isArray(value) ? value.filter((item): item is string => typeof item === "string" && item.trim().length > 0) : [];
+}
+
+function stringValue(value: unknown): string {
+  return typeof value === "string" && value.trim() ? value : "";
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return Boolean(value && typeof value === "object" && !Array.isArray(value));
 }

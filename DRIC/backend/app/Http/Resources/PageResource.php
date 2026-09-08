@@ -22,6 +22,7 @@ class PageResource extends JsonResource
             'status' => $this->status,
             'title' => $translation?->title,
             'menu_label' => $translation?->menu_title,
+            'subtitle' => $translation?->subtitle,
             'summary' => $translation?->summary,
             'seo' => [
                 'meta_title' => $this->seo?->meta_title,

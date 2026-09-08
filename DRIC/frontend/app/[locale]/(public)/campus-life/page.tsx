@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import type { ReactNode } from "react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import Card from "@mui/material/Card";
@@ -8,6 +9,8 @@ import ArrowOutwardRoundedIcon from "@mui/icons-material/ArrowOutwardRounded";
 import SchoolRoundedIcon from "@mui/icons-material/SchoolRounded";
 import PublicRoundedIcon from "@mui/icons-material/PublicRounded";
 import GroupsRoundedIcon from "@mui/icons-material/GroupsRounded";
+import { getOptionalPageBySlug } from "@/lib/api/pages";
+import type { CmsBlock, CmsPage, CmsSection } from "@/types/cms";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -16,8 +19,9 @@ type Props = {
 export default async function CampusLifePage({ params }: Props) {
   const { locale } = await params;
   const isEnglish = locale === "en";
+  const cmsPage = await getOptionalPageBySlug("campus-life", isEnglish ? "en" : "es");
 
-  const t = {
+  const t = mergeCampusCopy({
     badge: isEnglish ? "UMSS experience" : "Experiencia UMSS",
     title: "Campus Life",
     subtitle: isEnglish
@@ -32,9 +36,16 @@ export default async function CampusLifePage({ params }: Props) {
     other: isEnglish ? "Cochabamba and institutional life" : "Cochabamba y vida institucional",
     official: isEnglish ? "Official UMSS website" : "Sitio oficial UMSS",
     explore: isEnglish ? "Explore Cochabamba" : "Explorar Cochabamba",
-  };
+    officialLabel: "Universidad Mayor de San Simón",
+    basicTitle: isEnglish
+      ? "A historic public university with regional impact"
+      : "Una universidad pública histórica con impacto regional",
+    officialUrl: "https://www.umss.edu.bo/",
+    heroImage: "/images/campus-life/uni-view.png",
+    officialLogo: "/images/campus-life/umss-logo.png",
+  }, cmsPage);
 
-  const stats = [
+  const stats = cmsStats(cmsPage, [
     {
       value: "1832",
       label: isEnglish ? "Year of foundation" : "Año de fundación",
@@ -47,11 +58,12 @@ export default async function CampusLifePage({ params }: Props) {
       value: "77k+",
       label: isEnglish ? "Students and academic community" : "Estudiantes y comunidad académica",
     },
-  ];
+  ]);
 
-  const cards = [
+  const cards = cmsFeatures(cmsPage, [
     {
       icon: <SchoolRoundedIcon />,
+      iconKey: "school",
       title: isEnglish ? "Academic programs" : "Programas académicos",
       text: isEnglish
         ? "Undergraduate and postgraduate education across diverse areas of knowledge."
@@ -59,6 +71,7 @@ export default async function CampusLifePage({ params }: Props) {
     },
     {
       icon: <GroupsRoundedIcon />,
+      iconKey: "groups",
       title: isEnglish ? "Community contribution" : "Contribución a la comunidad",
       text: isEnglish
         ? "Teaching, research and social outreach connected with regional needs."
@@ -66,22 +79,25 @@ export default async function CampusLifePage({ params }: Props) {
     },
     {
       icon: <PublicRoundedIcon />,
+      iconKey: "public",
       title: isEnglish ? "International orientation" : "Orientación internacional",
       text: isEnglish
         ? "Cooperation, agreements, mobility and academic opportunities promoted through DRIC."
         : "Cooperación, convenios, movilidad y oportunidades académicas promovidas desde la DRIC.",
     },
-  ];
+  ]);
 
-  const magazineSections = [
+  const storyItems = cmsStories(cmsPage);
+  const magazineSections = storyItems.slice(0, 2);
+  const museumSection = storyItems[2];
+  const cochabambaSection = storyItems[3];
+
+  const fallbackMagazineSections = [
     {
       title: isEnglish ? "Libraries and learning spaces" : "Bibliotecas y espacios de aprendizaje",
       text: isEnglish
-        ? "Provides access to books, theses, scientific articles and academic publications from its faculties and research centers, promoting the "
-        : "Facilita el acceso a libros, tesis, artículos científicos y publicaciones académicas de sus facultades y centros de investigación, promoviendo la ",
-      strongText: isEnglish
-        ? "consultation, dissemination and access to academic and scientific knowledge for the university community."
-        : "consulta, difusión y acceso al conocimiento académico y científico de la comunidad universitaria.",
+        ? "Provides access to books, theses, scientific articles and academic publications from its faculties and research centers, promoting the consultation, dissemination and access to academic and scientific knowledge for the university community."
+        : "Facilita el acceso a libros, tesis, artículos científicos y publicaciones académicas de sus facultades y centros de investigación, promoviendo la consulta, difusión y acceso al conocimiento académico y científico de la comunidad universitaria.",
       image: "/images/campus-life/library.png",
       href: "http://bibliotecas.umss.edu.bo/site/php/index.php",
     },
@@ -90,21 +106,35 @@ export default async function CampusLifePage({ params }: Props) {
       text: isEnglish
         ? "UMSS has a wide diversity of faculties covering different areas of knowledge, offering academic training in sciences, technology, health, humanities, social sciences and other disciplines. This variety strengthens a multidisciplinary and diverse university community."
         : "La UMSS cuenta con una amplia diversidad de facultades que abarcan distintas áreas del conocimiento, ofreciendo formación académica en ciencias, tecnología, salud, humanidades, ciencias sociales y otras disciplinas. Esta variedad fortalece una comunidad universitaria multidisciplinaria y diversa.",
-      strongText: null,
       image: "/images/campus-life/faculties.png",
       href: "https://www.umss.edu.bo/facultades/",
     },
   ];
 
-  const museumSection = {
+  const fallbackMuseumSection = {
     eyebrow: isEnglish ? "History" : "Historia",
     title: "INIAM Museo UMSS",
     text: isEnglish
       ? "Founded in 1951 as the Archaeological and Ethnographic Museum of UMSS, it gave rise in 1963 to Bolivia's first School of Anthropology and Archaeology. In 1980, it was consolidated as the Institute of Anthropological Research and Archaeological Museum (INIAM-UMSS)."
       : "Fundado en 1951 como Museo Arqueológico y Etnográfico de la UMSS, dio origen en 1963 a la primera Escuela de Antropología y Arqueología de Bolivia. En 1980 fue consolidado como el Instituto de Investigaciones Antropológicas y Museo Arqueológico (INIAM-UMSS).",
-    image: "/images/campus-life/muse.png",
+    image: "/images/campus-life/uni-view.png",
     href: "https://museo.umss.edu.bo/",
   };
+
+  const fallbackCochabambaSection = {
+    eyebrow: isEnglish ? "Getting around" : "Recorriendo Cochabamba",
+    title: isEnglish ? "Beyond campus" : "Más allá del campus",
+    text: isEnglish
+      ? "Campus life is also connected to Cochabamba: its historic center, culture, gastronomy, landscapes and public spaces."
+      : "La vida universitaria también se conecta con Cochabamba: su centro histórico, cultura, gastronomía, paisajes y espacios públicos.",
+    button: t.explore,
+    image: "/images/campus-life/cochabamba.png",
+    href: "https://visita.cochabamba.bo/",
+  };
+
+  const resolvedMagazineSections = magazineSections.length >= 2 ? magazineSections : fallbackMagazineSections;
+  const resolvedMuseumSection = museumSection ?? fallbackMuseumSection;
+  const resolvedCochabambaSection = cochabambaSection ?? fallbackCochabambaSection;
 
   return (
     <main className="dric-theme-page dric-campus-life-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
@@ -112,7 +142,7 @@ export default async function CampusLifePage({ params }: Props) {
 
       <section className="relative isolate min-h-screen px-5 pb-20 pt-36 md:px-10 lg:px-12">
         <Image
-          src="/images/campus-life/uni-view.png"
+          src={t.heroImage}
           alt="UMSS campus view"
           fill
           priority
@@ -147,10 +177,10 @@ export default async function CampusLifePage({ params }: Props) {
             }}
           >
             <div className="p-8 md:p-10">
-              <Link href="https://www.umss.edu.bo/" target="_blank" className="inline-flex items-center gap-5">
+              <Link href={t.officialUrl} target="_blank" className="inline-flex items-center gap-5">
                 <div className="relative h-24 w-24 overflow-hidden rounded-full bg-white">
                   <Image
-                    src="/images/campus-life/umss-logo.png"
+                    src={t.officialLogo}
                     alt="UMSS logo"
                     fill
                     className="scale-[1.55] object-contain"
@@ -159,7 +189,7 @@ export default async function CampusLifePage({ params }: Props) {
 
                 <div>
                   <p className="text-xs font-bold uppercase tracking-[0.25em] text-white/55">
-                    Universidad Mayor de San Simón
+                    {t.officialLabel}
                   </p>
                   <p className="mt-2 text-2xl font-semibold tracking-[-0.04em]">
                     {t.official}
@@ -169,7 +199,7 @@ export default async function CampusLifePage({ params }: Props) {
 
               <p className="mt-8 text-sm leading-7 text-white/68">{t.basicText}</p>
 
-              <Link href="https://www.umss.edu.bo/" target="_blank" className="mt-8 inline-flex">
+              <Link href={t.officialUrl} target="_blank" className="mt-8 inline-flex">
                 <Button
                   variant="contained"
                   endIcon={<ArrowOutwardRoundedIcon />}
@@ -237,15 +267,13 @@ export default async function CampusLifePage({ params }: Props) {
               {t.basic}
             </p>
             <h2 className="mt-4 max-w-4xl text-5xl font-semibold tracking-[-0.06em]">
-              {isEnglish
-                ? "A historic public university with regional impact"
-                : "Una universidad pública histórica con impacto regional"}
+              {t.basicTitle}
             </h2>
             <p className="mt-6 max-w-4xl text-base leading-8 text-white/68">{t.basicText}</p>
           </div>
 
           <div className="mt-16 space-y-10">
-            {magazineSections.map((section, index) => {
+            {resolvedMagazineSections.map((section, index) => {
               const content = (
                 <>
                   <div className={index % 2 === 1 ? "relative h-[420px] lg:order-2" : "relative h-[420px]"}>
@@ -259,7 +287,6 @@ export default async function CampusLifePage({ params }: Props) {
                     <h3 className="mt-5 text-4xl font-semibold tracking-[-0.05em]">{section.title}</h3>
                     <p className="mt-6 text-sm leading-8 text-white/62">
                       {section.text}
-                      {section.strongText ? <strong>{section.strongText}</strong> : null}
                     </p>
                   </div>
                 </>
@@ -287,21 +314,21 @@ export default async function CampusLifePage({ params }: Props) {
           </div>
 
           <Link
-            href={museumSection.href}
+            href={resolvedMuseumSection.href}
             target="_blank"
             rel="noopener noreferrer"
             className="mt-10 grid overflow-hidden rounded-[2.5rem] border border-white/10 bg-white/[0.06] text-white shadow-2xl shadow-black/25 backdrop-blur-xl transition duration-500 hover:-translate-y-1 hover:border-white/25 lg:grid-cols-2"
           >
             <div className="relative h-[420px]">
-              <Image src={museumSection.image} alt={museumSection.title} fill className="object-cover" />
+              <Image src={resolvedMuseumSection.image} alt={resolvedMuseumSection.title} fill className="object-cover" />
             </div>
 
             <div className="flex flex-col justify-center p-8 md:p-12">
               <p className="text-sm font-bold uppercase tracking-[0.25em] text-[#E30613]">
-                {museumSection.eyebrow}
+                {resolvedMuseumSection.eyebrow}
               </p>
-              <h3 className="mt-5 text-4xl font-semibold tracking-[-0.05em]">{museumSection.title}</h3>
-              <p className="mt-6 text-sm leading-8 text-white/62">{museumSection.text}</p>
+              <h3 className="mt-5 text-4xl font-semibold tracking-[-0.05em]">{resolvedMuseumSection.title}</h3>
+              <p className="mt-6 text-sm leading-8 text-white/62">{resolvedMuseumSection.text}</p>
             </div>
           </Link>
 
@@ -309,18 +336,16 @@ export default async function CampusLifePage({ params }: Props) {
             <div className="grid gap-0 lg:grid-cols-[0.95fr_1.05fr]">
               <div className="p-8 md:p-12">
                 <p className="text-sm font-bold uppercase tracking-[0.25em] text-[#E30613]">
-                  {isEnglish ? "Getting around" : "Recorriendo Cochabamba"}
+                  {resolvedCochabambaSection.eyebrow}
                 </p>
                 <h2 className="mt-5 text-5xl font-semibold tracking-[-0.06em]">
-                  {isEnglish ? "Beyond campus" : "Más allá del campus"}
+                  {resolvedCochabambaSection.title}
                 </h2>
                 <p className="mt-6 max-w-xl text-sm leading-8 text-white/68">
-                  {isEnglish
-                    ? "Campus life is also connected to Cochabamba: its historic center, culture, gastronomy, landscapes and public spaces."
-                    : "La vida universitaria también se conecta con Cochabamba: su centro histórico, cultura, gastronomía, paisajes y espacios públicos."}
+                  {resolvedCochabambaSection.text}
                 </p>
 
-                <Link href="https://visita.cochabamba.bo/" target="_blank" className="mt-8 inline-flex">
+                <Link href={resolvedCochabambaSection.href} target="_blank" className="mt-8 inline-flex">
                   <Button
                     variant="contained"
                     endIcon={<ArrowOutwardRoundedIcon />}
@@ -334,13 +359,13 @@ export default async function CampusLifePage({ params }: Props) {
                       fontWeight: 900,
                     }}
                   >
-                    {t.explore}
+                    {resolvedCochabambaSection.button || t.explore}
                   </Button>
                 </Link>
               </div>
 
               <div className="relative min-h-[390px]">
-                <Image src="/images/campus-life/cochabamba.png" alt="Cochabamba" fill className="object-cover" />
+                <Image src={resolvedCochabambaSection.image} alt={resolvedCochabambaSection.title} fill className="object-cover" />
               </div>
             </div>
           </div>
@@ -350,4 +375,110 @@ export default async function CampusLifePage({ params }: Props) {
       <Footer />
     </main>
   );
+}
+
+function mergeCampusCopy(defaults: {
+  badge: string;
+  title: string;
+  subtitle: string;
+  basic: string;
+  basicText: string;
+  features: string;
+  strengths: string;
+  other: string;
+  official: string;
+  explore: string;
+  officialLabel: string;
+  basicTitle: string;
+  officialUrl: string;
+  heroImage: string;
+  officialLogo: string;
+}, page: CmsPage | null) {
+  const hero = section(page, "campus.hero");
+  const official = section(page, "campus.official");
+  const basic = section(page, "campus.basic");
+  const officialLogo = block(page, "campus.official.logo");
+
+  return {
+    ...defaults,
+    badge: hero?.subtitle || page?.menu_label || defaults.badge,
+    title: page?.title || hero?.title || defaults.title,
+    subtitle: hero?.summary || page?.summary || defaults.subtitle,
+    officialLabel: official?.subtitle || defaults.officialLabel,
+    official: official?.title || defaults.official,
+    basic: basic?.subtitle || defaults.basic,
+    basicTitle: basic?.title || defaults.basicTitle,
+    basicText: basic?.summary || official?.summary || defaults.basicText,
+    officialUrl: dataString(officialLogo, "url") || defaults.officialUrl,
+    heroImage: defaults.heroImage,
+    officialLogo: defaults.officialLogo,
+  };
+}
+
+function cmsStats(page: CmsPage | null, defaults: Array<{ value: string; label: string }>) {
+  const stats = section(page, "campus.stats")?.blocks.filter((item) => item.type === "campus_stat") ?? [];
+
+  if (stats.length < 3) return defaults;
+
+  return stats.slice(0, 3).map((stat, index) => ({
+    value: stat.title || defaults[index]?.value || "",
+    label: stat.summary || defaults[index]?.label || "",
+  }));
+}
+
+function cmsFeatures(page: CmsPage | null, defaults: Array<{ icon: ReactNode; iconKey: string; title: string; text: string }>) {
+  const features = section(page, "campus.features")?.blocks.filter((item) => item.type === "campus_feature") ?? [];
+
+  if (features.length < 3) return defaults;
+
+  return features.slice(0, 3).map((feature, index) => ({
+    icon: iconForFeature(dataString(feature, "icon") || defaults[index]?.iconKey || "public"),
+    iconKey: dataString(feature, "icon") || defaults[index]?.iconKey || "public",
+    title: feature.title || defaults[index]?.title || "",
+    text: feature.summary || defaults[index]?.text || "",
+  }));
+}
+
+function cmsStories(page: CmsPage | null) {
+  const systemImages = [
+    "/images/campus-life/library.png",
+    "/images/campus-life/faculties.png",
+    "/images/campus-life/uni-view.png",
+    "/images/campus-life/cochabamba.png",
+  ];
+
+  return (
+    section(page, "campus.stories")
+      ?.blocks.filter((item) => item.type === "campus_story")
+      .map((story, index) => ({
+        eyebrow: story.subtitle || "",
+        title: story.title || "",
+        text: story.summary || "",
+        button: story.cta_label || null,
+        image: systemImages[index] || "/images/campus-life/library.png",
+        href: dataString(story, "url") || "#",
+      }))
+      .filter((story) => story.title && story.text) ?? []
+  );
+}
+
+function iconForFeature(icon: string) {
+  if (icon === "school") return <SchoolRoundedIcon />;
+  if (icon === "groups") return <GroupsRoundedIcon />;
+
+  return <PublicRoundedIcon />;
+}
+
+function section(page: CmsPage | null, key: string): CmsSection | undefined {
+  return page?.sections.find((item) => item.section_key === key);
+}
+
+function block(page: CmsPage | null, key: string): CmsBlock | undefined {
+  return page?.sections.flatMap((item) => item.blocks).find((item) => item.link_url === key);
+}
+
+function dataString(block: CmsBlock | undefined, key: string): string | null {
+  const value = block?.data?.[key];
+
+  return typeof value === "string" && value.trim() ? value : null;
 }

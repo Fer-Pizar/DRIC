@@ -7,6 +7,8 @@ import EmailRoundedIcon from "@mui/icons-material/EmailRounded";
 import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
 import OpenInNewRoundedIcon from "@mui/icons-material/OpenInNewRounded";
 import PublicRoundedIcon from "@mui/icons-material/PublicRounded";
+import { getOptionalPageBySlug } from "@/lib/api/pages";
+import type { CmsBlock, CmsPage, CmsSection } from "@/types/cms";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -15,9 +17,10 @@ type Props = {
 export default async function ContactoPage({ params }: Props) {
   const { locale } = await params;
   const isEnglish = locale === "en";
+  const cmsPage = await getOptionalPageBySlug("contacto", isEnglish ? "en" : "es");
 
-  const labels = {
-    badge: isEnglish ? "Contact" : "Contacto",
+  const labels = mergeContactCopy({
+    badge: "DRIC · UMSS",
     title: isEnglish ? "Contact DRIC" : "Contacto",
     intro: isEnglish
       ? "Get in touch with the Directorate of International Relations and Agreements of Universidad Mayor de San Simón."
@@ -31,7 +34,12 @@ export default async function ContactoPage({ params }: Props) {
     mapTitle: isEnglish ? "Location map" : "Mapa de ubicación",
     openMap: isEnglish ? "Open in Google Maps" : "Abrir en Google Maps",
     social: isEnglish ? "Institutional channels" : "Canales institucionales",
-  };
+    socialSummary: isEnglish
+      ? "Official social networks for news, calls and institutional activities."
+      : "Redes sociales oficiales para conocer novedades, convocatorias y actividades institucionales.",
+  }, cmsPage);
+
+  const socialLinks = cmsSocialLinks(cmsPage);
 
   return (
     <main className="dric-theme-page dric-contact-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
@@ -40,7 +48,7 @@ export default async function ContactoPage({ params }: Props) {
       <section className="dric-contact-hero relative isolate px-5 pb-20 pt-36 md:px-10 lg:px-12">
         <div className="mx-auto max-w-7xl">
           <p className="mb-5 inline-flex rounded-full border border-white/15 bg-white/10 px-5 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-white/80 backdrop-blur">
-            DRIC · UMSS
+            {labels.badge}
           </p>
 
           <h1 className="text-5xl font-light uppercase leading-[0.9] tracking-[-0.07em] md:text-7xl lg:text-8xl">
@@ -59,15 +67,15 @@ export default async function ContactoPage({ params }: Props) {
             <ContactCard
               icon={<PhoneRoundedIcon />}
               title={labels.phone}
-              content="(+591) 4 4524779"
-              href="tel:+59144524779"
+              content={labels.phoneText}
+              href={phoneHref(labels.phoneText)}
             />
 
             <ContactCard
               icon={<EmailRoundedIcon />}
               title={labels.email}
-              content="rrii@umss.edu.bo"
-              href="mailto:rrii@umss.edu.bo"
+              content={labels.emailText}
+              href={`mailto:${labels.emailText}`}
             />
 
             <Card
@@ -91,7 +99,7 @@ export default async function ContactoPage({ params }: Props) {
                 </p>
 
                 <h2 className="mt-4 text-2xl font-bold tracking-[-0.04em]">
-                  DRIC
+                  {labels.addressName}
                 </h2>
 
                 <p className="mt-4 text-sm leading-7 text-white/62">
@@ -117,8 +125,23 @@ export default async function ContactoPage({ params }: Props) {
                   {labels.social}
                 </h2>
                 <p className="mt-4 text-sm leading-7 text-white/65">
-                  Facebook · X · YouTube · Instagram · LinkedIn
+                  {labels.socialSummary}
                 </p>
+                {socialLinks.length ? (
+                  <div className="mt-6 flex flex-wrap gap-3">
+                    {socialLinks.map((link) => (
+                      <a
+                        key={`${link.label}-${link.url}`}
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex rounded-full border border-white/15 px-4 py-2 text-sm font-semibold text-cyan-200 transition hover:border-cyan-200/70 hover:bg-white/10"
+                      >
+                        {link.label}
+                      </a>
+                    ))}
+                  </div>
+                ) : null}
               </div>
             </Card>
           </div>
@@ -181,6 +204,70 @@ export default async function ContactoPage({ params }: Props) {
       <Footer />
     </main>
   );
+}
+
+function mergeContactCopy(defaults: {
+  badge: string;
+  title: string;
+  intro: string;
+  phone: string;
+  email: string;
+  address: string;
+  addressText: string;
+  mapTitle: string;
+  openMap: string;
+  social: string;
+  socialSummary: string;
+}, page: CmsPage | null) {
+  const hero = section(page, "contact.hero");
+  const phone = section(page, "contact.phone");
+  const email = section(page, "contact.email");
+  const address = section(page, "contact.address");
+  const social = section(page, "contact.social");
+
+  return {
+    ...defaults,
+    badge: hero?.subtitle || page?.menu_label || defaults.badge,
+    title: page?.title || hero?.title || defaults.title,
+    intro: hero?.summary || page?.summary || defaults.intro,
+    phone: phone?.title || defaults.phone,
+    phoneText: phone?.summary || "(+591) 4 4524779",
+    email: email?.title || defaults.email,
+    emailText: email?.summary || "rrii@umss.edu.bo",
+    address: address?.title || defaults.address,
+    addressName: address?.subtitle || "DRIC",
+    addressText: address?.summary || defaults.addressText,
+    social: social?.title || defaults.social,
+    socialSummary: social?.summary || defaults.socialSummary,
+  };
+}
+
+function cmsSocialLinks(page: CmsPage | null) {
+  return (
+    section(page, "contact.social")
+      ?.blocks.filter((block) => block.type === "contact_social_link")
+      .map((block) => ({
+        label: block.title?.trim() ?? "",
+        url: dataString(block, "url") || block.link_url || "",
+      }))
+      .filter((link) => link.label && link.url) ?? []
+  );
+}
+
+function section(page: CmsPage | null, key: string): CmsSection | undefined {
+  return page?.sections.find((item) => item.section_key === key);
+}
+
+function dataString(block: CmsBlock, key: string): string | null {
+  const value = block.data?.[key];
+
+  return typeof value === "string" && value.trim() ? value : null;
+}
+
+function phoneHref(phone: string): string {
+  const cleanPhone = phone.replace(/[^\d+]/g, "");
+
+  return cleanPhone ? `tel:${cleanPhone}` : "#";
 }
 
 function ContactCard({

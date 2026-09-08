@@ -140,7 +140,7 @@ function MobilityTrack({
           {programs.map((program) => (
             <Link
               key={`${trackId}-${program.title}`}
-              href={`/${locale}/becas-movilidad/movilidad-pasantias/${slugifyProgramTitle(program.title, trackId)}`}
+              href={programHref(locale, program, trackId)}
               className="block h-full min-w-0"
             >
               <article className="dric-mobility-program-card group h-full min-w-0 rounded-[1.5rem] border border-white/10 bg-white/[0.055] p-5 shadow-2xl shadow-black/20 backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-[#E30613]/45 hover:bg-white/[0.075] sm:rounded-[2rem] sm:p-6 md:p-7">
@@ -209,6 +209,7 @@ function mergeMobilityCmsContent(fallbackText: MobilityLandingText, cmsPage: Cms
 
   return {
     ...fallbackText,
+    eyebrow: cmsPage.subtitle || fallbackText.eyebrow,
     title: cmsPage.title || fallbackText.title,
     intro: cmsPage.summary || fallbackText.intro,
     students: studentSection?.title || fallbackText.students,
@@ -251,9 +252,22 @@ function programsFromCmsBlocks(section: CmsSection | undefined, fallbackPrograms
       title: block.title || fallback?.title || slug || "",
       summary: block.summary || fallback?.summary || "",
       tag: block.subtitle || asString(block.data?.tag) || fallback?.tag || "",
+      slug: slug || fallback?.slug || slugifyProgramTitle(block.title || fallback?.title || "", trackId),
+      href: asString(block.link_url) || asString(block.data?.href) || fallback?.href,
       conditions: conditions.length > 0 ? conditions : fallback?.conditions ?? [],
     };
   });
+}
+
+function programHref(locale: string, program: Program, trackId: string): string {
+  const href = program.href || `/becas-movilidad/movilidad-pasantias/${program.slug || slugifyProgramTitle(program.title, trackId)}`;
+
+  if (href.startsWith("http://") || href.startsWith("https://")) {
+    return href;
+  }
+
+  const cleanHref = href.startsWith("/") ? href : `/${href}`;
+  return `/${locale}${cleanHref}`;
 }
 
 function asString(value: unknown): string | undefined {

@@ -18,12 +18,16 @@ class PagePermissionMap
             'proyectos-apoyo-financiero' => 'editar.proyectos',
             'becas-movilidad' => 'editar.becas_movilidad',
             'becas' => 'editar.becas_movilidad',
+            'movilidad-pasantias' => 'editar.becas_movilidad',
+            'premios-eventos-cursos-concursos' => 'editar.becas_movilidad',
             'internacionalizacion' => 'editar.internacionalizacion',
             'membresias' => 'editar.membresias',
             'inicio' => 'editar.inicio',
             'presentacion' => 'editar.presentacion',
             'informes-gestion' => 'editar.informes_gestion',
             'validar-certificado' => 'editar.validar_certificado',
+            'contacto' => 'editar.contacto',
+            'campus-life' => 'editar.campus_life',
         ];
     }
 

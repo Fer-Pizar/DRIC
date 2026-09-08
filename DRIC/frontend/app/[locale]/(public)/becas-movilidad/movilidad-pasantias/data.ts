@@ -3,6 +3,8 @@ export type Program = {
   summary: string;
   conditions: string[];
   tag: string;
+  slug?: string;
+  href?: string;
   highlights?: Array<{
     label: string;
     value: string;
