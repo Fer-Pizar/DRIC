@@ -1,0 +1,239 @@
+{
+  "copy": {
+    "es": {
+      "back": "Volver a Becas y Movilidad",
+      "eyebrow": "Información de interés",
+      "title": "Información para nacionales y extranjeros",
+      "intro": "Guía esencial para estudiantes, docentes, personal administrativo y visitantes internacionales que participan en procesos de movilidad vinculados con la UMSS.",
+      "keyInfo": "Información clave",
+      "resources": "Recursos oficiales",
+      "open": "Abrir enlace",
+      "photoSlot": "Espacio reservado para imagen"
+    },
+    "en": {
+      "back": "Back to Scholarships and Mobility",
+      "eyebrow": "Useful information",
+      "title": "Information for nationals and foreigners",
+      "intro": "Essential guidance for students, faculty, administrative staff, and international visitors participating in mobility processes linked to UMSS.",
+      "keyInfo": "Key information",
+      "resources": "Official resources",
+      "open": "Open link",
+      "photoSlot": "Reserved image space"
+    }
+  },
+  "sections": [
+    {
+      "id": "saliente",
+      "title": {
+        "es": "Movilidad Saliente",
+        "en": "Outgoing Mobility"
+      },
+      "eyebrow": {
+        "es": "Comunidad UMSS hacia el exterior",
+        "en": "UMSS community abroad"
+      },
+      "summary": {
+        "es": "Lineamientos y recursos para estudiantes, docentes y personal administrativo de la UMSS que realizarán movilidad, estudios o actividades académicas fuera del país.",
+        "en": "Guidelines and resources for UMSS students, faculty, and administrative staff undertaking mobility, studies, or academic activities abroad."
+      },
+      "image": "/images/mobility/saliente.png",
+      "imageAlt": {
+        "es": "Imagen para movilidad saliente",
+        "en": "Outgoing mobility image"
+      },
+      "points": [
+        {
+          "es": "Los estudiantes deben mantener la condición de alumnos regulares durante el periodo de movilidad.",
+          "en": "Students must maintain regular student status throughout the mobility period."
+        },
+        {
+          "es": "Después de concluir los estudios, los estudiantes podrán solicitar el reconocimiento de estudios.",
+          "en": "After completing their studies, students may request recognition of completed coursework."
+        },
+        {
+          "es": "El trámite para obtener la visa respectiva será responsabilidad del interesado, así como los gastos necesarios.",
+          "en": "The visa process and all related expenses are the responsibility of the applicant."
+        },
+        {
+          "es": "El personal académico y administrativo debe mantener su condición de vinculación laboral con la UMSS.",
+          "en": "Academic and administrative staff must maintain their employment relationship with UMSS."
+        }
+      ],
+      "links": [
+        {
+          "label": {
+            "es": "Información importante sobre el visado a España",
+            "en": "Important information about visas for Spain"
+          },
+          "href": "https://miumssedu-my.sharepoint.com/:b:/g/personal/dric_mi_umss_edu/ESwvbdGaAFxAmTAjk0Wy8BkB0dwgmPSJ_iasa3COcB20cA?e=jHUDBl"
+        },
+        {
+          "label": {
+            "es": "Requisitos para postulantes nacionales bolivianos que desean estudiar en la UMSS",
+            "en": "Requirements for Bolivian national applicants who wish to study at UMSS"
+          },
+          "href": "https://drive.google.com/file/d/1N_M4mMfnr1t7qcCyDTAQYu8EuWkianhv/view?usp=sharing"
+        },
+        {
+          "label": {
+            "es": "Ministerio de Relaciones Exteriores de Bolivia",
+            "en": "Ministry of Foreign Affairs of Bolivia"
+          },
+          "href": "https://cancilleria.gob.bo/webmre/"
+        },
+        {
+          "label": {
+            "es": "Reglamento del Sistema de créditos académicos de la UMSS",
+            "en": "UMSS Academic Credit System Regulations"
+          },
+          "href": "https://miumssedu-my.sharepoint.com/:b:/g/personal/dric_mi_umss_edu/ETg713v93xJMpcMxQ4uBGrMBCHduBg9lMV7UhwuMDiAz8w?e=piGTKA"
+        },
+        {
+          "label": {
+            "es": "Representaciones de Bolivia en el exterior",
+            "en": "Bolivian representations abroad"
+          },
+          "href": "https://cancilleria.gob.bo/mre/emergencia/"
+        }
+      ]
+    },
+    {
+      "id": "entrante",
+      "title": {
+        "es": "Movilidad Entrante",
+        "en": "Incoming Mobility"
+      },
+      "eyebrow": {
+        "es": "Visitantes nacionales e internacionales",
+        "en": "National and international visitors"
+      },
+      "summary": {
+        "es": "Información académica, migratoria e institucional para personas que desean realizar estudios, movilidad o actividades académicas en la Universidad Mayor de San Simón.",
+        "en": "Academic, migration, and institutional information for visitors who wish to study, undertake mobility, or participate in academic activities at Universidad Mayor de San Simón."
+      },
+      "image": "/images/mobility/entrante.png",
+      "imageAlt": {
+        "es": "Imagen para movilidad entrante",
+        "en": "Incoming mobility image"
+      },
+      "points": [
+        {
+          "es": "El sistema webSISS reúne carreras ofrecidas por las Facultades de la UMSS, pensum, horarios y otra información académica útil.",
+          "en": "The webSISS system includes UMSS degree programs by Faculty, curricula, schedules, and other useful academic information."
+        },
+        {
+          "es": "La ficha informativa UMSS y el calendario académico permiten planificar la estancia académica con mayor precisión.",
+          "en": "The UMSS information sheet and academic calendar help visitors plan their academic stay with greater precision."
+        },
+        {
+          "es": "La información de visa y migración orienta el ingreso y permanencia en Bolivia para fines de estudio.",
+          "en": "Visa and migration information guides entry and stay in Bolivia for study purposes."
+        },
+        {
+          "es": "La información general sobre Cochabamba ayuda a preparar la llegada, adaptación y vida cotidiana en la ciudad.",
+          "en": "General information about Cochabamba helps visitors prepare for arrival, adaptation, and daily life in the city."
+        }
+      ],
+      "links": [
+        {
+          "label": {
+            "es": "Sistema de Información Estudiantil de la UMSS - webSISS",
+            "en": "UMSS Student Information System - webSISS"
+          },
+          "href": "http://websis.umss.edu.bo/"
+        },
+        {
+          "label": {
+            "es": "Ficha informativa UMSS AUGM",
+            "en": "UMSS AUGM information sheet"
+          },
+          "href": "https://miumssedu-my.sharepoint.com/:b:/g/personal/dric_mi_umss_edu/EXQxIhDtK51HsdtD-Rh8Jy4B0rgfrknvri1xc1_PTCS5gQ?e=ofcaiY"
+        },
+        {
+          "label": {
+            "es": "Calendario Académico Gestión 2025",
+            "en": "Academic Calendar 2025"
+          },
+          "href": "http://plataforma.dpa.umss.edu.bo/plataforma/?page_id=2388"
+        },
+        {
+          "label": {
+            "es": "Oferta Académica de pregrado 2025",
+            "en": "Undergraduate academic offer 2025"
+          },
+          "href": "https://miumssedu-my.sharepoint.com/:b:/g/personal/dric_mi_umss_edu/EXxpbnaymy1FsAUE93zRUA8BpbMTr91tt_x-aVTO4lFJuA?e=NpfoCV"
+        },
+        {
+          "label": {
+            "es": "Oferta académica de Posgrado",
+            "en": "Graduate academic offer"
+          },
+          "href": "http://www.posgrado.umss.edu.bo/"
+        },
+        {
+          "label": {
+            "es": "Reglamento del Programa de Movilidad Estudiantil Internacional de la UMSS",
+            "en": "UMSS International Student Mobility Program Regulations"
+          },
+          "href": "https://drive.google.com/file/d/14FtDy4LNtRWZPwWxuyKheDtcs5j-uVKP/view?usp=sharing"
+        },
+        {
+          "label": {
+            "es": "Escalas de calificación en la UMSS / Grading Scale at UMSS",
+            "en": "Grading Scale at UMSS"
+          },
+          "href": "https://drive.google.com/file/d/1tbpMAyqvh8Sl_-Ceka2OqjLk9T-XuGHE/view?usp=sharing"
+        },
+        {
+          "label": {
+            "es": "VISA: lista de países que no requieren visa para ingresar a Bolivia",
+            "en": "VISA: countries that do not require a visa to enter Bolivia"
+          },
+          "href": "https://drive.google.com/file/d/15GR5TWU4Ywgge-srLYjWPPgf9TOJK583/view?usp=sharing"
+        },
+        {
+          "label": {
+            "es": "Resolución Biministerial Nº 01/2007",
+            "en": "Biministerial Resolution No. 01/2007"
+          },
+          "href": "https://drive.google.com/file/d/1PoZh9m4vfTJBnb8MrImhpn1bhcMqXwNE/view?usp=sharing"
+        },
+        {
+          "label": {
+            "es": "Guía Informativa Nº 1: estudiar en Bolivia",
+            "en": "Information Guide No. 1: studying in Bolivia"
+          },
+          "href": "https://drive.google.com/file/d/11q-f4c9IllOy21g6xqGau9ATDX1k5-fa/view?usp=sharing"
+        },
+        {
+          "label": {
+            "es": "Dirección General de Migración",
+            "en": "General Directorate of Migration"
+          },
+          "href": "http://www.migracion.gob.bo/"
+        },
+        {
+          "label": {
+            "es": "Ministerio de Relaciones Exteriores de Bolivia",
+            "en": "Ministry of Foreign Affairs of Bolivia"
+          },
+          "href": "https://cancilleria.gob.bo/webmre/"
+        },
+        {
+          "label": {
+            "es": "Representaciones del exterior en Bolivia",
+            "en": "Foreign representations in Bolivia"
+          },
+          "href": "https://cancilleria.gob.bo/mre/emergencia/"
+        },
+        {
+          "label": {
+            "es": "Información general sobre Cochabamba, Bolivia",
+            "en": "General information about Cochabamba, Bolivia"
+          },
+          "href": "https://cochabambabolivia.net/"
+        }
+      ]
+    }
+  ]
+}

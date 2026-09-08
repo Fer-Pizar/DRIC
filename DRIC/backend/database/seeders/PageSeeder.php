@@ -150,6 +150,16 @@ class PageSeeder extends Seeder
                 'created_by' => null,
                 'updated_by' => null,
             ],
+            [
+                'slug' => 'informacion-nacionales-extranjeros',
+                'page_type' => 'static',
+                'status' => 'draft',
+                'published_at' => null,
+                'sort_order' => 16,
+                'parent_id' => null,
+                'created_by' => null,
+                'updated_by' => null,
+            ],
         ];
 
         foreach ($pages as $page) {

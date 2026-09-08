@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\CampusLifeContentController;
 use App\Http\Controllers\Admin\ContactContentController;
 use App\Http\Controllers\Admin\MembershipContentController;
 use App\Http\Controllers\Admin\MobilityPasantiasContentController;
+use App\Http\Controllers\Admin\NationalForeignInfoContentController;
 use App\Http\Controllers\Admin\NewsContentController;
 use App\Http\Controllers\Admin\NormativeContentController;
 use App\Http\Controllers\Admin\PageController;
@@ -63,6 +64,8 @@ Route::get('mobility-programs/{block}/detail', [MobilityPasantiasContentControll
 Route::put('mobility-programs/{block}/detail', [MobilityPasantiasContentController::class, 'updateDetail'])->name('mobility-programs.detail.update');
 Route::get('pages/{page}/awards-opportunities-content', [AwardsOpportunityContentController::class, 'edit'])->name('pages.awards-opportunities.edit');
 Route::put('pages/{page}/awards-opportunities-content', [AwardsOpportunityContentController::class, 'update'])->name('pages.awards-opportunities.update');
+Route::get('pages/{page}/national-foreign-info-content', [NationalForeignInfoContentController::class, 'edit'])->name('pages.national-foreign-info.edit');
+Route::put('pages/{page}/national-foreign-info-content', [NationalForeignInfoContentController::class, 'update'])->name('pages.national-foreign-info.update');
 Route::resource('pages', PageController::class)->except(['show', 'destroy']);
 Route::resource('roles', RoleController::class)->except(['show']);
 Route::resource('permissions', PermissionController::class)->only(['index', 'create', 'store', 'destroy']);

@@ -9,6 +9,9 @@ import LinkRoundedIcon from "@mui/icons-material/LinkRounded";
 import PublicRoundedIcon from "@mui/icons-material/PublicRounded";
 import SchoolRoundedIcon from "@mui/icons-material/SchoolRounded";
 import TravelExploreRoundedIcon from "@mui/icons-material/TravelExploreRounded";
+import { getOptionalPageBySlug } from "@/lib/api/pages";
+import { publicAssetHref, publicAssetUrl } from "@/lib/api/assets";
+import type { CmsBlock, CmsPage } from "@/types/cms";
 
 type Locale = "es" | "en";
 type LocalizedText = Record<Locale, string>;
@@ -277,7 +280,8 @@ export default async function InformacionNacionalesExtranjerosPage({
 }) {
   const { locale } = await params;
   const language: Locale = locale === "en" ? "en" : "es";
-  const t = copy[language];
+  const cmsPage = await getOptionalPageBySlug("informacion-nacionales-extranjeros", language);
+  const { t, pageSections } = mergeCmsContent(language, cmsPage);
 
   return (
     <main className="dric-theme-page dric-info-mobility-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
@@ -315,7 +319,7 @@ export default async function InformacionNacionalesExtranjerosPage({
 
       <section className="relative isolate px-5 pb-24 md:px-10 lg:px-12">
         <div className="mx-auto grid max-w-7xl gap-8">
-          {sections.map((section, index) => (
+          {pageSections.map((section, index) => (
             <article
               key={section.id}
               className="dric-info-card relative overflow-hidden rounded-[2rem] p-[1px]"
@@ -366,8 +370,8 @@ export default async function InformacionNacionalesExtranjerosPage({
                       </div>
 
                       <ul className="space-y-3">
-                        {section.points.map((point) => (
-                          <li key={point.es} className="flex gap-3 text-sm leading-7 text-white/64">
+                        {section.points.map((point, pointIndex) => (
+                          <li key={`${section.id}-point-${pointIndex}`} className="flex gap-3 text-sm leading-7 text-white/64">
                             <span className="mt-3 h-1.5 w-1.5 shrink-0 rounded-full bg-[#E30613]" />
                             <span>{point[language]}</span>
                           </li>
@@ -382,9 +386,9 @@ export default async function InformacionNacionalesExtranjerosPage({
                       </div>
 
                       <div className="grid gap-3">
-                        {section.links.map((resource) => (
+                        {section.links.map((resource, resourceIndex) => (
                           <a
-                            key={resource.href}
+                            key={`${section.id}-resource-${resourceIndex}`}
                             href={resource.href}
                             target="_blank"
                             rel="noopener noreferrer"
@@ -411,4 +415,138 @@ export default async function InformacionNacionalesExtranjerosPage({
       <Footer />
     </main>
   );
+}
+
+function mergeCmsContent(language: Locale, cmsPage: CmsPage | null): {
+  t: (typeof copy)[Locale];
+  pageSections: MobilityInfoSection[];
+} {
+  const fallbackCopy = copy[language];
+  const listSection = cmsPage?.sections?.find((section) => section.section_key === "national_foreign_info.sections");
+
+  const mergedCopy = {
+    ...fallbackCopy,
+    eyebrow: cmsPage?.subtitle || fallbackCopy.eyebrow,
+    title: cmsPage?.title || fallbackCopy.title,
+    intro: cmsPage?.summary || fallbackCopy.intro,
+    keyInfo: listSection?.title || fallbackCopy.keyInfo,
+    resources: listSection?.subtitle || fallbackCopy.resources,
+    open: listSection?.body || fallbackCopy.open,
+    photoSlot: listSection?.summary || fallbackCopy.photoSlot,
+  };
+
+  const blocks = listSection?.blocks
+    ?.filter((block) => block.type === "national_foreign_info_section")
+    .sort((a, b) => a.sort_order - b.sort_order);
+
+  const cmsSections = blocks?.map((block, index) => blockToInfoSection(block, language, index)).filter(Boolean) as
+    | MobilityInfoSection[]
+    | undefined;
+
+  return {
+    t: mergedCopy,
+    pageSections: cmsSections && cmsSections.length > 0 ? cmsSections : sections,
+  };
+}
+
+function blockToInfoSection(block: CmsBlock, language: Locale, index: number): MobilityInfoSection | null {
+  const fallback = sections[index] ?? sections[0];
+  const data = block.data ?? {};
+  const imageFromMedia = block.media?.url ?? block.media_asset?.url;
+  const imageFromData = stringValue(data.image);
+  const image = publicAssetUrl(imageFromMedia || imageFromData || fallback.image) ?? fallback.image;
+  const id = stringValue(data.id) || slugify(block.title || fallback.title.es || `tarjeta-${index + 1}`);
+  const title = localized(block.title, fallback.title, language);
+  const eyebrow = localized(block.subtitle || localizedData(data.eyebrow, language), fallback.eyebrow, language);
+  const summary = localized(block.summary, fallback.summary, language);
+  const imageAlt = localized(localizedData(data.image_alt, language), fallback.imageAlt, language);
+  const points = localizedArray(data.points, language, fallback.points);
+  const links = linksFromData(data.links, language, fallback.links);
+
+  if (!title.es && !summary.es) return null;
+
+  return {
+    id,
+    title,
+    eyebrow,
+    summary,
+    image,
+    imageAlt,
+    points,
+    links,
+  };
+}
+
+function localized(value: unknown, fallback: LocalizedText, language: Locale): LocalizedText {
+  const text = stringValue(value);
+
+  if (!text) return fallback;
+
+  return {
+    ...fallback,
+    [language]: text,
+  };
+}
+
+function localizedData(value: unknown, language: Locale): string {
+  if (!value || typeof value !== "object") return "";
+
+  const record = value as Record<string, unknown>;
+
+  return stringValue(record[language]) || stringValue(record.es) || "";
+}
+
+function localizedArray(value: unknown, language: Locale, fallback: LocalizedText[]): LocalizedText[] {
+  if (!value || typeof value !== "object") return fallback;
+
+  const record = value as Record<string, unknown>;
+  const selected = Array.isArray(record[language]) ? record[language] : Array.isArray(record.es) ? record.es : [];
+
+  const lines = selected.map((item) => stringValue(item)).filter(Boolean);
+
+  if (lines.length === 0) return fallback;
+
+  return lines.map((line, index) => ({
+    es: language === "es" ? line : fallback[index]?.es || line,
+    en: language === "en" ? line : fallback[index]?.en || line,
+  }));
+}
+
+function linksFromData(value: unknown, language: Locale, fallback: InfoLink[]): InfoLink[] {
+  if (!Array.isArray(value)) return fallback;
+
+  const links = value
+    .map((item): InfoLink | null => {
+      if (!item || typeof item !== "object") return null;
+
+      const record = item as Record<string, unknown>;
+      const href = publicAssetHref(stringValue(record.href), "");
+      const label = localizedData(record.label, language);
+
+      if (!href || !label) return null;
+
+      return {
+        href,
+        label: {
+          es: language === "es" ? label : label,
+          en: language === "en" ? label : label,
+        },
+      };
+    })
+    .filter(Boolean) as InfoLink[];
+
+  return links.length > 0 ? links : fallback;
+}
+
+function stringValue(value: unknown): string {
+  return typeof value === "string" ? value.trim() : "";
+}
+
+function slugify(value: string): string {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 }

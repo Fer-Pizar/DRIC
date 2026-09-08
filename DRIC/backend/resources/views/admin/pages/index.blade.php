@@ -242,6 +242,9 @@
                                     @if ($page->slug === 'premios-eventos-cursos-concursos')
                                         <a href="{{ route('admin.pages.awards-opportunities.edit', $page) }}" class="btn-content">Editar contenido</a>
                                     @endif
+                                    @if ($page->slug === 'informacion-nacionales-extranjeros')
+                                        <a href="{{ route('admin.pages.national-foreign-info.edit', $page) }}" class="btn-content">Editar contenido</a>
+                                    @endif
                                     @if ($page->slug === 'membresias')
                                         <a href="{{ route('admin.pages.memberships.edit', $page) }}" class="btn-content">Editar contenido</a>
                                     @endif

@@ -90,6 +90,9 @@
                             @if ($awardsPage)
                                 <a class="btn btn-primary" href="{{ route('admin.pages.awards-opportunities.edit', $awardsPage) }}">Editar contenido de Convocatorias</a>
                             @endif
+                            @if ($nationalForeignInfoPage)
+                                <a class="btn btn-primary" href="{{ route('admin.pages.national-foreign-info.edit', $nationalForeignInfoPage) }}">Editar contenido de Información</a>
+                            @endif
                         </div>
                     @endif
                 </div>

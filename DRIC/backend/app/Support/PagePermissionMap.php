@@ -20,6 +20,7 @@ class PagePermissionMap
             'becas' => 'editar.becas_movilidad',
             'movilidad-pasantias' => 'editar.becas_movilidad',
             'premios-eventos-cursos-concursos' => 'editar.becas_movilidad',
+            'informacion-nacionales-extranjeros' => 'editar.becas_movilidad',
             'internacionalizacion' => 'editar.internacionalizacion',
             'membresias' => 'editar.membresias',
             'inicio' => 'editar.inicio',

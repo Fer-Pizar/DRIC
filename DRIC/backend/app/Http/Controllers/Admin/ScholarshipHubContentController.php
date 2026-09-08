@@ -38,6 +38,7 @@ class ScholarshipHubContentController extends Controller
             'cardLabels' => $this->cardLabels(),
             'scholarshipPage' => Page::query()->where('slug', 'becas')->first(),
             'awardsPage' => Page::query()->where('slug', 'premios-eventos-cursos-concursos')->first(),
+            'nationalForeignInfoPage' => Page::query()->where('slug', 'informacion-nacionales-extranjeros')->first(),
         ]);
     }
 

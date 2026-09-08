@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
             ScholarshipBecasPageSeeder::class,
             MobilityPasantiasPageSeeder::class,
             AwardsOpportunityPageSeeder::class,
+            NationalForeignInfoPageSeeder::class,
         ]);
     }
 }
