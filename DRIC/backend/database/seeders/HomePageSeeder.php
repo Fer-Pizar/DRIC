@@ -25,6 +25,11 @@ class HomePageSeeder extends Seeder
         $es = Language::where('code', 'es')->firstOrFail();
         $en = Language::where('code', 'en')->firstOrFail();
 
+        if ($page->sections()->where('section_key', 'home.hero')->exists()) {
+            $this->seedStudentTestimonials($page, $es, $en);
+            return;
+        }
+
         PageTranslation::updateOrCreate(
             ['page_id' => $page->id, 'language_id' => $es->id],
             [
@@ -263,7 +268,7 @@ class HomePageSeeder extends Seeder
             [
                 'key' => 'home.faq',
                 'type' => 'faq',
-                'order' => 7,
+                'order' => 8,
                 'settings' => [
                     'theme' => 'dark-blue',
                     'animation' => 'accordion',
@@ -322,7 +327,7 @@ class HomePageSeeder extends Seeder
             [
                 'key' => 'home.final_cta',
                 'type' => 'final_cta',
-                'order' => 8,
+                'order' => 9,
                 'settings' => [
                     'theme' => 'dark-blur',
                     'background' => '/images/hero/hero-blur-bg.jpg',
@@ -358,6 +363,9 @@ class HomePageSeeder extends Seeder
                 ],
             ],
         ];
+
+        $sections[] = $this->studentTestimonialsSection();
+        usort($sections, fn (array $a, array $b) => $a['order'] <=> $b['order']);
 
         foreach ($sections as $sectionData) {
             $section = Section::updateOrCreate(
@@ -436,6 +444,160 @@ class HomePageSeeder extends Seeder
                 );
             }
         }
+    }
+
+    private function seedStudentTestimonials(Page $page, Language $es, Language $en): void
+    {
+        if ($page->sections()->where('section_key', 'home.student_testimonials')->exists()) {
+            return;
+        }
+
+        $sectionData = $this->studentTestimonialsSection();
+        $section = Section::updateOrCreate(
+            ['page_id' => $page->id, 'section_key' => $sectionData['key']],
+            [
+                'section_type' => $sectionData['type'],
+                'sort_order' => $sectionData['order'],
+                'is_active' => true,
+                'settings' => $sectionData['settings'],
+            ]
+        );
+
+        foreach (['es' => $es, 'en' => $en] as $locale => $language) {
+            SectionTranslation::updateOrCreate(
+                ['section_id' => $section->id, 'language_id' => $language->id],
+                [
+                    'title' => $sectionData[$locale]['title'],
+                    'subtitle' => $sectionData[$locale]['subtitle'] ?? null,
+                    'summary' => $sectionData[$locale]['summary'] ?? null,
+                    'body' => null,
+                ]
+            );
+        }
+
+        foreach ($sectionData['blocks'] as $blockData) {
+            $block = ContentBlock::updateOrCreate(
+                [
+                    'section_id' => $section->id,
+                    'block_type' => $blockData['type'],
+                    'sort_order' => $blockData['order'],
+                ],
+                [
+                    'is_active' => true,
+                    'link_url' => $blockData['link_url'] ?? null,
+                    'media_asset_id' => null,
+                    'data' => $this->cleanBlockData($blockData),
+                ]
+            );
+
+            foreach (['es' => $es, 'en' => $en] as $locale => $language) {
+                ContentBlockTranslation::updateOrCreate(
+                    ['content_block_id' => $block->id, 'language_id' => $language->id],
+                    [
+                        'title' => $blockData[$locale]['title'] ?? null,
+                        'subtitle' => $blockData[$locale]['subtitle'] ?? null,
+                        'summary' => $blockData[$locale]['summary'] ?? null,
+                        'body' => null,
+                        'cta_label' => $blockData[$locale]['cta_label'] ?? null,
+                        'secondary_cta_label' => null,
+                    ]
+                );
+            }
+        }
+    }
+
+    private function studentTestimonialsSection(): array
+    {
+        return [
+            'key' => 'home.student_testimonials',
+            'type' => 'student_testimonials',
+            'order' => 7,
+            'settings' => [
+                'theme' => 'dark',
+                'layout' => 'student-carousel',
+                'image' => '/images/home/student-experience.png',
+            ],
+            'es' => [
+                'title' => 'Experiencias de los estudiantes',
+                'summary' => 'Historias reales sobre movilidad académica, cooperación internacional y oportunidades que transforman la vida universitaria.',
+            ],
+            'en' => [
+                'title' => 'Student experiences',
+                'summary' => 'Real stories about academic mobility, international cooperation, and opportunities that transform university life.',
+            ],
+            'blocks' => [
+                [
+                    'type' => 'testimonials_button',
+                    'order' => 1,
+                    'link_url' => '/becas-movilidad',
+                    'es' => ['title' => 'Ver programas', 'cta_label' => 'Ver programas'],
+                    'en' => ['title' => 'View programs', 'cta_label' => 'View programs'],
+                ],
+                [
+                    'type' => 'student_testimonial',
+                    'order' => 10,
+                    'image' => '/images/testimonials/mais.jpg',
+                    'country_es' => 'Bélgica',
+                    'country_en' => 'Belgium',
+                    'experience_date' => '2026-08-01',
+                    'mobility_type_es' => 'Estudiante de intercambio',
+                    'mobility_type_en' => 'Exchange student',
+                    'rating' => 10,
+                    'es' => [
+                        'title' => 'Naïs Mampaey',
+                        'subtitle' => 'Estudiante de intercambio',
+                        'summary' => 'Realicé una pasantía médica en Bolivia durante dos meses: un mes en pediatría y un mes en ginecología. Durante la pasantía conocimos a muchos internos y médicos amables, apasionados por su trabajo. Fue interesante ver las diferencias entre la atención médica en Bolivia y Bélgica. Los fines de semana viajamos y vimos muchos lugares hermosos como el Salar de Uyuni, Sucre, Potosí, Toro Toro, La Paz y Trinidad. ¡Bolivia realmente lo tiene todo!',
+                    ],
+                    'en' => [
+                        'title' => 'Naïs Mampaey',
+                        'subtitle' => 'Exchange student',
+                        'summary' => 'I did a medical internship in Bolivia for two months, one month pediatrics and one month gynecology. In the internship we met a lot of friendly interns and doctors who were passionate about their jobs. It was interesting to see the differences between the healthcare in Bolivia and Belgium. In the weekends we travelled, we saw a lot of beautiful places like Salar de Uyuni, Sucre, Potosí, Toro Toro, La Paz and Trinidad. Bolivia really has everything!',
+                    ],
+                ],
+                [
+                    'type' => 'student_testimonial',
+                    'order' => 11,
+                    'image' => '/images/testimonials/wannes.jpg',
+                    'country_es' => 'Bélgica',
+                    'country_en' => 'Belgium',
+                    'experience_date' => '2026-08-01',
+                    'mobility_type_es' => 'Estudiante de intercambio',
+                    'mobility_type_en' => 'Exchange student',
+                    'rating' => 10,
+                    'es' => [
+                        'title' => 'Wannes Loobuyck',
+                        'subtitle' => 'Estudiante de intercambio',
+                        'summary' => 'Llegué a Bolivia como estudiante de intercambio para realizar una pasantía en el hospital y realmente valió la pena. Las personas aquí son muy amables y siempre les gusta ayudarte. En el hospital vimos muchas patologías que no vemos en Bélgica. También nos gustó mucho la comida de aquí, ¡muy rico! ¡Gracias Bolivia!',
+                    ],
+                    'en' => [
+                        'title' => 'Wannes Loobuyck',
+                        'subtitle' => 'Exchange student',
+                        'summary' => 'I came to Bolivia as an exchange student to do internship in the hospital and it was totally worth it! The people here are very friendly and they like to help you everytime. In the hospital we saw many pathologies we dont see in Belgium. We also really liked the food here, muy rico!!! Gracias Bolivia!',
+                    ],
+                ],
+                [
+                    'type' => 'student_testimonial',
+                    'order' => 12,
+                    'image' => '/images/testimonials/kato.jpg',
+                    'country_es' => 'Bélgica',
+                    'country_en' => 'Belgium',
+                    'experience_date' => '2026-08-01',
+                    'mobility_type_es' => 'Estudiante de intercambio',
+                    'mobility_type_en' => 'Exchange student',
+                    'rating' => 10,
+                    'es' => [
+                        'title' => 'Kato Vandoorne',
+                        'subtitle' => 'Estudiante de intercambio',
+                        'summary' => 'Realicé una pasantía médica de dos meses en dos hospitales diferentes de Cochabamba. Fue muy interesante ver las diferencias con los hospitales de Bélgica. El intercambio también fue una experiencia muy bonita fuera del hospital. Conocimos a muchas personas amables, comimos buena comida local y pudimos viajar por la hermosa Bolivia. ¡Realmente recomiendo a todos hacer un intercambio internacional!',
+                    ],
+                    'en' => [
+                        'title' => 'Kato Vandoorne',
+                        'subtitle' => 'Exchange student',
+                        'summary' => 'I did a two month medical internship in two different hospitals in Cochabamba. It was very interesting to see the differences with the hospitals in Belgium. The exchange was also a very nice experience outside of the hospital. We met a lot of friendly people, ate good local food and could travel in the beautiful Bolivia. I really recommend everyone to do an international exchange!',
+                    ],
+                ],
+            ],
+        ];
     }
 
     private function cleanBlockData(array $blockData): array

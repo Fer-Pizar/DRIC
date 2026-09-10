@@ -715,6 +715,42 @@ html[data-theme="light"] .dric-theme-page.dric-home-page > section .dric-recent-
   -webkit-text-fill-color: #ffffff !important;
 }
 
+.dric-internationalization-page {
+  background:
+    radial-gradient(circle at 0% 14%, rgba(227, 6, 19, 0.24), transparent 34%),
+    radial-gradient(circle at 100% 8%, rgba(0, 55, 112, 0.44), transparent 38%),
+    radial-gradient(circle at 44% 48%, rgba(15, 23, 42, 0.78), transparent 46%),
+    linear-gradient(145deg, #020617 0%, #08111f 45%, #12070a 100%) !important;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: 100vw 100vh;
+}
+
+.dric-internationalization-page .dric-internationalization-section,
+html[data-theme="light"] .dric-internationalization-page .dric-internationalization-section {
+  background: transparent !important;
+}
+
+html[data-theme="light"] .dric-internationalization-page {
+  background:
+    radial-gradient(circle at 15% 8%, rgba(255, 255, 255, 0.96), transparent 28%),
+    radial-gradient(circle at 82% 12%, rgba(186, 216, 255, 0.72), transparent 32%),
+    radial-gradient(circle at 14% 86%, rgba(255, 205, 224, 0.56), transparent 34%),
+    linear-gradient(135deg, #f9fafb 0%, #e8edf5 46%, #f7f9fc 100%) !important;
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-internationalization-page .dric-internationalization-section,
+html[data-theme="light"] .dric-internationalization-page .dric-internationalization-section h1,
+html[data-theme="light"] .dric-internationalization-page .dric-internationalization-section h2,
+html[data-theme="light"] .dric-internationalization-page .dric-internationalization-section h3 {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-internationalization-page .dric-internationalization-section p:not(:first-child) {
+  color: rgba(71, 85, 105, 0.78) !important;
+}
+
 
 html[data-theme="light"] .dric-theme-page .dric-home-hero .dric-home-hero-content {
   contain: paint;
@@ -1076,8 +1112,29 @@ html[data-theme="light"] .dric-agreements-page .dric-agreements-hero-eyebrow {
   -webkit-background-clip: text;
   color: transparent;
   filter: drop-shadow(0 1px 0 rgba(97, 53, 0, 0.36))
-    drop-shadow(0 0 6px rgba(255, 211, 64, 0.22));
+    drop-shadow(0 0 7px rgba(255, 211, 64, 0.42))
+    drop-shadow(0 0 16px rgba(255, 178, 24, 0.22));
   letter-spacing: 0.03em;
+  animation: dric-star-neon 2.8s ease-in-out infinite;
+}
+
+.dric-testimonials-rating-empty {
+  color: rgba(255, 255, 255, 0.18);
+  letter-spacing: 0.03em;
+}
+
+@keyframes dric-star-neon {
+  0%, 100% {
+    filter: drop-shadow(0 1px 0 rgba(97, 53, 0, 0.36))
+      drop-shadow(0 0 7px rgba(255, 211, 64, 0.38))
+      drop-shadow(0 0 14px rgba(255, 178, 24, 0.18));
+  }
+
+  50% {
+    filter: drop-shadow(0 1px 0 rgba(97, 53, 0, 0.36))
+      drop-shadow(0 0 10px rgba(255, 230, 98, 0.58))
+      drop-shadow(0 0 24px rgba(255, 178, 24, 0.34));
+  }
 }
  
 html[data-theme="light"] .dric-testimonials-arrow {

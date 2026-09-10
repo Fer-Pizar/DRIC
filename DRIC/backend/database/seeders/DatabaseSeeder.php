@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             AgreementArchivePageSeeder::class,
             ProjectPageSeeder::class,
             ProjectFundingPageSeeder::class,
+            InternationalizationPageSeeder::class,
             MembershipPageSeeder::class,
             NewsPageSeeder::class,
             NormativePageSeeder::class,

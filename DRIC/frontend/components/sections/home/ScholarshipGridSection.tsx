@@ -6,61 +6,16 @@ type Props = {
   locale?: string;
 };
 
-const imageSlugMap: Record<string, string> = {
-  germany: "alemania",
-  france: "francia",
-  "south-korea": "corea-del-sur",
-  italy: "italia",
-  japan: "japon",
-  netherlands: "holanda",
-  sweden: "suecia",
-  switzerland: "suiza",
-  belgium: "belgica",
-  china: "china",
-};
-
 function getCountryCard(block: CmsSection["blocks"][number], locale: string) {
   const title = block.title ?? "";
-  const dataCountry = String(block.data?.country ?? "");
   const image = String(block.data?.image ?? block.media?.url ?? "");
-  const imageSlug = image.split("/").pop()?.replace(/\.[^.]+$/, "");
-  const isGermanyCard =
-    title.toLowerCase() === "germany" ||
-    title.toLowerCase() === "alemania" ||
-    dataCountry.toLowerCase() === "germany" ||
-    dataCountry.toLowerCase() === "alemania" ||
-    imageSlug === "germany";
-  const isChinaCard =
-    title.toLowerCase() === "china" ||
-    dataCountry.toLowerCase() === "china" ||
-    imageSlug === "china";
-  const isBelgiumCard =
-    title.toLowerCase() === "belgium" ||
-    title.toLowerCase() === "bélgica" ||
-    dataCountry.toLowerCase() === "belgium" ||
-    dataCountry.toLowerCase() === "bélgica" ||
-    imageSlug === "belgium";
-
-  if (isGermanyCard) {
-    return {
-      title: locale === "en" ? "Belgium" : "Bélgica",
-      image: "/images/scholarships/belgium.png",
-      slug: "belgica",
-    };
-  }
-
-  if (isChinaCard || isBelgiumCard) {
-    return {
-      title: locale === "en" ? "Germany" : "Alemania",
-      image: "/images/scholarships/germany.jpg",
-      slug: "alemania",
-    };
-  }
+  const href = block.link_url ?? `/becas-movilidad/becas/${getCountrySlug(block)}`;
 
   return {
     title,
     image: block.media?.url ?? image,
     slug: getCountrySlug(block),
+    href: localizedHref(href, locale),
   };
 }
 
@@ -74,7 +29,15 @@ function getCountrySlug(block: CmsSection["blocks"][number]) {
   const image = String(block.data?.image ?? "");
   const imageSlug = image.split("/").pop()?.replace(/\.[^.]+$/, "");
 
-  return imageSlug ? imageSlugMap[imageSlug] ?? imageSlug : "";
+  return imageSlug ?? "";
+}
+
+function localizedHref(href: string, locale: string) {
+  if (href.startsWith("http") || href.startsWith(`/${locale}/`)) {
+    return href;
+  }
+
+  return `/${locale}${href.startsWith("/") ? href : `/${href}`}`;
 }
 
 export default function ScholarshipGridSection({ section, locale = "es" }: Props) {
@@ -92,7 +55,7 @@ export default function ScholarshipGridSection({ section, locale = "es" }: Props
             return (
               <Link
                 key={block.id}
-                href={`/${locale}/becas-movilidad/becas/${countryCard.slug}`}
+                href={countryCard.href}
                 className="dric-scholarship-card dric-scholarship-country-card group block overflow-hidden rounded-3xl border border-white/10 bg-slate-900 transition duration-500 hover:-translate-y-3 hover:scale-[1.03] hover:border-cyan-300/70 hover:shadow-[0_0_45px_rgba(0,55,112,0.25)]"
               >
                 <div className="relative overflow-hidden">

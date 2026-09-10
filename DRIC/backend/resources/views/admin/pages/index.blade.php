@@ -212,6 +212,9 @@
                                 <td>{{ $page->parent?->slug ?? '—' }}</td>
                                 <td>
                                     <a href="{{ route('admin.pages.edit', $page) }}" class="btn-edit">Editar</a>
+                                    @if ($page->slug === 'inicio')
+                                        <a href="{{ route('admin.pages.home.edit', $page) }}" class="btn-content">Editar contenido</a>
+                                    @endif
                                     @if ($page->slug === 'presentacion')
                                         <a href="{{ route('admin.pages.presentation.edit', $page) }}" class="btn-content">Editar contenido</a>
                                     @endif
@@ -244,6 +247,9 @@
                                     @endif
                                     @if ($page->slug === 'informacion-nacionales-extranjeros')
                                         <a href="{{ route('admin.pages.national-foreign-info.edit', $page) }}" class="btn-content">Editar contenido</a>
+                                    @endif
+                                    @if ($page->slug === 'internacionalizacion')
+                                        <a href="{{ route('admin.pages.internationalization.edit', $page) }}" class="btn-content">Editar contenido</a>
                                     @endif
                                     @if ($page->slug === 'membresias')
                                         <a href="{{ route('admin.pages.memberships.edit', $page) }}" class="btn-content">Editar contenido</a>

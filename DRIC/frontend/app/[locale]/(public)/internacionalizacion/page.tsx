@@ -1,5 +1,7 @@
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import { getOptionalPageBySlug } from "@/lib/api/pages";
+import type { CmsBlock, CmsPage, CmsSection } from "@/types/cms";
 import Card from "@mui/material/Card";
 import PublicRoundedIcon from "@mui/icons-material/PublicRounded";
 import SchoolRoundedIcon from "@mui/icons-material/SchoolRounded";
@@ -82,16 +84,62 @@ const icons = [
   <GroupsRoundedIcon key="projection" />,
 ];
 
+function sectionByKey(page: CmsPage | null, key: string): CmsSection | null {
+  return page?.sections.find((section) => section.section_key === key) ?? null;
+}
+
+function blockByKey(section: CmsSection | null, key: string): CmsBlock | null {
+  return section?.blocks.find((block) => block.link_url === key) ?? null;
+}
+
+function textParagraphs(value: string | null | undefined, fallback: string[]): string[] {
+  if (!value || value.trim() === "") {
+    return fallback;
+  }
+
+  return value
+    .split(/\n{2,}/)
+    .map((paragraph) => paragraph.trim())
+    .filter(Boolean);
+}
+
+function pageContent(page: CmsPage | null, locale: "es" | "en") {
+  const fallback = content[locale] ?? content.es;
+  const hero = sectionByKey(page, "internationalization.hero");
+  const detail = sectionByKey(page, "internationalization.detail");
+  const workAreas = sectionByKey(page, "internationalization.work_areas");
+
+  return {
+    eyebrow: hero?.subtitle || page?.subtitle || fallback.eyebrow,
+    title: page?.title || hero?.title || fallback.title,
+    intro: hero?.summary || page?.summary || fallback.intro,
+    detailTitle: detail?.title || fallback.detailTitle,
+    detailParagraphs: textParagraphs(detail?.body, fallback.detailParagraphs),
+    sectionEyebrow: workAreas?.subtitle || fallback.sectionEyebrow,
+    sectionTitle: workAreas?.title || fallback.sectionTitle,
+    sectionText: workAreas?.summary || fallback.sectionText,
+    cards: fallback.cards.map((card, index) => {
+      const block = blockByKey(workAreas, `internationalization.card.${index + 1}`);
+
+      return {
+        title: block?.title || card.title,
+        text: block?.summary || card.text,
+      };
+    }),
+  };
+}
+
 export default async function InternacionalizacionPage({ params }: Props) {
   const { locale } = await params;
-  const t = content[locale === "en" ? "en" : "es"];
+  const currentLocale = locale === "en" ? "en" : "es";
+  const page = await getOptionalPageBySlug("internacionalizacion", currentLocale);
+  const t = pageContent(page, currentLocale);
 
   return (
-    <main className="dric-theme-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
+    <main className="dric-theme-page dric-internationalization-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
       <Header />
 
-      <section className="relative isolate px-4 pb-16 pt-32 sm:px-5 md:px-10 md:pb-20 md:pt-36 lg:px-12">
-        <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(227,6,19,0.42),transparent_34%),radial-gradient(circle_at_top_right,rgba(0,55,112,0.50),transparent_36%),linear-gradient(135deg,#020617_0%,#08111f_46%,#12070a_100%)]" />
+      <section className="dric-internationalization-section relative isolate px-4 pb-16 pt-32 sm:px-5 md:px-10 md:pb-20 md:pt-36 lg:px-12">
         <div className="absolute left-1/2 top-28 -z-10 h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-cyan-300/10 blur-[140px]" />
 
         <div className="mx-auto max-w-7xl text-center md:text-left">
@@ -109,9 +157,7 @@ export default async function InternacionalizacionPage({ params }: Props) {
         </div>
       </section>
 
-      <section className="relative isolate px-4 py-16 text-white sm:px-5 md:px-10 md:py-20 lg:px-12">
-        <div className="absolute inset-0 -z-20 bg-[#020617]" />
-
+      <section className="dric-internationalization-section relative isolate px-4 py-16 text-white sm:px-5 md:px-10 md:py-20 lg:px-12">
         <div className="group mx-auto max-w-5xl rounded-[2rem] border border-white/10 bg-white/[0.055] p-6 shadow-2xl shadow-black/20 backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 hover:border-cyan-300/45 hover:bg-white/[0.085] hover:shadow-[0_28px_80px_rgba(0,55,112,0.25)] sm:p-8 md:rounded-[2.5rem] md:p-10">
           <h2 className="mx-auto max-w-full break-words text-center text-2xl font-semibold leading-tight tracking-[-0.025em] sm:text-3xl md:text-5xl md:tracking-[-0.04em]">
             {t.detailTitle}
@@ -125,9 +171,7 @@ export default async function InternacionalizacionPage({ params }: Props) {
         </div>
       </section>
 
-      <section className="relative isolate overflow-hidden px-4 py-16 text-white sm:px-5 md:px-10 md:py-20 lg:px-12">
-        <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(227,6,19,0.20),transparent_34%),radial-gradient(circle_at_center_right,rgba(0,55,112,0.30),transparent_38%),linear-gradient(145deg,#020617_0%,#07111f_50%,#12070a_100%)]" />
-
+      <section className="dric-internationalization-section relative isolate overflow-hidden px-4 py-16 text-white sm:px-5 md:px-10 md:py-20 lg:px-12">
         <div className="mx-auto max-w-7xl">
           <div className="mb-12 max-w-3xl text-center md:text-left">
             <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#E30613] sm:text-sm sm:tracking-[0.25em]">

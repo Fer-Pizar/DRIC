@@ -163,10 +163,21 @@ class PageSeeder extends Seeder
         ];
 
         foreach ($pages as $page) {
-            Page::updateOrCreate(
-                ['slug' => $page['slug']],
-                $page
-            );
+            $existing = Page::query()->where('slug', $page['slug'])->first();
+
+            if ($existing) {
+                $existing->fill([
+                    'page_type' => $page['page_type'],
+                    'sort_order' => $page['sort_order'],
+                    'parent_id' => $existing->parent_id ?? $page['parent_id'],
+                    'created_by' => $existing->created_by,
+                    'updated_by' => $existing->updated_by,
+                ])->save();
+
+                continue;
+            }
+
+            Page::create($page);
         }
     }
 }

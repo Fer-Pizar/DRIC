@@ -3,9 +3,11 @@
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import type { CmsBlock, CmsSection } from "@/types/cms";
 
 type Props = {
   locale: "es" | "en";
+  section?: CmsSection | null;
 };
 
 const content = {
@@ -79,8 +81,100 @@ const content = {
   },
 };
 
-export default function StudentExperiencesSection({ locale }: Props) {
-  const t = content[locale] ?? content.es;
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://127.0.0.1:8000/api";
+const BACKEND_BASE_URL = (process.env.NEXT_PUBLIC_BACKEND_URL ?? API_BASE_URL.replace(/\/api\/?$/, "")).replace(/\/$/, "");
+
+function mediaUrl(block: CmsBlock, fallback = ""): string {
+  const url = block.media?.url ?? block.media_asset?.url;
+
+  if (url) {
+    return url;
+  }
+
+  const image = block.data?.image ?? block.data?.existing_image;
+
+  if (typeof image !== "string" || image.trim() === "") {
+    return fallback;
+  }
+
+  if (image.startsWith("http://") || image.startsWith("https://")) {
+    return image;
+  }
+
+  if (image.startsWith("/storage/")) {
+    return `${BACKEND_BASE_URL}${image}`;
+  }
+
+  return image;
+}
+
+function formatExperienceDate(value: unknown, locale: "es" | "en", fallback: string): string {
+  if (typeof value !== "string" || value.trim() === "") {
+    return fallback;
+  }
+
+  const date = new Date(`${value}T12:00:00`);
+
+  if (Number.isNaN(date.getTime())) {
+    return fallback;
+  }
+
+  const formattedDate = new Intl.DateTimeFormat(locale === "en" ? "en-US" : "es-BO", {
+    month: "long",
+    year: "numeric",
+  }).format(date);
+
+  if (locale === "en") {
+    return formattedDate;
+  }
+
+  return formattedDate.charAt(0).toLocaleUpperCase("es-BO") + formattedDate.slice(1);
+}
+
+function starCountFromRating(value: unknown): number {
+  const rating = Number(value);
+
+  if (!Number.isFinite(rating)) {
+    return 5;
+  }
+
+  return Math.max(1, Math.min(5, Math.ceil(rating / 2)));
+}
+
+function sectionContent(section: CmsSection | null | undefined, locale: "es" | "en") {
+  const fallback = content[locale] ?? content.es;
+  const button = section?.blocks.find((block) => block.type === "testimonials_button" || block.block_type === "testimonials_button");
+  const testimonialBlocks = section?.blocks.filter((block) => block.type === "student_testimonial" || block.block_type === "student_testimonial") ?? [];
+
+  if (!section || testimonialBlocks.length === 0) {
+    return fallback;
+  }
+
+  return {
+    title: section.title || fallback.title,
+    text: section.summary || fallback.text,
+    button: button?.cta_label || button?.title || fallback.button,
+    buttonLink: button?.link_url || `/${locale}/becas-movilidad`,
+    comments: testimonialBlocks.map((block, index) => {
+      const fallbackItem = fallback.comments[index % fallback.comments.length];
+      const countryKey = locale === "en" ? "country_en" : "country_es";
+      const mobilityTypeKey = locale === "en" ? "mobility_type_en" : "mobility_type_es";
+
+      return {
+        name: block.title || fallbackItem.name,
+        role: block.subtitle || (typeof block.data?.[mobilityTypeKey] === "string" ? block.data[mobilityTypeKey] : fallbackItem.role),
+        country: typeof block.data?.[countryKey] === "string" ? block.data[countryKey] : fallbackItem.country,
+        ratingDate: formatExperienceDate(block.data?.experience_date, locale, fallbackItem.ratingDate),
+        rating: starCountFromRating(block.data?.rating),
+        image: mediaUrl(block),
+        comment: block.summary || fallbackItem.comment,
+      };
+    }),
+  };
+}
+
+export default function StudentExperiencesSection({ locale, section }: Props) {
+  const t = sectionContent(section, locale);
   const carouselRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
@@ -149,7 +243,7 @@ export default function StudentExperiencesSection({ locale }: Props) {
               {t.text}
             </p>
             <a
-              href={`/${locale}/becas-movilidad`}
+              href={"buttonLink" in t ? t.buttonLink : `/${locale}/becas-movilidad`}
               className="mt-6 inline-flex rounded-2xl border border-white/40 px-6 py-3 text-sm font-medium text-white shadow-[0_0_30px_rgba(255,255,255,0.25)] transition hover:bg-white hover:text-slate-950 md:mt-8 md:px-7 md:py-4"
             >
               {t.button}
@@ -173,7 +267,10 @@ export default function StudentExperiencesSection({ locale }: Props) {
             ref={carouselRef}
             className="dric-testimonials-carousel flex snap-x snap-mandatory gap-5 overflow-x-auto px-1 pb-4 pt-10 md:gap-8 md:px-2 md:pt-14"
           >
-            {t.comments.map((item) => (
+            {t.comments.map((item) => {
+              const rating = "rating" in item ? item.rating : 5;
+
+              return (
               <article
                 key={item.name}
                 className="dric-testimonial-card flex w-[84vw] shrink-0 snap-center flex-col rounded-2xl border border-white/10 bg-white/[0.03] p-5 shadow-2xl transition duration-300 hover:-translate-y-3 hover:border-cyan-200/35 hover:bg-white/[0.05] sm:w-[68%] sm:p-7 md:w-[560px] md:rounded-3xl md:p-10 lg:w-[620px]"
@@ -185,6 +282,7 @@ export default function StudentExperiencesSection({ locale }: Props) {
                     alt={item.name}
                     width={100}
                     height={100}
+                    unoptimized={item.image.startsWith("http://") || item.image.startsWith("https://")}
                     className="h-full w-full object-cover"
                   />
                 ) : null}
@@ -199,14 +297,18 @@ export default function StudentExperiencesSection({ locale }: Props) {
                 “{item.comment}”
               </p>
               <p className="dric-testimonials-rating mt-auto pt-6 text-lg md:pt-8 md:text-xl">
-                <span className="dric-testimonials-rating-stars">★★★★★</span>
+                <span className="dric-testimonials-rating-stars" aria-label={`${rating} de 5 estrellas`}>
+                  {"★".repeat(rating)}
+                </span>
+                <span className="dric-testimonials-rating-empty" aria-hidden="true">{"★".repeat(5 - rating)}</span>
                 <span className="mx-2 align-middle text-sm text-white/35 md:text-base">・</span>
                 <span className="align-middle text-sm text-white/45 md:text-base">
                   {item.ratingDate}
                 </span>
               </p>
             </article>
-            ))}
+              );
+            })}
           </div>
 
           {canScrollRight ? (

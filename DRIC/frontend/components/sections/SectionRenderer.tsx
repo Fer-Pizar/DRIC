@@ -7,6 +7,7 @@ import RecentAgreementsSection from "@/components/sections/home/RecentAgreements
 import DirectorSection from "@/components/sections/home/DirectorSection";
 import FaqSection from "@/components/sections/home/FaqSection";
 import FinalCtaSection from "@/components/sections/home/FinalCtaSection";
+import StudentExperiencesSection from "@/components/sections/StudentExperiencesSection";
 
 import type { CmsSection } from "@/types/cms";
 
@@ -51,6 +52,15 @@ export default function SectionRenderer({ sections, locale = "es" }: Props) {
 
           case "stats":
             return <StatsSection key={section.id} section={section} />;
+
+          case "student_testimonials":
+            return (
+              <StudentExperiencesSection
+                key={section.id}
+                section={section}
+                locale={locale as "es" | "en"}
+              />
+            );
 
           case "faq":
             return (

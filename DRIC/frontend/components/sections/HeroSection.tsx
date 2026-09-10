@@ -42,10 +42,16 @@ export default function HeroSection({ section }: Props) {
   const locale = useLocale();
   const tNav = useTranslations("nav");
 
-  const badge = tNav("presentation");
-  const badgeHref = `/${locale}${heroBlock?.link_url ?? "/presentacion"}`;
-  const primaryHref = `/${locale}/convenios`;
-  const secondaryHref = `/${locale}${String(heroBlock?.data?.secondaryLink ?? "/becas-movilidad")}`;
+  const storedBadge = String(heroBlock?.data?.[`badge_${locale}`] ?? "");
+  const legacyBadge = locale === "es" ? String(heroBlock?.data?.badge ?? "") : "";
+  const translatedBadge =
+    heroBlock?.subtitle && heroBlock.subtitle !== section.subtitle
+      ? heroBlock.subtitle
+      : "";
+  const badge = storedBadge || legacyBadge || translatedBadge || tNav("presentation");
+  const badgeHref = localizedHref(String(heroBlock?.data?.badgeLink ?? heroBlock?.link_url ?? "/presentacion"), locale);
+  const primaryHref = localizedHref(String(heroBlock?.data?.primaryLink ?? "/convenios"), locale);
+  const secondaryHref = localizedHref(String(heroBlock?.data?.secondaryLink ?? "/becas-movilidad"), locale);
 
   const primaryLabel = heroBlock?.cta_label ?? tNav("agreements");
   const secondaryLabel = heroBlock?.secondary_cta_label ?? tNav("mobility");
@@ -121,4 +127,12 @@ export default function HeroSection({ section }: Props) {
       </div>
     </section>
   );
+}
+
+function localizedHref(href: string, locale: string): string {
+  if (href.startsWith("http") || href.startsWith(`/${locale}/`)) {
+    return href;
+  }
+
+  return `/${locale}${href.startsWith("/") ? href : `/${href}`}`;
 }
