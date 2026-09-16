@@ -35,6 +35,7 @@ export type CmsSection = {
   section_key?: string | null;
   layout?: string | null;
   sort_order: number;
+  is_active?: boolean;
   settings?: Record<string, unknown> | null;
   title?: string | null;
   subtitle?: string | null;

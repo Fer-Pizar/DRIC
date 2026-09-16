@@ -15,7 +15,8 @@ export default function RecentAgreementsSection({
   locale = "es",
 }: Props) {
   const eyebrow =
-    locale === "en" ? "International Cooperation" : "Cooperación internacional";
+    section.subtitle ||
+    (locale === "en" ? "International Cooperation" : "Cooperación internacional");
 
   return (
     <section className="relative overflow-hidden px-6 py-24 md:px-10 lg:px-16">

@@ -104,6 +104,7 @@ class HomeContentController extends Controller
                 'background' => '/images/hero/hero-blur-bg.jpg',
                 'layout' => 'centered-cta',
             ]);
+            $finalCta->update(['is_active' => $request->boolean('final_cta_enabled')]);
 
             foreach (['es', 'en'] as $locale) {
                 PageTranslation::updateOrCreate(
@@ -118,9 +119,9 @@ class HomeContentController extends Controller
                 );
 
                 $this->translateSection($hero, $languages[$locale], $validated[$locale]['hero_title'], $validated[$locale]['hero_badge'], $validated[$locale]['hero_summary']);
-                $this->translateSection($scholarships, $languages[$locale], $validated[$locale]['scholarships_title'], $validated[$locale]['scholarships_subtitle'], $validated[$locale]['scholarships_summary']);
+                $this->translateSection($scholarships, $languages[$locale], $validated[$locale]['scholarships_title'], $validated[$locale]['scholarships_subtitle'], $this->scholarshipsSummary($page, $locale));
                 $this->translateSection($about, $languages[$locale], $validated[$locale]['about_title'], null, $validated[$locale]['about_summary']);
-                $this->translateSection($recentAgreements, $languages[$locale], $validated[$locale]['agreements_title'], null, $validated[$locale]['agreements_summary']);
+                $this->translateSection($recentAgreements, $languages[$locale], $validated[$locale]['agreements_title'], $validated[$locale]['agreements_eyebrow'], $validated[$locale]['agreements_summary']);
                 $this->translateSection($testimonials, $languages[$locale], $validated[$locale]['testimonials_title'], null, $validated[$locale]['testimonials_summary']);
                 $this->translateSection($stats, $languages[$locale], null, null, null);
                 $this->translateSection($faq, $languages[$locale], 'FAQ', null, null);
@@ -235,15 +236,16 @@ class HomeContentController extends Controller
             'hero_secondary_link' => ['required', 'string', 'max:500'],
             'testimonials_button_link' => ['required', 'string', 'max:500'],
             'final_button_link' => ['required', 'string', 'max:500'],
+            'final_cta_enabled' => ['nullable', 'boolean'],
             'about_image' => ['nullable', 'file', 'mimes:jpg,jpeg,png', 'max:'.self::MAX_IMAGE_KB],
         ];
 
         foreach (['es', 'en'] as $locale) {
-            foreach (['hero_badge', 'hero_title', 'hero_primary_label', 'hero_secondary_label', 'scholarships_title', 'scholarships_subtitle', 'about_title', 'agreements_title', 'testimonials_title', 'testimonials_button_label', 'final_title', 'final_button_label'] as $field) {
+            foreach (['hero_badge', 'hero_title', 'hero_primary_label', 'hero_secondary_label', 'scholarships_title', 'scholarships_subtitle', 'about_title', 'agreements_eyebrow', 'agreements_title', 'testimonials_title', 'testimonials_button_label', 'final_title', 'final_button_label'] as $field) {
                 $rules["{$locale}.{$field}"] = ['required', 'string', 'max:180'];
             }
 
-            foreach (['hero_summary', 'scholarships_summary', 'about_summary', 'agreements_summary', 'testimonials_summary', 'final_summary'] as $field) {
+            foreach (['hero_summary', 'about_summary', 'agreements_summary', 'testimonials_summary', 'final_summary'] as $field) {
                 $rules["{$locale}.{$field}"] = ['required', 'string', 'max:1000'];
             }
         }
@@ -339,6 +341,7 @@ class HomeContentController extends Controller
             'director_blocks' => $this->directorBlocks($page),
             'stats' => $this->stats($page),
             'faqs' => $this->faqs($page),
+            'final_cta_enabled' => $this->sectionIsActive($page, 'home.final_cta', true),
             'final_button_link' => $this->block($page, 'home.final_cta', 1)?->link_url ?? '/agendar-cita',
         ];
     }
@@ -356,6 +359,7 @@ class HomeContentController extends Controller
             'scholarships_summary' => $this->sectionValue($page, 'home.scholarships', $locale, 'summary', $locale === 'en' ? 'Access scholarship, mobility, and academic exchange opportunities.' : 'Accede a convocatorias de becas, movilidad e intercambio académico.'),
             'about_title' => $this->sectionValue($page, 'home.about', $locale, 'title', $locale === 'en' ? 'About us' : 'Conócenos'),
             'about_summary' => $this->sectionValue($page, 'home.about', $locale, 'summary', $locale === 'en' ? 'DRIC strengthens university internationalization through agreements, mobility, cooperation, and academic partnerships.' : 'La DRIC fortalece la internacionalización universitaria mediante convenios, movilidad, cooperación y vinculación académica.'),
+            'agreements_eyebrow' => $this->sectionValue($page, 'home.recent_agreements', $locale, 'subtitle', $locale === 'en' ? 'International Cooperation' : 'Cooperación internacional'),
             'agreements_title' => $this->sectionValue($page, 'home.recent_agreements', $locale, 'title', $locale === 'en' ? 'Recent agreements' : 'Acuerdos recientes'),
             'agreements_summary' => $this->sectionValue($page, 'home.recent_agreements', $locale, 'summary', $locale === 'en' ? 'Learn about recent national and international cooperation actions.' : 'Conoce las acciones recientes de cooperación nacional e internacional.'),
             'testimonials_title' => $this->sectionValue($page, 'home.student_testimonials', $locale, 'title', $locale === 'en' ? 'Student experiences' : 'Experiencias de los estudiantes'),
@@ -365,6 +369,27 @@ class HomeContentController extends Controller
             'final_summary' => $this->sectionValue($page, 'home.final_cta', $locale, 'summary', $locale === 'en' ? 'Schedule an appointment and receive guidance on programs, agreements, and international scholarships.' : 'Agenda una cita y recibe orientación sobre programas, convenios y becas internacionales.'),
             'final_button_label' => $this->blockValue($page, 'home.final_cta', 1, $locale, 'cta_label', $locale === 'en' ? 'Schedule an appointment' : 'Agenda una cita'),
         ];
+    }
+
+    private function scholarshipsSummary(Page $page, string $locale): string
+    {
+        $fallback = $locale === 'en'
+            ? 'Access scholarship, mobility, and academic exchange opportunities.'
+            : 'Accede a convocatorias de becas, movilidad e intercambio académico.';
+
+        return SectionTranslation::query()
+            ->whereHas('section', fn ($query) => $query
+                ->where('page_id', $page->id)
+                ->where('section_key', 'home.scholarships'))
+            ->whereHas('language', fn ($query) => $query->where('code', $locale))
+            ->value('summary') ?? $fallback;
+    }
+
+    private function sectionIsActive(Page $page, string $key, bool $fallback): bool
+    {
+        $section = $page->sections->firstWhere('section_key', $key);
+
+        return $section ? (bool) $section->is_active : $fallback;
     }
 
     private function countryCards(Page $page): array

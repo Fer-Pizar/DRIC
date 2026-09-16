@@ -227,7 +227,7 @@ function mergeContactCopy(defaults: {
 
   return {
     ...defaults,
-    badge: hero?.subtitle || page?.menu_label || defaults.badge,
+    badge: defaults.badge,
     title: page?.title || hero?.title || defaults.title,
     intro: hero?.summary || page?.summary || defaults.intro,
     phone: phone?.title || defaults.phone,
@@ -243,15 +243,41 @@ function mergeContactCopy(defaults: {
 }
 
 function cmsSocialLinks(page: CmsPage | null) {
-  return (
+  const links =
     section(page, "contact.social")
       ?.blocks.filter((block) => block.type === "contact_social_link")
       .map((block) => ({
         label: block.title?.trim() ?? "",
         url: dataString(block, "url") || block.link_url || "",
       }))
-      .filter((link) => link.label && link.url) ?? []
-  );
+      .filter((link) => link.label && link.url) ?? [];
+
+  return links.length ? links : defaultSocialLinks();
+}
+
+function defaultSocialLinks() {
+  return [
+    {
+      label: "LinkedIn",
+      url: "https://bo.linkedin.com/school/umssboloficial/?trk=public_post_feed-actor-image",
+    },
+    {
+      label: "Facebook",
+      url: "https://www.facebook.com/UMSS.DRIC",
+    },
+    {
+      label: "X",
+      url: "https://x.com/UmssBolOficial",
+    },
+    {
+      label: "Instagram",
+      url: "https://www.instagram.com/umss.dric/",
+    },
+    {
+      label: "YouTube",
+      url: "https://www.youtube.com/c/UniversidadMayordeSanSimonOficial",
+    },
+  ];
 }
 
 function section(page: CmsPage | null, key: string): CmsSection | undefined {

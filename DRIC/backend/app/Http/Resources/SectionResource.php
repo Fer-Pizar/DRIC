@@ -22,6 +22,7 @@ class SectionResource extends JsonResource
             'section_type' => $this->section_type,
             'layout' => $this->layout,
             'sort_order' => $this->sort_order,
+            'is_active' => (bool) $this->is_active,
             'settings' => $this->settings ?? [],
             'title' => $translation?->title,
             'subtitle' => $translation?->subtitle,

@@ -56,6 +56,18 @@
         .preview img { max-height: 180px; max-width: 100%; object-fit: contain; }
         .sticky-actions { align-items: center; background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 16px; bottom: 18px; box-shadow: 0 18px 45px rgba(15,23,42,.12); display: flex; justify-content: space-between; padding: 14px; position: sticky; z-index: 5; }
         .remove-row { align-items: center; display: flex; justify-content: space-between; gap: 12px; }
+        .toggle-row { align-items: center; background: var(--soft); border: 1px solid var(--line); border-radius: 16px; display: flex; justify-content: space-between; gap: 18px; margin-bottom: 18px; padding: 16px; }
+        .switch { align-items: center; cursor: pointer; display: inline-flex; flex: 0 0 auto; gap: 12px; user-select: none; }
+        .switch input { height: 1px; opacity: 0; position: absolute; width: 1px; }
+        .switch-track { align-items: center; background: #cbd5e1; border: 1px solid #b8c2d1; border-radius: 999px; box-shadow: inset 0 2px 5px rgba(15,23,42,.14); display: inline-flex; height: 34px; padding: 3px; transition: background .2s ease, border-color .2s ease, box-shadow .2s ease; width: 62px; }
+        .switch-thumb { background: #fff; border-radius: 50%; box-shadow: 0 6px 14px rgba(15,23,42,.24); display: block; height: 26px; transform: translateX(0); transition: transform .2s ease; width: 26px; }
+        .switch input:checked + .switch-track { background: var(--blue); border-color: var(--blue); box-shadow: 0 10px 22px rgba(22,65,148,.22); }
+        .switch input:checked + .switch-track .switch-thumb { transform: translateX(28px); }
+        .switch-text { color: var(--muted); font-size: 13px; font-weight: 900; letter-spacing: .02em; min-width: 62px; text-transform: uppercase; }
+        .switch-text::before { content: "Inactivo"; }
+        .switch input:checked ~ .switch-text { color: var(--blue); }
+        .switch input:checked ~ .switch-text::before { content: "Activo"; }
+        .switch:focus-within .switch-track { outline: 3px solid rgba(22,65,148,.18); outline-offset: 3px; }
         @media (max-width: 940px) { .topbar, .sticky-actions { align-items: stretch; flex-direction: column; } .language-grid, .two-grid, .three-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
@@ -114,7 +126,6 @@
                             <h3>{{ $label }}</h3>
                             <label>Título<input type="text" name="{{ $locale }}[scholarships_title]" value="{{ old($locale.'.scholarships_title', $content[$locale]['scholarships_title']) }}">@error($locale.'.scholarships_title')<span class="field-error">{{ $message }}</span>@enderror</label>
                             <label>Subtítulo<input type="text" name="{{ $locale }}[scholarships_subtitle]" value="{{ old($locale.'.scholarships_subtitle', $content[$locale]['scholarships_subtitle']) }}">@error($locale.'.scholarships_subtitle')<span class="field-error">{{ $message }}</span>@enderror</label>
-                            <label>Descripción<textarea name="{{ $locale }}[scholarships_summary]">{{ old($locale.'.scholarships_summary', $content[$locale]['scholarships_summary']) }}</textarea>@error($locale.'.scholarships_summary')<span class="field-error">{{ $message }}</span>@enderror</label>
                         </div>
                     @endforeach
                 </div>
@@ -163,6 +174,7 @@
                     @foreach (['es' => 'Español', 'en' => 'Inglés'] as $locale => $label)
                         <div class="language-card">
                             <h3>{{ $label }}</h3>
+                            <label>Etiqueta superior<input type="text" name="{{ $locale }}[agreements_eyebrow]" value="{{ old($locale.'.agreements_eyebrow', $content[$locale]['agreements_eyebrow']) }}">@error($locale.'.agreements_eyebrow')<span class="field-error">{{ $message }}</span>@enderror</label>
                             <label>Título acuerdos<input type="text" name="{{ $locale }}[agreements_title]" value="{{ old($locale.'.agreements_title', $content[$locale]['agreements_title']) }}">@error($locale.'.agreements_title')<span class="field-error">{{ $message }}</span>@enderror</label>
                             <label>Texto acuerdos<textarea name="{{ $locale }}[agreements_summary]">{{ old($locale.'.agreements_summary', $content[$locale]['agreements_summary']) }}</textarea>@error($locale.'.agreements_summary')<span class="field-error">{{ $message }}</span>@enderror</label>
                         </div>
@@ -277,21 +289,34 @@
 
             <section class="panel">
                 <div class="panel-header">
-                    <h2>Cierre</h2>
-                    <p class="muted">Contenido final y enlace del botón de llamada a la acción.</p>
+                    <h2>Agendar cita</h2>
+                    <p class="muted">Última sección de Inicio. Puedes apagarla para ocultarla por completo en la página pública.</p>
+                </div>
+                <div class="toggle-row">
+                    <div>
+                        <h3>Mostrar sección en Inicio</h3>
+                        <p class="muted">Si está apagado, no se verá el bloque final de Agendar cita en la página pública.</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" name="final_cta_enabled" value="1" @checked(old('final_cta_enabled', $content['final_cta_enabled']))>
+                        <span class="switch-track" aria-hidden="true">
+                            <span class="switch-thumb"></span>
+                        </span>
+                        <span class="switch-text"></span>
+                    </label>
                 </div>
                 <div class="language-grid">
                     @foreach (['es' => 'Español', 'en' => 'Inglés'] as $locale => $label)
                         <div class="language-card">
                             <h3>{{ $label }}</h3>
-                            <label>Título final<input type="text" name="{{ $locale }}[final_title]" value="{{ old($locale.'.final_title', $content[$locale]['final_title']) }}">@error($locale.'.final_title')<span class="field-error">{{ $message }}</span>@enderror</label>
-                            <label>Texto final<textarea name="{{ $locale }}[final_summary]">{{ old($locale.'.final_summary', $content[$locale]['final_summary']) }}</textarea>@error($locale.'.final_summary')<span class="field-error">{{ $message }}</span>@enderror</label>
-                            <label>Texto del botón final<input type="text" name="{{ $locale }}[final_button_label]" value="{{ old($locale.'.final_button_label', $content[$locale]['final_button_label']) }}">@error($locale.'.final_button_label')<span class="field-error">{{ $message }}</span>@enderror</label>
+                            <label>Título<input type="text" name="{{ $locale }}[final_title]" value="{{ old($locale.'.final_title', $content[$locale]['final_title']) }}">@error($locale.'.final_title')<span class="field-error">{{ $message }}</span>@enderror</label>
+                            <label>Texto<textarea name="{{ $locale }}[final_summary]">{{ old($locale.'.final_summary', $content[$locale]['final_summary']) }}</textarea>@error($locale.'.final_summary')<span class="field-error">{{ $message }}</span>@enderror</label>
+                            <label>Texto del botón<input type="text" name="{{ $locale }}[final_button_label]" value="{{ old($locale.'.final_button_label', $content[$locale]['final_button_label']) }}">@error($locale.'.final_button_label')<span class="field-error">{{ $message }}</span>@enderror</label>
                         </div>
                     @endforeach
                 </div>
                 <article class="item-card">
-                    <h3>Enlace del botón final</h3>
+                    <h3>Enlace del botón</h3>
                     <label>Enlace del botón<input type="text" name="final_button_link" value="{{ old('final_button_link', $content['final_button_link']) }}">@error('final_button_link')<span class="field-error">{{ $message }}</span>@enderror</label>
                 </article>
             </section>

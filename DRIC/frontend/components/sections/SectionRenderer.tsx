@@ -20,6 +20,10 @@ export default function SectionRenderer({ sections, locale = "es" }: Props) {
   return (
     <>
       {sections.map((section) => {
+        if (section.is_active === false) {
+          return null;
+        }
+
         const sectionType = section.type ?? section.section_type;
 
         switch (sectionType) {

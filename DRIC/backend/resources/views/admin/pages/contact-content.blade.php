@@ -65,8 +65,8 @@
 
             <section class="panel">
                 <div class="panel-header">
-                    <h2>Texto editable</h2>
-                    <p class="muted">Estos textos se publican en la página Contacto. No cambian el diseño.</p>
+                    <h2>Encabezado</h2>
+                    <p class="muted">Primera parte de la página Contacto. La insignia superior DRIC · UMSS queda fija por diseño.</p>
                 </div>
 
                 <div class="language-grid">
@@ -74,12 +74,6 @@
                         <div class="language-card">
                             <h3>{{ $label }}</h3>
                             <div class="field-grid">
-                                <label>
-                                    Insignia superior
-                                    <input type="text" name="{{ $locale }}[badge]" value="{{ old($locale.'.badge', $content[$locale]['badge']) }}">
-                                    @error($locale.'.badge')<span class="field-error">{{ $message }}</span>@enderror
-                                </label>
-
                                 <label>
                                     Título principal
                                     <input type="text" name="{{ $locale }}[title]" value="{{ old($locale.'.title', $content[$locale]['title']) }}">
@@ -91,7 +85,23 @@
                                     <textarea name="{{ $locale }}[intro]">{{ old($locale.'.intro', $content[$locale]['intro']) }}</textarea>
                                     @error($locale.'.intro')<span class="field-error">{{ $message }}</span>@enderror
                                 </label>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </section>
 
+            <section class="panel">
+                <div class="panel-header">
+                    <h2>Tarjetas de contacto</h2>
+                    <p class="muted">Tarjetas visibles debajo del encabezado: teléfono, correo y dirección.</p>
+                </div>
+
+                <div class="language-grid">
+                    @foreach (['es' => 'Español', 'en' => 'Inglés'] as $locale => $label)
+                        <div class="language-card">
+                            <h3>{{ $label }}</h3>
+                            <div class="field-grid">
                                 <div class="two-grid">
                                     <label>
                                         Título de teléfono
@@ -137,7 +147,23 @@
                                     <textarea name="{{ $locale }}[address_text]">{{ old($locale.'.address_text', $content[$locale]['address_text']) }}</textarea>
                                     @error($locale.'.address_text')<span class="field-error">{{ $message }}</span>@enderror
                                 </label>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </section>
 
+            <section class="panel">
+                <div class="panel-header">
+                    <h2>Canales institucionales</h2>
+                    <p class="muted">Tarjeta de redes sociales que aparece debajo de dirección.</p>
+                </div>
+
+                <div class="language-grid">
+                    @foreach (['es' => 'Español', 'en' => 'Inglés'] as $locale => $label)
+                        <div class="language-card">
+                            <h3>{{ $label }}</h3>
+                            <div class="field-grid">
                                 <label>
                                     Título de redes sociales
                                     <input type="text" name="{{ $locale }}[social_title]" value="{{ old($locale.'.social_title', $content[$locale]['social_title']) }}">

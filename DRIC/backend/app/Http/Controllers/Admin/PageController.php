@@ -15,7 +15,7 @@ class PageController extends Controller
     public function index(): View
     {
         $pages = Page::query()
-            ->with(['parent', 'creator', 'updater'])
+            ->with(['parent.translations.language', 'translations.language', 'creator', 'updater'])
             ->tap(fn ($query) => PagePermissionMap::scopeVisibleToUser($query, auth()->user()))
             ->orderBy('sort_order')
             ->orderBy('id')

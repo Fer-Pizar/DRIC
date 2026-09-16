@@ -67,7 +67,7 @@ class ContactContentController extends Controller
                     [
                         'title' => $validated[$locale]['title'],
                         'menu_title' => $validated[$locale]['title'],
-                        'subtitle' => $validated[$locale]['badge'],
+                        'subtitle' => $this->defaultBadge(),
                         'summary' => $validated[$locale]['intro'],
                         'body' => null,
                     ]
@@ -77,7 +77,7 @@ class ContactContentController extends Controller
                     ['section_id' => $hero->id, 'language_id' => $languages[$locale]->id],
                     [
                         'title' => $validated[$locale]['title'],
-                        'subtitle' => $validated[$locale]['badge'],
+                        'subtitle' => $this->defaultBadge(),
                         'summary' => $validated[$locale]['intro'],
                         'body' => null,
                     ]
@@ -137,7 +137,6 @@ class ContactContentController extends Controller
         $rules = [];
 
         foreach (['es', 'en'] as $locale) {
-            $rules["{$locale}.badge"] = ['required', 'string', 'max:80'];
             $rules["{$locale}.title"] = ['required', 'string', 'max:140', 'regex:'.self::CLEAN_LABEL_REGEX];
             $rules["{$locale}.intro"] = ['required', 'string', 'max:700'];
             $rules["{$locale}.phone_title"] = ['required', 'string', 'max:80', 'regex:'.self::CLEAN_LABEL_REGEX];
@@ -207,7 +206,6 @@ class ContactContentController extends Controller
     {
         return [
             'es' => [
-                'badge' => $this->sectionValue($page, 'contact.hero', 'es', 'subtitle', 'DRIC · UMSS'),
                 'title' => $this->pageValue($page, 'es', 'title', 'Contacto'),
                 'intro' => $this->sectionValue($page, 'contact.hero', 'es', 'summary', 'Comunícate con la Dirección de Relaciones Internacionales y Convenios de la Universidad Mayor de San Simón.'),
                 'phone_title' => $this->sectionValue($page, 'contact.phone', 'es', 'title', 'Teléfonos'),
@@ -221,7 +219,6 @@ class ContactContentController extends Controller
                 'social_summary' => $this->sectionValue($page, 'contact.social', 'es', 'summary', 'Redes sociales oficiales para conocer novedades, convocatorias y actividades institucionales.'),
             ],
             'en' => [
-                'badge' => $this->sectionValue($page, 'contact.hero', 'en', 'subtitle', 'DRIC · UMSS'),
                 'title' => $this->pageValue($page, 'en', 'title', 'Contact DRIC'),
                 'intro' => $this->sectionValue($page, 'contact.hero', 'en', 'summary', 'Get in touch with the Directorate of International Relations and Agreements of Universidad Mayor de San Simón.'),
                 'phone_title' => $this->sectionValue($page, 'contact.phone', 'en', 'title', 'Phone'),
@@ -314,6 +311,11 @@ class ContactContentController extends Controller
     private function sectionValue(Page $page, string $key, string $locale, string $field, string $fallback): string
     {
         return $page->sections->firstWhere('section_key', $key)?->translations->firstWhere('language.code', $locale)?->{$field} ?? $fallback;
+    }
+
+    private function defaultBadge(): string
+    {
+        return 'DRIC · UMSS';
     }
 
     private function authorizeContactAccess(Page $page): void
