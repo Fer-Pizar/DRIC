@@ -70,7 +70,7 @@ class NationalForeignInfoContentController extends Controller
                     ['page_id' => $page->id, 'language_id' => $languages[$locale]->id],
                     [
                         'title' => $validated[$locale]['title'],
-                        'menu_title' => $validated[$locale]['menu_title'],
+                        'menu_title' => $validated[$locale]['title'],
                         'subtitle' => $validated[$locale]['eyebrow'],
                         'summary' => $validated[$locale]['intro'],
                         'body' => null,
@@ -114,7 +114,6 @@ class NationalForeignInfoContentController extends Controller
         ];
 
         foreach (['es', 'en'] as $locale) {
-            $rules["{$locale}.menu_title"] = ['required', 'string', 'max:160'];
             $rules["{$locale}.eyebrow"] = ['required', 'string', 'max:160'];
             $rules["{$locale}.title"] = ['required', 'string', 'max:220'];
             $rules["{$locale}.intro"] = ['required', 'string', 'max:1200'];
@@ -163,7 +162,7 @@ class NationalForeignInfoContentController extends Controller
                 'sections.*.eyebrow_en' => ['nullable', 'string', 'max:180'],
                 'sections.*.summary_es' => ['required', 'string', 'max:1400'],
                 'sections.*.summary_en' => ['nullable', 'string', 'max:1400'],
-                'sections.*.image_alt_es' => ['required', 'string', 'max:220'],
+                'sections.*.image_alt_es' => ['nullable', 'string', 'max:220'],
                 'sections.*.image_alt_en' => ['nullable', 'string', 'max:220'],
                 'sections.*.existing_image' => ['nullable', 'string', 'max:900'],
                 'sections.*.points_es' => ['required', 'string', 'max:8000'],
@@ -178,7 +177,6 @@ class NationalForeignInfoContentController extends Controller
                 'sections.*.title_es.required' => 'Escribe el título de esta tarjeta en español.',
                 'sections.*.eyebrow_es.required' => 'Escribe la etiqueta superior de esta tarjeta.',
                 'sections.*.summary_es.required' => 'Escribe la descripción de esta tarjeta.',
-                'sections.*.image_alt_es.required' => 'Escribe un texto alternativo para la imagen.',
                 'sections.*.points_es.required' => 'Agrega al menos una viñeta en español.',
                 'sections.*.max' => 'Este campo supera el tamaño permitido.',
             ]
@@ -216,7 +214,10 @@ class NationalForeignInfoContentController extends Controller
                 'title' => $this->localized(trim($row['title_es']), trim($row['title_en'] ?? '')),
                 'eyebrow' => $this->localized(trim($row['eyebrow_es']), trim($row['eyebrow_en'] ?? '')),
                 'summary' => $this->localized(trim($row['summary_es']), trim($row['summary_en'] ?? '')),
-                'image_alt' => $this->localized(trim($row['image_alt_es']), trim($row['image_alt_en'] ?? '')),
+                'image_alt' => $this->localized(
+                    trim($row['image_alt_es'] ?? '') ?: trim($row['title_es']),
+                    trim($row['image_alt_en'] ?? '') ?: trim($row['title_en'] ?? '')
+                ),
                 'existing_image' => trim($row['existing_image'] ?? ''),
                 'points' => $this->localizedLines($row['points_es'] ?? '', $row['points_en'] ?? ''),
                 'links' => $this->validatedLinks($row['links'] ?? []),

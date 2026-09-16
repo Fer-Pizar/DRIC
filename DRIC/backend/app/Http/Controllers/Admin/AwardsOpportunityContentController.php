@@ -62,7 +62,7 @@ class AwardsOpportunityContentController extends Controller
                     ['page_id' => $page->id, 'language_id' => $languages[$locale]->id],
                     [
                         'title' => $validated[$locale]['title'],
-                        'menu_title' => $validated[$locale]['menu_title'],
+                        'menu_title' => $validated[$locale]['title'],
                         'subtitle' => $validated[$locale]['eyebrow'],
                         'summary' => $validated[$locale]['intro'],
                         'body' => null,
@@ -93,7 +93,6 @@ class AwardsOpportunityContentController extends Controller
         $rules = [];
 
         foreach (['es', 'en'] as $locale) {
-            $rules["{$locale}.menu_title"] = ['required', 'string', 'max:160'];
             $rules["{$locale}.eyebrow"] = ['required', 'string', 'max:160'];
             $rules["{$locale}.title"] = ['required', 'string', 'max:220'];
             $rules["{$locale}.intro"] = ['required', 'string', 'max:1200'];
@@ -202,13 +201,11 @@ class AwardsOpportunityContentController extends Controller
 
         return [
             'es' => [
-                'menu_title' => $this->pageValue($page, 'es', 'menu_title', data_get($fallback, 'es.title', 'Premios, eventos, cursos y concursos')),
                 'eyebrow' => $this->sectionValue($page, 'awards_opportunities.hero', 'es', 'subtitle', data_get($fallback, 'es.eyebrow', 'Convocatorias academicas')),
                 'title' => $this->pageValue($page, 'es', 'title', data_get($fallback, 'es.title', 'Premios, eventos, cursos y concursos')),
                 'intro' => $this->sectionValue($page, 'awards_opportunities.hero', 'es', 'summary', data_get($fallback, 'es.intro', 'Oportunidades de formación, investigación, liderazgo, intercambio académico y participación internacional difundidas por la DRIC para la comunidad universitaria.')),
             ],
             'en' => [
-                'menu_title' => $this->pageValue($page, 'en', 'menu_title', data_get($fallback, 'en.title', 'Awards, events, courses and contests')),
                 'eyebrow' => $this->sectionValue($page, 'awards_opportunities.hero', 'en', 'subtitle', data_get($fallback, 'en.eyebrow', 'Academic calls')),
                 'title' => $this->pageValue($page, 'en', 'title', data_get($fallback, 'en.title', 'Awards, events, courses and contests')),
                 'intro' => $this->sectionValue($page, 'awards_opportunities.hero', 'en', 'summary', data_get($fallback, 'en.intro', 'Training, research, leadership, academic exchange, and international participation opportunities shared by DRIC for the university community.')),

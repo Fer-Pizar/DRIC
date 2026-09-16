@@ -74,6 +74,14 @@
             gap: 10px;
         }
 
+        .list-tools {
+            align-items: end;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+
         .btn {
             border: 0;
             border-radius: 10px;
@@ -98,6 +106,37 @@
         .btn-danger {
             background: #fff1f2;
             color: var(--red-dark);
+        }
+
+        .pagination {
+            align-items: center;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 18px;
+        }
+
+        .page-btn {
+            background: #e8edf5;
+            color: var(--ink);
+            min-width: 44px;
+        }
+
+        .page-btn.is-active {
+            background: var(--blue);
+            color: #fff;
+        }
+
+        .page-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.45;
+        }
+
+        .page-ellipsis {
+            color: var(--muted);
+            font-weight: 800;
+            padding: 0 4px;
         }
 
         .alert {
@@ -170,7 +209,8 @@
         }
 
         input[type="text"],
-        input[type="url"] {
+        input[type="url"],
+        select {
             border: 1px solid #cfd6e3;
             border-radius: 12px;
             color: var(--ink);
@@ -196,6 +236,12 @@
         }
 
         .live-error:empty { display: none; }
+
+        .list-status {
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 700;
+        }
 
         .is-invalid {
             border-color: var(--red-dark) !important;
@@ -230,6 +276,11 @@
             .sticky-actions {
                 align-items: stretch;
                 flex-direction: column;
+            }
+
+            .list-tools {
+                align-items: stretch;
+                justify-content: flex-start;
             }
 
             .field-grid {
@@ -271,8 +322,24 @@
                         <h2>Documentos publicados</h2>
                         <p class="muted">Puedes agregar nuevos documentos, editar sus enlaces o quitar los que ya no deben mostrarse.</p>
                     </div>
-                    <button class="btn btn-primary" type="button" id="add-document">Agregar documento</button>
+                    <div class="list-tools">
+                        @if ($list === 'ceub-gobierno')
+                            <label>
+                                Mostrar
+                                <select id="visible-limit">
+                                    <option value="10">10 documentos</option>
+                                    <option value="50">50 documentos</option>
+                                    <option value="100">100 documentos</option>
+                                    <option value="all">Todos</option>
+                                </select>
+                            </label>
+                        @endif
+                        <button class="btn btn-primary" type="button" id="add-document">Agregar documento</button>
+                    </div>
                 </div>
+                @if ($list === 'ceub-gobierno')
+                    <p class="list-status" id="visible-status"></p>
+                @endif
 
                 <div class="documents" id="documents">
                     @php
@@ -310,6 +377,9 @@
                         <div class="empty-state" id="empty-state">Todavía no hay documentos guardados. Agrega el primer documento para publicarlo.</div>
                     @endforelse
                 </div>
+                @if ($list === 'ceub-gobierno')
+                    <nav class="pagination" id="pagination" aria-label="Paginación de documentos"></nav>
+                @endif
             </section>
 
             <div class="sticky-actions">
@@ -348,6 +418,10 @@
         const container = document.getElementById("documents");
         const template = document.getElementById("document-template");
         const emptyState = document.getElementById("empty-state");
+        const visibleLimit = document.getElementById("visible-limit");
+        const visibleStatus = document.getElementById("visible-status");
+        const pagination = document.getElementById("pagination");
+        let currentPage = 1;
 
         function ensureLiveError(field) {
             let message = field.parentElement.querySelector(".live-error");
@@ -397,6 +471,97 @@
             if (emptyState) {
                 emptyState.style.display = rows.length ? "none" : "block";
             }
+
+            applyPagination();
+        }
+
+        function pageSize(rows) {
+            if (!visibleLimit || visibleLimit.value === "all") {
+                return rows.length || 1;
+            }
+
+            return Number(visibleLimit.value);
+        }
+
+        function applyPagination() {
+            const rows = [...container.querySelectorAll(".document-row")];
+
+            if (!visibleLimit) {
+                return;
+            }
+
+            const size = pageSize(rows);
+            const totalPages = Math.max(1, Math.ceil(rows.length / size));
+            currentPage = Math.min(Math.max(currentPage, 1), totalPages);
+            const start = (currentPage - 1) * size;
+            const end = start + size;
+
+            rows.forEach((row, index) => {
+                row.style.display = index >= start && index < end ? "" : "none";
+            });
+
+            if (visibleStatus) {
+                const from = rows.length ? start + 1 : 0;
+                const to = Math.min(end, rows.length);
+                visibleStatus.textContent = rows.length
+                    ? `Mostrando ${from}-${to} de ${rows.length} documentos. Los documentos ocultos siguen guardándose al enviar el formulario.`
+                    : "";
+            }
+
+            renderPagination(totalPages);
+        }
+
+        function pageButton(label, page, options = {}) {
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = `btn page-btn${options.active ? " is-active" : ""}`;
+            button.textContent = label;
+            button.disabled = Boolean(options.disabled);
+            button.addEventListener("click", () => {
+                currentPage = page;
+                applyPagination();
+                container.scrollIntoView({ behavior: "smooth", block: "start" });
+            });
+
+            return button;
+        }
+
+        function addEllipsis() {
+            const ellipsis = document.createElement("span");
+            ellipsis.className = "page-ellipsis";
+            ellipsis.textContent = "...";
+            pagination.append(ellipsis);
+        }
+
+        function renderPagination(totalPages) {
+            if (!pagination) {
+                return;
+            }
+
+            pagination.innerHTML = "";
+
+            if (!visibleLimit || visibleLimit.value === "all" || totalPages <= 1) {
+                return;
+            }
+
+            pagination.append(pageButton("Anterior", currentPage - 1, { disabled: currentPage === 1 }));
+
+            const pages = new Set([1, totalPages, currentPage, currentPage - 1, currentPage + 1]);
+            let previousPage = 0;
+
+            [...pages]
+                .filter((page) => page >= 1 && page <= totalPages)
+                .sort((a, b) => a - b)
+                .forEach((page) => {
+                    if (previousPage && page - previousPage > 1) {
+                        addEllipsis();
+                    }
+
+                    pagination.append(pageButton(String(page), page, { active: page === currentPage }));
+                    previousPage = page;
+                });
+
+            pagination.append(pageButton("Siguiente", currentPage + 1, { disabled: currentPage === totalPages }));
         }
 
         function bindRow(row) {
@@ -415,8 +580,17 @@
             const row = template.content.firstElementChild.cloneNode(true);
             container.append(row);
             bindRow(row);
+            if (visibleLimit) {
+                visibleLimit.value = "all";
+            }
+            currentPage = 1;
             refreshRows();
             row.querySelector("input[type='text']").focus();
+        });
+
+        visibleLimit?.addEventListener("change", () => {
+            currentPage = 1;
+            applyPagination();
         });
 
         container.querySelectorAll(".document-row").forEach(bindRow);

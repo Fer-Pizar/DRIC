@@ -12,6 +12,7 @@ use App\Models\Page;
 use App\Models\PageTranslation;
 use App\Models\Section;
 use App\Models\SectionTranslation;
+use App\Support\NewsStaticContent;
 use App\Support\PagePermissionMap;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -139,6 +140,13 @@ class NewsContentController extends Controller
         ])->validate();
 
         DB::transaction(function () use ($request, $validated, $news): void {
+            $news->loadMissing('section.page');
+            $news->section?->page?->update([
+                'status' => 'published',
+                'published_at' => $news->section->page->published_at ?? now(),
+                'updated_by' => $request->user()->id,
+            ]);
+
             $languages = Language::query()->whereIn('code', ['es', 'en'])->get()->keyBy('code');
             $removeIds = collect($validated['remove_images'] ?? [])->map(fn ($id) => (int) $id)->all();
             $gallery = collect($this->galleryImages($news))
@@ -162,24 +170,54 @@ class NewsContentController extends Controller
                 $media = $this->storeMediaFile($file, $request->user()->id);
                 $gallery[] = [
                     'media_asset_id' => $media->id,
-                    'url' => '/storage/'.ltrim($media->file_path, '/'),
+                    'url' => $this->mediaUrl($media),
                     'file_name' => $media->file_name,
                 ];
             }
 
-            $data = $news->data ?? [];
-            $data['detail_title_es'] = trim($validated['es']['detail_title'] ?? '');
-            $data['detail_title_en'] = trim($validated['en']['detail_title'] ?? '') ?: $data['detail_title_es'];
-            $data['deck_es'] = trim($validated['es']['deck'] ?? '');
-            $data['deck_en'] = trim($validated['en']['deck'] ?? '') ?: $data['deck_es'];
+            $news->loadMissing('translations.language');
+            $existingData = $news->data ?? [];
+            $existingBodyEs = (string) ($news->translations->firstWhere('language.code', 'es')?->body ?? '');
+            $existingBodyEn = (string) ($news->translations->firstWhere('language.code', 'en')?->body ?? '');
+
+            $detailTitleEs = trim($validated['es']['detail_title'] ?? '');
+            $detailTitleEn = trim($validated['en']['detail_title'] ?? '');
+            if ($this->shouldMirrorSpanishToEnglish(
+                $detailTitleEn,
+                (string) ($existingData['detail_title_en'] ?? ''),
+                $detailTitleEs,
+                (string) ($existingData['detail_title_es'] ?? '')
+            )) {
+                $detailTitleEn = $detailTitleEs;
+            }
+
+            $deckEs = trim($validated['es']['deck'] ?? '');
+            $deckEn = trim($validated['en']['deck'] ?? '');
+            if ($this->shouldMirrorSpanishToEnglish(
+                $deckEn,
+                (string) ($existingData['deck_en'] ?? ''),
+                $deckEs,
+                (string) ($existingData['deck_es'] ?? '')
+            )) {
+                $deckEn = $deckEs;
+            }
+
+            $bodyEs = $this->sanitizeRichText($validated['es']['body'] ?? '');
+            $bodyEn = $this->sanitizeRichText($validated['en']['body'] ?? '');
+            if ($this->shouldMirrorSpanishToEnglish($bodyEn, $existingBodyEn, $bodyEs, $existingBodyEs)) {
+                $bodyEn = $bodyEs;
+            }
+
+            $data = $existingData;
+            $data['detail_title_es'] = $detailTitleEs;
+            $data['detail_title_en'] = $detailTitleEn ?: $detailTitleEs;
+            $data['deck_es'] = $deckEs;
+            $data['deck_en'] = $deckEn ?: $deckEs;
             $data['images'] = $gallery;
             $news->update(['data' => $data]);
 
             foreach (['es', 'en'] as $locale) {
-                $body = $this->sanitizeRichText($validated[$locale]['body'] ?? '');
-                if ($locale === 'en' && $body === '') {
-                    $body = $this->sanitizeRichText($validated['es']['body'] ?? '');
-                }
+                $body = $locale === 'es' ? $bodyEs : $bodyEn;
 
                 ContentBlockTranslation::updateOrCreate(
                     ['content_block_id' => $news->id, 'language_id' => $languages[$locale]->id],
@@ -406,19 +444,98 @@ class NewsContentController extends Controller
     private function detailContent(ContentBlock $news): array
     {
         $data = $news->data ?? [];
+        $staticArticle = NewsStaticContent::article($this->newsSlug($news));
 
         return [
             'es' => [
-                'detail_title' => is_string($data['detail_title_es'] ?? null) ? $data['detail_title_es'] : '',
-                'deck' => is_string($data['deck_es'] ?? null) ? $data['deck_es'] : '',
-                'body' => $news->translations->firstWhere('language.code', 'es')?->body ?? '',
+                'detail_title' => $this->detailField($data, 'detail_title_es', $news, 'es', 'title', data_get($staticArticle, 'heading.es')),
+                'deck' => $this->detailField($data, 'deck_es', $news, 'es', 'summary', data_get($staticArticle, 'deck.es')),
+                'body' => $this->detailBody($news, 'es', $staticArticle),
             ],
             'en' => [
-                'detail_title' => is_string($data['detail_title_en'] ?? null) ? $data['detail_title_en'] : '',
-                'deck' => is_string($data['deck_en'] ?? null) ? $data['deck_en'] : '',
-                'body' => $news->translations->firstWhere('language.code', 'en')?->body ?? '',
+                'detail_title' => $this->detailField($data, 'detail_title_en', $news, 'en', 'title', data_get($staticArticle, 'heading.en')),
+                'deck' => $this->detailField($data, 'deck_en', $news, 'en', 'summary', data_get($staticArticle, 'deck.en')),
+                'body' => $this->detailBody($news, 'en', $staticArticle),
             ],
         ];
+    }
+
+    private function detailField(array $data, string $key, ContentBlock $news, string $locale, string $translationField, ?string $staticValue = null): string
+    {
+        $value = $data[$key] ?? null;
+
+        if (is_string($value) && trim($value) !== '') {
+            return trim($value);
+        }
+
+        if (is_string($staticValue) && trim($staticValue) !== '') {
+            return trim($staticValue);
+        }
+
+        return (string) ($news->translations->firstWhere('language.code', $locale)?->{$translationField} ?? '');
+    }
+
+    private function detailBody(ContentBlock $news, string $locale, ?array $staticArticle = null): string
+    {
+        $translation = $news->translations->firstWhere('language.code', $locale);
+        $body = trim((string) ($translation?->body ?? ''));
+
+        if ($body !== '') {
+            return $body;
+        }
+
+        $staticBody = $this->staticArticleBodyHtml($staticArticle, $locale);
+
+        if ($staticBody !== '') {
+            return $staticBody;
+        }
+
+        $summary = trim((string) ($translation?->summary ?? ''));
+
+        return $summary !== '' ? '<p>'.e($summary).'</p>' : '';
+    }
+
+    private function staticArticleBodyHtml(?array $article, string $locale): string
+    {
+        if (! $article) {
+            return '';
+        }
+
+        $paragraphs = collect($article['paragraphs'] ?? [])
+            ->map(fn (array $paragraph) => trim((string) data_get($paragraph, $locale, data_get($paragraph, 'es', ''))))
+            ->filter()
+            ->values();
+
+        $bullets = collect($article['bullets'] ?? [])
+            ->map(fn (array $bullet) => trim((string) data_get($bullet, $locale, data_get($bullet, 'es', ''))))
+            ->filter()
+            ->values();
+
+        $html = $paragraphs
+            ->map(fn (string $paragraph) => '<p>'.e($paragraph).'</p>')
+            ->all();
+
+        if ($bullets->isNotEmpty()) {
+            $list = '<ul>'.$bullets->map(fn (string $bullet) => '<li>'.e($bullet).'</li>')->implode('').'</ul>';
+            array_splice($html, min(3, count($html)), 0, [$list]);
+        }
+
+        return implode('', $html);
+    }
+
+    private function newsSlug(ContentBlock $news): string
+    {
+        $data = $news->data ?? [];
+
+        if (is_string($data['slug'] ?? null) && trim($data['slug']) !== '') {
+            return trim($data['slug']);
+        }
+
+        if (is_string($data['href'] ?? null)) {
+            return $this->slugFromHref($data['href']) ?? '';
+        }
+
+        return '';
     }
 
     private function galleryImages(ContentBlock $news): array
@@ -430,13 +547,14 @@ class NewsContentController extends Controller
 
     private function storeMediaFile($file, ?int $userId): MediaAsset
     {
-        $path = $file->store('news', 'public');
+        $disk = $this->mediaDisk();
+        $path = $file->store('news', $disk);
         $media = MediaAsset::create([
             'file_name' => $file->getClientOriginalName(),
             'file_path' => $path,
             'mime_type' => $file->getMimeType(),
             'file_size' => $file->getSize(),
-            'disk' => 'public',
+            'disk' => $disk,
             'uploaded_by' => $userId,
         ]);
 
@@ -450,6 +568,20 @@ class NewsContentController extends Controller
         return $media;
     }
 
+    private function mediaDisk(): string
+    {
+        return config('filesystems.default') === 's3' ? 's3' : 'public';
+    }
+
+    private function mediaUrl(MediaAsset $media): string
+    {
+        if (($media->disk ?? 'public') === 'public') {
+            return '/storage/'.ltrim($media->file_path, '/');
+        }
+
+        return Storage::disk($media->disk)->url($media->file_path);
+    }
+
     private function sanitizeRichText(string $html): string
     {
         $html = trim($html);
@@ -458,6 +590,7 @@ class NewsContentController extends Controller
         $html = strip_tags($html, '<p><br><strong><b><em><i><u><ul><ol><li><blockquote><h2><h3><a>');
         $html = preg_replace('/\s+on[a-z]+\s*=\s*("[^"]*"|\'[^\']*\'|[^\s>]+)/i', '', $html) ?? '';
         $html = preg_replace('/href\s*=\s*([\'"])\s*javascript:[^\'"]*\1/i', 'href="#"', $html) ?? '';
+        $html = $this->sanitizeRichTextAttributes($html);
         $html = $this->repairListMarkup($html);
 
         return trim($html);
@@ -487,6 +620,47 @@ class NewsContentController extends Controller
         $html = preg_replace('/<\/li>\s*<br\s*\/?>/i', '</li>', $html) ?? $html;
 
         return $html;
+    }
+
+    private function sanitizeRichTextAttributes(string $html): string
+    {
+        return preg_replace_callback('/<([a-z0-9]+)\b([^>]*)>/i', function (array $matches): string {
+            $tag = strtolower($matches[1]);
+            $attributes = $matches[2] ?? '';
+
+            if ($tag === 'p' && preg_match('/\bclass\s*=\s*([\'"])(?=[^\'"]*\bdric-news-dropcap\b)[^\'"]*\1/i', $attributes)) {
+                return '<p class="dric-news-dropcap">';
+            }
+
+            if ($tag === 'a' && preg_match('/\bhref\s*=\s*([\'"])(.*?)\1/i', $attributes, $hrefMatch)) {
+                $href = trim($hrefMatch[2]);
+
+                if ($href !== '' && ! Str::startsWith(strtolower($href), 'javascript:')) {
+                    return '<a href="'.e($href).'">';
+                }
+            }
+
+            return '<'.$tag.'>';
+        }, $html) ?? $html;
+    }
+
+    private function shouldMirrorSpanishToEnglish(string $english, string $existingEnglish, string $spanish, string $existingSpanish): bool
+    {
+        if (trim($spanish) === '') {
+            return false;
+        }
+
+        if (trim($english) === '') {
+            return true;
+        }
+
+        return $this->comparableContent($english) === $this->comparableContent($existingEnglish)
+            && $this->comparableContent($spanish) !== $this->comparableContent($existingSpanish);
+    }
+
+    private function comparableContent(string $value): string
+    {
+        return trim(preg_replace('/\s+/u', ' ', $value) ?? $value);
     }
 
     private function slugFromHref(string $href): ?string

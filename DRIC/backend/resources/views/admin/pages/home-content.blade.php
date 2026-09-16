@@ -93,7 +93,6 @@
                     @foreach (['es' => 'Español', 'en' => 'Inglés'] as $locale => $label)
                         <div class="language-card">
                             <h3>{{ $label }}</h3>
-                            <label>Título interno de página<input type="text" name="{{ $locale }}[page_title]" value="{{ old($locale.'.page_title', $content[$locale]['page_title']) }}">@error($locale.'.page_title')<span class="field-error">{{ $message }}</span>@enderror</label>
                             <label>Texto del tag superior<input type="text" name="{{ $locale }}[hero_badge]" value="{{ old($locale.'.hero_badge', $content[$locale]['hero_badge']) }}">@error($locale.'.hero_badge')<span class="field-error">{{ $message }}</span>@enderror</label>
                             <label>Título principal<input type="text" name="{{ $locale }}[hero_title]" value="{{ old($locale.'.hero_title', $content[$locale]['hero_title']) }}">@error($locale.'.hero_title')<span class="field-error">{{ $message }}</span>@enderror</label>
                             <label>Descripción principal<textarea name="{{ $locale }}[hero_summary]">{{ old($locale.'.hero_summary', $content[$locale]['hero_summary']) }}</textarea>@error($locale.'.hero_summary')<span class="field-error">{{ $message }}</span>@enderror</label>
@@ -186,18 +185,8 @@
 
             <section class="panel">
                 <div class="panel-header">
-                    <h2>Dirección, misión y propósito</h2>
+                    <h2>Misión y propósito</h2>
                     <p class="muted">Textos de presentación institucional y bloques informativos.</p>
-                </div>
-                <div class="language-grid">
-                    @foreach (['es' => 'Español', 'en' => 'Inglés'] as $locale => $label)
-                        <div class="language-card">
-                            <h3>{{ $label }}</h3>
-                            <label>Título director<input type="text" name="{{ $locale }}[director_title]" value="{{ old($locale.'.director_title', $content[$locale]['director_title']) }}">@error($locale.'.director_title')<span class="field-error">{{ $message }}</span>@enderror</label>
-                            <label>Subtítulo director<input type="text" name="{{ $locale }}[director_subtitle]" value="{{ old($locale.'.director_subtitle', $content[$locale]['director_subtitle']) }}">@error($locale.'.director_subtitle')<span class="field-error">{{ $message }}</span>@enderror</label>
-                            <label>Texto director<textarea name="{{ $locale }}[director_summary]">{{ old($locale.'.director_summary', $content[$locale]['director_summary']) }}</textarea>@error($locale.'.director_summary')<span class="field-error">{{ $message }}</span>@enderror</label>
-                        </div>
-                    @endforeach
                 </div>
                 <div class="two-grid">
                     @foreach ($content['director_blocks'] as $index => $block)
@@ -215,25 +204,15 @@
             <section class="panel">
                 <div class="panel-header">
                     <h2>Indicadores</h2>
-                    <p class="muted">Texto de contexto y cifras destacadas de la página principal.</p>
-                </div>
-                <div class="language-grid">
-                    @foreach (['es' => 'Español', 'en' => 'Inglés'] as $locale => $label)
-                        <div class="language-card">
-                            <h3>{{ $label }}</h3>
-                            <label>Título indicadores<input type="text" name="{{ $locale }}[stats_title]" value="{{ old($locale.'.stats_title', $content[$locale]['stats_title']) }}">@error($locale.'.stats_title')<span class="field-error">{{ $message }}</span>@enderror</label>
-                            <label>Subtítulo indicadores<input type="text" name="{{ $locale }}[stats_subtitle]" value="{{ old($locale.'.stats_subtitle', $content[$locale]['stats_subtitle']) }}">@error($locale.'.stats_subtitle')<span class="field-error">{{ $message }}</span>@enderror</label>
-                            <label>Texto indicadores<textarea name="{{ $locale }}[stats_summary]">{{ old($locale.'.stats_summary', $content[$locale]['stats_summary']) }}</textarea>@error($locale.'.stats_summary')<span class="field-error">{{ $message }}</span>@enderror</label>
-                        </div>
-                    @endforeach
+                    <p class="muted">Edita solo las cifras visibles y sus etiquetas.</p>
                 </div>
                 <div class="three-grid">
                     @foreach ($content['stats'] as $index => $stat)
                         <article class="item-card">
                             <h3>Indicador {{ $index }}</h3>
                             <label>Valor<input type="text" name="stats[{{ $index }}][value]" value="{{ old('stats.'.$index.'.value', $stat['value']) }}">@error('stats.'.$index.'.value')<span class="field-error">{{ $message }}</span>@enderror</label>
-                            <label>Etiqueta español<input type="text" name="stats[{{ $index }}][label_es]" value="{{ old('stats.'.$index.'.label_es', $stat['label_es']) }}">@error('stats.'.$index.'.label_es')<span class="field-error">{{ $message }}</span>@enderror</label>
-                            <label>Etiqueta inglés<input type="text" name="stats[{{ $index }}][label_en]" value="{{ old('stats.'.$index.'.label_en', $stat['label_en']) }}">@error('stats.'.$index.'.label_en')<span class="field-error">{{ $message }}</span>@enderror</label>
+                            <label>Texto español<input type="text" name="stats[{{ $index }}][label_es]" value="{{ old('stats.'.$index.'.label_es', $stat['label_es']) }}">@error('stats.'.$index.'.label_es')<span class="field-error">{{ $message }}</span>@enderror</label>
+                            <label>Texto inglés<input type="text" name="stats[{{ $index }}][label_en]" value="{{ old('stats.'.$index.'.label_en', $stat['label_en']) }}">@error('stats.'.$index.'.label_en')<span class="field-error">{{ $message }}</span>@enderror</label>
                         </article>
                     @endforeach
                 </div>
@@ -272,16 +251,6 @@
                     <h2>Preguntas frecuentes</h2>
                     <p class="muted">Esta es la única sección de Inicio donde puedes agregar o quitar elementos.</p>
                 </div>
-                <div class="language-grid">
-                    @foreach (['es' => 'Español', 'en' => 'Inglés'] as $locale => $label)
-                        <div class="language-card">
-                            <h3>{{ $label }}</h3>
-                            <label>Título FAQ<input type="text" name="{{ $locale }}[faq_title]" value="{{ old($locale.'.faq_title', $content[$locale]['faq_title']) }}">@error($locale.'.faq_title')<span class="field-error">{{ $message }}</span>@enderror</label>
-                            <label>Subtítulo FAQ<input type="text" name="{{ $locale }}[faq_subtitle]" value="{{ old($locale.'.faq_subtitle', $content[$locale]['faq_subtitle']) }}">@error($locale.'.faq_subtitle')<span class="field-error">{{ $message }}</span>@enderror</label>
-                            <label>Texto FAQ<textarea name="{{ $locale }}[faq_summary]">{{ old($locale.'.faq_summary', $content[$locale]['faq_summary']) }}</textarea>@error($locale.'.faq_summary')<span class="field-error">{{ $message }}</span>@enderror</label>
-                        </div>
-                    @endforeach
-                </div>
                 <div class="section-grid" id="faq-list">
                     @foreach ($content['faqs'] as $index => $faq)
                         <article class="item-card faq-row">
@@ -316,7 +285,6 @@
                         <div class="language-card">
                             <h3>{{ $label }}</h3>
                             <label>Título final<input type="text" name="{{ $locale }}[final_title]" value="{{ old($locale.'.final_title', $content[$locale]['final_title']) }}">@error($locale.'.final_title')<span class="field-error">{{ $message }}</span>@enderror</label>
-                            <label>Subtítulo final<input type="text" name="{{ $locale }}[final_subtitle]" value="{{ old($locale.'.final_subtitle', $content[$locale]['final_subtitle']) }}">@error($locale.'.final_subtitle')<span class="field-error">{{ $message }}</span>@enderror</label>
                             <label>Texto final<textarea name="{{ $locale }}[final_summary]">{{ old($locale.'.final_summary', $content[$locale]['final_summary']) }}</textarea>@error($locale.'.final_summary')<span class="field-error">{{ $message }}</span>@enderror</label>
                             <label>Texto del botón final<input type="text" name="{{ $locale }}[final_button_label]" value="{{ old($locale.'.final_button_label', $content[$locale]['final_button_label']) }}">@error($locale.'.final_button_label')<span class="field-error">{{ $message }}</span>@enderror</label>
                         </div>

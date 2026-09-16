@@ -109,8 +109,8 @@ class HomeContentController extends Controller
                 PageTranslation::updateOrCreate(
                     ['page_id' => $page->id, 'language_id' => $languages[$locale]->id],
                     [
-                        'title' => $validated[$locale]['page_title'],
-                        'menu_title' => $validated[$locale]['page_title'],
+                        'title' => $locale === 'en' ? 'Home' : 'Inicio',
+                        'menu_title' => $locale === 'en' ? 'Home' : 'Inicio',
                         'subtitle' => $validated[$locale]['hero_title'],
                         'summary' => $validated[$locale]['hero_summary'],
                         'body' => null,
@@ -121,11 +121,10 @@ class HomeContentController extends Controller
                 $this->translateSection($scholarships, $languages[$locale], $validated[$locale]['scholarships_title'], $validated[$locale]['scholarships_subtitle'], $validated[$locale]['scholarships_summary']);
                 $this->translateSection($about, $languages[$locale], $validated[$locale]['about_title'], null, $validated[$locale]['about_summary']);
                 $this->translateSection($recentAgreements, $languages[$locale], $validated[$locale]['agreements_title'], null, $validated[$locale]['agreements_summary']);
-                $this->translateSection($director, $languages[$locale], $validated[$locale]['director_title'], $validated[$locale]['director_subtitle'], $validated[$locale]['director_summary']);
-                $this->translateSection($stats, $languages[$locale], $validated[$locale]['stats_title'], $validated[$locale]['stats_subtitle'], $validated[$locale]['stats_summary']);
                 $this->translateSection($testimonials, $languages[$locale], $validated[$locale]['testimonials_title'], null, $validated[$locale]['testimonials_summary']);
-                $this->translateSection($faq, $languages[$locale], $validated[$locale]['faq_title'], $validated[$locale]['faq_subtitle'], $validated[$locale]['faq_summary']);
-                $this->translateSection($finalCta, $languages[$locale], $validated[$locale]['final_title'], $validated[$locale]['final_subtitle'], $validated[$locale]['final_summary']);
+                $this->translateSection($stats, $languages[$locale], null, null, null);
+                $this->translateSection($faq, $languages[$locale], 'FAQ', null, null);
+                $this->translateSection($finalCta, $languages[$locale], $validated[$locale]['final_title'], null, $validated[$locale]['final_summary']);
             }
 
             $heroBlock = $this->upsertFixedBlock($hero, 'hero_content', 1, $languages, [
@@ -240,11 +239,11 @@ class HomeContentController extends Controller
         ];
 
         foreach (['es', 'en'] as $locale) {
-            foreach (['page_title', 'hero_badge', 'hero_title', 'hero_primary_label', 'hero_secondary_label', 'scholarships_title', 'scholarships_subtitle', 'about_title', 'agreements_title', 'director_title', 'director_subtitle', 'stats_title', 'stats_subtitle', 'testimonials_title', 'testimonials_button_label', 'faq_title', 'faq_subtitle', 'final_title', 'final_subtitle', 'final_button_label'] as $field) {
+            foreach (['hero_badge', 'hero_title', 'hero_primary_label', 'hero_secondary_label', 'scholarships_title', 'scholarships_subtitle', 'about_title', 'agreements_title', 'testimonials_title', 'testimonials_button_label', 'final_title', 'final_button_label'] as $field) {
                 $rules["{$locale}.{$field}"] = ['required', 'string', 'max:180'];
             }
 
-            foreach (['hero_summary', 'scholarships_summary', 'about_summary', 'agreements_summary', 'director_summary', 'stats_summary', 'testimonials_summary', 'faq_summary', 'final_summary'] as $field) {
+            foreach (['hero_summary', 'scholarships_summary', 'about_summary', 'agreements_summary', 'testimonials_summary', 'final_summary'] as $field) {
                 $rules["{$locale}.{$field}"] = ['required', 'string', 'max:1000'];
             }
         }
@@ -347,7 +346,6 @@ class HomeContentController extends Controller
     private function localizedContent(Page $page, string $locale): array
     {
         return [
-            'page_title' => $this->pageValue($page, $locale, 'title', $locale === 'en' ? 'Home' : 'Inicio'),
             'hero_badge' => $this->heroBadgeValue($page, $locale),
             'hero_title' => $this->sectionValue($page, 'home.hero', $locale, 'title', $locale === 'en' ? 'Connecting global minds' : 'Conectando mentes globales'),
             'hero_summary' => $this->blockValue($page, 'home.hero', 1, $locale, 'summary', $locale === 'en' ? 'Discover the opportunities DRIC offers to strengthen your academic future.' : 'Conoce las oportunidades que la DRIC ofrece para fortalecer tu futuro académico.'),
@@ -360,20 +358,10 @@ class HomeContentController extends Controller
             'about_summary' => $this->sectionValue($page, 'home.about', $locale, 'summary', $locale === 'en' ? 'DRIC strengthens university internationalization through agreements, mobility, cooperation, and academic partnerships.' : 'La DRIC fortalece la internacionalización universitaria mediante convenios, movilidad, cooperación y vinculación académica.'),
             'agreements_title' => $this->sectionValue($page, 'home.recent_agreements', $locale, 'title', $locale === 'en' ? 'Recent agreements' : 'Acuerdos recientes'),
             'agreements_summary' => $this->sectionValue($page, 'home.recent_agreements', $locale, 'summary', $locale === 'en' ? 'Learn about recent national and international cooperation actions.' : 'Conoce las acciones recientes de cooperación nacional e internacional.'),
-            'director_title' => $this->sectionValue($page, 'home.director', $locale, 'title', 'Director: Omar Morales Delgadillo'),
-            'director_subtitle' => $this->sectionValue($page, 'home.director', $locale, 'subtitle', $locale === 'en' ? 'International Relations and Agreements Office' : 'Dirección de Relaciones Internacionales y Convenios'),
-            'director_summary' => $this->sectionValue($page, 'home.director', $locale, 'summary', $locale === 'en' ? 'DRIC reports directly to the Rectorate in the fulfillment of its functions.' : 'La DRIC depende directamente del Rectorado para el cumplimiento de sus funciones.'),
-            'stats_title' => $this->sectionValue($page, 'home.stats', $locale, 'title', $locale === 'en' ? 'Institutional results' : 'Resultados institucionales'),
-            'stats_subtitle' => $this->sectionValue($page, 'home.stats', $locale, 'subtitle', $locale === 'en' ? 'Impact of international cooperation.' : 'Impacto de la cooperación internacional.'),
-            'stats_summary' => $this->sectionValue($page, 'home.stats', $locale, 'summary', $locale === 'en' ? 'Key indicators of institutional management.' : 'Indicadores destacados de la gestión institucional.'),
             'testimonials_title' => $this->sectionValue($page, 'home.student_testimonials', $locale, 'title', $locale === 'en' ? 'Student experiences' : 'Experiencias de los estudiantes'),
             'testimonials_summary' => $this->sectionValue($page, 'home.student_testimonials', $locale, 'summary', $locale === 'en' ? 'Real stories about academic mobility, international cooperation, and opportunities that transform university life.' : 'Historias reales sobre movilidad académica, cooperación internacional y oportunidades que transforman la vida universitaria.'),
             'testimonials_button_label' => $this->blockValue($page, 'home.student_testimonials', 1, $locale, 'cta_label', $locale === 'en' ? 'View programs' : 'Ver programas'),
-            'faq_title' => $this->sectionValue($page, 'home.faq', $locale, 'title', 'FAQ'),
-            'faq_subtitle' => $this->sectionValue($page, 'home.faq', $locale, 'subtitle', $locale === 'en' ? 'Find answers to frequently asked questions about our programs.' : 'Encuentra respuestas a preguntas frecuentes acerca de nuestros programas.'),
-            'faq_summary' => $this->sectionValue($page, 'home.faq', $locale, 'summary', $locale === 'en' ? 'Essential information for national and international students and visitors.' : 'Información esencial para estudiantes nacionales, extranjeros y visitantes.'),
             'final_title' => $this->sectionValue($page, 'home.final_cta', $locale, 'title', $locale === 'en' ? 'Take the next step in your academic journey' : 'Da el siguiente paso en tu camino académico'),
-            'final_subtitle' => $this->sectionValue($page, 'home.final_cta', $locale, 'subtitle', $locale === 'en' ? 'Discover opportunities that can transform your future.' : 'Descubre oportunidades que pueden transformar tu futuro.'),
             'final_summary' => $this->sectionValue($page, 'home.final_cta', $locale, 'summary', $locale === 'en' ? 'Schedule an appointment and receive guidance on programs, agreements, and international scholarships.' : 'Agenda una cita y recibe orientación sobre programas, convenios y becas internacionales.'),
             'final_button_label' => $this->blockValue($page, 'home.final_cta', 1, $locale, 'cta_label', $locale === 'en' ? 'Schedule an appointment' : 'Agenda una cita'),
         ];
@@ -604,11 +592,6 @@ class HomeContentController extends Controller
     private function mergedSettings(Page $page, string $key, array $fallback): array
     {
         return array_merge($fallback, $page->sections->firstWhere('section_key', $key)?->settings ?? []);
-    }
-
-    private function pageValue(Page $page, string $locale, string $field, string $fallback): string
-    {
-        return $page->translations->firstWhere('language.code', $locale)?->{$field} ?? $fallback;
     }
 
     private function sectionValue(Page $page, string $key, string $locale, string $field, string $fallback): string

@@ -175,7 +175,7 @@ export default async function MobilityProgramDetailPage({ params }: Props) {
             </div>
 
             <h2 className="text-3xl font-semibold tracking-[-0.04em] md:text-4xl">
-              {copy.overview}
+              {match.program.overviewTitle || copy.overview}
             </h2>
 
             <p className="mt-6 text-base leading-8 text-white/68 md:text-lg">
@@ -299,7 +299,7 @@ export default async function MobilityProgramDetailPage({ params }: Props) {
             <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
               <div>
                 <h2 className="text-3xl font-semibold tracking-[-0.04em] md:text-4xl">
-                  {copy.callsTitle}
+                  {match.program.callsTitle || copy.callsTitle}
                 </h2>
               </div>
             </div>
@@ -532,6 +532,8 @@ function programsFromCmsBlocks(section: CmsSection | undefined, fallbackPrograms
       slug: slug || fallback?.slug || slugifyProgramTitle(block.title || fallback?.title || "", trackId),
       href: block.link_url || stringValue(block.data?.href) || fallback?.href,
       conditions: conditions.length > 0 ? conditions : fallback?.conditions ?? [],
+      overviewTitle: localizedString(block.data?.overview_title, locale) || fallback?.overviewTitle,
+      callsTitle: localizedString(block.data?.calls_title, locale) || fallback?.callsTitle,
       highlights: detailWasEdited ? cmsHighlights(block, locale) : fallback?.highlights,
       sections: detailWasEdited ? cmsSections(block, locale) : fallback?.sections,
       reference: detailWasEdited ? cmsReference(block, locale) : fallback?.reference,

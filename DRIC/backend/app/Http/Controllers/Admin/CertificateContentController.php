@@ -21,6 +21,8 @@ class CertificateContentController extends Controller
 {
     private const CLEAN_NAME_REGEX = '/\A[\p{L}\s.,]+\z/u';
     private const CODE_REGEX = '/\A[A-Z0-9]{7}\z/';
+    private const CODE_LETTERS = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+    private const CODE_NUMBERS = '23456789';
     private const PROTECTED_CODES = ['B7T3SG9', 'X4D8R1Q', 'A7K9P2M'];
 
     public function edit(Page $page): View
@@ -277,15 +279,27 @@ class CertificateContentController extends Controller
     private function uniqueCode(): string
     {
         do {
-            $code = collect(range(1, 7))
-                ->map(fn () => 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[random_int(0, 31)])
-                ->implode('');
+            $code = $this->alternatingCode();
         } while (
             in_array($code, self::PROTECTED_CODES, true)
             || CertificateVerification::query()->where('code', $code)->exists()
         );
 
         return $code;
+    }
+
+    private function alternatingCode(): string
+    {
+        $startsWithLetter = (bool) random_int(0, 1);
+        $characters = [];
+
+        for ($position = 0; $position < 7; $position++) {
+            $useLetter = $startsWithLetter ? $position % 2 === 0 : $position % 2 === 1;
+            $pool = $useLetter ? self::CODE_LETTERS : self::CODE_NUMBERS;
+            $characters[] = $pool[random_int(0, strlen($pool) - 1)];
+        }
+
+        return implode('', $characters);
     }
 
     private function pageValue(Page $page, string $locale, string $field, string $fallback): string

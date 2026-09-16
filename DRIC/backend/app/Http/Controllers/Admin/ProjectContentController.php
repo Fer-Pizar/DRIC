@@ -201,8 +201,8 @@ class ProjectContentController extends Controller
             'procedure_url' => $this->procedureUrlValue($page),
             'card_1_href' => $this->blockData($page, 'projects.card.1', 'href', 'https://conveniosdric.umss.edu.bo/proyectos'),
             'card_2_href' => $this->blockData($page, 'projects.card.2', 'href', 'apoyo-financiero'),
-            'card_1_image_url' => $this->blockMediaUrl($page, 'projects.card.1'),
-            'card_2_image_url' => $this->blockMediaUrl($page, 'projects.card.2'),
+            'card_1_image_url' => $this->blockMediaUrl($page, 'projects.card.1', '/images/hero/hero-dric.jpg'),
+            'card_2_image_url' => $this->blockMediaUrl($page, 'projects.card.2', '/images/agreements/international-flags.jpg'),
         ];
     }
 
@@ -307,11 +307,11 @@ class ProjectContentController extends Controller
         return $procedure?->mediaAsset ? '' : 'https://dric.umss.edu.bo/wp-content/uploads/2021/11/proconv.pdf';
     }
 
-    private function blockMediaUrl(Page $page, string $key): ?string
+    private function blockMediaUrl(Page $page, string $key, ?string $fallback = null): ?string
     {
         $media = $this->block($page, $key)?->mediaAsset;
 
-        return $media?->file_path ? '/storage/'.ltrim($media->file_path, '/') : null;
+        return $media?->file_path ? '/storage/'.ltrim($media->file_path, '/') : $fallback;
     }
 
     private function block(Page $page, string $key): ?ContentBlock

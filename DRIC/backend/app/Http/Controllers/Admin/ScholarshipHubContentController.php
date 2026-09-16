@@ -37,6 +37,7 @@ class ScholarshipHubContentController extends Controller
             'content' => $this->formContent($page),
             'cardLabels' => $this->cardLabels(),
             'scholarshipPage' => Page::query()->where('slug', 'becas')->first(),
+            'mobilityPage' => Page::query()->where('slug', 'movilidad-pasantias')->first(),
             'awardsPage' => Page::query()->where('slug', 'premios-eventos-cursos-concursos')->first(),
             'nationalForeignInfoPage' => Page::query()->where('slug', 'informacion-nacionales-extranjeros')->first(),
         ]);
@@ -66,7 +67,7 @@ class ScholarshipHubContentController extends Controller
                     [
                         'title' => $validated[$locale]['title'],
                         'menu_title' => $validated[$locale]['title'],
-                        'subtitle' => $validated[$locale]['badge'],
+                        'subtitle' => 'DRIC · UMSS',
                         'summary' => $validated[$locale]['intro'],
                         'body' => null,
                     ]
@@ -76,7 +77,7 @@ class ScholarshipHubContentController extends Controller
                     ['section_id' => $hero->id, 'language_id' => $languages[$locale]->id],
                     [
                         'title' => $validated[$locale]['title'],
-                        'subtitle' => $validated[$locale]['badge'],
+                        'subtitle' => 'DRIC · UMSS',
                         'summary' => $validated[$locale]['intro'],
                         'body' => null,
                     ]
@@ -125,7 +126,6 @@ class ScholarshipHubContentController extends Controller
         $rules = [];
 
         foreach (['es', 'en'] as $locale) {
-            $rules["{$locale}.badge"] = ['required', 'string', 'max:80'];
             $rules["{$locale}.title"] = ['required', 'string', 'max:140', 'regex:'.self::CLEAN_LABEL_REGEX];
             $rules["{$locale}.intro"] = ['required', 'string', 'max:900'];
             $rules["{$locale}.explore_badge"] = ['required', 'string', 'max:100', 'regex:'.self::CLEAN_LABEL_REGEX];
@@ -201,7 +201,7 @@ class ScholarshipHubContentController extends Controller
         return [
             1 => ['label' => 'Becas', 'title_es' => 'Becas de pregrado y posgrado', 'title_en' => 'Undergraduate and postgraduate scholarships', 'description_es' => 'Programas de becas ofertados por gobiernos, universidades y organismos internacionales.', 'description_en' => 'Scholarship opportunities offered by governments, universities and international organizations.', 'label_es' => 'Ver becas', 'label_en' => 'View scholarships', 'href' => '/becas-movilidad/becas', 'icon' => 'school', 'accent' => '#E30613'],
             2 => ['label' => 'Movilidad', 'title_es' => 'Movilidad y pasantías internacionales', 'title_en' => 'Mobility and international internships', 'description_es' => 'Programas de movilidad docente, estudiantil, administrativa y pasantías internacionales.', 'description_en' => 'Academic, teaching, student and administrative mobility programs.', 'label_es' => 'Ver programas', 'label_en' => 'View programs', 'href' => '/becas-movilidad/movilidad-pasantias', 'icon' => 'flight', 'accent' => '#003770'],
-            3 => ['label' => 'Convocatorias', 'title_es' => 'Premios, eventos, cursos y concursos', 'title_en' => 'Awards, events, courses and contests', 'description_es' => 'Convocatorias, cursos, concursos y oportunidades académicas para la comunidad universitaria.', 'description_en' => 'Calls, courses, contests and academic opportunities for the university community.', 'label_es' => 'Ver convocatorias', 'label_en' => 'View calls', 'href' => '/becas-movilidad/premios-eventos-cursos-concursos', 'icon' => 'awards', 'accent' => '#E30613'],
+            3 => ['label' => 'Premios-Concursos', 'title_es' => 'Premios, eventos, cursos y concursos', 'title_en' => 'Awards, events, courses and contests', 'description_es' => 'Convocatorias, cursos, concursos y oportunidades académicas para la comunidad universitaria.', 'description_en' => 'Calls, courses, contests and academic opportunities for the university community.', 'label_es' => 'Ver convocatorias', 'label_en' => 'View calls', 'href' => '/becas-movilidad/premios-eventos-cursos-concursos', 'icon' => 'awards', 'accent' => '#E30613'],
             4 => ['label' => 'Información', 'title_es' => 'Información para nacionales y extranjeros', 'title_en' => 'Information for nationals and foreigners', 'description_es' => 'Información útil, trámites y orientación para ciudadanos nacionales y extranjeros.', 'description_en' => 'Useful information, procedures and guidance for national and international visitors.', 'label_es' => 'Ver información', 'label_en' => 'View information', 'href' => '/becas-movilidad/informacion-nacionales-extranjeros', 'icon' => 'info', 'accent' => '#003770'],
         ];
     }

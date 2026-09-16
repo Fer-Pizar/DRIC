@@ -70,32 +70,26 @@
 
             <section class="panel">
                 <div class="panel-header">
-                    <h2>Textos generales</h2>
-                <p class="muted">Encabezado, título de la lista e información institucional.</p>
+                    <div>
+                        <h2>Encabezado</h2>
+                        <p class="muted">Primera vista de la página pública: título principal y descripción introductoria.</p>
+                    </div>
                 </div>
                 <div class="language-grid">
                     @foreach (['es' => 'Español', 'en' => 'Inglés'] as $locale => $label)
                         <div class="language-card">
                             <h3>{{ $label }}</h3>
                             <div class="field-grid">
-                                @foreach ([
-                                    'title' => 'Título principal',
-                                    'summary' => 'Descripción principal',
-                                    'kicker' => 'Categoría de la lista',
-                                    'section_title' => 'Título de la lista',
-                                    'info_title' => 'Título de información',
-                                    'info_text' => 'Texto de información',
-                                ] as $field => $labelText)
-                                    <label>
-                                        {{ $labelText }}
-                                        @if (str_contains($field, 'text') || $field === 'summary')
-                                            <textarea name="{{ $locale }}[{{ $field }}]">{{ old($locale.'.'.$field, $content[$locale][$field]) }}</textarea>
-                                        @else
-                                            <input type="text" name="{{ $locale }}[{{ $field }}]" value="{{ old($locale.'.'.$field, $content[$locale][$field]) }}">
-                                        @endif
-                                        @error($locale.'.'.$field)<span class="field-error">{{ $message }}</span>@enderror
-                                    </label>
-                                @endforeach
+                                <label>
+                                    Título principal
+                                    <input type="text" name="{{ $locale }}[title]" value="{{ old($locale.'.title', $content[$locale]['title']) }}">
+                                    @error($locale.'.title')<span class="field-error">{{ $message }}</span>@enderror
+                                </label>
+                                <label>
+                                    Descripción principal
+                                    <textarea name="{{ $locale }}[summary]">{{ old($locale.'.summary', $content[$locale]['summary']) }}</textarea>
+                                    @error($locale.'.summary')<span class="field-error">{{ $message }}</span>@enderror
+                                </label>
                             </div>
                         </div>
                     @endforeach
@@ -105,8 +99,36 @@
             <section class="panel">
                 <div class="panel-header">
                     <div>
-                        <h2>Membresías</h2>
-                        <p class="muted">Agrega o quita tarjetas. Cada tarjeta permite título, descripción corta, URL e imagen JPG o PNG.</p>
+                        <h2>Listado de membresías</h2>
+                        <p class="muted">Texto que aparece justo antes de las tarjetas de membresías.</p>
+                    </div>
+                </div>
+                <div class="language-grid">
+                    @foreach (['es' => 'Español', 'en' => 'Inglés'] as $locale => $label)
+                        <div class="language-card">
+                            <h3>{{ $label }}</h3>
+                            <div class="field-grid">
+                                <label>
+                                    Categoría de la lista
+                                    <input type="text" name="{{ $locale }}[kicker]" value="{{ old($locale.'.kicker', $content[$locale]['kicker']) }}">
+                                    @error($locale.'.kicker')<span class="field-error">{{ $message }}</span>@enderror
+                                </label>
+                                <label>
+                                    Título de la lista
+                                    <input type="text" name="{{ $locale }}[section_title]" value="{{ old($locale.'.section_title', $content[$locale]['section_title']) }}">
+                                    @error($locale.'.section_title')<span class="field-error">{{ $message }}</span>@enderror
+                                </label>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </section>
+
+            <section class="panel">
+                <div class="panel-header">
+                    <div>
+                        <h2>Tarjetas de membresías</h2>
+                        <p class="muted">Cada tarjeta pública muestra logo, nombre, descripción, información extra opcional y botón al sitio.</p>
                     </div>
                     <button class="btn btn-primary" type="button" id="add-membership">Agregar membresía</button>
                 </div>
@@ -191,6 +213,39 @@
                     @empty
                         <div class="empty-state" id="empty-state">Todavía no hay membresías guardadas. Agrega la primera para publicarla.</div>
                     @endforelse
+                </div>
+            </section>
+
+            <section class="panel">
+                <div class="panel-header">
+                    <div>
+                        <h2>Información institucional</h2>
+                        <p class="muted">Bloque final que aparece después de todas las tarjetas.</p>
+                    </div>
+                </div>
+                <div class="language-grid">
+                    @foreach (['es' => 'Español', 'en' => 'Inglés'] as $locale => $label)
+                        <div class="language-card">
+                            <h3>{{ $label }}</h3>
+                            <div class="field-grid">
+                                <label>
+                                    Título de información
+                                    <input type="text" name="{{ $locale }}[info_title]" value="{{ old($locale.'.info_title', $content[$locale]['info_title']) }}">
+                                    @error($locale.'.info_title')<span class="field-error">{{ $message }}</span>@enderror
+                                </label>
+                                <label>
+                                    Texto de información
+                                    <textarea name="{{ $locale }}[info_text]">{{ old($locale.'.info_text', $content[$locale]['info_text']) }}</textarea>
+                                    @error($locale.'.info_text')<span class="field-error">{{ $message }}</span>@enderror
+                                </label>
+                                <label>
+                                    Correo de información
+                                    <input type="text" name="{{ $locale }}[info_email]" value="{{ old($locale.'.info_email', $content[$locale]['info_email']) }}" placeholder="dric@umss.edu">
+                                    @error($locale.'.info_email')<span class="field-error">{{ $message }}</span>@enderror
+                                </label>
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
             </section>
 

@@ -67,7 +67,7 @@ class ScholarshipBecasContentController extends Controller
                     [
                         'title' => $validated[$locale]['title'],
                         'menu_title' => $validated[$locale]['title'],
-                        'subtitle' => $validated[$locale]['badge'],
+                        'subtitle' => $this->fixedHeroBadge($locale),
                         'summary' => $validated[$locale]['intro'],
                         'body' => null,
                     ]
@@ -141,7 +141,6 @@ class ScholarshipBecasContentController extends Controller
         $rules = [];
 
         foreach (['es', 'en'] as $locale) {
-            $rules["{$locale}.badge"] = ['required', 'string', 'max:100'];
             $rules["{$locale}.title"] = ['required', 'string', 'max:180', 'regex:'.self::CLEAN_LABEL_REGEX];
             $rules["{$locale}.intro"] = ['required', 'string', 'max:900'];
             $rules["{$locale}.countries_badge"] = ['required', 'string', 'max:100', 'regex:'.self::CLEAN_LABEL_REGEX];
@@ -300,6 +299,11 @@ class ScholarshipBecasContentController extends Controller
                 'organizations_title' => $this->sectionValue($page, 'scholarship.organizations', 'en', 'title', 'Other scholarship channels'),
             ],
         ];
+    }
+
+    private function fixedHeroBadge(string $locale): string
+    {
+        return $locale === 'en' ? 'Scholarship calls' : 'Convocatoria de becas';
     }
 
     private function items(Page $page, string $type): array

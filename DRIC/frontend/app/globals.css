@@ -3554,6 +3554,110 @@ html[data-theme="light"] .dric-news-page .MuiCard-root {
   text-underline-offset: 0.2em;
 }
 
+@media (max-width: 639px) {
+  .dric-news-article-page article {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+    padding-top: 8rem !important;
+  }
+
+  .dric-news-article-back {
+    display: inline-flex !important;
+    position: relative;
+    pointer-events: auto;
+    margin-top: 1rem;
+  }
+
+  .dric-news-article-page > .dric-site-header {
+    margin-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+
+  .dric-news-article-page article > div > header {
+    margin-top: 2rem !important;
+    padding-bottom: 1.8rem !important;
+  }
+
+  .dric-news-article-title {
+    font-size: clamp(1.75rem, 8.4vw, 2.35rem) !important;
+    line-height: 1.08 !important;
+    letter-spacing: normal !important;
+    overflow-wrap: anywhere;
+    word-break: normal;
+  }
+
+  .dric-news-article-page article > div > header > p {
+    font-size: 0.98rem !important;
+    line-height: 1.72rem !important;
+    margin-top: 1.15rem !important;
+  }
+
+  .dric-news-article-photo {
+    aspect-ratio: 16 / 10.5 !important;
+    border-radius: 1.1rem !important;
+    margin-top: 1.75rem !important;
+  }
+
+  .dric-news-article-body {
+    margin-top: 1.8rem !important;
+  }
+
+  .dric-news-article-drop-title {
+    font-size: 1.7rem !important;
+    line-height: 1.15 !important;
+    letter-spacing: -0.01em !important;
+    overflow-wrap: anywhere;
+  }
+
+  .dric-news-article-rich {
+    margin-top: 1.3rem !important;
+  }
+
+  .dric-news-article-rich p,
+  .dric-news-article-body > div p {
+    font-size: 0.95rem !important;
+    line-height: 1.72rem !important;
+    margin-top: 1.2rem !important;
+    overflow-wrap: anywhere;
+  }
+
+  .dric-news-article-body .dric-news-dropcap::first-letter,
+  .dric-news-article-rich p.dric-news-dropcap::first-letter {
+    font-size: 2.6em !important;
+    line-height: 0.9 !important;
+    margin: 0.06em 0.1em 0 0 !important;
+  }
+
+  .dric-news-article-rich h2 {
+    font-size: 1.7rem !important;
+    line-height: 1.16 !important;
+  }
+
+  .dric-news-article-rich h3 {
+    font-size: 1.35rem !important;
+    line-height: 1.22 !important;
+  }
+
+  .dric-news-article-rich ul,
+  .dric-news-article-rich ol {
+    margin-top: 1.25rem !important;
+    padding: 1.25rem 0 1.25rem 1.25rem !important;
+  }
+
+  .dric-news-article-rich li {
+    font-size: 0.94rem !important;
+    line-height: 1.7rem !important;
+    margin-top: 0.7rem !important;
+    overflow-wrap: anywhere;
+  }
+
+  .dric-news-article-rich blockquote {
+    font-size: 1rem !important;
+    line-height: 1.75rem !important;
+    padding-left: 1rem !important;
+  }
+}
+
 html[data-theme="light"] .dric-news-article-page {
   background:
     radial-gradient(circle at 15% 8%, rgba(255, 255, 255, 0.96), transparent 28%),

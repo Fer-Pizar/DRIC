@@ -66,8 +66,8 @@
 
             <section class="panel">
                 <div class="panel-header">
-                    <h2>Textos de la página</h2>
-                    <p class="muted">Estos campos controlan los textos visibles del encabezado, el archivo y las tarjetas.</p>
+                    <h2>Encabezado</h2>
+                    <p class="muted">Primera parte de la página pública: etiqueta superior, título principal y descripción.</p>
                 </div>
 
                 <div class="language-grid">
@@ -78,14 +78,6 @@
                                 @foreach ([
                                     'eyebrow' => 'Texto superior',
                                     'title' => 'Título',
-                                    'archive_label' => 'Etiqueta del archivo',
-                                    'explore_label' => 'Etiqueta de exploración',
-                                    'archive_title' => 'Título del archivo',
-                                    'search_placeholder' => 'Texto del buscador',
-                                    'cover_eyebrow' => 'Texto superior de portada',
-                                    'cover_title' => 'Título de portada',
-                                    'year_label' => 'Etiqueta de gestión',
-                                    'download_label' => 'Texto del botón PDF',
                                 ] as $field => $fieldLabel)
                                     <label>
                                         {{ $fieldLabel }}
@@ -99,12 +91,65 @@
                                     <textarea name="{{ $locale }}[intro]">{{ old($locale.'.intro', $content[$locale]['intro']) }}</textarea>
                                     @error($locale.'.intro')<span class="field-error">{{ $message }}</span>@enderror
                                 </label>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </section>
+
+            <section class="panel">
+                <div class="panel-header">
+                    <h2>Resumen del archivo</h2>
+                    <p class="muted">Tarjeta lateral de la portada pública: etiqueta del archivo y texto descriptivo.</p>
+                </div>
+
+                <div class="language-grid">
+                    @foreach (['es' => 'Español', 'en' => 'Inglés'] as $locale => $label)
+                        <div class="language-card">
+                            <h3>{{ $label }}</h3>
+                            <div class="field-grid">
+                                <label>
+                                    Etiqueta del archivo
+                                    <input type="text" name="{{ $locale }}[archive_label]" value="{{ old($locale.'.archive_label', $content[$locale]['archive_label']) }}">
+                                    @error($locale.'.archive_label')<span class="field-error">{{ $message }}</span>@enderror
+                                </label>
 
                                 <label>
                                     Descripción del archivo
                                     <textarea name="{{ $locale }}[archive_description]">{{ old($locale.'.archive_description', $content[$locale]['archive_description']) }}</textarea>
                                     @error($locale.'.archive_description')<span class="field-error">{{ $message }}</span>@enderror
                                 </label>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </section>
+
+            <section class="panel">
+                <div class="panel-header">
+                    <h2>Archivo de informes</h2>
+                    <p class="muted">Textos de la sección donde aparece el buscador y las tarjetas tipo libro. El texto interno del buscador queda fijo por diseño.</p>
+                </div>
+
+                <div class="language-grid">
+                    @foreach (['es' => 'Español', 'en' => 'Inglés'] as $locale => $label)
+                        <div class="language-card">
+                            <h3>{{ $label }}</h3>
+                            <div class="field-grid">
+                                @foreach ([
+                                    'explore_label' => 'Etiqueta de exploración',
+                                    'archive_title' => 'Título del archivo',
+                                    'cover_eyebrow' => 'Texto superior de portada',
+                                    'cover_title' => 'Título de portada',
+                                    'year_label' => 'Etiqueta de gestión',
+                                    'download_label' => 'Texto del botón PDF',
+                                ] as $field => $fieldLabel)
+                                    <label>
+                                        {{ $fieldLabel }}
+                                        <input type="text" name="{{ $locale }}[{{ $field }}]" value="{{ old($locale.'.'.$field, $content[$locale][$field]) }}">
+                                        @error($locale.'.'.$field)<span class="field-error">{{ $message }}</span>@enderror
+                                    </label>
+                                @endforeach
                             </div>
                         </div>
                     @endforeach

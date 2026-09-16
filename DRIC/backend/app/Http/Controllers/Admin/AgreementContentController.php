@@ -233,10 +233,10 @@ class AgreementContentController extends Controller
             'card_1_href' => $this->blockData($page, 'agreements.card.1', 'href', 'https://conveniosdric.umss.edu.bo/convenios'),
             'card_2_href' => $this->blockData($page, 'agreements.card.2', 'href', '/convenios/otros'),
             'card_3_href' => $this->blockData($page, 'agreements.card.3', 'href', '/convenios/ceub-gobierno'),
-            'hero_image_url' => $this->blockMediaUrl($page, 'agreements.hero-image'),
-            'card_1_image_url' => $this->blockMediaUrl($page, 'agreements.card.1'),
-            'card_2_image_url' => $this->blockMediaUrl($page, 'agreements.card.2'),
-            'card_3_image_url' => $this->blockMediaUrl($page, 'agreements.card.3'),
+            'hero_image_url' => $this->blockMediaUrl($page, 'agreements.hero-image', '/images/agreements/international-flags.jpg'),
+            'card_1_image_url' => $this->blockMediaUrl($page, 'agreements.card.1', '/images/agreements/convenios-umss.png'),
+            'card_2_image_url' => $this->blockMediaUrl($page, 'agreements.card.2', '/images/agreements/convenios.png'),
+            'card_3_image_url' => $this->blockMediaUrl($page, 'agreements.card.3', '/images/agreements/ceub.jpg'),
         ];
     }
 
@@ -347,12 +347,12 @@ class AgreementContentController extends Controller
         return $procedure?->mediaAsset ? '' : 'https://dric.umss.edu.bo/wp-content/uploads/2021/11/proconv.pdf';
     }
 
-    private function blockMediaUrl(Page $page, string $key): ?string
+    private function blockMediaUrl(Page $page, string $key, ?string $fallback = null): ?string
     {
         $media = $this->block($page, $key)?->mediaAsset;
 
         if (! $media?->file_path) {
-            return null;
+            return $fallback;
         }
 
         return '/storage/'.ltrim($media->file_path, '/');

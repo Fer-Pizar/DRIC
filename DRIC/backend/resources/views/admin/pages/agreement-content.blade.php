@@ -1,3 +1,20 @@
+@php
+    $frontendUrl = rtrim(config('app.frontend_url', env('FRONTEND_URL', 'http://localhost:3000')), '/');
+    $preview = function (?string $path) use ($frontendUrl): string {
+        $path = (string) $path;
+        if ($path === '') {
+            return '';
+        }
+        if (\Illuminate\Support\Str::startsWith($path, ['http://', 'https://'])) {
+            return $path;
+        }
+        if (\Illuminate\Support\Str::startsWith($path, '/storage/')) {
+            return url($path);
+        }
+        return $frontendUrl.$path;
+    };
+@endphp
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -143,6 +160,12 @@
             grid-template-columns: repeat(2, minmax(0, 1fr));
         }
 
+        .hero-layout {
+            display: grid;
+            gap: 18px;
+            grid-template-columns: minmax(0, 1.45fr) minmax(280px, 0.55fr);
+        }
+
         .cards-grid {
             display: grid;
             gap: 18px;
@@ -263,6 +286,7 @@
 
             .language-grid,
             .media-grid,
+            .hero-layout,
             .subpage-actions {
                 grid-template-columns: 1fr;
             }
@@ -303,74 +327,80 @@
             <section class="panel">
                 <div class="panel-header">
                     <h2>Encabezado principal</h2>
-                    <p class="muted">Texto superior y párrafos introductorios de la página.</p>
+                    <p class="muted">Primera vista de la página pública: texto superior, botón de procedimiento e imagen principal.</p>
                 </div>
-                <div class="language-grid">
-                    @foreach (['es' => 'Español', 'en' => 'Inglés'] as $locale => $label)
+                <div class="hero-layout">
+                    <div class="field-grid">
+                        <div class="language-grid">
+                            @foreach (['es' => 'Español', 'en' => 'Inglés'] as $locale => $label)
+                                <div class="language-card">
+                                    <h3>{{ $label }}</h3>
+                                    <div class="field-grid">
+                                        <label>
+                                            Categoría
+                                            <input type="text" name="{{ $locale }}[eyebrow]" value="{{ old($locale.'.eyebrow', $content[$locale]['eyebrow']) }}">
+                                            @error($locale.'.eyebrow')<span class="field-error">{{ $message }}</span>@enderror
+                                        </label>
+                                        <label>
+                                            Título
+                                            <input type="text" name="{{ $locale }}[title]" value="{{ old($locale.'.title', $content[$locale]['title']) }}">
+                                            @error($locale.'.title')<span class="field-error">{{ $message }}</span>@enderror
+                                        </label>
+                                        <label>
+                                            Primer párrafo
+                                            <textarea name="{{ $locale }}[intro_one]">{{ old($locale.'.intro_one', $content[$locale]['intro_one']) }}</textarea>
+                                            @error($locale.'.intro_one')<span class="field-error">{{ $message }}</span>@enderror
+                                        </label>
+                                        <label>
+                                            Segundo párrafo
+                                            <textarea name="{{ $locale }}[intro_two]">{{ old($locale.'.intro_two', $content[$locale]['intro_two']) }}</textarea>
+                                            @error($locale.'.intro_two')<span class="field-error">{{ $message }}</span>@enderror
+                                        </label>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
                         <div class="language-card">
-                            <h3>{{ $label }}</h3>
-                            <div class="field-grid">
+                            <h3>Botón de procedimiento</h3>
+                            <div class="language-grid" style="margin-top:14px;">
+                                @foreach (['es' => 'Español', 'en' => 'Inglés'] as $locale => $label)
+                                    <label>
+                                        Texto {{ strtolower($label) }}
+                                        <input type="text" name="{{ $locale }}[procedure_label]" value="{{ old($locale.'.procedure_label', $content[$locale]['procedure_label']) }}">
+                                        @error($locale.'.procedure_label')<span class="field-error">{{ $message }}</span>@enderror
+                                    </label>
+                                @endforeach
+                            </div>
+                            <div class="field-grid" style="margin-top:14px;">
                                 <label>
-                                    Categoría
-                                    <input type="text" name="{{ $locale }}[eyebrow]" value="{{ old($locale.'.eyebrow', $content[$locale]['eyebrow']) }}">
-                                    @error($locale.'.eyebrow')<span class="field-error">{{ $message }}</span>@enderror
+                                    URL del PDF
+                                    <input type="url" name="procedure_url" value="{{ old('procedure_url', $content['procedure_url']) }}" placeholder="https://sitio.edu.bo/documento.pdf">
+                                    <span class="hint">Usa este campo si el PDF está alojado en otra página.</span>
+                                    @error('procedure_url')<span class="field-error">{{ $message }}</span>@enderror
                                 </label>
                                 <label>
-                                    Título
-                                    <input type="text" name="{{ $locale }}[title]" value="{{ old($locale.'.title', $content[$locale]['title']) }}">
-                                    @error($locale.'.title')<span class="field-error">{{ $message }}</span>@enderror
-                                </label>
-                                <label>
-                                    Primer párrafo
-                                    <textarea name="{{ $locale }}[intro_one]">{{ old($locale.'.intro_one', $content[$locale]['intro_one']) }}</textarea>
-                                    @error($locale.'.intro_one')<span class="field-error">{{ $message }}</span>@enderror
-                                </label>
-                                <label>
-                                    Segundo párrafo
-                                    <textarea name="{{ $locale }}[intro_two]">{{ old($locale.'.intro_two', $content[$locale]['intro_two']) }}</textarea>
-                                    @error($locale.'.intro_two')<span class="field-error">{{ $message }}</span>@enderror
-                                </label>
-                                <label>
-                                    Texto del botón de las tarjetas
-                                    <input type="text" name="{{ $locale }}[main_button]" value="{{ old($locale.'.main_button', $content[$locale]['main_button']) }}">
-                                    @error($locale.'.main_button')<span class="field-error">{{ $message }}</span>@enderror
+                                    Subir PDF
+                                    <input type="file" name="procedure_pdf" accept=".pdf,application/pdf">
+                                    <span class="hint">Solo PDF. Tamaño máximo: 20 MB. @if ($content['procedure_pdf_url']) PDF actual: <a href="{{ $content['procedure_pdf_url'] }}" target="_blank">abrir archivo</a>. @endif</span>
+                                    @error('procedure_pdf')<span class="field-error">{{ $message }}</span>@enderror
                                 </label>
                             </div>
                         </div>
-                    @endforeach
-                </div>
-            </section>
-
-            <section class="panel">
-                <div class="panel-header">
-                    <h2>Botón de procedimiento</h2>
-                    <p class="muted">Puedes usar una URL externa o subir un PDF. Si subes un PDF nuevo, ese archivo tendrá prioridad.</p>
-                </div>
-                <div class="language-grid">
-                    @foreach (['es' => 'Español', 'en' => 'Inglés'] as $locale => $label)
-                        <div class="language-card">
-                            <h3>{{ $label }}</h3>
-                            <label style="margin-top:14px;">
-                                Texto del botón
-                                <input type="text" name="{{ $locale }}[procedure_label]" value="{{ old($locale.'.procedure_label', $content[$locale]['procedure_label']) }}">
-                                @error($locale.'.procedure_label')<span class="field-error">{{ $message }}</span>@enderror
-                            </label>
+                    </div>
+                    <div class="media-card">
+                        <h3>Imagen principal</h3>
+                        <div class="preview" style="margin-top:14px;">
+                            @if ($content['hero_image_url'])
+                                <img src="{{ $preview($content['hero_image_url']) }}" alt="Imagen principal">
+                            @else
+                                <span class="muted">Se usará la imagen actual del sitio hasta subir una nueva.</span>
+                            @endif
                         </div>
-                    @endforeach
-                </div>
-                <div class="language-card" style="margin-top:18px;">
-                    <div class="field-grid">
                         <label>
-                            URL del PDF
-                            <input type="url" name="procedure_url" value="{{ old('procedure_url', $content['procedure_url']) }}" placeholder="https://sitio.edu.bo/documento.pdf">
-                            <span class="hint">Usa este campo si el PDF está alojado en otra página.</span>
-                            @error('procedure_url')<span class="field-error">{{ $message }}</span>@enderror
-                        </label>
-                        <label>
-                            Subir PDF
-                            <input type="file" name="procedure_pdf" accept=".pdf,application/pdf">
-                            <span class="hint">Solo PDF. Tamaño máximo: 20 MB. @if ($content['procedure_pdf_url']) PDF actual: <a href="{{ $content['procedure_pdf_url'] }}" target="_blank">abrir archivo</a>. @endif</span>
-                            @error('procedure_pdf')<span class="field-error">{{ $message }}</span>@enderror
+                            Subir nueva imagen
+                            <input type="file" name="hero_image" accept=".jpg,.jpeg,.png,image/jpeg,image/png">
+                            <span class="hint">JPG o PNG. Máximo 5 MB.</span>
+                            @error('hero_image')<span class="field-error">{{ $message }}</span>@enderror
                         </label>
                     </div>
                 </div>
@@ -379,12 +409,39 @@
             <section class="panel">
                 <div class="panel-header">
                     <h2>Tarjetas de acceso</h2>
-                    <p class="muted">Edita el texto y destino de las tres tarjetas. Las subpáginas se administrarán luego en sus propios módulos.</p>
+                    <p class="muted">Segunda parte de la página pública: tres tarjetas con imagen, texto, enlace y etiqueta común del botón.</p>
+                </div>
+                <div class="language-card">
+                    <h3>Texto del botón de las tarjetas</h3>
+                    <div class="language-grid" style="margin-top:14px;">
+                        @foreach (['es' => 'Español', 'en' => 'Inglés'] as $locale => $label)
+                            <label>
+                                Texto {{ strtolower($label) }}
+                                <input type="text" name="{{ $locale }}[main_button]" value="{{ old($locale.'.main_button', $content[$locale]['main_button']) }}">
+                                @error($locale.'.main_button')<span class="field-error">{{ $message }}</span>@enderror
+                            </label>
+                        @endforeach
+                    </div>
                 </div>
                 <div class="cards-grid">
                     @foreach ([1, 2, 3] as $index)
                         <div class="language-card">
                             <h3>Tarjeta {{ $index }}</h3>
+                            <div class="media-card" style="margin-top:14px;">
+                                <div class="preview">
+                                    @if ($content['card_'.$index.'_image_url'])
+                                        <img src="{{ $preview($content['card_'.$index.'_image_url']) }}" alt="Imagen de tarjeta {{ $index }}">
+                                    @else
+                                        <span class="muted">Se usará la imagen actual del sitio hasta subir una nueva.</span>
+                                    @endif
+                                </div>
+                                <label>
+                                    Imagen de la tarjeta
+                                    <input type="file" name="card_{{ $index }}_image" accept=".jpg,.jpeg,.png,image/jpeg,image/png">
+                                    <span class="hint">JPG o PNG. Máximo 5 MB.</span>
+                                    @error('card_'.$index.'_image')<span class="field-error">{{ $message }}</span>@enderror
+                                </label>
+                            </div>
                             <div class="language-grid" style="margin-top:14px;">
                                 @foreach (['es' => 'Español', 'en' => 'Inglés'] as $locale => $label)
                                     <div class="field-grid">
@@ -410,37 +467,6 @@
                                     @error('card_'.$index.'_href')<span class="field-error">{{ $message }}</span>@enderror
                                 </label>
                             </div>
-                        </div>
-                    @endforeach
-                </div>
-            </section>
-
-            <section class="panel">
-                <div class="panel-header">
-                    <h2>Imágenes</h2>
-                    <p class="muted">Solo JPG o PNG. Tamaño máximo permitido: 5 MB por imagen.</p>
-                </div>
-                <div class="media-grid">
-                    @foreach ([
-                        'hero_image' => ['label' => 'Imagen principal', 'url' => $content['hero_image_url']],
-                        'card_1_image' => ['label' => 'Imagen de la tarjeta uno', 'url' => $content['card_1_image_url']],
-                        'card_2_image' => ['label' => 'Imagen de la tarjeta dos', 'url' => $content['card_2_image_url']],
-                        'card_3_image' => ['label' => 'Imagen de la tarjeta tres', 'url' => $content['card_3_image_url']],
-                    ] as $field => $image)
-                        <div class="media-card">
-                            <div class="preview">
-                                @if ($image['url'])
-                                    <img src="{{ $image['url'] }}" alt="{{ $image['label'] }}">
-                                @else
-                                    <span class="muted">Se usará la imagen actual del sitio hasta subir una nueva.</span>
-                                @endif
-                            </div>
-                            <label>
-                                {{ $image['label'] }}
-                                <input type="file" name="{{ $field }}" accept=".jpg,.jpeg,.png,image/jpeg,image/png">
-                                <span class="hint">No se eliminará la imagen anterior hasta guardar una nueva.</span>
-                                @error($field)<span class="field-error">{{ $message }}</span>@enderror
-                            </label>
                         </div>
                     @endforeach
                 </div>

@@ -32,6 +32,7 @@
         .panel-header { border-bottom: 1px solid var(--line); margin-bottom: 20px; padding-bottom: 16px; }
         .language-grid, .two-grid { display: grid; gap: 18px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
         .language-card, .program-card { box-shadow: none; padding: 18px; }
+        .panel > .language-grid + .program-list { margin-top: 18px; }
         .program-card { display: grid; gap: 16px; }
         .program-header { align-items: center; display: flex; gap: 12px; justify-content: space-between; }
         label { display: grid; gap: 7px; font-size: 13px; font-weight: 800; }
@@ -68,8 +69,8 @@
 
             <section class="panel">
                 <div class="panel-header">
-                    <h2>Texto principal</h2>
-                    <p class="muted">Estos textos aparecen en la cabecera de la página pública.</p>
+                    <h2>Portada</h2>
+                    <p class="muted">Estos textos aparecen en la cabecera principal de Movilidad y Pasantías.</p>
                 </div>
 
                 <div class="language-grid">
@@ -81,10 +82,6 @@
                                 <label>Etiqueta superior<input type="text" name="{{ $locale }}[eyebrow]" value="{{ old($locale.'.eyebrow', $content[$locale]['eyebrow']) }}">@error($locale.'.eyebrow')<span class="field-error">{{ $message }}</span>@enderror</label>
                                 <label>Título principal<input type="text" name="{{ $locale }}[title]" value="{{ old($locale.'.title', $content[$locale]['title']) }}">@error($locale.'.title')<span class="field-error">{{ $message }}</span>@enderror</label>
                                 <label>Descripción principal<textarea name="{{ $locale }}[intro]">{{ old($locale.'.intro', $content[$locale]['intro']) }}</textarea>@error($locale.'.intro')<span class="field-error">{{ $message }}</span>@enderror</label>
-                                <label>Título de movilidad estudiantil<input type="text" name="{{ $locale }}[students_title]" value="{{ old($locale.'.students_title', $content[$locale]['students_title']) }}">@error($locale.'.students_title')<span class="field-error">{{ $message }}</span>@enderror</label>
-                                <label>Texto de movilidad estudiantil<textarea name="{{ $locale }}[students_intro]">{{ old($locale.'.students_intro', $content[$locale]['students_intro']) }}</textarea>@error($locale.'.students_intro')<span class="field-error">{{ $message }}</span>@enderror</label>
-                                <label>Título de movilidad docente / administrativa<input type="text" name="{{ $locale }}[staff_title]" value="{{ old($locale.'.staff_title', $content[$locale]['staff_title']) }}">@error($locale.'.staff_title')<span class="field-error">{{ $message }}</span>@enderror</label>
-                                <label>Texto de movilidad docente / administrativa<textarea name="{{ $locale }}[staff_intro]">{{ old($locale.'.staff_intro', $content[$locale]['staff_intro']) }}</textarea>@error($locale.'.staff_intro')<span class="field-error">{{ $message }}</span>@enderror</label>
                             </div>
                         </div>
                     @endforeach
@@ -92,10 +89,27 @@
             </section>
 
             @foreach ($tracks as $groupKey => $track)
+                @php
+                    $sectionTitleField = $groupKey === 'students' ? 'students_title' : 'staff_title';
+                    $sectionIntroField = $groupKey === 'students' ? 'students_intro' : 'staff_intro';
+                @endphp
+
                 <section class="panel">
                     <div class="panel-header">
                         <h2>{{ $track['title'] }}</h2>
-                        <p class="muted">Cada tarjeta se guarda en PostgreSQL y la página pública la leerá al recargar.</p>
+                        <p class="muted">Primero edita el encabezado de esta sección y debajo sus tarjetas, tal como aparece en la página pública.</p>
+                    </div>
+
+                    <div class="language-grid">
+                        @foreach (['es' => 'Español', 'en' => 'Inglés'] as $locale => $label)
+                            <div class="language-card">
+                                <h3>{{ $label }}</h3>
+                                <div class="field-grid">
+                                    <label>Título de sección<input type="text" name="{{ $locale }}[{{ $sectionTitleField }}]" value="{{ old($locale.'.'.$sectionTitleField, $content[$locale][$sectionTitleField]) }}">@error($locale.'.'.$sectionTitleField)<span class="field-error">{{ $message }}</span>@enderror</label>
+                                    <label>Texto de sección<textarea name="{{ $locale }}[{{ $sectionIntroField }}]">{{ old($locale.'.'.$sectionIntroField, $content[$locale][$sectionIntroField]) }}</textarea>@error($locale.'.'.$sectionIntroField)<span class="field-error">{{ $message }}</span>@enderror</label>
+                                </div>
+                            </div>
+                        @endforeach
                     </div>
 
                     <div class="program-list" id="{{ $groupKey }}-list">

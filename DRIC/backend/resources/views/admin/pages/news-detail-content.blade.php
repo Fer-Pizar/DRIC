@@ -39,6 +39,7 @@
         .editor { border: 1px solid #cfd6e3; border-radius: 14px; line-height: 1.75; min-height: 340px; outline: none; padding: 18px; }
         .editor:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(22, 65, 148, 0.12); }
         .editor p { margin: 0 0 16px; }
+        .editor p.dric-news-dropcap { border-left: 4px solid var(--blue); margin-top: 20px; padding-left: 12px; }
         .editor blockquote { border-left: 4px solid var(--blue); color: #475569; margin: 16px 0; padding-left: 16px; }
         .images-grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
         .image-card { box-shadow: none; overflow: hidden; padding: 12px; }
@@ -72,7 +73,7 @@
             <section class="panel">
                 <div class="panel-header">
                     <h2>Texto editorial</h2>
-                    <p class="muted">Puedes usar negrita, cursiva, subrayado, subtítulos, citas y listas. El diseño público se mantiene fijo.</p>
+                    <p class="muted">Contenido central de la noticia pública: título interno del detalle, bajada, párrafos, listas, citas e imágenes.</p>
                 </div>
 
                 <div class="language-grid">
@@ -101,6 +102,7 @@
                                         <button class="btn btn-light" type="button" data-command="underline">U</button>
                                         <button class="btn btn-light" type="button" data-block="h2">H2</button>
                                         <button class="btn btn-light" type="button" data-block="h3">H3</button>
+                                        <button class="btn btn-light" type="button" data-dropcap>Nuevo Párrafo</button>
                                         <button class="btn btn-light" type="button" data-command="insertUnorderedList">Viñetas</button>
                                         <button class="btn btn-light" type="button" data-command="insertOrderedList">Números</button>
                                         <button class="btn btn-light" type="button" data-block="blockquote">Cita</button>
@@ -108,7 +110,7 @@
                                     </div>
                                     <div class="editor" data-editor="{{ $locale }}" contenteditable="true">{!! old($locale.'.body', $content[$locale]['body']) !!}</div>
                                     <input type="hidden" name="{{ $locale }}[body]" data-body-input="{{ $locale }}">
-                                    <span class="hint">Pega o redacta el contenido aquí. El primer párrafo mantiene la letra inicial grande en la vista pública.</span>
+                                    <span class="hint">Pega o redacta el contenido aquí. Nuevo Párrafo marca dónde la vista pública inicia con letra grande.</span>
                                     @error($locale.'.body')<span class="field-error">{{ $message }}</span>@enderror
                                 </label>
                             </div>
@@ -177,9 +179,73 @@
             selection.addRange(savedRange);
         }
 
+        function currentTextBlock(editor) {
+            const selection = window.getSelection();
+            if (!selection || !selection.rangeCount) {
+                return null;
+            }
+
+            let node = selection.getRangeAt(0).startContainer;
+            if (node.nodeType === Node.TEXT_NODE) {
+                node = node.parentElement;
+            }
+
+            while (node && node !== editor) {
+                if (["P", "H2", "H3", "BLOCKQUOTE", "LI", "DIV"].includes(node.nodeName)) {
+                    return node;
+                }
+
+                node = node.parentElement;
+            }
+
+            return null;
+        }
+
+        function toggleDropcap(editor) {
+            restoreSelection(editor);
+
+            let block = currentTextBlock(editor);
+
+            if (!block || block === editor) {
+                document.execCommand("formatBlock", false, "p");
+                block = currentTextBlock(editor);
+            }
+
+            if (!block) {
+                return;
+            }
+
+            if (block.nodeName !== "P") {
+                document.execCommand("formatBlock", false, "p");
+                block = currentTextBlock(editor);
+            }
+
+            if (block && block.nodeName === "P") {
+                block.classList.toggle("dric-news-dropcap");
+            }
+
+            rememberSelection();
+        }
+
+        function shouldUseNewParagraphMarker(paragraph, index) {
+            const text = paragraph.textContent.replace(/\s+/g, " ").trim();
+
+            return index === 0 || text.length >= 80;
+        }
+
+        function prefillEditorialMarkers(editor) {
+            editor.querySelectorAll("p").forEach((paragraph, index) => {
+                if (shouldUseNewParagraphMarker(paragraph, index)) {
+                    paragraph.classList.add("dric-news-dropcap");
+                }
+            });
+        }
+
         document.querySelectorAll("[data-toolbar]").forEach((toolbar) => {
             const locale = toolbar.dataset.toolbar;
             const editor = document.querySelector(`[data-editor="${locale}"]`);
+
+            prefillEditorialMarkers(editor);
 
             editor.addEventListener("keyup", rememberSelection);
             editor.addEventListener("mouseup", rememberSelection);
@@ -189,7 +255,9 @@
                 button.addEventListener("mousedown", (event) => event.preventDefault());
                 button.addEventListener("click", () => {
                     restoreSelection(editor);
-                    if (button.dataset.block) {
+                    if (button.hasAttribute("data-dropcap")) {
+                        toggleDropcap(editor);
+                    } else if (button.dataset.block) {
                         document.execCommand("formatBlock", false, button.dataset.block);
                     } else {
                         document.execCommand(button.dataset.command, false, null);
@@ -209,14 +277,40 @@
         document.execCommand("defaultParagraphSeparator", false, "p");
 
         function normalizeEditorHtml(editor) {
-            const html = editor.innerHTML.trim();
+            const clone = editor.cloneNode(true);
+
+            clone.querySelectorAll("div").forEach((div) => {
+                const paragraph = document.createElement("p");
+                paragraph.innerHTML = div.innerHTML;
+
+                if (div.classList.contains("dric-news-dropcap")) {
+                    paragraph.classList.add("dric-news-dropcap");
+                }
+
+                div.replaceWith(paragraph);
+            });
+
+            clone.querySelectorAll("p").forEach((paragraph) => {
+                if (paragraph.classList.contains("dric-news-dropcap")) {
+                    paragraph.setAttribute("class", "dric-news-dropcap");
+                } else {
+                    paragraph.removeAttribute("class");
+                }
+
+                paragraph.removeAttribute("style");
+            });
+
+            clone.querySelectorAll("*").forEach((node) => {
+                node.removeAttribute("style");
+                node.removeAttribute("data-mce-style");
+                node.removeAttribute("contenteditable");
+            });
+
+            const html = clone.innerHTML.trim();
             if (/<(p|h2|h3|ul|ol|li|blockquote|div)\b/i.test(html)) {
                 return html
                     .replace(/<div><br><\/div>/gi, "")
-                    .replace(/<div>\s*((?:<ul\b[^>]*>|<ol\b[^>]*>)[\s\S]*?(?:<\/ul>|<\/ol>))\s*<\/div>/gi, "$1")
                     .replace(/<p>\s*((?:<ul\b[^>]*>|<ol\b[^>]*>)[\s\S]*?(?:<\/ul>|<\/ol>))\s*<\/p>/gi, "$1")
-                    .replace(/<div>/gi, "<p>")
-                    .replace(/<\/div>/gi, "</p>")
                     .replace(/<p>\s*((?:<ul\b[^>]*>|<ol\b[^>]*>)[\s\S]*?(?:<\/ul>|<\/ol>))\s*<\/p>/gi, "$1");
             }
 

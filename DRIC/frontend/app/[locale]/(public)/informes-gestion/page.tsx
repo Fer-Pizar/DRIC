@@ -271,7 +271,7 @@ function cmsContent(page: CmsPage | null, locale: "es" | "en") {
     archiveDescription: hero?.body || fallback.archiveDescription,
     exploreLabel: archive?.subtitle || fallback.exploreLabel,
     archiveTitle: archive?.title || fallback.archiveTitle,
-    searchPlaceholder: archive?.summary || fallback.searchPlaceholder,
+    searchPlaceholder: fallback.searchPlaceholder,
     coverEyebrow: settingString(settings, `cover_eyebrow_${locale}`) || fallback.coverEyebrow,
     coverTitle: settingString(settings, `cover_title_${locale}`) || fallback.coverTitle,
     yearLabel: settingString(settings, `year_label_${locale}`) || fallback.yearLabel,

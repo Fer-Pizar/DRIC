@@ -62,8 +62,42 @@
 
             <section class="panel">
                 <div class="panel-header">
-                    <h2>Portada e información principal</h2>
-                    <p class="muted">La portada y el logo institucional no son editables desde este panel.</p>
+                    <h2>Portada</h2>
+                    <p class="muted">Primera vista de Campus Life: insignia, título principal y descripción. La imagen de portada se mantiene fija desde el sistema.</p>
+                </div>
+
+                <div class="language-grid">
+                    @foreach (['es' => 'Español', 'en' => 'Inglés'] as $locale => $label)
+                        <div class="language-card">
+                            <h3>{{ $label }}</h3>
+                            <div class="field-grid">
+                                <label>
+                                    Insignia superior
+                                    <input type="text" name="{{ $locale }}[badge]" value="{{ old($locale.'.badge', $content[$locale]['badge']) }}">
+                                    @error($locale.'.badge')<span class="field-error">{{ $message }}</span>@enderror
+                                </label>
+
+                                <label>
+                                    Título principal
+                                    <input type="text" name="{{ $locale }}[title]" value="{{ old($locale.'.title', $content[$locale]['title']) }}">
+                                    @error($locale.'.title')<span class="field-error">{{ $message }}</span>@enderror
+                                </label>
+
+                                <label>
+                                    Descripción principal
+                                    <textarea name="{{ $locale }}[subtitle]">{{ old($locale.'.subtitle', $content[$locale]['subtitle']) }}</textarea>
+                                    @error($locale.'.subtitle')<span class="field-error">{{ $message }}</span>@enderror
+                                </label>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </section>
+
+            <section class="panel">
+                <div class="panel-header">
+                    <h2>Tarjeta oficial UMSS</h2>
+                    <p class="muted">Tarjeta que aparece en la portada con el logo institucional, el texto descriptivo y el enlace al sitio oficial.</p>
                 </div>
 
                 <label>
@@ -77,26 +111,24 @@
                         <div class="language-card">
                             <h3>{{ $label }}</h3>
                             <div class="field-grid">
-                                @foreach ([
-                                    'badge' => 'Insignia superior',
-                                    'title' => 'Título principal',
-                                    'subtitle' => 'Descripción principal',
-                                    'official_label' => 'Texto pequeño del sitio oficial',
-                                    'official_title' => 'Texto del botón o tarjeta oficial',
-                                    'basic_kicker' => 'Etiqueta de información básica',
-                                    'basic_title' => 'Título de información básica',
-                                    'basic_text' => 'Texto de información básica',
-                                ] as $field => $fieldLabel)
-                                    <label>
-                                        {{ $fieldLabel }}
-                                        @if (str_contains($field, 'text') || $field === 'subtitle')
-                                            <textarea name="{{ $locale }}[{{ $field }}]">{{ old($locale.'.'.$field, $content[$locale][$field]) }}</textarea>
-                                        @else
-                                            <input type="text" name="{{ $locale }}[{{ $field }}]" value="{{ old($locale.'.'.$field, $content[$locale][$field]) }}">
-                                        @endif
-                                        @error($locale.'.'.$field)<span class="field-error">{{ $message }}</span>@enderror
-                                    </label>
-                                @endforeach
+                                <label>
+                                    Texto pequeño del sitio oficial
+                                    <input type="text" name="{{ $locale }}[official_label]" value="{{ old($locale.'.official_label', $content[$locale]['official_label']) }}">
+                                    @error($locale.'.official_label')<span class="field-error">{{ $message }}</span>@enderror
+                                </label>
+
+                                <label>
+                                    Texto del botón o tarjeta oficial
+                                    <input type="text" name="{{ $locale }}[official_title]" value="{{ old($locale.'.official_title', $content[$locale]['official_title']) }}">
+                                    @error($locale.'.official_title')<span class="field-error">{{ $message }}</span>@enderror
+                                </label>
+
+                                <label>
+                                    Texto descriptivo de la tarjeta UMSS
+                                    <textarea name="{{ $locale }}[basic_text]">{{ old($locale.'.basic_text', $content[$locale]['basic_text']) }}</textarea>
+                                    <span class="hint">Este mismo texto también aparece en el bloque de Información básica de la página pública.</span>
+                                    @error($locale.'.basic_text')<span class="field-error">{{ $message }}</span>@enderror
+                                </label>
                             </div>
                         </div>
                     @endforeach
@@ -123,7 +155,7 @@
             <section class="panel">
                 <div class="panel-header">
                     <h2>Tarjetas de características</h2>
-                    <p class="muted">Los íconos no se editan; solo textos.</p>
+                    <p class="muted">Tres tarjetas posteriores a las estadísticas. Los íconos no se editan; solo textos.</p>
                 </div>
                 <div class="three-grid">
                     @foreach ($content['features'] as $index => $feature)
@@ -140,11 +172,43 @@
 
             <section class="panel">
                 <div class="panel-header">
-                    <h2>Secciones con enlace</h2>
-                    <p class="muted">Las imágenes de estas secciones son las originales del sistema. Aquí solo se editan textos y URLs.</p>
+                    <h2>Información básica</h2>
+                    <p class="muted">Bloque institucional que aparece después de las tarjetas de características. El texto descriptivo se edita arriba, en Tarjeta oficial UMSS, porque la página pública reutiliza el mismo párrafo.</p>
+                </div>
+
+                <div class="language-grid">
+                    @foreach (['es' => 'Español', 'en' => 'Inglés'] as $locale => $label)
+                        <div class="language-card">
+                            <h3>{{ $label }}</h3>
+                            <div class="field-grid">
+                                <label>
+                                    Etiqueta de información básica
+                                    <input type="text" name="{{ $locale }}[basic_kicker]" value="{{ old($locale.'.basic_kicker', $content[$locale]['basic_kicker']) }}">
+                                    @error($locale.'.basic_kicker')<span class="field-error">{{ $message }}</span>@enderror
+                                </label>
+
+                                <label>
+                                    Título de información básica
+                                    <input type="text" name="{{ $locale }}[basic_title]" value="{{ old($locale.'.basic_title', $content[$locale]['basic_title']) }}">
+                                    @error($locale.'.basic_title')<span class="field-error">{{ $message }}</span>@enderror
+                                </label>
+
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </section>
+
+            <section class="panel">
+                <div class="panel-header">
+                    <h2>Bibliotecas y facultades</h2>
+                    <p class="muted">Primeras dos secciones visuales del recorrido. Las imágenes son las originales del sistema; aquí solo se editan textos y URLs.</p>
                 </div>
                 <div class="section-grid">
-                    @foreach ($content['stories'] as $index => $story)
+                    @foreach ([1, 2] as $index)
+                        @php
+                            $story = $content['stories'][$index];
+                        @endphp
                         <article class="item-card">
                             <h3>{{ $storyLabels[$index] ?? 'Sección '.$index }}</h3>
                             <label>
@@ -160,15 +224,71 @@
                                         <label>Etiqueta<input type="text" name="stories[{{ $index }}][eyebrow_{{ $locale }}]" value="{{ old('stories.'.$index.'.eyebrow_'.$locale, $story['eyebrow_'.$locale]) }}">@error('stories.'.$index.'.eyebrow_'.$locale)<span class="field-error">{{ $message }}</span>@enderror</label>
                                         <label>Título<input type="text" name="stories[{{ $index }}][title_{{ $locale }}]" value="{{ old('stories.'.$index.'.title_'.$locale, $story['title_'.$locale]) }}">@error('stories.'.$index.'.title_'.$locale)<span class="field-error">{{ $message }}</span>@enderror</label>
                                         <label>Texto<textarea name="stories[{{ $index }}][text_{{ $locale }}]">{{ old('stories.'.$index.'.text_'.$locale, $story['text_'.$locale]) }}</textarea>@error('stories.'.$index.'.text_'.$locale)<span class="field-error">{{ $message }}</span>@enderror</label>
-                                        @if ($index === 4)
-                                            <label>Texto del botón<input type="text" name="stories[{{ $index }}][button_{{ $locale }}]" value="{{ old('stories.'.$index.'.button_'.$locale, $story['button_'.$locale] ?? '') }}">@error('stories.'.$index.'.button_'.$locale)<span class="field-error">{{ $message }}</span>@enderror</label>
-                                        @endif
                                     </div>
                                 @endforeach
                             </div>
                         </article>
                     @endforeach
                 </div>
+            </section>
+
+            <section class="panel">
+                <div class="panel-header">
+                    <h2>Museo UMSS</h2>
+                    <p class="muted">Sección del museo que aparece después de bibliotecas y facultades.</p>
+                </div>
+                @php
+                    $story = $content['stories'][3];
+                @endphp
+                <article class="item-card">
+                    <h3>{{ $storyLabels[3] ?? 'Museo' }}</h3>
+                    <label>
+                        URL de redirección
+                        <input type="url" name="stories[3][url]" value="{{ old('stories.3.url', $story['url']) }}">
+                        @error('stories.3.url')<span class="field-error">{{ $message }}</span>@enderror
+                    </label>
+
+                    <div class="language-grid">
+                        @foreach (['es' => 'Español', 'en' => 'Inglés'] as $locale => $label)
+                            <div class="language-card">
+                                <h3>{{ $label }}</h3>
+                                <label>Etiqueta<input type="text" name="stories[3][eyebrow_{{ $locale }}]" value="{{ old('stories.3.eyebrow_'.$locale, $story['eyebrow_'.$locale]) }}">@error('stories.3.eyebrow_'.$locale)<span class="field-error">{{ $message }}</span>@enderror</label>
+                                <label>Título<input type="text" name="stories[3][title_{{ $locale }}]" value="{{ old('stories.3.title_'.$locale, $story['title_'.$locale]) }}">@error('stories.3.title_'.$locale)<span class="field-error">{{ $message }}</span>@enderror</label>
+                                <label>Texto<textarea name="stories[3][text_{{ $locale }}]">{{ old('stories.3.text_'.$locale, $story['text_'.$locale]) }}</textarea>@error('stories.3.text_'.$locale)<span class="field-error">{{ $message }}</span>@enderror</label>
+                            </div>
+                        @endforeach
+                    </div>
+                </article>
+            </section>
+
+            <section class="panel">
+                <div class="panel-header">
+                    <h2>Cochabamba</h2>
+                    <p class="muted">Última sección del recorrido, con enlace y texto del botón.</p>
+                </div>
+                @php
+                    $story = $content['stories'][4];
+                @endphp
+                <article class="item-card">
+                    <h3>{{ $storyLabels[4] ?? 'Cochabamba' }}</h3>
+                    <label>
+                        URL de redirección
+                        <input type="url" name="stories[4][url]" value="{{ old('stories.4.url', $story['url']) }}">
+                        @error('stories.4.url')<span class="field-error">{{ $message }}</span>@enderror
+                    </label>
+
+                    <div class="language-grid">
+                        @foreach (['es' => 'Español', 'en' => 'Inglés'] as $locale => $label)
+                            <div class="language-card">
+                                <h3>{{ $label }}</h3>
+                                <label>Etiqueta<input type="text" name="stories[4][eyebrow_{{ $locale }}]" value="{{ old('stories.4.eyebrow_'.$locale, $story['eyebrow_'.$locale]) }}">@error('stories.4.eyebrow_'.$locale)<span class="field-error">{{ $message }}</span>@enderror</label>
+                                <label>Título<input type="text" name="stories[4][title_{{ $locale }}]" value="{{ old('stories.4.title_'.$locale, $story['title_'.$locale]) }}">@error('stories.4.title_'.$locale)<span class="field-error">{{ $message }}</span>@enderror</label>
+                                <label>Texto<textarea name="stories[4][text_{{ $locale }}]">{{ old('stories.4.text_'.$locale, $story['text_'.$locale]) }}</textarea>@error('stories.4.text_'.$locale)<span class="field-error">{{ $message }}</span>@enderror</label>
+                                <label>Texto del botón<input type="text" name="stories[4][button_{{ $locale }}]" value="{{ old('stories.4.button_'.$locale, $story['button_'.$locale] ?? '') }}">@error('stories.4.button_'.$locale)<span class="field-error">{{ $message }}</span>@enderror</label>
+                            </div>
+                        @endforeach
+                    </div>
+                </article>
             </section>
 
             <div class="sticky-actions">

@@ -101,7 +101,7 @@ class MembershipContentController extends Controller
                         'title' => $validated[$locale]['info_title'],
                         'subtitle' => null,
                         'summary' => $validated[$locale]['info_text'],
-                        'body' => null,
+                        'body' => $validated[$locale]['info_email'],
                     ]
                 );
             }
@@ -125,6 +125,7 @@ class MembershipContentController extends Controller
             $localized["{$locale}.section_title"] = ['required', 'string', 'max:180'];
             $localized["{$locale}.info_title"] = ['required', 'string', 'max:140'];
             $localized["{$locale}.info_text"] = ['required', 'string', 'max:800'];
+            $localized["{$locale}.info_email"] = ['required', 'email', 'max:180'];
         }
 
         return array_merge($localized, [
@@ -230,6 +231,7 @@ class MembershipContentController extends Controller
                 'section_title' => $this->sectionValue($page, 'memberships.list', 'es', 'title', 'Alianzas que conectan a la UMSS con el mundo'),
                 'info_title' => $this->sectionValue($page, 'memberships.info', 'es', 'title', 'Información institucional'),
                 'info_text' => $this->sectionValue($page, 'memberships.info', 'es', 'summary', 'Para mayor información sobre registros, membresías institucionales o participación en redes internacionales, contactar con la Dirección de Relaciones Internacionales y Convenios.'),
+                'info_email' => $this->sectionValue($page, 'memberships.info', 'es', 'body', 'dric@umss.edu'),
             ],
             'en' => [
                 'title' => $this->pageValue($page, 'en', 'title', 'Memberships'),
@@ -238,6 +240,7 @@ class MembershipContentController extends Controller
                 'section_title' => $this->sectionValue($page, 'memberships.list', 'en', 'title', 'Partnerships connecting UMSS with the world'),
                 'info_title' => $this->sectionValue($page, 'memberships.info', 'en', 'title', 'Institutional information'),
                 'info_text' => $this->sectionValue($page, 'memberships.info', 'en', 'summary', 'For more information about institutional records, memberships or participation in international networks, contact the Directorate of International Relations and Agreements.'),
+                'info_email' => $this->sectionValue($page, 'memberships.info', 'en', 'body', 'dric@umss.edu'),
             ],
         ];
     }

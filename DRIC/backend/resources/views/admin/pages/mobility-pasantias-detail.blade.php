@@ -35,6 +35,8 @@
         .item-card { display: grid; gap: 16px; }
         .link-card { background: #f8fafc; display: grid; gap: 12px; }
         .item-header { align-items: center; display: flex; gap: 12px; justify-content: space-between; }
+        .subsection { display: grid; gap: 16px; }
+        .subsection + .subsection { border-top: 1px solid var(--line); margin-top: 20px; padding-top: 20px; }
         label { display: grid; gap: 7px; font-size: 13px; font-weight: 800; }
         input, textarea { border: 1px solid #cfd6e3; border-radius: 12px; color: var(--ink); font: inherit; font-weight: 500; padding: 12px 13px; width: 100%; }
         input[type="file"] { background: #fff; }
@@ -48,6 +50,10 @@
 </head>
 <body>
     <main class="shell">
+        @php
+            $main = $detail['main'];
+        @endphp
+
         <header class="topbar">
             <div>
                 <h1>Detalle del programa</h1>
@@ -68,38 +74,76 @@
 
             <section class="panel">
                 <div class="panel-header">
-                    <h2>Datos clave</h2>
-                    <p class="muted">Aparecen en el panel lateral como información rápida del programa.</p>
+                    <h2>Portada y resumen</h2>
+                    <p class="muted">Edita el título del bloque de resumen, la descripción y las condiciones públicas. El título principal y la etiqueta se editan desde la lista principal de Movilidad.</p>
                 </div>
-                <div class="item-list" id="highlights-list">
-                    @foreach (old('highlights', $detail['highlights'] ?? []) as $index => $item)
-                        <article class="item-card" data-highlight-card>
-                            <div class="item-header"><h3>Dato {{ $index + 1 }}</h3><button class="btn btn-remove" type="button" data-remove-item>Quitar</button></div>
-                            <div class="two-grid">
-                                <label>Etiqueta en español<input type="text" name="highlights[{{ $index }}][label_es]" value="{{ $item['label_es'] ?? '' }}">@error('highlights.'.$index.'.label_es')<span class="field-error">{{ $message }}</span>@enderror</label>
-                                <label>Etiqueta en inglés<input type="text" name="highlights[{{ $index }}][label_en]" value="{{ $item['label_en'] ?? '' }}">@error('highlights.'.$index.'.label_en')<span class="field-error">{{ $message }}</span>@enderror</label>
-                                <label>Valor en español<input type="text" name="highlights[{{ $index }}][value_es]" value="{{ $item['value_es'] ?? '' }}">@error('highlights.'.$index.'.value_es')<span class="field-error">{{ $message }}</span>@enderror</label>
-                                <label>Valor en inglés<input type="text" name="highlights[{{ $index }}][value_en]" value="{{ $item['value_en'] ?? '' }}">@error('highlights.'.$index.'.value_en')<span class="field-error">{{ $message }}</span>@enderror</label>
+
+                <div class="language-grid">
+                    @foreach (['es' => 'Español', 'en' => 'Inglés'] as $locale => $label)
+                        <div class="language-card">
+                            <h3>{{ $label }}</h3>
+                            <div class="field-grid">
+                                <input type="hidden" name="main[{{ $locale }}][title]" value="{{ old('main.'.$locale.'.title', $main['title_'.$locale]) }}">
+                                <input type="hidden" name="main[{{ $locale }}][tag]" value="{{ old('main.'.$locale.'.tag', $main['tag_'.$locale]) }}">
+                                <label>Título del bloque de resumen<input type="text" name="main[{{ $locale }}][overview_title]" value="{{ old('main.'.$locale.'.overview_title', $main['overview_title_'.$locale]) }}">@error('main.'.$locale.'.overview_title')<span class="field-error">{{ $message }}</span>@enderror</label>
+                                <label>Descripción principal<textarea name="main[{{ $locale }}][summary]">{{ old('main.'.$locale.'.summary', $main['summary_'.$locale]) }}</textarea>@error('main.'.$locale.'.summary')<span class="field-error">{{ $message }}</span>@enderror</label>
+                                <label>
+                                    Condiciones
+                                    <div class="toolbar" aria-label="Herramientas de condiciones">
+                                        <button class="tool-btn" type="button" data-prefix-line="• ">Viñeta</button>
+                                        <button class="tool-btn" type="button" data-clear-prefixes>Limpiar viñetas</button>
+                                    </div>
+                                    <textarea name="main[{{ $locale }}][conditions]">{{ old('main.'.$locale.'.conditions', $main['conditions_'.$locale]) }}</textarea>
+                                    <span class="hint">Escribe una condición por línea.</span>
+                                    @error('main.'.$locale.'.conditions')<span class="field-error">{{ $message }}</span>@enderror
+                                </label>
                             </div>
-                        </article>
+                        </div>
                     @endforeach
                 </div>
-                <button class="btn btn-add" type="button" data-add-highlight>Agregar dato clave</button>
             </section>
 
             <section class="panel">
                 <div class="panel-header">
-                    <h2>Enlace oficial</h2>
-                    <p class="muted">Se muestra como tarjeta de enlace oficial. Puedes usar una URL o subir un PDF de hasta 20 MB.</p>
+                    <h2>Panel lateral</h2>
+                    <p class="muted">En la página pública, estos bloques aparecen al lado del resumen: datos clave y enlace oficial.</p>
                 </div>
-                <div class="two-grid">
-                    <label>Texto del enlace en español<input type="text" name="reference[label_es]" value="{{ old('reference.label_es', $detail['reference']['label_es'] ?? '') }}">@error('reference.label_es')<span class="field-error">{{ $message }}</span>@enderror</label>
-                    <label>Texto del enlace en inglés<input type="text" name="reference[label_en]" value="{{ old('reference.label_en', $detail['reference']['label_en'] ?? '') }}">@error('reference.label_en')<span class="field-error">{{ $message }}</span>@enderror</label>
+
+                <div class="subsection">
+                    <div>
+                        <h3>Datos clave</h3>
+                        <p class="muted">Aparecen como información rápida del programa.</p>
+                    </div>
+                    <div class="item-list" id="highlights-list">
+                        @foreach (old('highlights', $detail['highlights'] ?? []) as $index => $item)
+                            <article class="item-card" data-highlight-card>
+                                <div class="item-header"><h3>Dato {{ $index + 1 }}</h3><button class="btn btn-remove" type="button" data-remove-item>Quitar</button></div>
+                                <div class="two-grid">
+                                    <label>Etiqueta en español<input type="text" name="highlights[{{ $index }}][label_es]" value="{{ $item['label_es'] ?? '' }}">@error('highlights.'.$index.'.label_es')<span class="field-error">{{ $message }}</span>@enderror</label>
+                                    <label>Etiqueta en inglés<input type="text" name="highlights[{{ $index }}][label_en]" value="{{ $item['label_en'] ?? '' }}">@error('highlights.'.$index.'.label_en')<span class="field-error">{{ $message }}</span>@enderror</label>
+                                    <label>Valor en español<input type="text" name="highlights[{{ $index }}][value_es]" value="{{ $item['value_es'] ?? '' }}">@error('highlights.'.$index.'.value_es')<span class="field-error">{{ $message }}</span>@enderror</label>
+                                    <label>Valor en inglés<input type="text" name="highlights[{{ $index }}][value_en]" value="{{ $item['value_en'] ?? '' }}">@error('highlights.'.$index.'.value_en')<span class="field-error">{{ $message }}</span>@enderror</label>
+                                </div>
+                            </article>
+                        @endforeach
+                    </div>
+                    <button class="btn btn-add" type="button" data-add-highlight>Agregar dato clave</button>
                 </div>
-                <label>URL actual o nueva<input type="text" name="reference[href]" value="{{ old('reference.href', $detail['reference']['href'] ?? '') }}">@error('reference.href')<span class="field-error">{{ $message }}</span>@enderror</label>
-                <input type="hidden" name="reference[existing_href]" value="{{ $detail['reference']['existing_href'] ?? '' }}">
-                <input type="hidden" name="reference[existing_media_asset_id]" value="{{ $detail['reference']['existing_media_asset_id'] ?? '' }}">
-                <label>Subir PDF opcional<input type="file" name="reference[pdf]" accept="application/pdf">@error('reference.pdf')<span class="field-error">{{ $message }}</span>@enderror</label>
+
+                <div class="subsection">
+                    <div>
+                        <h3>Enlace oficial</h3>
+                        <p class="muted">Se muestra como tarjeta de enlace oficial. Puedes usar una URL o subir un PDF de hasta 20 MB.</p>
+                    </div>
+                    <div class="two-grid">
+                        <label>Texto del enlace en español<input type="text" name="reference[label_es]" value="{{ old('reference.label_es', $detail['reference']['label_es'] ?? '') }}">@error('reference.label_es')<span class="field-error">{{ $message }}</span>@enderror</label>
+                        <label>Texto del enlace en inglés<input type="text" name="reference[label_en]" value="{{ old('reference.label_en', $detail['reference']['label_en'] ?? '') }}">@error('reference.label_en')<span class="field-error">{{ $message }}</span>@enderror</label>
+                    </div>
+                    <label>URL actual o nueva<input type="text" name="reference[href]" value="{{ old('reference.href', $detail['reference']['href'] ?? '') }}">@error('reference.href')<span class="field-error">{{ $message }}</span>@enderror</label>
+                    <input type="hidden" name="reference[existing_href]" value="{{ $detail['reference']['existing_href'] ?? '' }}">
+                    <input type="hidden" name="reference[existing_media_asset_id]" value="{{ $detail['reference']['existing_media_asset_id'] ?? '' }}">
+                    <label>Subir PDF opcional<input type="file" name="reference[pdf]" accept="application/pdf">@error('reference.pdf')<span class="field-error">{{ $message }}</span>@enderror</label>
+                </div>
             </section>
 
             <section class="panel">
@@ -138,6 +182,14 @@
                 <div class="panel-header">
                     <h2>Convocatorias y documentos</h2>
                     <p class="muted">Puedes agregar convocatorias, beneficios, documentos, fechas, notas y varios enlaces o PDFs.</p>
+                </div>
+                <div class="language-grid">
+                    @foreach (['es' => 'Español', 'en' => 'Inglés'] as $locale => $label)
+                        <div class="language-card">
+                            <h3>{{ $label }}</h3>
+                            <label>Título de la sección<input type="text" name="main[{{ $locale }}][calls_title]" value="{{ old('main.'.$locale.'.calls_title', $main['calls_title_'.$locale]) }}">@error('main.'.$locale.'.calls_title')<span class="field-error">{{ $message }}</span>@enderror</label>
+                        </div>
+                    @endforeach
                 </div>
                 <div class="item-list" id="calls-list">
                     @foreach (old('calls', $detail['calls'] ?? []) as $index => $call)
@@ -253,6 +305,17 @@
             if (event.target.matches('[data-add-link]')) addLink(event.target.closest('[data-call-card]'));
             if (event.target.matches('[data-remove-link]')) event.target.closest('[data-link-card]').remove();
             if (event.target.matches('[data-editor-action]')) applyEditorAction(event.target);
+            if (event.target.matches('[data-prefix-line]')) {
+                const textarea = event.target.closest('label').querySelector('textarea');
+                const lines = textarea.value.split('\n').filter((line) => line.trim().length > 0);
+                textarea.value = lines.length ? lines.map((line) => line.trim().match(/^[•*-]/) ? line.trim() : `${event.target.dataset.prefixLine}${line.trim()}`).join('\n') : event.target.dataset.prefixLine;
+                textarea.focus();
+            }
+            if (event.target.matches('[data-clear-prefixes]')) {
+                const textarea = event.target.closest('label').querySelector('textarea');
+                textarea.value = textarea.value.split('\n').map((line) => line.replace(/^[\s•*-]+/, '')).join('\n');
+                textarea.focus();
+            }
         });
     </script>
 </body>

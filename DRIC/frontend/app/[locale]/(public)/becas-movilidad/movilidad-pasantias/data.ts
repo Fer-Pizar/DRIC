@@ -18,6 +18,8 @@ export type Program = {
     label: string;
     href: string;
   };
+  overviewTitle?: string;
+  callsTitle?: string;
   calls?: Array<{
     title: string;
     description: string;

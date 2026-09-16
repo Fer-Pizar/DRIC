@@ -23,6 +23,8 @@
         .btn-add { background: #2563eb; color: #fff; }
         .btn-generate { background: #0f766e; color: #fff; }
         .btn-remove { background: #fff1f2; color: var(--red-dark); }
+        .btn-undo { align-items: center; background: #eef3fb; color: var(--blue); font-size: 22px; font-weight: 900; line-height: 1; min-width: 44px; text-shadow: 0 0 0 currentColor, .35px 0 0 currentColor, 0 .35px 0 currentColor; }
+        .btn-undo:disabled { cursor: not-allowed; opacity: .42; }
         .alert { border-radius: 14px; margin-bottom: 18px; padding: 14px 16px; }
         .alert-success { background: #e8f8ee; border: 1px solid #bde8c9; color: #176534; }
         .alert-error { background: #fff1f2; border: 1px solid #b91c1c; color: var(--red-dark); font-weight: 800; }
@@ -42,6 +44,7 @@
         .checkline input { height: 17px; width: 17px; }
         .hint { color: var(--muted); font-size: 12px; font-weight: 500; line-height: 1.45; }
         .field-error { color: var(--red-dark); font-size: 12px; font-weight: 800; line-height: 1.45; }
+        .undo-placeholder { align-items: center; background: #fff; border: 1px dashed #b8c2d2; border-radius: 18px; color: var(--muted); display: flex; gap: 12px; justify-content: space-between; padding: 18px; }
         .sticky-actions { align-items: center; background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 16px; bottom: 18px; box-shadow: 0 18px 45px rgba(15,23,42,.12); display: flex; justify-content: space-between; padding: 14px; position: sticky; }
         @media (max-width: 820px) { .topbar, .sticky-actions, .certificate-header { align-items: stretch; flex-direction: column; } .language-grid, .certificate-grid, .code-row { grid-template-columns: 1fr; } }
     </style>
@@ -74,8 +77,11 @@
 
                 <div class="language-grid">
                     @foreach (['es' => 'Español', 'en' => 'Inglés'] as $locale => $label)
-                        <div class="language-card">
-                            <h3>{{ $label }}</h3>
+                        <div class="language-card" data-undo-scope>
+                            <div class="certificate-header">
+                                <h3>{{ $label }}</h3>
+                                <button class="btn btn-undo" type="button" data-undo-card disabled title="Deshacer último cambio" aria-label="Deshacer último cambio">↶</button>
+                            </div>
                             <div class="field-grid">
                                 <label>
                                     Texto superior
@@ -108,7 +114,7 @@
 
                 <div class="certificates-list" id="certificates-list">
                     @forelse (old('certificates', $certificates) as $index => $certificate)
-                        <article class="certificate-card" data-certificate-card>
+                        <article class="certificate-card" data-certificate-card data-undo-scope>
                             <div class="certificate-header">
                                 <div>
                                     <h3>Persona {{ $index + 1 }}</h3>
@@ -119,6 +125,7 @@
                                         <input type="checkbox" name="certificates[{{ $index }}][is_active]" value="1" @checked((bool) ($certificate['is_active'] ?? true))>
                                         Activo
                                     </label>
+                                    <button class="btn btn-undo" type="button" data-undo-card disabled title="Deshacer último cambio" aria-label="Deshacer último cambio">↶</button>
                                     <button class="btn btn-remove" type="button" data-remove-certificate>Quitar</button>
                                 </div>
                             </div>
@@ -193,7 +200,7 @@
         </form>
 
         <template id="certificate-template">
-            <article class="certificate-card" data-certificate-card>
+            <article class="certificate-card" data-certificate-card data-undo-scope>
                 <div class="certificate-header">
                     <div>
                         <h3>Nueva persona</h3>
@@ -204,6 +211,7 @@
                             <input type="checkbox" name="__NAME__[is_active]" value="1" checked>
                             Activo
                         </label>
+                        <button class="btn btn-undo" type="button" data-undo-card disabled title="Deshacer último cambio" aria-label="Deshacer último cambio">↶</button>
                         <button class="btn btn-remove" type="button" data-remove-certificate>Quitar</button>
                     </div>
                 </div>
@@ -257,15 +265,141 @@
         const template = document.getElementById("certificate-template");
         const addButton = document.getElementById("add-certificate");
         let nextIndex = {{ count(old('certificates', $certificates)) }};
+        const cardHistory = new WeakMap();
+        const fieldStartSnapshots = new WeakMap();
+
+        function editableFields(card) {
+            return Array.from(card.querySelectorAll("input, textarea"));
+        }
+
+        function snapshotCard(card) {
+            return editableFields(card).map((field) => ({
+                name: field.name,
+                type: field.type,
+                value: field.value,
+                checked: field.checked,
+            }));
+        }
+
+        function restoreSnapshot(card, snapshot) {
+            snapshot.forEach((item) => {
+                const field = editableFields(card).find((candidate) => candidate.name === item.name);
+                if (!field) return;
+
+                if (field.type === "checkbox") {
+                    field.checked = item.checked;
+                    return;
+                }
+
+                field.value = item.value;
+            });
+        }
+
+        function historyFor(card) {
+            if (!cardHistory.has(card)) {
+                cardHistory.set(card, []);
+            }
+
+            return cardHistory.get(card);
+        }
+
+        function setUndoState(card) {
+            const undoButton = card.querySelector("[data-undo-card]");
+            if (!undoButton) return;
+
+            undoButton.disabled = historyFor(card).length === 0;
+        }
+
+        function pushSnapshot(card, snapshot = snapshotCard(card)) {
+            const history = historyFor(card);
+            const serialized = JSON.stringify(snapshot);
+            const last = history.length ? JSON.stringify(history[history.length - 1]) : null;
+
+            if (serialized !== last) {
+                history.push(snapshot);
+            }
+
+            if (history.length > 20) {
+                history.shift();
+            }
+
+            setUndoState(card);
+        }
+
+        function undoCard(card) {
+            const history = historyFor(card);
+            const snapshot = history.pop();
+
+            if (!snapshot) return;
+
+            restoreSnapshot(card, snapshot);
+            editableFields(card).forEach((field) => fieldStartSnapshots.delete(field));
+            setUndoState(card);
+        }
+
+        function markFieldStart(field) {
+            const scope = field.closest("[data-undo-scope]");
+            if (!scope || fieldStartSnapshots.has(field)) return;
+
+            fieldStartSnapshots.set(field, snapshotCard(scope));
+        }
+
+        function rememberFieldChange(field) {
+            const scope = field.closest("[data-undo-scope]");
+            const snapshot = fieldStartSnapshots.get(field);
+
+            if (!scope || !snapshot) return;
+
+            pushSnapshot(scope, snapshot);
+            fieldStartSnapshots.delete(field);
+        }
+
+        function removeCardWithUndo(card) {
+            const placeholder = document.createElement("div");
+            placeholder.className = "undo-placeholder";
+            placeholder.innerHTML = `
+                <span>Registro quitado. Puedes deshacer antes de guardar.</span>
+                <button class="btn btn-undo" type="button">↶ Deshacer</button>
+            `;
+
+            editableFields(card).forEach((field) => {
+                field.disabled = true;
+            });
+
+            card.hidden = true;
+            card.after(placeholder);
+
+            placeholder.querySelector("button").addEventListener("click", () => {
+                placeholder.remove();
+                card.hidden = false;
+                editableFields(card).forEach((field) => {
+                    field.disabled = false;
+                });
+            });
+        }
+
+        function bindUndoScope(scope) {
+            setUndoState(scope);
+            scope.querySelector("[data-undo-card]").addEventListener("click", () => undoCard(scope));
+            editableFields(scope).forEach((field) => {
+                if (field.type === "hidden") return;
+
+                field.addEventListener("focusin", () => markFieldStart(field));
+                field.addEventListener("input", () => rememberFieldChange(field));
+                field.addEventListener("change", () => rememberFieldChange(field));
+            });
+        }
 
         function bindCard(card) {
-            card.querySelector("[data-remove-certificate]").addEventListener("click", () => card.remove());
+            bindUndoScope(card);
+            card.querySelector("[data-remove-certificate]").addEventListener("click", () => removeCardWithUndo(card));
             card.querySelector("[data-code-input]").addEventListener("input", (event) => {
                 event.target.value = event.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 7);
             });
             card.querySelector("[data-generate-code]").addEventListener("click", async () => {
                 const input = card.querySelector("[data-code-input]");
                 const button = card.querySelector("[data-generate-code]");
+                pushSnapshot(card);
                 button.disabled = true;
                 button.textContent = "Generando...";
 
@@ -282,6 +416,7 @@
             });
         }
 
+        document.querySelectorAll("[data-undo-scope]:not([data-certificate-card])").forEach(bindUndoScope);
         document.querySelectorAll("[data-certificate-card]").forEach(bindCard);
 
         addButton.addEventListener("click", () => {

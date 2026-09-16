@@ -18,6 +18,9 @@ type Props = {
   }>;
 };
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 const copy = {
   es: {
     back: "Volver a noticias",
@@ -89,11 +92,11 @@ export default async function NewsArticlePage({ params }: Props) {
               </span>
             </div>
 
-            <h1 className="dric-news-article-title mx-auto max-w-5xl text-balance text-5xl font-semibold uppercase leading-[0.95] tracking-[-0.05em] text-white md:text-7xl">
+            <h1 className="dric-news-article-title mx-auto max-w-5xl text-balance text-[2rem] font-semibold uppercase leading-[1.08] tracking-normal text-white [overflow-wrap:anywhere] sm:text-5xl sm:leading-[0.98] sm:tracking-[-0.04em] md:text-7xl md:leading-[0.95] md:tracking-[-0.05em]">
               {article.title[language]}
             </h1>
 
-            <p className="mx-auto mt-7 max-w-3xl text-xl leading-9 text-white/68 md:text-2xl">
+            <p className="mx-auto mt-5 max-w-3xl text-base leading-7 text-white/68 sm:mt-7 sm:text-xl sm:leading-9 md:text-2xl">
               {(article.deck ?? article.excerpt)[language]}
             </p>
           </header>
@@ -102,16 +105,16 @@ export default async function NewsArticlePage({ params }: Props) {
 
           <div className="dric-news-article-body mx-auto mt-12 max-w-3xl">
             {article.detailTitle ? (
-              <h2 className="dric-news-article-drop-title text-4xl font-semibold leading-tight tracking-[-0.03em] text-white md:text-5xl">
+              <h2 className="dric-news-article-drop-title text-[1.85rem] font-semibold leading-[1.14] tracking-[-0.015em] text-white sm:text-4xl sm:leading-tight sm:tracking-[-0.03em] md:text-5xl">
                 {article.detailTitle[language]}
               </h2>
             ) : !article.bodyHtml ? (
               body?.heading ? (
-                <h2 className="dric-news-article-drop-title text-4xl font-semibold leading-tight tracking-[-0.03em] text-white md:text-5xl">
+                <h2 className="dric-news-article-drop-title text-[1.85rem] font-semibold leading-[1.14] tracking-[-0.015em] text-white sm:text-4xl sm:leading-tight sm:tracking-[-0.03em] md:text-5xl">
                   {body.heading[language]}
                 </h2>
               ) : (
-                <h2 className="dric-news-article-drop-title text-4xl font-semibold leading-tight tracking-[-0.03em] text-white md:text-5xl">
+                <h2 className="dric-news-article-drop-title text-[1.85rem] font-semibold leading-[1.14] tracking-[-0.015em] text-white sm:text-4xl sm:leading-tight sm:tracking-[-0.03em] md:text-5xl">
                   {t.pendingTitle}
                 </h2>
               )
@@ -125,14 +128,14 @@ export default async function NewsArticlePage({ params }: Props) {
             ) : (
               (body?.paragraphs ?? [article.excerpt, { es: t.pendingBody, en: t.pendingBody }]).map((paragraph, index) => (
                 <div key={`${paragraph.es}-${index}`}>
-                  <p className="dric-news-dropcap mt-7 text-xl leading-10 text-white/78">
+                  <p className="dric-news-dropcap mt-5 text-base leading-8 text-white/78 sm:mt-7 sm:text-xl sm:leading-10">
                     {paragraph[language]}
                   </p>
 
                   {index === 2 && body?.bullets?.length ? (
                     <ul className="mt-7 space-y-5 border-y border-white/12 py-7">
                       {body.bullets.map((bullet) => (
-                        <li key={bullet.es} className="flex gap-4 text-lg leading-9 text-white/74">
+                        <li key={bullet.es} className="flex gap-3 text-base leading-8 text-white/74 sm:gap-4 sm:text-lg sm:leading-9">
                           <span className="mt-4 h-2 w-2 shrink-0 rounded-full bg-[#67e8f9]" />
                           <span>{bullet[language]}</span>
                         </li>
@@ -255,8 +258,13 @@ function richBodyHtml(value: string): string {
 }
 
 function markEditorialParagraphs(html: string): string {
+  let paragraphIndex = 0;
+
   return html.replace(/<p(\s[^>]*)?>([\s\S]*?)<\/p>/gi, (match, attrs = "", content = "") => {
-    if (!shouldUseDropCap(content)) {
+    const shouldDropCap = paragraphIndex === 0 || shouldUseDropCap(content);
+    paragraphIndex += 1;
+
+    if (!shouldDropCap) {
       return match;
     }
 

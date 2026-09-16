@@ -63,6 +63,7 @@ export default async function MembresiasPage({ params }: Props) {
     infoText: isEnglish
       ? "For more information about institutional records, memberships or participation in international networks, contact the Directorate of International Relations and Agreements."
       : "Para mayor información sobre registros, membresías institucionales o participación en redes internacionales, contactar con la Dirección de Relaciones Internacionales y Convenios.",
+    infoEmail: "dric@umss.edu",
   }, cmsPage);
   const cmsItems = cmsMemberships(cmsPage, isEnglish);
   const membershipItems = hasCmsSection(cmsPage, "memberships.list") ? cmsItems : memberships;
@@ -212,8 +213,8 @@ export default async function MembresiasPage({ params }: Props) {
               {copy.infoText}
             </p>
 
-            <a href="mailto:dric@umss.edu" className="mt-6 inline-flex font-bold text-white underline underline-offset-4">
-              dric@umss.edu
+            <a href={`mailto:${copy.infoEmail}`} className="mt-6 inline-flex font-bold text-white underline underline-offset-4">
+              {copy.infoEmail}
             </a>
           </div>
         </div>
@@ -232,6 +233,7 @@ function mergeMembershipCopy(defaults: {
   visitSite: string;
   infoTitle: string;
   infoText: string;
+  infoEmail: string;
 }, page: CmsPage | null) {
   const hero = section(page, "memberships.hero");
   const list = section(page, "memberships.list");
@@ -245,6 +247,7 @@ function mergeMembershipCopy(defaults: {
     sectionTitle: list?.title || defaults.sectionTitle,
     infoTitle: info?.title || defaults.infoTitle,
     infoText: info?.summary || defaults.infoText,
+    infoEmail: info?.body || defaults.infoEmail,
   };
 }
 

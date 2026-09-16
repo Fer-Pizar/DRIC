@@ -66,6 +66,11 @@
         <form method="POST" action="{{ route('admin.pages.awards-opportunities.update', $page) }}">
             @csrf
             @method('PUT')
+            @php
+                $formOpportunities = collect(old('opportunities', $opportunities))->values();
+                $featuredOpportunities = $formOpportunities->slice(0, 3);
+                $archivedOpportunities = $formOpportunities->slice(3);
+            @endphp
 
             <section class="panel">
                 <div class="panel-header">
@@ -77,7 +82,6 @@
                         <div class="language-card">
                             <h3>{{ $label }}</h3>
                             <div class="field-grid">
-                                <label>Título del menú<input type="text" name="{{ $locale }}[menu_title]" value="{{ old($locale.'.menu_title', $content[$locale]['menu_title']) }}">@error($locale.'.menu_title')<span class="field-error">{{ $message }}</span>@enderror</label>
                                 <label>Etiqueta superior<input type="text" name="{{ $locale }}[eyebrow]" value="{{ old($locale.'.eyebrow', $content[$locale]['eyebrow']) }}">@error($locale.'.eyebrow')<span class="field-error">{{ $message }}</span>@enderror</label>
                                 <label>Título principal<input type="text" name="{{ $locale }}[title]" value="{{ old($locale.'.title', $content[$locale]['title']) }}">@error($locale.'.title')<span class="field-error">{{ $message }}</span>@enderror</label>
                                 <label>Descripción principal<textarea name="{{ $locale }}[intro]">{{ old($locale.'.intro', $content[$locale]['intro']) }}</textarea>@error($locale.'.intro')<span class="field-error">{{ $message }}</span>@enderror</label>
@@ -87,45 +91,59 @@
                 </div>
             </section>
 
-            <section class="panel">
-                <div class="panel-header">
-                    <h2>Oportunidades</h2>
-                    <p class="muted">Cada oportunidad se muestra como tarjeta. Las listas se escriben con una línea por elemento; el sistema conserva las viñetas del diseño público.</p>
-                </div>
-                <div class="item-list" id="opportunities-list">
-                    @foreach (old('opportunities', $opportunities) as $index => $item)
+            @foreach ([
+                'featured' => [
+                    'title' => 'Oportunidades destacadas',
+                    'description' => 'Estas son las primeras tres tarjetas que se muestran destacadas en la vista pública.',
+                    'items' => $featuredOpportunities,
+                    'button' => 'Agregar oportunidad destacada',
+                ],
+                'archive' => [
+                    'title' => 'Archivo y convocatorias difundidas',
+                    'description' => 'Estas tarjetas aparecen después de las destacadas, como archivo de convocatorias difundidas.',
+                    'items' => $archivedOpportunities,
+                    'button' => 'Agregar convocatoria al archivo',
+                ],
+            ] as $groupKey => $group)
+                <section class="panel">
+                    <div class="panel-header">
+                        <h2>{{ $group['title'] }}</h2>
+                        <p class="muted">{{ $group['description'] }} Las listas se escriben con una línea por elemento; el sistema conserva las viñetas del diseño público.</p>
+                    </div>
+                    <div class="item-list" data-opportunities-list="{{ $groupKey }}">
+                    @foreach ($group['items'] as $index => $item)
                         <article class="item-card" data-opportunity-card>
                             <div class="item-header">
-                                <h3>Oportunidad {{ $index + 1 }}</h3>
+                                <h3>Oportunidad</h3>
                                 <div class="item-actions">
                                     <button class="btn btn-remove" type="button" data-remove-item>Quitar</button>
                                 </div>
                             </div>
-                            <input type="hidden" name="opportunities[{{ $index }}][id]" value="{{ $item['id'] ?? '' }}">
+                            <input type="hidden" name="opportunities[0][id]" value="{{ $item['id'] ?? '' }}">
 
                             <div class="language-grid">
                                 @foreach (['es' => 'Español', 'en' => 'Inglés'] as $locale => $label)
                                     <div class="language-card">
                                         <h3>{{ $label }}</h3>
                                         <div class="field-grid">
-                                            <label>Título<input type="text" name="opportunities[{{ $index }}][title_{{ $locale }}]" value="{{ $item['title_'.$locale] ?? '' }}">@error('opportunities.'.$index.'.title_'.$locale)<span class="field-error">{{ $message }}</span>@enderror</label>
-                                            <label>Categoría<input type="text" name="opportunities[{{ $index }}][category_{{ $locale }}]" value="{{ $item['category_'.$locale] ?? '' }}">@error('opportunities.'.$index.'.category_'.$locale)<span class="field-error">{{ $message }}</span>@enderror</label>
-                                            <label>Dirigido a<textarea name="opportunities[{{ $index }}][audience_{{ $locale }}]">{{ $item['audience_'.$locale] ?? '' }}</textarea>@error('opportunities.'.$index.'.audience_'.$locale)<span class="field-error">{{ $message }}</span>@enderror</label>
-                                            <label>Resumen<textarea name="opportunities[{{ $index }}][summary_{{ $locale }}]">{{ $item['summary_'.$locale] ?? '' }}</textarea>@error('opportunities.'.$index.'.summary_'.$locale)<span class="field-error">{{ $message }}</span>@enderror</label>
-                                            <label>Fechas<input type="text" name="opportunities[{{ $index }}][dates_{{ $locale }}]" value="{{ $item['dates_'.$locale] ?? '' }}">@error('opportunities.'.$index.'.dates_'.$locale)<span class="field-error">{{ $message }}</span>@enderror</label>
-                                            <label>Plazo<input type="text" name="opportunities[{{ $index }}][deadline_{{ $locale }}]" value="{{ $item['deadline_'.$locale] ?? '' }}">@error('opportunities.'.$index.'.deadline_'.$locale)<span class="field-error">{{ $message }}</span>@enderror</label>
-                                            <label>Lugar<input type="text" name="opportunities[{{ $index }}][location_{{ $locale }}]" value="{{ $item['location_'.$locale] ?? '' }}">@error('opportunities.'.$index.'.location_'.$locale)<span class="field-error">{{ $message }}</span>@enderror</label>
-                                            <label>Modalidad<input type="text" name="opportunities[{{ $index }}][format_{{ $locale }}]" value="{{ $item['format_'.$locale] ?? '' }}">@error('opportunities.'.$index.'.format_'.$locale)<span class="field-error">{{ $message }}</span>@enderror</label>
-                                            <label>Información clave<textarea class="list-field" name="opportunities[{{ $index }}][details_{{ $locale }}]">{{ $item['details_'.$locale] ?? '' }}</textarea><span class="hint">Una línea por viñeta.</span>@error('opportunities.'.$index.'.details_'.$locale)<span class="field-error">{{ $message }}</span>@enderror</label>
-                                            <label>Beneficios<textarea class="list-field" name="opportunities[{{ $index }}][benefits_{{ $locale }}]">{{ $item['benefits_'.$locale] ?? '' }}</textarea><span class="hint">Una línea por viñeta.</span>@error('opportunities.'.$index.'.benefits_'.$locale)<span class="field-error">{{ $message }}</span>@enderror</label>
-                                            <label>Requisitos<textarea class="list-field" name="opportunities[{{ $index }}][requirements_{{ $locale }}]">{{ $item['requirements_'.$locale] ?? '' }}</textarea><span class="hint">Una línea por viñeta.</span>@error('opportunities.'.$index.'.requirements_'.$locale)<span class="field-error">{{ $message }}</span>@enderror</label>
-                                            <label>Documentos<textarea class="list-field" name="opportunities[{{ $index }}][documents_{{ $locale }}]">{{ $item['documents_'.$locale] ?? '' }}</textarea><span class="hint">Una línea por documento.</span>@error('opportunities.'.$index.'.documents_'.$locale)<span class="field-error">{{ $message }}</span>@enderror</label>
+                                            <label>Título<input type="text" name="opportunities[0][title_{{ $locale }}]" value="{{ $item['title_'.$locale] ?? '' }}">@error('opportunities.'.$index.'.title_'.$locale)<span class="field-error">{{ $message }}</span>@enderror</label>
+                                            <label>Categoría<input type="text" name="opportunities[0][category_{{ $locale }}]" value="{{ $item['category_'.$locale] ?? '' }}">@error('opportunities.'.$index.'.category_'.$locale)<span class="field-error">{{ $message }}</span>@enderror</label>
+                                            <label>Dirigido a<textarea name="opportunities[0][audience_{{ $locale }}]">{{ $item['audience_'.$locale] ?? '' }}</textarea>@error('opportunities.'.$index.'.audience_'.$locale)<span class="field-error">{{ $message }}</span>@enderror</label>
+                                            <label>Resumen<textarea name="opportunities[0][summary_{{ $locale }}]">{{ $item['summary_'.$locale] ?? '' }}</textarea>@error('opportunities.'.$index.'.summary_'.$locale)<span class="field-error">{{ $message }}</span>@enderror</label>
+                                            <label>Fechas<input type="text" name="opportunities[0][dates_{{ $locale }}]" value="{{ $item['dates_'.$locale] ?? '' }}">@error('opportunities.'.$index.'.dates_'.$locale)<span class="field-error">{{ $message }}</span>@enderror</label>
+                                            <label>Plazo<input type="text" name="opportunities[0][deadline_{{ $locale }}]" value="{{ $item['deadline_'.$locale] ?? '' }}">@error('opportunities.'.$index.'.deadline_'.$locale)<span class="field-error">{{ $message }}</span>@enderror</label>
+                                            <label>Lugar<input type="text" name="opportunities[0][location_{{ $locale }}]" value="{{ $item['location_'.$locale] ?? '' }}">@error('opportunities.'.$index.'.location_'.$locale)<span class="field-error">{{ $message }}</span>@enderror</label>
+                                            <label>Modalidad<input type="text" name="opportunities[0][format_{{ $locale }}]" value="{{ $item['format_'.$locale] ?? '' }}">@error('opportunities.'.$index.'.format_'.$locale)<span class="field-error">{{ $message }}</span>@enderror</label>
+                                            <label>Información clave<textarea class="list-field" name="opportunities[0][details_{{ $locale }}]">{{ $item['details_'.$locale] ?? '' }}</textarea><span class="hint">Una línea por viñeta.</span>@error('opportunities.'.$index.'.details_'.$locale)<span class="field-error">{{ $message }}</span>@enderror</label>
+                                            <label>Beneficios<textarea class="list-field" name="opportunities[0][benefits_{{ $locale }}]">{{ $item['benefits_'.$locale] ?? '' }}</textarea><span class="hint">Una línea por viñeta.</span>@error('opportunities.'.$index.'.benefits_'.$locale)<span class="field-error">{{ $message }}</span>@enderror</label>
+                                            <label>Requisitos<textarea class="list-field" name="opportunities[0][requirements_{{ $locale }}]">{{ $item['requirements_'.$locale] ?? '' }}</textarea><span class="hint">Una línea por viñeta.</span>@error('opportunities.'.$index.'.requirements_'.$locale)<span class="field-error">{{ $message }}</span>@enderror</label>
+                                            <label>Documentos<textarea class="list-field" name="opportunities[0][documents_{{ $locale }}]">{{ $item['documents_'.$locale] ?? '' }}</textarea><span class="hint">Una línea por documento.</span>@error('opportunities.'.$index.'.documents_'.$locale)<span class="field-error">{{ $message }}</span>@enderror</label>
                                         </div>
                                     </div>
                                 @endforeach
                             </div>
 
-                            <label>Contacto<input type="text" name="opportunities[{{ $index }}][contact]" value="{{ $item['contact'] ?? '' }}">@error('opportunities.'.$index.'.contact')<span class="field-error">{{ $message }}</span>@enderror</label>
+                            <label>Contacto<input type="text" name="opportunities[0][contact]" value="{{ $item['contact'] ?? '' }}">@error('opportunities.'.$index.'.contact')<span class="field-error">{{ $message }}</span>@enderror</label>
 
                             <div>
                                 <h3>Enlaces</h3>
@@ -134,10 +152,10 @@
                                         <article class="link-card" data-link-card>
                                             <div class="link-actions"><button class="btn btn-remove" type="button" data-remove-link>Quitar enlace</button></div>
                                             <div class="two-grid">
-                                                <label>Texto en español<input type="text" name="opportunities[{{ $index }}][links][{{ $linkIndex }}][label_es]" value="{{ $link['label_es'] ?? '' }}">@error('opportunities.'.$index.'.links.'.$linkIndex.'.label_es')<span class="field-error">{{ $message }}</span>@enderror</label>
-                                                <label>Texto en inglés<input type="text" name="opportunities[{{ $index }}][links][{{ $linkIndex }}][label_en]" value="{{ $link['label_en'] ?? '' }}">@error('opportunities.'.$index.'.links.'.$linkIndex.'.label_en')<span class="field-error">{{ $message }}</span>@enderror</label>
+                                                <label>Texto en español<input type="text" name="opportunities[0][links][{{ $linkIndex }}][label_es]" value="{{ $link['label_es'] ?? '' }}">@error('opportunities.'.$index.'.links.'.$linkIndex.'.label_es')<span class="field-error">{{ $message }}</span>@enderror</label>
+                                                <label>Texto en inglés<input type="text" name="opportunities[0][links][{{ $linkIndex }}][label_en]" value="{{ $link['label_en'] ?? '' }}">@error('opportunities.'.$index.'.links.'.$linkIndex.'.label_en')<span class="field-error">{{ $message }}</span>@enderror</label>
                                             </div>
-                                            <label>URL<input type="text" name="opportunities[{{ $index }}][links][{{ $linkIndex }}][href]" value="{{ $link['href'] ?? '' }}">@error('opportunities.'.$index.'.links.'.$linkIndex.'.href')<span class="field-error">{{ $message }}</span>@enderror</label>
+                                            <label>URL<input type="text" name="opportunities[0][links][{{ $linkIndex }}][href]" value="{{ $link['href'] ?? '' }}">@error('opportunities.'.$index.'.links.'.$linkIndex.'.href')<span class="field-error">{{ $message }}</span>@enderror</label>
                                         </article>
                                     @endforeach
                                 </div>
@@ -145,9 +163,10 @@
                             </div>
                         </article>
                     @endforeach
-                </div>
-                <button class="btn btn-add" type="button" data-add-opportunity>Agregar oportunidad</button>
-            </section>
+                    </div>
+                    <button class="btn btn-add" type="button" data-add-opportunity="{{ $groupKey }}">{{ $group['button'] }}</button>
+                </section>
+            @endforeach
 
             <div class="sticky-actions">
                 <span class="muted">Los cambios se guardan en PostgreSQL y se muestran al recargar la página pública.</span>
@@ -207,8 +226,6 @@
     </template>
 
     <script>
-        const opportunitiesList = document.getElementById('opportunities-list');
-
         function reindexOpportunity(card, index) {
             card.querySelectorAll('[name]').forEach((field) => {
                 field.name = field.name.replace(/opportunities\[\d+\]/, `opportunities[${index}]`);
@@ -216,22 +233,27 @@
         }
 
         function reindexAll() {
-            opportunitiesList.querySelectorAll('[data-opportunity-card]').forEach((card, index) => {
+            const sectionCounts = { featured: 0, archive: 0 };
+            document.querySelectorAll('[data-opportunity-card]').forEach((card, index) => {
                 reindexOpportunity(card, index);
-                card.querySelector('h3').textContent = `Oportunidad ${index + 1}`;
+                const section = card.closest('[data-opportunities-list]')?.dataset.opportunitiesList;
+                sectionCounts[section] = (sectionCounts[section] || 0) + 1;
+                card.querySelector('h3').textContent = `${section === 'featured' ? 'Destacada' : 'Archivo'} ${sectionCounts[section]}`;
             });
         }
 
-        function addOpportunity() {
-            const index = opportunitiesList.querySelectorAll('[data-opportunity-card]').length;
+        function addOpportunity(group) {
+            const list = document.querySelector(`[data-opportunities-list="${group}"]`);
+            const index = document.querySelectorAll('[data-opportunity-card]').length;
             const wrapper = document.createElement('div');
             wrapper.innerHTML = document.getElementById('opportunity-template').innerHTML.replaceAll('__INDEX__', index);
-            opportunitiesList.appendChild(wrapper.firstElementChild);
+            list.appendChild(wrapper.firstElementChild);
+            reindexAll();
         }
 
         function addLink(card) {
             reindexLinks(card);
-            const opportunityIndex = Array.from(opportunitiesList.querySelectorAll('[data-opportunity-card]')).indexOf(card);
+            const opportunityIndex = Array.from(document.querySelectorAll('[data-opportunity-card]')).indexOf(card);
             const list = card.querySelector('[data-links-list]');
             const linkIndex = list.querySelectorAll('[data-link-card]').length;
             const wrapper = document.createElement('div');
@@ -240,7 +262,7 @@
         }
 
         function reindexLinks(card) {
-            const opportunityIndex = Array.from(opportunitiesList.querySelectorAll('[data-opportunity-card]')).indexOf(card);
+            const opportunityIndex = Array.from(document.querySelectorAll('[data-opportunity-card]')).indexOf(card);
             card.querySelectorAll('[data-link-card]').forEach((linkCard, linkIndex) => {
                 linkCard.querySelectorAll('[name]').forEach((field) => {
                     field.name = field.name.replace(/opportunities\[\d+\]\[links\]\[\d+\]/, `opportunities[${opportunityIndex}][links][${linkIndex}]`);
@@ -248,7 +270,10 @@
             });
         }
 
-        document.querySelector('[data-add-opportunity]').addEventListener('click', addOpportunity);
+        reindexAll();
+        document.querySelectorAll('[data-add-opportunity]').forEach((button) => {
+            button.addEventListener('click', () => addOpportunity(button.dataset.addOpportunity));
+        });
         document.addEventListener('click', (event) => {
             if (event.target.matches('[data-remove-item]')) {
                 event.target.closest('[data-opportunity-card]').remove();

@@ -145,6 +145,7 @@ class MobilityPasantiasContentController extends Controller
     {
         $this->authorizeBlockAccess($block);
 
+        $main = $this->validatedProgramDetail($request);
         $validated = Validator::make($request->all(), $this->detailRules(), $this->detailMessages())->validate();
         $highlights = $this->validatedHighlights($request);
         $sections = $this->validatedDetailSections($request);
@@ -152,15 +153,40 @@ class MobilityPasantiasContentController extends Controller
 
         $data = $block->data ?? [];
         $reference = $this->referenceData($request, $validated, $data['reference'] ?? null);
-        $hasCustomDetail = $highlights !== [] || $sections !== [] || $calls !== [] || $reference !== null;
-
-        $data['detail_edited'] = $hasCustomDetail;
+        $data['detail_edited'] = true;
+        $data['tag'] = $main['es']['tag'];
+        $data['tag_en'] = $main['en']['tag'];
+        $data['conditions_es'] = $main['es']['conditions'];
+        $data['conditions_en'] = $main['en']['conditions'];
+        $data['overview_title'] = [
+            'es' => $main['es']['overview_title'],
+            'en' => $main['en']['overview_title'],
+        ];
+        $data['calls_title'] = [
+            'es' => $main['es']['calls_title'],
+            'en' => $main['en']['calls_title'],
+        ];
         $data['highlights'] = $highlights;
         $data['sections'] = $sections;
         $data['reference'] = $reference;
         $data['calls'] = $calls;
 
         $block->forceFill(['data' => $data])->save();
+
+        $languages = Language::query()->whereIn('code', ['es', 'en'])->get()->keyBy('code');
+
+        foreach (['es', 'en'] as $locale) {
+            ContentBlockTranslation::updateOrCreate(
+                ['content_block_id' => $block->id, 'language_id' => $languages[$locale]->id],
+                [
+                    'title' => $main[$locale]['title'],
+                    'subtitle' => $main[$locale]['tag'],
+                    'summary' => $main[$locale]['summary'],
+                    'body' => null,
+                    'cta_label' => null,
+                ]
+            );
+        }
 
         return redirect()
             ->route('admin.mobility-programs.detail.edit', $block)
@@ -298,6 +324,62 @@ class MobilityPasantiasContentController extends Controller
                 'value' => $this->localized(trim($row['value_es']), trim($row['value_en'] ?? '')),
             ])
             ->all();
+    }
+
+    private function validatedProgramDetail(Request $request): array
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'main.es.title' => ['required', 'string', 'max:220'],
+                'main.en.title' => ['nullable', 'string', 'max:220'],
+                'main.es.tag' => ['required', 'string', 'max:120'],
+                'main.en.tag' => ['nullable', 'string', 'max:120'],
+                'main.es.summary' => ['required', 'string', 'max:1200'],
+                'main.en.summary' => ['nullable', 'string', 'max:1200'],
+                'main.es.conditions' => ['nullable', 'string', 'max:6000'],
+                'main.en.conditions' => ['nullable', 'string', 'max:6000'],
+                'main.es.overview_title' => ['required', 'string', 'max:180'],
+                'main.en.overview_title' => ['nullable', 'string', 'max:180'],
+                'main.es.calls_title' => ['required', 'string', 'max:180'],
+                'main.en.calls_title' => ['nullable', 'string', 'max:180'],
+            ],
+            [
+                'main.es.title.required' => 'Escribe el título principal del programa.',
+                'main.es.tag.required' => 'Escribe la etiqueta del programa.',
+                'main.es.summary.required' => 'Escribe la descripción principal.',
+                'main.es.overview_title.required' => 'Escribe el título del resumen.',
+                'main.es.calls_title.required' => 'Escribe el título de convocatorias.',
+                'main.*.max' => 'Este campo supera el tamaño permitido.',
+            ]
+        );
+
+        $validated = $validator->validate()['main'];
+        $titleEs = trim($validated['es']['title']);
+        $tagEs = trim($validated['es']['tag']);
+        $summaryEs = trim($validated['es']['summary']);
+        $conditionsEs = $this->linesToList($validated['es']['conditions'] ?? '');
+        $overviewTitleEs = trim($validated['es']['overview_title']);
+        $callsTitleEs = trim($validated['es']['calls_title']);
+
+        return [
+            'es' => [
+                'title' => $titleEs,
+                'tag' => $tagEs,
+                'summary' => $summaryEs,
+                'conditions' => $conditionsEs,
+                'overview_title' => $overviewTitleEs,
+                'calls_title' => $callsTitleEs,
+            ],
+            'en' => [
+                'title' => trim($validated['en']['title'] ?? '') ?: $titleEs,
+                'tag' => trim($validated['en']['tag'] ?? '') ?: $tagEs,
+                'summary' => trim($validated['en']['summary'] ?? '') ?: $summaryEs,
+                'conditions' => $this->linesToList($validated['en']['conditions'] ?? '') ?: $conditionsEs,
+                'overview_title' => trim($validated['en']['overview_title'] ?? '') ?: $overviewTitleEs,
+                'calls_title' => trim($validated['en']['calls_title'] ?? '') ?: $callsTitleEs,
+            ],
+        ];
     }
 
     private function validatedDetailSections(Request $request): array
@@ -486,6 +568,20 @@ class MobilityPasantiasContentController extends Controller
         $reference = $this->referenceForm($source['reference'] ?? null);
 
         return [
+            'main' => [
+                'title_es' => $block->translations->firstWhere('language.code', 'es')?->title ?? '',
+                'title_en' => $block->translations->firstWhere('language.code', 'en')?->title ?? '',
+                'tag_es' => $block->translations->firstWhere('language.code', 'es')?->subtitle ?? ($data['tag'] ?? ''),
+                'tag_en' => $block->translations->firstWhere('language.code', 'en')?->subtitle ?? ($data['tag_en'] ?? ''),
+                'summary_es' => $block->translations->firstWhere('language.code', 'es')?->summary ?? '',
+                'summary_en' => $block->translations->firstWhere('language.code', 'en')?->summary ?? '',
+                'conditions_es' => implode("\n", $data['conditions_es'] ?? $data['conditions'] ?? []),
+                'conditions_en' => implode("\n", $data['conditions_en'] ?? $data['conditions'] ?? []),
+                'overview_title_es' => data_get($data, 'overview_title.es', 'Resumen del programa'),
+                'overview_title_en' => data_get($data, 'overview_title.en', 'Program overview'),
+                'calls_title_es' => data_get($data, 'calls_title.es', 'Convocatorias vigentes y fenecidas'),
+                'calls_title_en' => data_get($data, 'calls_title.en', 'Current and past calls'),
+            ],
             'highlights' => collect($source['highlights'] ?? [])->map(fn ($item) => [
                 'label_es' => data_get($item, 'label.es', ''),
                 'label_en' => data_get($item, 'label.en', data_get($item, 'label.es', '')),

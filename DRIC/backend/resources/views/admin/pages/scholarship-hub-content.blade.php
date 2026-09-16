@@ -34,11 +34,35 @@
         .hint { color: var(--muted); font-size: 12px; font-weight: 500; line-height: 1.45; }
         .field-error { color: var(--red-dark); font-size: 12px; font-weight: 800; line-height: 1.45; }
         .sticky-actions { align-items: center; background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 16px; bottom: 18px; box-shadow: 0 18px 45px rgba(15,23,42,.12); display: flex; justify-content: space-between; padding: 14px; position: sticky; }
-        @media (max-width: 900px) { .topbar, .sticky-actions { align-items: stretch; flex-direction: column; } .language-grid, .two-grid { grid-template-columns: 1fr; } }
+        .card-heading { align-items: flex-start; display: flex; gap: 16px; justify-content: space-between; margin-bottom: 16px; }
+        .card-heading .muted { font-size: 13px; font-weight: 800; margin-top: 4px; }
+        .card-heading .btn { flex-shrink: 0; }
+        @media (max-width: 900px) { .topbar, .sticky-actions, .card-heading { align-items: stretch; flex-direction: column; } .language-grid, .two-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
     <main class="shell">
+        @php
+            $cardEditLinks = [
+                1 => $scholarshipPage ? [
+                    'label' => 'Editar detalle de Becas',
+                    'href' => route('admin.pages.scholarship-becas.edit', $scholarshipPage),
+                ] : null,
+                2 => $mobilityPage ? [
+                    'label' => 'Editar detalle de Movilidad',
+                    'href' => route('admin.pages.mobility-pasantias.edit', $mobilityPage),
+                ] : null,
+                3 => $awardsPage ? [
+                    'label' => 'Editar detalle de Premios-Concursos',
+                    'href' => route('admin.pages.awards-opportunities.edit', $awardsPage),
+                ] : null,
+                4 => $nationalForeignInfoPage ? [
+                    'label' => 'Editar detalle de Información',
+                    'href' => route('admin.pages.national-foreign-info.edit', $nationalForeignInfoPage),
+                ] : null,
+            ];
+        @endphp
+
         <header class="topbar">
             <div>
                 <h1>Becas y Movilidad</h1>
@@ -68,7 +92,6 @@
                         <div class="language-card">
                             <h3>{{ $label }}</h3>
                             <div class="field-grid">
-                                <label>Insignia superior<input type="text" name="{{ $locale }}[badge]" value="{{ old($locale.'.badge', $content[$locale]['badge']) }}">@error($locale.'.badge')<span class="field-error">{{ $message }}</span>@enderror</label>
                                 <label>Título principal<input type="text" name="{{ $locale }}[title]" value="{{ old($locale.'.title', $content[$locale]['title']) }}">@error($locale.'.title')<span class="field-error">{{ $message }}</span>@enderror</label>
                                 <label>Descripción principal<textarea name="{{ $locale }}[intro]">{{ old($locale.'.intro', $content[$locale]['intro']) }}</textarea>@error($locale.'.intro')<span class="field-error">{{ $message }}</span>@enderror</label>
                                 <label>Etiqueta de exploración<input type="text" name="{{ $locale }}[explore_badge]" value="{{ old($locale.'.explore_badge', $content[$locale]['explore_badge']) }}">@error($locale.'.explore_badge')<span class="field-error">{{ $message }}</span>@enderror</label>
@@ -83,24 +106,22 @@
             <section class="panel">
                 <div class="panel-header">
                     <h2>Tarjetas principales</h2>
-                    <p class="muted">Las cuatro tarjetas son fijas. Puedes editar texto, botón y URL de destino.</p>
-                    @if ($scholarshipPage)
-                        <div class="actions" style="margin-top: 14px;">
-                            <a class="btn btn-primary" href="{{ route('admin.pages.scholarship-becas.edit', $scholarshipPage) }}">Editar contenido de Becas</a>
-                            @if ($awardsPage)
-                                <a class="btn btn-primary" href="{{ route('admin.pages.awards-opportunities.edit', $awardsPage) }}">Editar contenido de Convocatorias</a>
-                            @endif
-                            @if ($nationalForeignInfoPage)
-                                <a class="btn btn-primary" href="{{ route('admin.pages.national-foreign-info.edit', $nationalForeignInfoPage) }}">Editar contenido de Información</a>
-                            @endif
-                        </div>
-                    @endif
+                    <p class="muted">El orden sigue la vista pública: Becas, Movilidad, Premios e Información. Cada tarjeta tiene su acceso directo al panel de detalle correspondiente.</p>
                 </div>
 
                 <div class="section-grid">
                     @foreach ($content['cards'] as $index => $card)
                         <article class="item-card">
-                            <h3>{{ $cardLabels[$index] ?? 'Tarjeta '.$index }}</h3>
+                            <div class="card-heading">
+                                <div>
+                                    <h3>{{ $cardLabels[$index] ?? 'Tarjeta '.$index }}</h3>
+                                    <p class="muted">Tarjeta {{ $index }} de Becas y Movilidad</p>
+                                </div>
+
+                                @if ($cardEditLinks[$index] ?? null)
+                                    <a class="btn btn-primary" href="{{ $cardEditLinks[$index]['href'] }}">{{ $cardEditLinks[$index]['label'] }}</a>
+                                @endif
+                            </div>
 
                             <label>
                                 URL de destino

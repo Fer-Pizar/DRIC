@@ -89,7 +89,7 @@ class ReportContentController extends Controller
                     [
                         'title' => $validated[$locale]['archive_title'],
                         'subtitle' => $validated[$locale]['explore_label'],
-                        'summary' => $validated[$locale]['search_placeholder'],
+                        'summary' => $this->defaultSearchPlaceholder($locale),
                         'body' => null,
                     ]
                 );
@@ -128,7 +128,6 @@ class ReportContentController extends Controller
             $rules["{$locale}.archive_description"] = ['required', 'string', 'max:500'];
             $rules["{$locale}.explore_label"] = ['required', 'string', 'max:120'];
             $rules["{$locale}.archive_title"] = ['required', 'string', 'max:160'];
-            $rules["{$locale}.search_placeholder"] = ['required', 'string', 'max:120'];
             $rules["{$locale}.cover_eyebrow"] = ['required', 'string', 'max:80', 'regex:'.self::CLEAN_LABEL_REGEX];
             $rules["{$locale}.cover_title"] = ['required', 'string', 'max:180'];
             $rules["{$locale}.year_label"] = ['required', 'string', 'max:80', 'regex:'.self::CLEAN_LABEL_REGEX];
@@ -242,7 +241,6 @@ class ReportContentController extends Controller
                 'archive_description' => $this->sectionValue($page, 'reports.hero', 'es', 'body', 'Una colección histórica de gestiones institucionales preparada para consulta pública y descarga documental.'),
                 'explore_label' => $this->sectionValue($page, 'reports.archive', 'es', 'subtitle', 'Explorar documentos'),
                 'archive_title' => $this->sectionValue($page, 'reports.archive', 'es', 'title', 'Archivo de informes'),
-                'search_placeholder' => $this->sectionValue($page, 'reports.archive', 'es', 'summary', 'Buscar informe...'),
                 'cover_eyebrow' => is_string($settings['cover_eyebrow_es'] ?? null) ? $settings['cover_eyebrow_es'] : 'Dirección de',
                 'cover_title' => is_string($settings['cover_title_es'] ?? null) ? $settings['cover_title_es'] : 'Relaciones Internacionales y Convenios',
                 'year_label' => is_string($settings['year_label_es'] ?? null) ? $settings['year_label_es'] : 'Gestión',
@@ -256,7 +254,6 @@ class ReportContentController extends Controller
                 'archive_description' => $this->sectionValue($page, 'reports.hero', 'en', 'body', 'A historical collection of institutional terms prepared for public consultation and document downloads.'),
                 'explore_label' => $this->sectionValue($page, 'reports.archive', 'en', 'subtitle', 'Explore documents'),
                 'archive_title' => $this->sectionValue($page, 'reports.archive', 'en', 'title', 'Reports archive'),
-                'search_placeholder' => $this->sectionValue($page, 'reports.archive', 'en', 'summary', 'Search report...'),
                 'cover_eyebrow' => is_string($settings['cover_eyebrow_en'] ?? null) ? $settings['cover_eyebrow_en'] : 'Directorate of',
                 'cover_title' => is_string($settings['cover_title_en'] ?? null) ? $settings['cover_title_en'] : 'International Relations and Agreements',
                 'year_label' => is_string($settings['year_label_en'] ?? null) ? $settings['year_label_en'] : 'Year',
@@ -395,6 +392,11 @@ class ReportContentController extends Controller
     private function sectionValue(Page $page, string $key, string $locale, string $field, string $fallback): string
     {
         return $page->sections->firstWhere('section_key', $key)?->translations->firstWhere('language.code', $locale)?->{$field} ?? $fallback;
+    }
+
+    private function defaultSearchPlaceholder(string $locale): string
+    {
+        return $locale === 'en' ? 'Search report...' : 'Buscar informe...';
     }
 
     private function authorizeReportAccess(Page $page): void

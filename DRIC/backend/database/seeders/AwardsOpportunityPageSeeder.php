@@ -18,10 +18,12 @@ class AwardsOpportunityPageSeeder extends Seeder
     public function run(): void
     {
         $content = AwardsOpportunityStaticContent::all();
+        $parent = Page::query()->where('slug', 'becas-movilidad')->first();
         $page = Page::updateOrCreate(
             ['slug' => 'premios-eventos-cursos-concursos'],
             [
                 'page_type' => 'static',
+                'parent_id' => $parent?->id,
                 'status' => 'published',
                 'published_at' => now(),
                 'sort_order' => 15,

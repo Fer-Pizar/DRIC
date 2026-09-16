@@ -1,3 +1,20 @@
+@php
+    $frontendUrl = rtrim(config('app.frontend_url', env('FRONTEND_URL', 'http://localhost:3000')), '/');
+    $preview = function (?string $path) use ($frontendUrl): string {
+        $path = (string) $path;
+        if ($path === '') {
+            return '';
+        }
+        if (\Illuminate\Support\Str::startsWith($path, ['http://', 'https://'])) {
+            return $path;
+        }
+        if (\Illuminate\Support\Str::startsWith($path, '/storage/')) {
+            return url($path);
+        }
+        return $frontendUrl.$path;
+    };
+@endphp
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -352,7 +369,7 @@
                                 <div class="media-card">
                                     <div class="preview">
                                         @if ($content['card_'.$index.'_image_url'])
-                                            <img src="{{ $content['card_'.$index.'_image_url'] }}" alt="Imagen de la tarjeta {{ $index }}">
+                                            <img src="{{ $preview($content['card_'.$index.'_image_url']) }}" alt="Imagen de la tarjeta {{ $index }}">
                                         @else
                                             <span class="muted">Se usará la imagen actual del sitio hasta subir una nueva.</span>
                                         @endif

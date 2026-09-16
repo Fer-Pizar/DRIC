@@ -72,21 +72,17 @@
             <section class="panel">
                 <div class="panel-header">
                     <h2>Encabezado</h2>
-                    <p class="muted">Estos textos aparecen en la parte superior de la página pública.</p>
+                    <p class="muted">Primera parte de la página pública: etiqueta, título y descripción principal.</p>
                 </div>
                 <div class="language-grid">
                     @foreach (['es' => 'Español', 'en' => 'Inglés'] as $locale => $label)
                         <div class="language-card">
                             <h3>{{ $label }}</h3>
                             <div class="field-grid">
-                                <label>Título del menú<input type="text" name="{{ $locale }}[menu_title]" value="{{ old($locale.'.menu_title', $content[$locale]['menu_title']) }}">@error($locale.'.menu_title')<span class="field-error">{{ $message }}</span>@enderror</label>
+                                <input type="hidden" name="{{ $locale }}[photo_slot]" value="{{ old($locale.'.photo_slot', $content[$locale]['photo_slot']) }}">
                                 <label>Etiqueta superior<input type="text" name="{{ $locale }}[eyebrow]" value="{{ old($locale.'.eyebrow', $content[$locale]['eyebrow']) }}">@error($locale.'.eyebrow')<span class="field-error">{{ $message }}</span>@enderror</label>
                                 <label>Título principal<input type="text" name="{{ $locale }}[title]" value="{{ old($locale.'.title', $content[$locale]['title']) }}">@error($locale.'.title')<span class="field-error">{{ $message }}</span>@enderror</label>
                                 <label>Descripción principal<textarea name="{{ $locale }}[intro]">{{ old($locale.'.intro', $content[$locale]['intro']) }}</textarea>@error($locale.'.intro')<span class="field-error">{{ $message }}</span>@enderror</label>
-                                <label>Título de información clave<input type="text" name="{{ $locale }}[key_info]" value="{{ old($locale.'.key_info', $content[$locale]['key_info']) }}">@error($locale.'.key_info')<span class="field-error">{{ $message }}</span>@enderror</label>
-                                <label>Título de recursos<input type="text" name="{{ $locale }}[resources]" value="{{ old($locale.'.resources', $content[$locale]['resources']) }}">@error($locale.'.resources')<span class="field-error">{{ $message }}</span>@enderror</label>
-                                <label>Texto de abrir enlace<input type="text" name="{{ $locale }}[open]" value="{{ old($locale.'.open', $content[$locale]['open']) }}">@error($locale.'.open')<span class="field-error">{{ $message }}</span>@enderror</label>
-                                <label>Texto reservado de imagen<input type="text" name="{{ $locale }}[photo_slot]" value="{{ old($locale.'.photo_slot', $content[$locale]['photo_slot']) }}">@error($locale.'.photo_slot')<span class="field-error">{{ $message }}</span>@enderror</label>
                             </div>
                         </div>
                     @endforeach
@@ -95,8 +91,27 @@
 
             <section class="panel">
                 <div class="panel-header">
-                    <h2>Tarjetas de información</h2>
-                    <p class="muted">Cada tarjeta conserva el formato visual. Las viñetas se escriben con una línea por punto.</p>
+                    <h2>Información clave y recursos</h2>
+                    <p class="muted">Textos compartidos que ordenan las tarjetas y sus enlaces en la página pública.</p>
+                </div>
+                <div class="language-grid">
+                    @foreach (['es' => 'Español', 'en' => 'Inglés'] as $locale => $label)
+                        <div class="language-card">
+                            <h3>{{ $label }}</h3>
+                            <div class="field-grid">
+                                <label>Título de información clave<input type="text" name="{{ $locale }}[key_info]" value="{{ old($locale.'.key_info', $content[$locale]['key_info']) }}">@error($locale.'.key_info')<span class="field-error">{{ $message }}</span>@enderror</label>
+                                <label>Título de recursos<input type="text" name="{{ $locale }}[resources]" value="{{ old($locale.'.resources', $content[$locale]['resources']) }}">@error($locale.'.resources')<span class="field-error">{{ $message }}</span>@enderror</label>
+                                <label>Texto de abrir enlace<input type="text" name="{{ $locale }}[open]" value="{{ old($locale.'.open', $content[$locale]['open']) }}">@error($locale.'.open')<span class="field-error">{{ $message }}</span>@enderror</label>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </section>
+
+            <section class="panel">
+                <div class="panel-header">
+                    <h2>Tarjetas de movilidad</h2>
+                    <p class="muted">Cada tarjeta sigue el orden público: imagen, texto principal, viñetas y recursos.</p>
                 </div>
 
                 <div class="item-list" id="sections-list">
@@ -115,7 +130,7 @@
 
                             <div class="two-grid">
                                 <div>
-                                    <label>Imagen</label>
+                                    <label>Imagen actual y nueva imagen</label>
                                     @if (! empty($section['image']))
                                         @php
                                             $previewUrl = \Illuminate\Support\Str::startsWith($section['image'], 'http')
@@ -137,10 +152,10 @@
                                     <div class="language-card">
                                         <h3>{{ $label }}</h3>
                                         <div class="field-grid">
+                                            <input type="hidden" name="sections[{{ $index }}][image_alt_{{ $locale }}]" value="{{ $section['image_alt_'.$locale] ?? '' }}">
                                             <label>Etiqueta superior<input type="text" name="sections[{{ $index }}][eyebrow_{{ $locale }}]" value="{{ $section['eyebrow_'.$locale] ?? '' }}">@error('sections.'.$index.'.eyebrow_'.$locale)<span class="field-error">{{ $message }}</span>@enderror</label>
                                             <label>Título<input type="text" name="sections[{{ $index }}][title_{{ $locale }}]" value="{{ $section['title_'.$locale] ?? '' }}">@error('sections.'.$index.'.title_'.$locale)<span class="field-error">{{ $message }}</span>@enderror</label>
                                             <label>Descripción<textarea name="sections[{{ $index }}][summary_{{ $locale }}]">{{ $section['summary_'.$locale] ?? '' }}</textarea>@error('sections.'.$index.'.summary_'.$locale)<span class="field-error">{{ $message }}</span>@enderror</label>
-                                            <label>Texto alternativo de imagen<input type="text" name="sections[{{ $index }}][image_alt_{{ $locale }}]" value="{{ $section['image_alt_'.$locale] ?? '' }}">@error('sections.'.$index.'.image_alt_'.$locale)<span class="field-error">{{ $message }}</span>@enderror</label>
                                             <label>Viñetas<textarea class="list-field" name="sections[{{ $index }}][points_{{ $locale }}]" data-list-field>{{ $section['points_'.$locale] ?? '' }}</textarea><span class="hint">Una línea por viñeta. Puedes escribir con o sin •, el sistema mantiene el diseño público.</span>@error('sections.'.$index.'.points_'.$locale)<span class="field-error">{{ $message }}</span>@enderror</label>
                                         </div>
                                     </div>
@@ -188,17 +203,17 @@
             <label>Imagen<input type="file" name="sections[__INDEX__][image]" accept=".jpg,.jpeg,.png,image/jpeg,image/png"><span class="hint">Solo JPG o PNG. Tamaño máximo: 7 MB.</span></label>
             <div class="language-grid">
                 <div class="language-card"><h3>Español</h3><div class="field-grid">
+                    <input type="hidden" name="sections[__INDEX__][image_alt_es]" value="">
                     <label>Etiqueta superior<input type="text" name="sections[__INDEX__][eyebrow_es]" value=""></label>
                     <label>Título<input type="text" name="sections[__INDEX__][title_es]" value=""></label>
                     <label>Descripción<textarea name="sections[__INDEX__][summary_es]"></textarea></label>
-                    <label>Texto alternativo de imagen<input type="text" name="sections[__INDEX__][image_alt_es]" value=""></label>
                     <label>Viñetas<textarea class="list-field" name="sections[__INDEX__][points_es]" data-list-field></textarea><span class="hint">Una línea por viñeta.</span></label>
                 </div></div>
                 <div class="language-card"><h3>Inglés</h3><div class="field-grid">
+                    <input type="hidden" name="sections[__INDEX__][image_alt_en]" value="">
                     <label>Etiqueta superior<input type="text" name="sections[__INDEX__][eyebrow_en]" value=""></label>
                     <label>Título<input type="text" name="sections[__INDEX__][title_en]" value=""></label>
                     <label>Descripción<textarea name="sections[__INDEX__][summary_en]"></textarea></label>
-                    <label>Texto alternativo de imagen<input type="text" name="sections[__INDEX__][image_alt_en]" value=""></label>
                     <label>Viñetas<textarea class="list-field" name="sections[__INDEX__][points_en]" data-list-field></textarea><span class="hint">Una línea por viñeta.</span></label>
                 </div></div>
             </div>

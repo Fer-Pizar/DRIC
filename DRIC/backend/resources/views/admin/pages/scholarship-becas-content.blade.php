@@ -31,6 +31,7 @@
         .panel-header { border-bottom: 1px solid var(--line); margin-bottom: 20px; padding-bottom: 16px; }
         .language-grid, .two-grid { display: grid; gap: 18px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
         .language-card, .item-card { box-shadow: none; padding: 18px; }
+        .panel > .language-grid + .item-list { margin-top: 18px; }
         .item-card { display: grid; gap: 16px; }
         .item-header { align-items: center; display: flex; gap: 12px; justify-content: space-between; }
         label { display: grid; gap: 7px; font-size: 13px; font-weight: 800; }
@@ -66,8 +67,8 @@
 
             <section class="panel">
                 <div class="panel-header">
-                    <h2>Texto principal</h2>
-                    <p class="muted">Estos textos aparecen en el encabezado y títulos de la página.</p>
+                    <h2>Portada</h2>
+                    <p class="muted">Estos textos aparecen en el encabezado principal de Becas.</p>
                 </div>
 
                 <div class="language-grid">
@@ -75,13 +76,8 @@
                         <div class="language-card">
                             <h3>{{ $label }}</h3>
                             <div class="field-grid">
-                                <label>Insignia superior<input type="text" name="{{ $locale }}[badge]" value="{{ old($locale.'.badge', $content[$locale]['badge']) }}">@error($locale.'.badge')<span class="field-error">{{ $message }}</span>@enderror</label>
                                 <label>Título principal<input type="text" name="{{ $locale }}[title]" value="{{ old($locale.'.title', $content[$locale]['title']) }}">@error($locale.'.title')<span class="field-error">{{ $message }}</span>@enderror</label>
                                 <label>Descripción principal<textarea name="{{ $locale }}[intro]">{{ old($locale.'.intro', $content[$locale]['intro']) }}</textarea>@error($locale.'.intro')<span class="field-error">{{ $message }}</span>@enderror</label>
-                                <label>Etiqueta de países<input type="text" name="{{ $locale }}[countries_badge]" value="{{ old($locale.'.countries_badge', $content[$locale]['countries_badge']) }}">@error($locale.'.countries_badge')<span class="field-error">{{ $message }}</span>@enderror</label>
-                                <label>Título de países<input type="text" name="{{ $locale }}[countries_title]" value="{{ old($locale.'.countries_title', $content[$locale]['countries_title']) }}">@error($locale.'.countries_title')<span class="field-error">{{ $message }}</span>@enderror</label>
-                                <label>Etiqueta de otros canales<input type="text" name="{{ $locale }}[organizations_badge]" value="{{ old($locale.'.organizations_badge', $content[$locale]['organizations_badge']) }}">@error($locale.'.organizations_badge')<span class="field-error">{{ $message }}</span>@enderror</label>
-                                <label>Título de otros canales<input type="text" name="{{ $locale }}[organizations_title]" value="{{ old($locale.'.organizations_title', $content[$locale]['organizations_title']) }}">@error($locale.'.organizations_title')<span class="field-error">{{ $message }}</span>@enderror</label>
                             </div>
                         </div>
                     @endforeach
@@ -89,13 +85,43 @@
             </section>
 
             @foreach ([
-                'countries' => ['title' => 'Países', 'items' => old('countries', $countries), 'button' => 'Agregar país'],
-                'organizations' => ['title' => 'Otros canales', 'items' => old('organizations', $organizations), 'button' => 'Agregar canal'],
+                'countries' => [
+                    'title' => 'Países',
+                    'description' => 'Primero se editan los títulos de la sección y debajo sus tarjetas, tal como aparece en la página pública.',
+                    'items' => old('countries', $countries),
+                    'button' => 'Agregar país',
+                    'badge_field' => 'countries_badge',
+                    'title_field' => 'countries_title',
+                    'badge_label' => 'Etiqueta de países',
+                    'title_label' => 'Título de países',
+                ],
+                'organizations' => [
+                    'title' => 'Otros canales',
+                    'description' => 'Estos datos alimentan el bloque final de programas y organismos.',
+                    'items' => old('organizations', $organizations),
+                    'button' => 'Agregar canal',
+                    'badge_field' => 'organizations_badge',
+                    'title_field' => 'organizations_title',
+                    'badge_label' => 'Etiqueta de otros canales',
+                    'title_label' => 'Título de otros canales',
+                ],
             ] as $groupKey => $group)
                 <section class="panel">
                     <div class="panel-header">
                         <h2>{{ $group['title'] }}</h2>
-                        <p class="muted">Cada tarjeta se guarda en la base de datos y se muestra en la página pública.</p>
+                        <p class="muted">{{ $group['description'] }}</p>
+                    </div>
+
+                    <div class="language-grid">
+                        @foreach (['es' => 'Español', 'en' => 'Inglés'] as $locale => $label)
+                            <div class="language-card">
+                                <h3>{{ $label }}</h3>
+                                <div class="field-grid">
+                                    <label>{{ $group['badge_label'] }}<input type="text" name="{{ $locale }}[{{ $group['badge_field'] }}]" value="{{ old($locale.'.'.$group['badge_field'], $content[$locale][$group['badge_field']]) }}">@error($locale.'.'.$group['badge_field'])<span class="field-error">{{ $message }}</span>@enderror</label>
+                                    <label>{{ $group['title_label'] }}<input type="text" name="{{ $locale }}[{{ $group['title_field'] }}]" value="{{ old($locale.'.'.$group['title_field'], $content[$locale][$group['title_field']]) }}">@error($locale.'.'.$group['title_field'])<span class="field-error">{{ $message }}</span>@enderror</label>
+                                </div>
+                            </div>
+                        @endforeach
                     </div>
 
                     <div class="item-list" id="{{ $groupKey }}-list">
