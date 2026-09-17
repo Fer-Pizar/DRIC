@@ -1,10 +1,16 @@
 import type { Metadata } from "next";
-import { Comfortaa } from "next/font/google";
+import { Comfortaa, Poiret_One } from "next/font/google";
 import "./globals.css";
 
 const comfortaa = Comfortaa({
   variable: "--font-comfortaa",
   subsets: ["latin"],
+});
+
+const poiretOne = Poiret_One({
+  variable: "--font-poiret-one",
+  subsets: ["latin"],
+  weight: "400",
 });
 
 export const metadata: Metadata = {
@@ -19,7 +25,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" suppressHydrationWarning>
-      <body className={`${comfortaa.variable} antialiased`}>
+      <body className={`${comfortaa.variable} ${poiretOne.variable} antialiased`}>
         {children}
       </body>
     </html>

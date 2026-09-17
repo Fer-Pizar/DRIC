@@ -1,6 +1,9 @@
 @import "tailwindcss";
 
 :root {
+  --umss-blue: #003770;
+  --umss-red: #E30613;
+  --umss-white: #FFFFFF;
   --bg: #050816;
   --surface: rgba(255, 255, 255, 0.04);
   --border: rgba(255, 255, 255, 0.10);
@@ -10,6 +13,20 @@
   --violet: #8b5cf6;
 }
 
+@theme {
+  --color-blue-500: #003770;
+  --color-blue-600: #003770;
+  --color-blue-950: #003770;
+  --color-blue-400: #003770;
+  --color-red-50: #FFFFFF;
+  --color-red-200: #E30613;
+  --color-red-300: #E30613;
+  --color-red-400: #E30613;
+  --color-red-500: #E30613;
+  --color-red-600: #E30613;
+  --color-red-700: #E30613;
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -17,7 +34,7 @@ html {
 body {
   background:
     radial-gradient(circle at 30% 20%, rgba(99, 102, 241, 0.28), transparent 30%),
-    radial-gradient(circle at 70% 65%, rgba(34, 211, 238, 0.18), transparent 28%),
+    radial-gradient(circle at 70% 65%, rgba(0, 55, 112, 0.18), transparent 28%),
     linear-gradient(180deg, #050816 0%, #040611 100%);
   color: var(--text);
   font-family: Comfortaa, Helvetica, sans-serif;
@@ -41,7 +58,7 @@ body {
 }
 
 .text-gradient {
-  background: linear-gradient(90deg, #818cf8 0%, #22d3ee 100%);
+  background: linear-gradient(90deg, #003770 0%, #003770 100%);
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
@@ -66,19 +83,4006 @@ body {
 .dric-glow-button {
   border: 1px solid rgba(255, 255, 255, 0.18);
   background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(2, 6, 23, 0.95));
-  box-shadow: 0 0 24px rgba(96, 165, 250, 0.25);
+  box-shadow: 0 0 24px rgba(0, 55, 112, 0.25);
   transition: transform 180ms ease, box-shadow 180ms ease;
 }
 
 .dric-glow-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 0 34px rgba(96, 165, 250, 0.42);
+  box-shadow: 0 0 34px rgba(0, 55, 112, 0.42);
 }
 
 .dric-blur-bg {
   background:
-    radial-gradient(circle at 20% 20%, rgba(37, 99, 235, 0.35), transparent 32%),
+    radial-gradient(circle at 20% 20%, rgba(0, 55, 112, 0.35), transparent 32%),
     radial-gradient(circle at 80% 30%, rgba(127, 29, 29, 0.38), transparent 34%),
     radial-gradient(circle at 50% 90%, rgba(15, 23, 42, 0.9), transparent 45%),
     #020617;
+}
+
+.dric-social-track {
+  --icon-size: 50px;
+  --icon-gap: 180px;
+
+  display: flex;
+  width: max-content;
+  align-items: center;
+  gap: var(--icon-gap);
+  animation: dric-social-marquee 24s linear infinite;
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.dric-social-icon {
+  display: inline-flex;
+  width: var(--icon-size);
+  height: var(--icon-size);
+  flex: 0 0 var(--icon-size);
+  align-items: center;
+  justify-content: center;
+  opacity: 0.82;
+  filter: drop-shadow(0 0 12px rgb(255 255 255 / 0.16));
+  transition: opacity 300ms ease, transform 300ms ease, filter 300ms ease;
+  transform: translateZ(0);
+}
+
+.dric-social-icon:hover {
+  opacity: 1;
+  transform: translateY(-4px) scale(1.08);
+  filter: drop-shadow(0 0 18px rgb(255 255 255 / 0.28));
+}
+
+@keyframes dric-social-marquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(calc(-5 * (var(--icon-size) + var(--icon-gap))));
+  }
+}
+
+.dric-certificate-page {
+  background: #020617;
+  color: #ffffff;
+}
+
+html[data-theme="light"] .dric-certificate-page {
+  background:
+    radial-gradient(circle at 15% 8%, rgba(255, 255, 255, 0.96), transparent 28%),
+    radial-gradient(circle at 82% 12%, rgba(186, 216, 255, 0.72), transparent 32%),
+    radial-gradient(circle at 14% 86%, rgba(255, 205, 224, 0.56), transparent 34%),
+    linear-gradient(135deg, #f9fafb 0%, #e8edf5 46%, #f7f9fc 100%) !important;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: 100vw 100vh;
+  color: #0f172a;
+}
+
+html[data-theme="dark"] .dric-certificate-page {
+  background: #020617;
+  color: #ffffff;
+}
+
+.dric-certificate-glass {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.82);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.56), rgba(255, 255, 255, 0.18)),
+    radial-gradient(circle at 15% 10%, rgba(255, 255, 255, 0.9), transparent 28%),
+    radial-gradient(circle at 85% 12%, rgba(125, 211, 252, 0.22), transparent 34%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.98),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.34),
+    inset 18px 18px 60px rgba(255, 255, 255, 0.16),
+    inset -18px -18px 70px rgba(15, 23, 42, 0.08),
+    0 36px 110px rgba(15, 23, 42, 0.16);
+  backdrop-filter: blur(34px) saturate(180%);
+}
+
+.dric-certificate-glass::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  pointer-events: none;
+  border-radius: inherit;
+  background:
+    linear-gradient(115deg, rgba(255, 255, 255, 0.82) 0%, transparent 24%),
+    linear-gradient(295deg, rgba(255, 255, 255, 0.28) 0%, transparent 36%);
+  opacity: 0.82;
+}
+
+.dric-certificate-glass::after {
+  content: "";
+  position: absolute;
+  top: 8%;
+  left: 6%;
+  width: 42%;
+  height: 18%;
+  pointer-events: none;
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.72), transparent);
+  filter: blur(14px);
+  opacity: 0.48;
+  transform: rotate(-4deg);
+}
+
+.dric-certificate-glass > * {
+  position: relative;
+  z-index: 1;
+}
+
+html[data-theme="dark"] .dric-certificate-glass {
+  border-color: rgba(255, 255, 255, 0.18);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.105), rgba(255, 255, 255, 0.035)),
+    radial-gradient(circle at 18% 12%, rgba(255, 255, 255, 0.16), transparent 28%),
+    radial-gradient(circle at 88% 14%, rgba(0, 55, 112, 0.12), transparent 34%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.28),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.08),
+    inset 18px 18px 60px rgba(255, 255, 255, 0.03),
+    inset -18px -18px 70px rgba(0, 0, 0, 0.38),
+    0 36px 110px rgba(0, 0, 0, 0.48);
+}
+
+.dric-certificate-title {
+  color: #111827;
+}
+
+html[data-theme="dark"] .dric-certificate-title {
+  color: #ffffff;
+}
+
+.dric-certificate-muted,
+.dric-certificate-label {
+  color: #475569;
+}
+
+html[data-theme="dark"] .dric-certificate-muted,
+html[data-theme="dark"] .dric-certificate-label {
+  color: rgba(255, 255, 255, 0.66);
+}
+
+.dric-certificate-input-shell {
+  border: 1px solid rgba(255, 255, 255, 0.82);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0.24));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.96),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.35),
+    0 22px 60px rgba(15, 23, 42, 0.11);
+  backdrop-filter: blur(24px) saturate(170%);
+}
+
+html[data-theme="dark"] .dric-certificate-input-shell {
+  border-color: rgba(255, 255, 255, 0.14);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.025));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 22px 60px rgba(0, 0, 0, 0.38);
+}
+
+.dric-certificate-input {
+  border: 1px solid rgba(255, 255, 255, 0.86);
+  background: rgba(255, 255, 255, 0.42);
+  color: #0f172a;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.98),
+    inset 0 -12px 28px rgba(15, 23, 42, 0.035);
+}
+
+.dric-certificate-input::placeholder {
+  color: rgba(100, 116, 139, 0.62);
+}
+
+.dric-certificate-input:focus {
+  border-color: rgba(0, 55, 112, 0.7);
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.98),
+    0 0 0 4px rgba(0, 55, 112, 0.12),
+    0 14px 35px rgba(0, 55, 112, 0.12);
+}
+
+html[data-theme="dark"] .dric-certificate-input {
+  border-color: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.055);
+  color: #ffffff;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    inset 0 -12px 28px rgba(0, 0, 0, 0.2);
+}
+
+html[data-theme="dark"] .dric-certificate-input::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.dric-certificate-button {
+  background: #0f172a;
+  color: #ffffff;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 18px 44px rgba(15, 23, 42, 0.24);
+}
+
+.dric-certificate-button:hover {
+  transform: translateY(-2px);
+  background: #1e293b;
+}
+
+html[data-theme="dark"] .dric-certificate-button {
+  background: rgba(255, 255, 255, 0.92);
+  color: #020617;
+}
+
+
+
+
+
+.dric-certificate-cell:not(:last-child) {
+  border-right: 1px solid rgba(255, 255, 255, 0.46);
+}
+
+html[data-theme="dark"] .dric-certificate-cell {
+  border-top-color: rgba(255, 255, 255, 0.12);
+}
+
+html[data-theme="dark"] .dric-certificate-cell:not(:last-child) {
+  border-right-color: rgba(255, 255, 255, 0.12);
+}
+
+
+.dric-certificate-cell-value {
+  color: #0f172a;
+}
+
+
+html[data-theme="dark"] .dric-certificate-cell-value {
+  color: #ffffff;
+}
+
+.dric-certificate-table {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  border: 1px solid rgba(255, 255, 255, 0.96);
+  background:
+    radial-gradient(ellipse at 18% 12%, rgba(255, 255, 255, 0.92), transparent 22%),
+    radial-gradient(ellipse at 82% 18%, rgba(255, 255, 255, 0.42), transparent 28%),
+    radial-gradient(ellipse at 68% 78%, rgba(125, 211, 252, 0.2), transparent 34%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.26), rgba(255, 255, 255, 0.04));
+  box-shadow:
+    inset 0 2px 5px rgba(255, 255, 255, 0.95),
+    inset 0 -18px 34px rgba(255, 255, 255, 0.28),
+    inset 22px 20px 48px rgba(255, 255, 255, 0.22),
+    inset -24px -26px 58px rgba(15, 23, 42, 0.16),
+    0 34px 90px rgba(15, 23, 42, 0.18);
+  backdrop-filter: blur(42px) saturate(220%) contrast(118%);
+}
+
+.dric-certificate-table::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  z-index: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background:
+    linear-gradient(118deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.48) 9%, transparent 24%),
+    linear-gradient(300deg, rgba(255, 255, 255, 0.58) 0%, transparent 29%),
+    radial-gradient(ellipse at 25% 6%, rgba(255, 255, 255, 0.95), transparent 18%);
+  opacity: 0.9;
+  mix-blend-mode: screen;
+}
+
+.dric-certificate-table::after {
+  content: "";
+  position: absolute;
+  top: 8%;
+  left: 8%;
+  z-index: 0;
+  width: 46%;
+  height: 18%;
+  pointer-events: none;
+  border-radius: 999px;
+  background:
+    radial-gradient(ellipse at 22% 35%, rgba(255, 255, 255, 0.95), transparent 34%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.78), transparent);
+  filter: blur(10px);
+  opacity: 0.74;
+  transform: rotate(-4deg);
+}
+
+html[data-theme="dark"] .dric-certificate-table {
+  border-color: rgba(255, 255, 255, 0.34);
+  background:
+    radial-gradient(ellipse at 18% 12%, rgba(255, 255, 255, 0.34), transparent 22%),
+    radial-gradient(ellipse at 82% 18%, rgba(255, 255, 255, 0.16), transparent 28%),
+    radial-gradient(ellipse at 68% 78%, rgba(0, 55, 112, 0.16), transparent 34%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.035));
+  box-shadow:
+    inset 0 2px 5px rgba(255, 255, 255, 0.35),
+    inset 0 -18px 34px rgba(255, 255, 255, 0.08),
+    inset 22px 20px 48px rgba(255, 255, 255, 0.06),
+    inset -24px -26px 58px rgba(0, 0, 0, 0.45),
+    0 34px 90px rgba(0, 0, 0, 0.5);
+}
+
+.dric-certificate-table > * {
+  position: relative;
+  z-index: 1;
+}
+
+.dric-certificate-table-header {
+  position: relative;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.56);
+}
+
+html[data-theme="dark"] .dric-certificate-table-header {
+  border-bottom-color: rgba(255, 255, 255, 0.2);
+}
+
+.dric-certificate-table-header p {
+  color: #003770;
+  text-shadow: 0 0 18px rgba(0, 55, 112, 0.32);
+}
+
+html[data-theme="dark"] .dric-certificate-table-header p {
+  color: #FFFFFF;
+  text-shadow: 0 0 22px rgba(0, 55, 112, 0.55);
+}
+
+.dric-certificate-cell-label {
+  color: rgba(51, 65, 85, 0.72);
+  text-shadow: 0 1px 8px rgba(255, 255, 255, 0.3);
+}
+
+html[data-theme="dark"] .dric-certificate-cell-label {
+  color: rgba(255, 255, 255, 0.7);
+  text-shadow: 0 0 12px rgba(0, 0, 0, 0.36);
+}
+
+.dric-theme-page {
+  transition: background 300ms ease, color 300ms ease;
+}
+
+html[data-theme="light"] .dric-theme-page {
+  background:
+    radial-gradient(circle at 18% 8%, rgba(255, 255, 255, 0.96), transparent 28%),
+    radial-gradient(circle at 82% 12%, rgba(230, 230, 230, 0.72), transparent 32%),
+    radial-gradient(circle at 14% 86%, rgba(248, 250, 252, 0.62), transparent 34%),
+    linear-gradient(135deg, #f9fafb 0%, #e8edf5 46%, #f7f9fc 100%) !important;
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-theme-page > section {
+  color: #0f172a;
+}
+
+html[data-theme="light"] .dric-theme-page > section > .absolute.inset-0 {
+  background:
+    radial-gradient(circle at 18% 8%, rgba(255, 255, 255, 0.72), transparent 30%),
+    radial-gradient(circle at 82% 16%, rgba(125, 211, 252, 0.28), transparent 34%),
+    radial-gradient(circle at 16% 88%, rgba(255, 205, 224, 0.36), transparent 34%) !important;
+}
+
+html[data-theme="light"] .dric-theme-page > section[class*="bg-[#020617]"],
+html[data-theme="light"] .dric-theme-page > section[class*="bg-[#f8fafc]"],
+html[data-theme="light"] .dric-theme-page > section[class*="bg-white"],
+html[data-theme="light"] .dric-theme-page > section [class*="bg-[#f8fafc]"] {
+  background: rgba(248, 250, 252, 0.62) !important;
+}
+
+html[data-theme="light"] .dric-theme-page > section [class*="bg-[#020617]"],
+html[data-theme="light"] .dric-theme-page > section [class*="bg-[#071126]"],
+html[data-theme="light"] .dric-theme-page > section [class*="bg-white/"],
+html[data-theme="light"] .dric-theme-page > section [class*="bg-white["] {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0.18)),
+    radial-gradient(circle at 16% 12%, rgba(255, 255, 255, 0.9), transparent 30%),
+    radial-gradient(circle at 86% 16%, rgba(125, 211, 252, 0.2), transparent 34%) !important;
+  color: #0f172a !important;
+  border-color: rgba(255, 255, 255, 0.74) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.94),
+    0 22px 56px rgba(15, 23, 42, 0.1) !important;
+  backdrop-filter: blur(10px) saturate(130%);
+}
+
+html[data-theme="light"] .dric-theme-page > section [class*="border-white"] {
+  border-color: rgba(255, 255, 255, 0.74) !important;
+}
+
+html[data-theme="light"] .dric-theme-page > section [class*="text-white"] {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-theme-page .dric-final-cta-button,
+.dric-final-cta-button {
+  color: #ffffff !important;
+}
+
+html[data-theme="light"] .dric-theme-page > section [class*="text-white/"],
+html[data-theme="light"] .dric-theme-page > section [class*="text-slate-300"],
+html[data-theme="light"] .dric-theme-page > section [class*="text-slate-400"] {
+  color: rgba(71, 85, 105, 0.78) !important;
+}
+
+html[data-theme="light"] .dric-theme-page > section [class*="placeholder:text-white"]::placeholder {
+  color: rgba(100, 116, 139, 0.62) !important;
+}
+
+html[data-theme="light"] .dric-site-header .dric-site-header-shell {
+  background: rgba(0, 25, 53, 0.88) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25) !important;
+}
+
+html[data-theme="light"] .dric-site-header .dric-site-header-button {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: #ffffff !important;
+}
+
+.dric-faq-section {
+  color: #ffffff;
+}
+
+.dric-faq-toggle-all {
+  border-color: rgba(227, 6, 19, 0.92);
+  color: #ffffff;
+  background: rgba(227, 6, 19, 0.08);
+}
+
+.dric-faq-toggle-all:hover,
+.dric-faq-toggle-all:focus-visible {
+  background: rgba(227, 6, 19, 0.16);
+  box-shadow: 0 12px 30px rgba(227, 6, 19, 0.18);
+  outline: none;
+  transform: translateY(-1px);
+}
+
+.dric-faq-list {
+  border-top: 1px solid rgba(148, 163, 184, 0.24);
+}
+
+.dric-faq-item {
+  border-bottom: 1px solid rgba(148, 163, 184, 0.24);
+}
+
+.dric-faq-question {
+  color: #ffffff;
+}
+
+.dric-faq-question:hover {
+  color: #f8fafc;
+}
+
+.dric-faq-question:focus-visible {
+  outline: 2px solid rgba(227, 6, 19, 0.82);
+  outline-offset: 4px;
+}
+
+.dric-faq-plus {
+  color: #e30613;
+  transform-origin: center;
+}
+
+.dric-faq-item.is-open .dric-faq-plus {
+  transform: rotate(45deg);
+}
+
+.dric-faq-answer-grid {
+  grid-template-rows: 0fr;
+  opacity: 0;
+}
+
+.dric-faq-item.is-open .dric-faq-answer-grid {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.dric-faq-answer {
+  max-width: 58rem;
+  color: rgba(203, 213, 225, 0.86);
+}
+
+html[data-theme="light"] .dric-theme-page .dric-faq-section {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-theme-page .dric-faq-toggle-all {
+  background: rgba(255, 255, 255, 0.5);
+  border-color: rgba(227, 6, 19, 0.92) !important;
+  color: #b91c1c !important;
+  box-shadow: 0 16px 38px rgba(15, 23, 42, 0.08);
+}
+
+html[data-theme="light"] .dric-theme-page .dric-faq-toggle-all:hover,
+html[data-theme="light"] .dric-theme-page .dric-faq-toggle-all:focus-visible {
+  background: rgba(227, 6, 19, 0.08);
+}
+
+html[data-theme="light"] .dric-theme-page .dric-faq-list,
+html[data-theme="light"] .dric-theme-page .dric-faq-item {
+  border-color: rgba(15, 23, 42, 0.14);
+}
+
+html[data-theme="light"] .dric-theme-page .dric-faq-question {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-theme-page .dric-faq-question:hover {
+  color: #003770 !important;
+}
+
+html[data-theme="light"] .dric-theme-page .dric-faq-plus {
+  color: #e30613 !important;
+}
+
+html[data-theme="light"] .dric-theme-page .dric-faq-answer {
+  color: rgba(51, 65, 85, 0.82) !important;
+}
+
+html[data-theme="light"] .dric-site-header .dric-site-header-button:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+}
+
+html[data-theme="light"] .dric-site-footer,
+html[data-theme="light"] .dric-site-footer h2,
+html[data-theme="light"] .dric-site-footer p,
+html[data-theme="light"] .dric-site-footer address {
+  color: #ffffff !important;
+}
+
+html[data-theme="light"] .dric-site-footer {
+  background-color: #001935 !important;
+}
+
+html[data-theme="light"] .dric-site-footer .dric-site-footer-muted {
+  color: rgba(255, 255, 255, 0.68) !important;
+}
+
+html[data-theme="light"] .dric-theme-page .MuiPaper-root {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.34)) !important;
+  color: #0f172a !important;
+  border-color: rgba(255, 255, 255, 0.72) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.86),
+    0 22px 58px rgba(15, 23, 42, 0.1) !important;
+  backdrop-filter: blur(10px) saturate(130%);
+}
+
+html[data-theme="light"] .dric-theme-page input,
+html[data-theme="light"] .dric-theme-page select,
+html[data-theme="light"] .dric-theme-page textarea {
+  background: rgba(255, 255, 255, 0.68) !important;
+  color: #0f172a !important;
+  border-color: rgba(203, 213, 225, 0.9) !important;
+}
+
+html[data-theme="light"] .dric-home-hero {
+  color: #0f172a;
+}
+
+html[data-theme="light"] .dric-home-page {
+  background: rgba(253, 254, 254, 0.891) !important;
+}
+
+html[data-theme="light"] .dric-home-page > section:not(.dric-home-hero),
+html[data-theme="light"] .dric-home-page .dric-student-experiences-section,
+html[data-theme="light"] .dric-home-page .dric-faq-section {
+  background: rgba(253, 254, 254, 0.891) !important;
+}
+
+html[data-theme="light"] .dric-home-page > section:not(.dric-home-hero) > .absolute.inset-0 {
+  background: transparent !important;
+}
+
+html[data-theme="light"] .dric-home-page .dric-student-experiences-section .dric-testimonials-carousel {
+  background: transparent !important;
+}
+
+html[data-theme="light"] .dric-home-page .dric-student-experiences-section .dric-testimonial-card,
+html[data-theme="light"] .dric-home-page .dric-student-experiences-section .dric-testimonial-card:hover {
+  background: rgba(253, 254, 254, 0.891) !important;
+  border-color: rgba(203, 213, 225, 0.62) !important;
+  box-shadow: none !important;
+}
+
+html[data-theme="light"] .dric-home-page .dric-stats-panel {
+  background: #cdd2d7 !important;
+}
+
+html[data-theme="light"] .dric-home-page .dric-stats-value {
+  color: #001935E0 !important;
+}
+
+html[data-theme="light"] .dric-home-page .dric-recent-agreements-eyebrow {
+  color: #a40000 !important;
+}
+
+html[data-theme="light"] .dric-home-page .dric-recent-agreement-kicker {
+  color: #67e8f9 !important;
+}
+
+html[data-theme="light"] .dric-theme-page.dric-home-page > section .dric-recent-agreement-title {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+.dric-internationalization-page {
+  background:
+    radial-gradient(circle at 0% 14%, rgba(227, 6, 19, 0.24), transparent 34%),
+    radial-gradient(circle at 100% 8%, rgba(0, 55, 112, 0.44), transparent 38%),
+    radial-gradient(circle at 44% 48%, rgba(15, 23, 42, 0.78), transparent 46%),
+    linear-gradient(145deg, #020617 0%, #08111f 45%, #12070a 100%) !important;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: 100vw 100vh;
+}
+
+.dric-internationalization-page .dric-internationalization-section,
+html[data-theme="light"] .dric-internationalization-page .dric-internationalization-section {
+  background: transparent !important;
+}
+
+html[data-theme="light"] .dric-internationalization-page {
+  background:
+    radial-gradient(circle at 15% 8%, rgba(255, 255, 255, 0.96), transparent 28%),
+    radial-gradient(circle at 82% 12%, rgba(186, 216, 255, 0.72), transparent 32%),
+    radial-gradient(circle at 14% 86%, rgba(255, 205, 224, 0.56), transparent 34%),
+    linear-gradient(135deg, #f9fafb 0%, #e8edf5 46%, #f7f9fc 100%) !important;
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-internationalization-page .dric-internationalization-section,
+html[data-theme="light"] .dric-internationalization-page .dric-internationalization-section h1,
+html[data-theme="light"] .dric-internationalization-page .dric-internationalization-section h2,
+html[data-theme="light"] .dric-internationalization-page .dric-internationalization-section h3 {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-internationalization-page .dric-internationalization-section p:not(:first-child) {
+  color: rgba(71, 85, 105, 0.78) !important;
+}
+
+
+html[data-theme="light"] .dric-theme-page .dric-home-hero .dric-home-hero-content {
+  contain: paint;
+  min-height: auto;
+  margin-top: clamp(0rem, 1vh, 1rem);
+  padding: clamp(2rem, 5vw, 4.5rem);
+  padding-bottom: clamp(1rem, 4vw, 3.5rem);
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: clamp(2rem, 4vw, 3.5rem);
+  background:
+    radial-gradient(circle at 12% 10%, rgba(255, 255, 255, 0.82), transparent 30%),
+    radial-gradient(circle at 86% 16%, rgba(186, 216, 255, 0.38), transparent 34%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.52), rgba(255, 255, 255, 0.16));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.22),
+    0 24px 64px rgba(15, 23, 42, 0.14);
+  backdrop-filter: blur(8px) saturate(120%);
+}
+
+html[data-theme="light"] .dric-theme-page .dric-home-hero .dric-home-hero-title {
+  color: #07111f !important;
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.55),
+    0 18px 50px rgba(255, 255, 255, 0.42),
+    0 28px 70px rgba(15, 23, 42, 0.18);
+}
+
+html[data-theme="light"] .dric-theme-page .dric-home-hero .dric-home-hero-summary {
+  color: rgba(30, 41, 59, 0.82) !important;
+  text-shadow: 0 1px 18px rgba(255, 255, 255, 0.72);
+}
+
+html[data-theme="light"] .dric-theme-page .dric-home-hero .dric-home-hero-badge {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0.22)) !important;
+  border-color: rgba(255, 255, 255, 0.78) !important;
+  color: #334155 !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.82),
+    0 12px 30px rgba(15, 23, 42, 0.1) !important;
+}
+
+html[data-theme="light"] .dric-theme-page .dric-home-hero .dric-home-hero-primary {
+  background: #0f172a !important;
+  color: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.18) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 14px 34px rgba(15, 23, 42, 0.2) !important;
+}
+
+html[data-theme="light"] .dric-theme-page .dric-home-hero .dric-home-hero-secondary {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.66), rgba(255, 255, 255, 0.24)) !important;
+  border-color: rgba(15, 23, 42, 0.2) !important;
+  color: #0f172a !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.82),
+    0 12px 30px rgba(15, 23, 42, 0.1) !important;
+}
+
+html[data-theme="light"] .dric-social-icon {
+  filter: none;
+}
+
+html[data-theme="light"] .dric-social-icon:hover {
+  filter: none;
+}
+
+@media (max-width: 639px) {
+  .dric-theme-page .dric-home-hero .dric-home-hero-content {
+    width: 100%;
+  }
+
+  .dric-theme-page .dric-home-hero .dric-home-hero-title {
+    max-width: min(18rem, 100%);
+    overflow-wrap: break-word;
+    word-break: normal;
+  }
+
+  .dric-theme-page .dric-home-hero .dric-social-track {
+    --icon-gap: 76px;
+    animation-duration: 18s;
+  }
+
+  html[data-theme="light"] .dric-theme-page .dric-home-hero .dric-home-hero-content {
+    margin-top: 1rem;
+    padding: 1rem 1rem 0.75rem;
+    border-radius: 2rem;
+  }
+}
+
+html[data-theme="light"] .dric-scholarship-card {
+  background: rgba(255, 255, 255, 0.78) !important;
+  color: #0f172a !important;
+  border-color: rgba(148, 163, 184, 0.22) !important;
+  box-shadow:
+    0 18px 46px rgba(15, 23, 42, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.86) !important;
+}
+
+html[data-theme="light"] .dric-scholarship-card-strip {
+  background:
+    linear-gradient(135deg, rgba(248, 250, 252, 0.94), rgba(226, 232, 240, 0.9)) !important;
+  border-top: 1px solid rgba(148, 163, 184, 0.18);
+}
+
+html[data-theme="light"] .dric-scholarship-card-title {
+  color: #003770 !important;
+}
+
+html[data-theme="light"] .dric-scholarship-card:hover .dric-scholarship-card-title {
+  color: #E30613 !important;
+}
+
+@media (min-width: 640px) and (max-width: 1279px) {
+  .dric-scholarship-country-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .dric-scholarship-country-grid .dric-scholarship-country-card:last-child:nth-child(odd) {
+    width: calc((100% - 2rem) / 2);
+    justify-self: center;
+    grid-column: 1 / -1;
+  }
+}
+
+html[data-theme="light"] .dric-scholarship-cta {
+  background: rgba(255, 255, 255, 0.72) !important;
+  border-color: rgba(227, 6, 19, 0.64) !important;
+  color: #E30613 !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.86),
+    0 12px 30px rgba(227, 6, 19, 0.1) !important;
+}
+
+html[data-theme="light"] .dric-scholarship-cta:hover {
+  background: rgba(255, 236, 238, 0.86) !important;
+  border-color: #E30613 !important;
+  color: #b80510 !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 16px 38px rgba(227, 6, 19, 0.16) !important;
+}
+
+html[data-theme="light"] .dric-scholarship-cta span {
+  color: inherit !important;
+}
+
+.dric-scholarship-detail-page {
+  background: #020617 !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="light"] .dric-scholarship-detail-page {
+  background:
+    radial-gradient(circle at 15% 8%, rgba(255, 255, 255, 0.96), transparent 28%),
+    radial-gradient(circle at 82% 12%, rgba(186, 216, 255, 0.72), transparent 32%),
+    radial-gradient(circle at 14% 86%, rgba(255, 205, 224, 0.56), transparent 34%),
+    linear-gradient(135deg, #f9fafb 0%, #e8edf5 46%, #f7f9fc 100%) !important;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: 100vw 100vh;
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-scholarship-detail-page section {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-scholarship-detail-page section > .absolute.inset-0 {
+  background: transparent !important;
+}
+
+html[data-theme="light"] .dric-scholarship-index-page .dric-scholarship-index-hero-glow {
+  display: none !important;
+}
+
+.dric-scholarship-index-page {
+  background: #020617 !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="light"] .dric-scholarship-index-page {
+  background:
+    radial-gradient(circle at 15% 8%, rgba(255, 255, 255, 0.96), transparent 28%),
+    radial-gradient(circle at 82% 12%, rgba(186, 216, 255, 0.72), transparent 32%),
+    radial-gradient(circle at 14% 86%, rgba(255, 205, 224, 0.56), transparent 34%),
+    linear-gradient(135deg, #f9fafb 0%, #e8edf5 46%, #f7f9fc 100%) !important;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: 100vw 100vh;
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-scholarship-index-page section,
+html[data-theme="light"] .dric-scholarship-index-page h1,
+html[data-theme="light"] .dric-scholarship-index-page h2 {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-scholarship-index-page p,
+html[data-theme="light"] .dric-scholarship-index-page span {
+  color: rgba(71, 85, 105, 0.78) !important;
+}
+
+html[data-theme="light"] .dric-scholarship-index-page .dric-scholarship-option,
+html[data-theme="light"] .dric-scholarship-detail-page [class*="bg-white/"]:not(.dric-site-header-button) {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.68), rgba(255, 255, 255, 0.26)) !important;
+  color: #0f172a !important;
+  border-color: rgba(255, 255, 255, 0.82) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 22px 56px rgba(15, 23, 42, 0.1) !important;
+}
+
+html[data-theme="light"] .dric-scholarship-index-page .dric-scholarship-org-track {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+html[data-theme="light"] .dric-scholarship-index-page .dric-scholarship-org-track .dric-scholarship-option {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 12px 32px rgba(125, 134, 155, 0.04) !important;
+}
+
+html[data-theme="light"] .dric-scholarship-index-page .dric-scholarship-option h2 {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-scholarship-index-page .dric-scholarship-option p,
+html[data-theme="light"] .dric-scholarship-index-page .dric-scholarship-option span {
+  color: rgba(51, 65, 85, 0.78) !important;
+}
+
+html[data-theme="light"] .dric-scholarship-index-page .dric-scholarship-option a {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-scholarship-index-page .dric-scholarship-option a:hover {
+  color: #003770 !important;
+}
+
+html[data-theme="light"] .dric-scholarship-detail-page h1,
+html[data-theme="light"] .dric-scholarship-detail-page h2,
+html[data-theme="light"] .dric-scholarship-detail-page h3,
+html[data-theme="light"] .dric-scholarship-detail-page h4 {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-scholarship-detail-page p,
+html[data-theme="light"] .dric-scholarship-detail-page span,
+html[data-theme="light"] .dric-scholarship-detail-page li {
+  color: rgba(71, 85, 105, 0.78) !important;
+}
+
+html[data-theme="light"] .dric-scholarship-detail-page a:not(.dric-scholarship-program-link) {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-scholarship-index-page .dric-site-header .dric-site-header-shell,
+html[data-theme="light"] .dric-scholarship-detail-page .dric-site-header .dric-site-header-shell {
+  background: rgba(0, 25, 53, 0.88) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25) !important;
+}
+
+html[data-theme="light"] .dric-scholarship-index-page .dric-site-header .dric-site-header-button,
+html[data-theme="light"] .dric-scholarship-detail-page .dric-site-header .dric-site-header-button {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: #ffffff !important;
+  box-shadow: none !important;
+}
+
+html[data-theme="light"] .dric-scholarship-index-page .dric-site-footer,
+html[data-theme="light"] .dric-scholarship-index-page .dric-site-footer h2,
+html[data-theme="light"] .dric-scholarship-index-page .dric-site-footer p,
+html[data-theme="light"] .dric-scholarship-index-page .dric-site-footer span,
+html[data-theme="light"] .dric-scholarship-index-page .dric-site-footer address,
+html[data-theme="light"] .dric-scholarship-detail-page .dric-site-footer,
+html[data-theme="light"] .dric-scholarship-detail-page .dric-site-footer h2,
+html[data-theme="light"] .dric-scholarship-detail-page .dric-site-footer p,
+html[data-theme="light"] .dric-scholarship-detail-page .dric-site-footer span,
+html[data-theme="light"] .dric-scholarship-detail-page .dric-site-footer address {
+  color: #ffffff !important;
+}
+
+html[data-theme="light"] .dric-scholarship-index-page .dric-site-footer .dric-site-footer-muted,
+html[data-theme="light"] .dric-scholarship-detail-page .dric-site-footer .dric-site-footer-muted {
+  color: rgba(255, 255, 255, 0.68) !important;
+}
+
+.dric-agreements-hero-eyebrow {
+  color: #67e8f9;
+}
+
+html[data-theme="light"] .dric-agreements-page .dric-agreements-hero-eyebrow {
+  color: #a40000 !important;
+  -webkit-text-fill-color: #a40000 !important;
+}
+
+.dric-scholarship-org-track {
+  margin-block: -2rem;
+  padding-block: 2rem;
+  scrollbar-width: none;
+  scroll-padding-inline: 0;
+  scroll-snap-type: x mandatory;
+}
+
+.dric-scholarship-org-track::-webkit-scrollbar {
+  display: none;
+}
+
+.dric-testimonials-carousel {
+  scrollbar-width: none;
+}
+
+.dric-testimonials-carousel::-webkit-scrollbar {
+  display: none;
+}
+
+.dric-testimonials-arrow {
+  background:
+    linear-gradient(10deg, rgba(255, 255, 255, 0), rgba(103, 232, 249, 0.1)),
+    rgba(2, 6, 23, 0.42);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.32),
+    0 18px 44px rgba(0, 0, 0, 0.32);
+}
+
+.dric-testimonials-arrow-left {
+  left: -3.5rem;
+}
+
+.dric-testimonials-arrow-right {
+  right: -3.5rem;
+}
+
+.dric-testimonials-quote {
+  text-align-last: left;
+}
+
+.dric-testimonials-rating {
+  color: #ffd84d;
+}
+
+.dric-testimonials-rating-score {
+  color: #ffe88a;
+}
+
+.dric-testimonials-rating-stars {
+  display: inline-block;
+  background: linear-gradient(180deg, #fff4a8 0%, #ffd01f 44%, #c98300 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 1px 0 rgba(97, 53, 0, 0.36))
+    drop-shadow(0 0 7px rgba(255, 211, 64, 0.42))
+    drop-shadow(0 0 16px rgba(255, 178, 24, 0.22));
+  letter-spacing: 0.03em;
+  animation: dric-star-neon 2.8s ease-in-out infinite;
+}
+
+.dric-testimonials-rating-empty {
+  color: rgba(255, 255, 255, 0.18);
+  letter-spacing: 0.03em;
+}
+
+@keyframes dric-star-neon {
+  0%, 100% {
+    filter: drop-shadow(0 1px 0 rgba(97, 53, 0, 0.36))
+      drop-shadow(0 0 7px rgba(255, 211, 64, 0.38))
+      drop-shadow(0 0 14px rgba(255, 178, 24, 0.18));
+  }
+
+  50% {
+    filter: drop-shadow(0 1px 0 rgba(97, 53, 0, 0.36))
+      drop-shadow(0 0 10px rgba(255, 230, 98, 0.58))
+      drop-shadow(0 0 24px rgba(255, 178, 24, 0.34));
+  }
+}
+ 
+html[data-theme="light"] .dric-testimonials-arrow {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.78), rgba(218, 250, 255, 0.46)),
+    rgba(255, 255, 255, 0.56);
+  border-color: rgba(8, 145, 178, 0.28) !important;
+  color: #0f172a !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.92),
+    0 18px 44px rgba(15, 23, 42, 0.16);
+}
+
+html[data-theme="light"] .dric-testimonials-country {
+  background:
+    linear-gradient(135deg, rgba(218, 250, 255, 0.82), rgba(255, 255, 255, 0.62)) !important;
+  border-color: rgba(8, 145, 178, 0.34) !important;
+  color: #0f172a !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.86),
+    0 10px 24px rgba(8, 145, 178, 0.12) !important;
+}
+
+@media (max-width: 1380px) {
+  .dric-testimonials-arrow-left {
+    left: -2.2rem;
+  }
+
+  .dric-testimonials-arrow-right {
+    right: -2.2rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .dric-testimonials-arrow-left {
+    left: -0.65rem;
+  }
+
+  .dric-testimonials-arrow-right {
+    right: -0.65rem;
+  }
+
+  .dric-testimonials-quote {
+    font-size: 0.86rem;
+    line-height: 1.68;
+  }
+}
+
+
+.dric-scholarship-org-slide {
+  width: min(86vw, 21rem);
+  scroll-snap-align: start;
+}
+
+.dric-scholarship-org-slide .dric-scholarship-option {
+  height: 100%;
+}
+
+.dric-scholarship-org-hint {
+  margin-top: 2rem;
+  letter-spacing: 0;
+}
+
+@media (min-width: 768px) {
+  .dric-scholarship-org-slide {
+    width: calc((100% - 1.25rem) / 2);
+  }
+}
+
+@media (min-width: 1280px) {
+  .dric-scholarship-org-slide {
+    width: calc((100% - 5rem) / 5);
+  }
+
+  .dric-scholarship-org-arrow-left {
+    left: -3.7rem;
+  }
+
+  .dric-scholarship-org-arrow-right {
+    right: -3.7rem;
+  }
+
+  .dric-scholarship-org-hint {
+    display: none;
+  }
+}
+
+html[data-theme="light"] .dric-scholarship-index-page .dric-scholarship-org-hint {
+  color: rgba(15, 23, 42, 0.72) !important;
+}
+
+.dric-scholarship-detail-page .dric-neon-country-title {
+  font-family: var(--font-poiret-one), "Arial Black", Impact, sans-serif;
+  font-size: clamp(2.7rem, 7vw, 4.5rem);
+  font-weight: 900;
+  line-height: 0.88;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: #fff5f5 !important;
+  text-shadow:
+    0 0 4px rgba(255, 255, 255, 0.96),
+    0 0 12px rgba(227, 6, 19, 0.96),
+    0 0 28px rgba(227, 6, 19, 0.84),
+    0 0 54px rgba(120, 0, 10, 0.9),
+    0 0 86px rgba(120, 0, 10, 0.72);
+}
+
+html[data-theme="light"] .dric-scholarship-detail-page .dric-neon-country-title {
+  color: #05468b !important;
+  text-shadow:
+    0 0 3px rgba(255, 255, 255, 0.96),
+    0 0 10px rgba(0, 55, 112, 0.55),
+    0 0 24px rgba(0, 55, 112, 0.34),
+    0 16px 38px rgba(15, 23, 42, 0.18);
+}
+
+.dric-scholarship-detail-page .dric-scholarship-program-card,
+.dric-campus-life-page .dric-campus-feature-card,
+html[data-theme="dark"] .dric-scholarship-index-page .dric-scholarship-option,
+html[data-theme="dark"] .dric-mobility-page .dric-mobility-card {
+  background: transparent;
+  box-shadow:
+    0 0 18px rgba(197, 157, 255, 0.18),
+    0 0 42px rgba(84, 36, 187, 0.12),
+    0 30px 80px rgba(0, 0, 0, 0.24);
+}
+
+html[data-theme="dark"] .dric-mobility-page .dric-mobility-card {
+  position: relative;
+  border-color: transparent !important;
+}
+
+.dric-campus-life-page .dric-campus-feature-card,
+html[data-theme="dark"] .dric-scholarship-index-page .dric-scholarship-option {
+  border-color: transparent !important;
+}
+
+.dric-scholarship-detail-page .dric-scholarship-program-card::before,
+.dric-campus-life-page .dric-campus-feature-card::before,
+html[data-theme="dark"] .dric-scholarship-index-page .dric-scholarship-option::before,
+html[data-theme="dark"] .dric-mobility-page .dric-mobility-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(180deg, #c59dff 0%, #111a82 100%);
+  pointer-events: none;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+}
+
+.dric-scholarship-detail-page .dric-scholarship-program-card-inner,
+.dric-campus-life-page .dric-campus-feature-card-inner,
+html[data-theme="dark"] .dric-mobility-page .dric-mobility-card-inner {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.54);
+  backdrop-filter: none;
+}
+
+.dric-mobility-page .dric-mobility-card-inner {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.dric-mobility-page .dric-mobility-card-inner > a {
+  align-self: center;
+  margin-top: auto !important;
+  padding-top: 2.5rem;
+}
+
+.dric-scholarship-detail-page .dric-scholarship-program-divider {
+  height: 1px;
+  width: 100%;
+  background: linear-gradient(90deg, #000000 0%, rgba(255, 255, 255, 0.96) 100%);
+  opacity: 0.94;
+}
+
+.dric-scholarship-detail-page .dric-scholarship-program-link {
+  background: linear-gradient(135deg, #c59dff 0%, #5424bb 100%);
+  box-shadow:
+    0 0 18px rgba(197, 157, 255, 0.16),
+    0 0 36px rgba(84, 36, 187, 0.14);
+}
+
+.dric-scholarship-detail-page .dric-scholarship-program-link span {
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  color: #ffffff !important;
+}
+
+.dric-scholarship-detail-page .dric-scholarship-program-link *,
+.dric-scholarship-detail-page .dric-scholarship-program-link *::before,
+.dric-scholarship-detail-page .dric-scholarship-program-link *::after {
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
+html[data-theme="dark"] .dric-mobility-page .dric-mobility-card-inner > .absolute.inset-x-0.bottom-0.h-1 {
+  display: none;
+}
+
+html[data-theme="dark"] .dric-mobility-page .dric-mobility-card-button {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.22), rgba(197, 157, 255, 0.08)),
+    rgba(4, 15, 64, 0.16) !important;
+  border-color: rgba(255, 255, 255, 0.56) !important;
+  color: #ffffff !important;
+  text-shadow: 0 1px 12px rgba(255, 255, 255, 0.28);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.46),
+    inset 0 -1px 0 rgba(197, 157, 255, 0.18),
+    0 0 18px rgba(197, 157, 255, 0.2),
+    0 14px 34px rgba(0, 0, 0, 0.22) !important;
+  backdrop-filter: blur(16px) saturate(145%);
+}
+
+.dric-mobility-page .dric-mobility-card-button {
+  position: relative;
+  overflow: visible;
+  isolation: isolate;
+  transition:
+    background 220ms ease,
+    border-color 220ms ease,
+    box-shadow 220ms ease,
+    color 220ms ease,
+    transform 220ms ease;
+}
+
+.dric-mobility-page .dric-mobility-card-button::before {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  z-index: -1;
+  border-radius: inherit;
+  padding: 3px;
+  background: linear-gradient(90deg, #fe58d4 0%, #ff57aa 46%, #bf8eff 100%);
+  opacity: 0;
+  filter: blur(8px);
+  transition: opacity 220ms ease, filter 220ms ease;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+}
+
+.dric-mobility-page .dric-mobility-card-inner > a:hover .dric-mobility-card-button,
+.dric-mobility-page .dric-mobility-card-button:hover {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.32), rgba(197, 157, 255, 0.16)),
+    rgba(20, 10, 34, 0.2) !important;
+  border-color: rgba(255, 190, 230, 0.92) !important;
+  color: #ffffff !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.58),
+    0 0 8px rgba(255, 255, 255, 0.42),
+    0 0 14px rgba(227, 6, 164, 0.42),
+    0 0 24px rgba(253, 94, 181, 0.798),
+    0 0 34px rgba(155, 76, 255, 0.3),
+    0 16px 38px rgba(0, 0, 0, 0.24) !important;
+  transform: translateY(-2px);
+}
+
+.dric-mobility-page .dric-mobility-card-inner > a:hover .dric-mobility-card-button::before,
+.dric-mobility-page .dric-mobility-card-button:hover::before {
+  opacity: 1;
+  filter: blur(10px);
+}
+
+html[data-theme="light"] .dric-campus-life-page .dric-campus-feature-card,
+html[data-theme="light"] .dric-scholarship-detail-page .dric-scholarship-program-card {
+  background: transparent !important;
+}
+
+html[data-theme="light"] .dric-scholarship-detail-page .dric-scholarship-program-card-inner {
+  background: transparent !important;
+  border-color: rgba(84, 36, 187, 0.24) !important;
+  color: #0f172a !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.86),
+    0 22px 56px rgba(15, 23, 42, 0.12) !important;
+}
+
+html[data-theme="light"] .dric-scholarship-detail-page .dric-scholarship-program-card h3,
+html[data-theme="light"] .dric-scholarship-detail-page .dric-scholarship-program-card h4,
+html[data-theme="light"] .dric-scholarship-detail-page .dric-scholarship-program-card li,
+html[data-theme="light"] .dric-scholarship-detail-page .dric-scholarship-program-card p {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-scholarship-detail-page .dric-scholarship-program-link span {
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-projects-hero-glow {
+  opacity: 0;
+}
+
+.dric-projects-page {
+  background: #020617 !important;
+}
+
+html[data-theme="light"] .dric-projects-page {
+  background:
+    radial-gradient(circle at 15% 8%, rgba(255, 255, 255, 0.96), transparent 28%),
+    radial-gradient(circle at 82% 12%, rgba(186, 216, 255, 0.72), transparent 32%),
+    radial-gradient(circle at 14% 86%, rgba(255, 205, 224, 0.56), transparent 34%),
+    linear-gradient(135deg, #f9fafb 0%, #e8edf5 46%, #f7f9fc 100%) !important;
+}
+
+html[data-theme="light"] .dric-projects-page .dric-projects-hero > .absolute.inset-0,
+html[data-theme="light"] .dric-projects-page .dric-projects-section > .absolute.inset-0 {
+  background: transparent !important;
+}
+
+html[data-theme="light"] .dric-projects-page .dric-projects-hero {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-projects-page .dric-projects-section {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-projects-page .dric-projects-hero h1 {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-projects-page .dric-projects-section h2,
+html[data-theme="light"] .dric-projects-page .dric-projects-section h3,
+html[data-theme="light"] .dric-projects-page .dric-projects-feature-card h2 {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-projects-page .dric-projects-hero p:not(:first-child) {
+  color: rgba(71, 85, 105, 0.78) !important;
+}
+
+html[data-theme="light"] .dric-projects-page .dric-projects-section p,
+html[data-theme="light"] .dric-projects-page .dric-projects-feature-card p {
+  color: rgba(71, 85, 105, 0.78) !important;
+}
+
+html[data-theme="light"] .dric-projects-page .dric-projects-feature-card,
+html[data-theme="light"] .dric-projects-page .dric-projects-info-card,
+html[data-theme="light"] .dric-projects-page .dric-projects-finance-panel,
+html[data-theme="light"] .dric-projects-page .dric-projects-doc-card {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0.18)),
+    radial-gradient(circle at 16% 12%, rgba(255, 255, 255, 0.9), transparent 30%),
+    radial-gradient(circle at 86% 16%, rgba(125, 211, 252, 0.2), transparent 34%) !important;
+  color: #0f172a !important;
+  border: 1px solid rgba(255, 255, 255, 0.74) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.94),
+    0 22px 56px rgba(15, 23, 42, 0.1) !important;
+  backdrop-filter: blur(10px) saturate(130%);
+}
+
+html[data-theme="light"] .dric-projects-page .dric-projects-doc-card {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.32)),
+    radial-gradient(circle at 86% 16%, rgba(125, 211, 252, 0.18), transparent 34%) !important;
+  color: #0f172a !important;
+  border-color: rgba(255, 255, 255, 0.78) !important;
+}
+
+html[data-theme="light"] .dric-projects-page .dric-projects-doc-card h3 {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-projects-page .dric-projects-doc-card p {
+  color: rgba(71, 85, 105, 0.78) !important;
+}
+
+.dric-projects-doc-title {
+  color: #ffffff;
+}
+
+.dric-projects-doc-copy {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+html[data-theme="light"] .dric-projects-page .dric-projects-doc-title {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-projects-page .dric-projects-doc-copy {
+  color: rgba(51, 65, 85, 0.84) !important;
+}
+
+html[data-theme="light"] .dric-projects-page .dric-projects-feature-card [class*="bg-white/"] {
+  background: rgba(255, 255, 255, 0.58) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    0 14px 28px rgba(15, 23, 42, 0.1) !important;
+}
+
+html[data-theme="light"] .dric-projects-page .dric-projects-feature-card svg {
+  color: #E30613 !important;
+}
+
+html[data-theme="light"] .dric-projects-page .dric-projects-feature-card img {
+  filter: saturate(1.05) brightness(1.03);
+}
+
+html[data-theme="light"] .dric-projects-page .dric-projects-outline-button,
+html[data-theme="light"] .dric-projects-page .dric-projects-card-button {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0.22)) !important;
+  border-color: rgba(0, 55, 112, 0.32) !important;
+  color: #0f172a !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.82),
+    0 12px 30px rgba(15, 23, 42, 0.1) !important;
+}
+
+html[data-theme="light"] .dric-projects-page .dric-projects-outline-button:hover,
+html[data-theme="light"] .dric-projects-page .dric-projects-card-button:hover {
+  border-color: rgba(0, 55, 112, 0.72) !important;
+  background: rgba(0, 55, 112, 0.1) !important;
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-projects-page .dric-funding-summary,
+html[data-theme="light"] .dric-projects-page .dric-funding-panel,
+html[data-theme="light"] .dric-projects-page .dric-funding-metric,
+html[data-theme="light"] .dric-projects-page .dric-funding-area,
+html[data-theme="light"] .dric-projects-page .dric-funding-document {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.68), rgba(255, 255, 255, 0.24)),
+    radial-gradient(circle at 18% 16%, rgba(255, 255, 255, 0.9), transparent 28%),
+    radial-gradient(circle at 88% 12%, rgba(125, 211, 252, 0.2), transparent 34%) !important;
+  border-color: rgba(255, 255, 255, 0.76) !important;
+  color: #0f172a !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.92),
+    0 22px 56px rgba(15, 23, 42, 0.1) !important;
+}
+
+html[data-theme="light"] .dric-projects-page .dric-funding-metric p,
+html[data-theme="light"] .dric-projects-page .dric-funding-area,
+html[data-theme="light"] .dric-projects-page .dric-funding-document span {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-projects-page .dric-funding-document:hover,
+html[data-theme="light"] .dric-projects-page .dric-funding-area:hover {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.78), rgba(255, 236, 238, 0.48)),
+    radial-gradient(circle at 88% 12%, rgba(227, 6, 19, 0.12), transparent 34%) !important;
+  border-color: rgba(227, 6, 19, 0.36) !important;
+}
+
+html[data-theme="light"] .dric-projects-page .dric-funding-document svg {
+  color: #E30613 !important;
+}
+
+html[data-theme="light"] .dric-projects-page .dric-funding-document:hover svg,
+html[data-theme="light"] .dric-projects-page .dric-funding-document:hover span:first-child svg {
+  color: #ffffff !important;
+}
+
+html[data-theme="light"] .dric-mobility-hero-glow {
+  opacity: 0;
+}
+
+.dric-mobility-landing-page,
+.dric-mobility-detail-page {
+  background:
+    radial-gradient(circle at 0% 14%, rgba(227, 6, 19, 0.24), transparent 34%),
+    radial-gradient(circle at 100% 8%, rgba(0, 55, 112, 0.44), transparent 38%),
+    radial-gradient(circle at 44% 48%, rgba(15, 23, 42, 0.78), transparent 46%),
+    linear-gradient(145deg, #020617 0%, #08111f 45%, #12070a 100%) !important;
+  background-attachment: fixed;
+  background-size: 100vw 100vh;
+  background-repeat: no-repeat;
+}
+
+.dric-mobility-landing-page .dric-mobility-hero > .absolute.inset-0,
+.dric-mobility-landing-page .dric-mobility-section > .absolute.inset-0,
+.dric-mobility-detail-page .dric-mobility-hero > .absolute.inset-0,
+.dric-mobility-detail-page .dric-mobility-section > .absolute.inset-0 {
+  background: transparent !important;
+}
+
+html[data-theme="light"] .dric-mobility-page {
+  background:
+    radial-gradient(circle at 18% 8%, rgba(255, 255, 255, 0.96), transparent 28%),
+    radial-gradient(circle at 82% 12%, rgba(186, 216, 255, 0.72), transparent 32%),
+    radial-gradient(circle at 14% 86%, rgba(255, 205, 224, 0.62), transparent 34%),
+    linear-gradient(135deg, #f9fafb 0%, #e8edf5 46%, #f7f9fc 100%) !important;
+}
+
+html[data-theme="light"] .dric-mobility-landing-page,
+html[data-theme="light"] .dric-mobility-detail-page {
+  background:
+    radial-gradient(circle at 18% 8%, rgba(255, 255, 255, 0.96), transparent 28%),
+    radial-gradient(circle at 82% 12%, rgba(186, 216, 255, 0.72), transparent 32%),
+    radial-gradient(circle at 14% 86%, rgba(255, 205, 224, 0.62), transparent 34%),
+    linear-gradient(135deg, #f9fafb 0%, #e8edf5 46%, #f7f9fc 100%) !important;
+  background-attachment: fixed;
+  background-size: 100vw 100vh;
+  background-repeat: no-repeat;
+}
+
+html[data-theme="light"] .dric-mobility-page .dric-mobility-hero > .absolute.inset-0,
+html[data-theme="light"] .dric-mobility-page .dric-mobility-section > .absolute.inset-0 {
+  background:
+    radial-gradient(circle at top, rgba(0, 55, 112, 0.16), transparent 38%),
+    radial-gradient(circle at bottom right, rgba(0, 55, 112, 0.18), transparent 36%) !important;
+}
+
+html[data-theme="light"] .dric-mobility-landing-page .dric-mobility-hero > .absolute.inset-0,
+html[data-theme="light"] .dric-mobility-landing-page .dric-mobility-section > .absolute.inset-0,
+html[data-theme="light"] .dric-mobility-detail-page .dric-mobility-hero > .absolute.inset-0,
+html[data-theme="light"] .dric-mobility-detail-page .dric-mobility-section > .absolute.inset-0 {
+  background: transparent !important;
+}
+
+html[data-theme="light"] .dric-mobility-page .dric-mobility-hero,
+html[data-theme="light"] .dric-mobility-page .dric-mobility-section {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-mobility-page .dric-mobility-hero h1,
+html[data-theme="light"] .dric-mobility-page .dric-mobility-section h2,
+html[data-theme="light"] .dric-mobility-page .dric-mobility-section h3 {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-mobility-page .dric-mobility-hero p:not(:first-child),
+html[data-theme="light"] .dric-mobility-page .dric-mobility-section p {
+  color: rgba(71, 85, 105, 0.78) !important;
+}
+
+html[data-theme="light"] .dric-mobility-page .dric-mobility-card,
+html[data-theme="light"] .dric-mobility-page .dric-mobility-card-inner,
+html[data-theme="light"] .dric-mobility-page .dric-mobility-track-panel,
+html[data-theme="light"] .dric-mobility-page .dric-mobility-track-heading,
+html[data-theme="light"] .dric-mobility-page .dric-mobility-program-card,
+html[data-theme="light"] .dric-mobility-page .dric-mobility-call-card,
+html[data-theme="light"] .dric-mobility-page .dric-mobility-stat {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0.18)),
+    radial-gradient(circle at 16% 12%, rgba(255, 255, 255, 0.9), transparent 30%),
+    radial-gradient(circle at 86% 16%, rgba(125, 211, 252, 0.2), transparent 34%) !important;
+  color: #0f172a !important;
+  border-color: rgba(255, 255, 255, 0.74) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.94),
+    0 22px 56px rgba(15, 23, 42, 0.1) !important;
+  backdrop-filter: blur(10px) saturate(130%);
+}
+
+html[data-theme="light"] .dric-mobility-page .dric-mobility-program-card:hover,
+html[data-theme="light"] .dric-mobility-page .dric-mobility-call-card:hover {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.74), rgba(255, 238, 240, 0.42)),
+    radial-gradient(circle at 86% 16%, rgba(227, 6, 19, 0.12), transparent 34%) !important;
+  border-color: rgba(227, 6, 19, 0.36) !important;
+}
+
+html[data-theme="light"] .dric-mobility-page .dric-mobility-program-card h3,
+html[data-theme="light"] .dric-mobility-page .dric-mobility-call-card h3,
+html[data-theme="light"] .dric-mobility-page .dric-mobility-stat p:first-child {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-mobility-page .dric-mobility-program-card span,
+html[data-theme="light"] .dric-mobility-page .dric-mobility-program-card li,
+html[data-theme="light"] .dric-mobility-page .dric-mobility-call-card span,
+html[data-theme="light"] .dric-mobility-page .dric-mobility-call-card li,
+html[data-theme="light"] .dric-mobility-page .dric-mobility-stat p:last-child {
+  color: rgba(15, 23, 42, 0.72) !important;
+}
+
+html[data-theme="light"] .dric-mobility-page .dric-mobility-program-card .dric-mobility-program-number {
+  color: #67e8f9 !important;
+  text-shadow: 0 0 18px rgba(103, 232, 249, 0.26);
+}
+
+html[data-theme="light"] .dric-mobility-page .dric-mobility-program-card [class*="bg-[#020617]"],
+html[data-theme="light"] .dric-mobility-page .dric-mobility-call-card [class*="bg-[#020617]"] {
+  background: rgba(255, 255, 255, 0.46) !important;
+  border-color: rgba(255, 255, 255, 0.74) !important;
+}
+
+html[data-theme="light"] .dric-mobility-page .dric-mobility-cyan-note {
+  background:
+    linear-gradient(135deg, rgba(218, 250, 255, 0.86), rgba(255, 255, 255, 0.64)) !important;
+  border-color: rgba(8, 145, 178, 0.28) !important;
+  color: #0f172a !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.88),
+    0 14px 34px rgba(8, 47, 73, 0.08) !important;
+}
+
+html[data-theme="light"] .dric-mobility-page .dric-mobility-card-button {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0.22)) !important;
+  border-color: rgba(8, 145, 178, 0.38) !important;
+  color: #0f172a !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.82),
+    0 12px 30px rgba(15, 23, 42, 0.1) !important;
+}
+
+html[data-theme="light"] .dric-mobility-page .dric-mobility-card-button svg {
+  color: #0f172a !important;
+}
+
+.dric-mobility-detail-page {
+  background: #020617 !important;
+  background-attachment: initial;
+  background-repeat: initial;
+  background-size: initial;
+  color: #ffffff !important;
+}
+
+html[data-theme="light"] .dric-mobility-detail-page {
+  background:
+    radial-gradient(circle at 15% 8%, rgba(255, 255, 255, 0.96), transparent 28%),
+    radial-gradient(circle at 82% 12%, rgba(186, 216, 255, 0.72), transparent 32%),
+    radial-gradient(circle at 14% 86%, rgba(255, 205, 224, 0.56), transparent 34%),
+    linear-gradient(135deg, #f9fafb 0%, #e8edf5 46%, #f7f9fc 100%) !important;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: 100vw 100vh;
+  color: #0f172a !important;
+}
+
+.dric-mobility-detail-page .dric-mobility-hero > .absolute.inset-0,
+.dric-mobility-detail-page .dric-mobility-section > .absolute.inset-0,
+html[data-theme="light"] .dric-mobility-detail-page .dric-mobility-hero > .absolute.inset-0,
+html[data-theme="light"] .dric-mobility-detail-page .dric-mobility-section > .absolute.inset-0 {
+  background: transparent !important;
+}
+
+html[data-theme="light"] .dric-mobility-detail-page .dric-mobility-hero,
+html[data-theme="light"] .dric-mobility-detail-page .dric-mobility-section,
+html[data-theme="light"] .dric-mobility-detail-page .dric-mobility-hero h1,
+html[data-theme="light"] .dric-mobility-detail-page .dric-mobility-section h2,
+html[data-theme="light"] .dric-mobility-detail-page .dric-mobility-section h3 {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-mobility-detail-page .dric-mobility-hero p:not(:first-child),
+html[data-theme="light"] .dric-mobility-detail-page .dric-mobility-section p {
+  color: rgba(71, 85, 105, 0.78) !important;
+}
+
+.dric-mobility-programs-index-page {
+  background: #020617 !important;
+  background-attachment: initial;
+  background-repeat: initial;
+  background-size: initial;
+  color: #ffffff !important;
+}
+
+html[data-theme="light"] .dric-mobility-programs-index-page {
+  background:
+    radial-gradient(circle at 15% 8%, rgba(255, 255, 255, 0.96), transparent 28%),
+    radial-gradient(circle at 82% 12%, rgba(186, 216, 255, 0.72), transparent 32%),
+    radial-gradient(circle at 14% 86%, rgba(255, 205, 224, 0.56), transparent 34%),
+    linear-gradient(135deg, #f9fafb 0%, #e8edf5 46%, #f7f9fc 100%) !important;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: 100vw 100vh;
+  color: #0f172a !important;
+}
+
+.dric-mobility-programs-index-page .dric-mobility-hero > .absolute.inset-0,
+.dric-mobility-programs-index-page .dric-mobility-section > .absolute.inset-0,
+html[data-theme="light"] .dric-mobility-programs-index-page .dric-mobility-hero > .absolute.inset-0,
+html[data-theme="light"] .dric-mobility-programs-index-page .dric-mobility-section > .absolute.inset-0 {
+  background: transparent !important;
+}
+
+html[data-theme="light"] .dric-mobility-programs-index-page .dric-mobility-hero,
+html[data-theme="light"] .dric-mobility-programs-index-page .dric-mobility-section,
+html[data-theme="light"] .dric-mobility-programs-index-page .dric-mobility-hero h1,
+html[data-theme="light"] .dric-mobility-programs-index-page .dric-mobility-section h2,
+html[data-theme="light"] .dric-mobility-programs-index-page .dric-mobility-section h3 {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-mobility-programs-index-page .dric-mobility-hero p:not(:first-child),
+html[data-theme="light"] .dric-mobility-programs-index-page .dric-mobility-section p {
+  color: rgba(71, 85, 105, 0.78) !important;
+}
+
+.dric-mobility-programs-index-page .dric-mobility-program-card {
+  position: relative;
+  overflow: hidden;
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow:
+    0 0 18px rgba(103, 232, 249, 0.14),
+    0 0 42px rgba(227, 6, 19, 0.1),
+    0 30px 80px rgba(0, 0, 0, 0.24) !important;
+}
+
+.dric-mobility-programs-index-page .dric-mobility-program-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(180deg, rgba(103, 232, 249, 0.82) 0%, rgba(227, 6, 19, 0.72) 48%, rgba(0, 55, 112, 0.92) 100%);
+  pointer-events: none;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+}
+
+.dric-mobility-programs-index-page .dric-mobility-program-card:hover {
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow:
+    0 0 22px rgba(103, 232, 249, 0.2),
+    0 0 52px rgba(227, 6, 19, 0.16),
+    0 34px 86px rgba(0, 0, 0, 0.28) !important;
+}
+
+html[data-theme="light"] .dric-mobility-programs-index-page .dric-mobility-program-card {
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.86),
+    0 22px 56px rgba(15, 23, 42, 0.12) !important;
+}
+
+html[data-theme="light"] .dric-mobility-programs-index-page .dric-mobility-program-card:hover {
+  background: transparent !important;
+  border-color: transparent !important;
+}
+
+html[data-theme="light"] .dric-mobility-programs-index-page .dric-mobility-program-card::before {
+  background: linear-gradient(180deg, rgba(8, 145, 178, 0.58) 0%, rgba(227, 6, 19, 0.42) 48%, rgba(0, 55, 112, 0.5) 100%);
+}
+
+html[data-theme="light"] .dric-mobility-programs-index-page .dric-mobility-program-tag {
+  background: rgba(8, 145, 178, 0.09) !important;
+  border-color: rgba(8, 145, 178, 0.22) !important;
+  color: #0e7490 !important;
+}
+
+html[data-theme="light"] .dric-mobility-programs-index-page .dric-mobility-condition-panel {
+  background: rgba(255, 255, 255, 0.46) !important;
+  border-color: rgba(255, 255, 255, 0.74) !important;
+}
+
+.dric-mobility-programs-index-page .dric-mobility-track-heading,
+html[data-theme="light"] .dric-mobility-programs-index-page .dric-mobility-track-heading {
+  background: transparent !important;
+  border: 0 !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  padding: 0 !important;
+}
+
+.dric-mobility-programs-index-page .dric-mobility-track-heading::before {
+  display: none !important;
+}
+
+.dric-scholarships-hub-page {
+  background: #020617 !important;
+  background-attachment: initial;
+  background-repeat: initial;
+  background-size: initial;
+  color: #ffffff !important;
+}
+
+.dric-scholarships-hub-eyebrow {
+  color: #E30613;
+  padding-left: 0.2rem;
+}
+
+html[data-theme="light"] .dric-scholarships-hub-page {
+  background:
+    radial-gradient(circle at 15% 8%, rgba(255, 255, 255, 0.96), transparent 28%),
+    radial-gradient(circle at 82% 12%, rgba(186, 216, 255, 0.72), transparent 32%),
+    radial-gradient(circle at 14% 86%, rgba(255, 205, 224, 0.56), transparent 34%),
+    linear-gradient(135deg, #f9fafb 0%, #e8edf5 46%, #f7f9fc 100%) !important;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: 100vw 100vh;
+  color: #0f172a !important;
+}
+
+.dric-scholarships-hub-page .dric-mobility-hero > .absolute.inset-0,
+.dric-scholarships-hub-page .dric-mobility-section > .absolute.inset-0,
+html[data-theme="light"] .dric-scholarships-hub-page .dric-mobility-hero > .absolute.inset-0,
+html[data-theme="light"] .dric-scholarships-hub-page .dric-mobility-section > .absolute.inset-0 {
+  background: transparent !important;
+}
+
+html[data-theme="light"] .dric-scholarships-hub-page .dric-mobility-hero,
+html[data-theme="light"] .dric-scholarships-hub-page .dric-mobility-section,
+html[data-theme="light"] .dric-scholarships-hub-page .dric-mobility-hero h1,
+html[data-theme="light"] .dric-scholarships-hub-page .dric-mobility-section h2,
+html[data-theme="light"] .dric-scholarships-hub-page .dric-mobility-section h3 {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-scholarships-hub-page .dric-mobility-hero p:not(:first-child),
+html[data-theme="light"] .dric-scholarships-hub-page .dric-mobility-section p {
+  color: rgba(71, 85, 105, 0.78) !important;
+}
+
+html[data-theme="light"] .dric-scholarships-hub-page .dric-scholarships-hub-eyebrow {
+  color: #a40000 !important;
+  -webkit-text-fill-color: #a40000 !important;
+}
+
+html[data-theme="light"] .dric-scholarships-hub-page .dric-scholarships-hub-hero-copy {
+  padding-left: 0.2rem;
+}
+
+.dric-awards-page {
+  background: #020617 !important;
+}
+
+.dric-awards-hero,
+.dric-awards-page section {
+  color: #ffffff;
+}
+
+.dric-awards-cms-note,
+.dric-awards-filter,
+.dric-awards-card {
+  box-shadow:
+    0 0 18px rgba(197, 157, 255, 0.14),
+    0 26px 72px rgba(0, 0, 0, 0.24);
+}
+
+.dric-awards-card {
+  background: transparent;
+  border-color: transparent;
+  transition:
+    box-shadow 240ms ease,
+    transform 240ms ease;
+}
+
+.dric-awards-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(180deg, #c59dff 0%, #111a82 100%);
+  pointer-events: none;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+}
+
+.dric-awards-card:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 0 22px rgba(197, 157, 255, 0.24),
+    0 0 52px rgba(84, 36, 187, 0.16),
+    0 34px 86px rgba(0, 0, 0, 0.28);
+}
+
+.dric-awards-card-inner {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.54);
+}
+
+.dric-awards-card-featured .dric-awards-card-inner {
+  min-height: 100%;
+}
+
+.dric-awards-icon {
+  background:
+    linear-gradient(135deg, #E30613 0%, #a40000 100%);
+  box-shadow:
+    0 0 18px rgba(227, 6, 19, 0.22),
+    0 14px 34px rgba(0, 0, 0, 0.2);
+}
+
+.dric-awards-filter {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.64);
+  cursor: pointer;
+}
+
+.dric-awards-filter:hover,
+.dric-awards-filter-active {
+  background:
+    linear-gradient(135deg, rgba(197, 157, 255, 0.2), rgba(84, 36, 187, 0.12)),
+    rgba(255, 255, 255, 0.08);
+  border-color: rgba(197, 157, 255, 0.5);
+  color: #ffffff;
+  box-shadow:
+    0 0 14px rgba(197, 157, 255, 0.22),
+    0 14px 34px rgba(0, 0, 0, 0.18);
+}
+
+.dric-awards-link {
+  background: linear-gradient(135deg, #c59dff 0%, #5424bb 100%);
+  box-shadow:
+    0 0 18px rgba(197, 157, 255, 0.16),
+    0 0 36px rgba(84, 36, 187, 0.14);
+}
+
+.dric-awards-link:hover {
+  box-shadow:
+    0 0 8px rgba(255, 255, 255, 0.42),
+    0 0 22px rgba(253, 94, 181, 0.52),
+    0 16px 38px rgba(0, 0, 0, 0.24);
+}
+
+html[data-theme="light"] .dric-awards-page {
+  background:
+    radial-gradient(circle at 15% 8%, rgba(255, 255, 255, 0.96), transparent 28%),
+    radial-gradient(circle at 82% 12%, rgba(186, 216, 255, 0.72), transparent 32%),
+    radial-gradient(circle at 14% 86%, rgba(255, 205, 224, 0.56), transparent 34%),
+    linear-gradient(135deg, #f9fafb 0%, #e8edf5 46%, #f7f9fc 100%) !important;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: 100vw 100vh;
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-awards-page,
+html[data-theme="light"] .dric-awards-page section,
+html[data-theme="light"] .dric-awards-page h1,
+html[data-theme="light"] .dric-awards-page h2,
+html[data-theme="light"] .dric-awards-page h3 {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-awards-page p,
+html[data-theme="light"] .dric-awards-page li,
+html[data-theme="light"] .dric-awards-page span {
+  color: rgba(71, 85, 105, 0.78) !important;
+}
+
+html[data-theme="light"] .dric-awards-back,
+html[data-theme="light"] .dric-awards-eyebrow,
+html[data-theme="light"] .dric-awards-cms-note,
+html[data-theme="light"] .dric-awards-filter,
+html[data-theme="light"] .dric-awards-card-inner,
+html[data-theme="light"] .dric-awards-meta {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.68), rgba(255, 255, 255, 0.26)) !important;
+  border-color: rgba(255, 255, 255, 0.82) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 22px 56px rgba(15, 23, 42, 0.1) !important;
+  backdrop-filter: blur(10px) saturate(130%);
+}
+
+html[data-theme="light"] .dric-awards-card {
+  background: transparent !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.86),
+    0 22px 56px rgba(15, 23, 42, 0.12) !important;
+}
+
+html[data-theme="light"] .dric-awards-card:hover {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.86),
+    0 28px 66px rgba(15, 23, 42, 0.14) !important;
+}
+
+html[data-theme="light"] .dric-awards-card-inner {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-awards-card-inner [class*="bg-[#020617]"] {
+  background: rgba(255, 255, 255, 0.46) !important;
+  border-color: rgba(255, 255, 255, 0.74) !important;
+}
+
+html[data-theme="light"] .dric-awards-page .dric-awards-chip,
+html[data-theme="light"] .dric-awards-page .dric-awards-section-kicker,
+html[data-theme="light"] .dric-awards-page .dric-awards-filter {
+  color: #a40000 !important;
+}
+
+html[data-theme="light"] .dric-awards-filter:hover,
+html[data-theme="light"] .dric-awards-filter-active {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.82), rgba(255, 238, 240, 0.48)) !important;
+  border-color: rgba(227, 6, 19, 0.34) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.92),
+    0 16px 38px rgba(227, 6, 19, 0.12) !important;
+}
+
+html[data-theme="light"] .dric-awards-page .dric-awards-meta .font-bold,
+html[data-theme="light"] .dric-awards-page .dric-awards-card h3,
+html[data-theme="light"] .dric-awards-page .dric-awards-card .font-bold {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-awards-link,
+html[data-theme="light"] .dric-awards-link span,
+html[data-theme="light"] .dric-awards-link svg {
+  color: #ffffff !important;
+}
+
+.dric-info-mobility-page {
+  background: #020617 !important;
+  color: #ffffff !important;
+}
+
+.dric-info-card {
+  background: transparent;
+  border-color: transparent;
+  box-shadow:
+    0 0 18px rgba(197, 157, 255, 0.18),
+    0 0 42px rgba(84, 36, 187, 0.12),
+    0 30px 80px rgba(0, 0, 0, 0.24);
+}
+
+.dric-info-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(180deg, #c59dff 0%, #111a82 100%);
+  pointer-events: none;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+}
+
+.dric-info-card-inner {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.54);
+}
+
+.dric-info-icon {
+  background: linear-gradient(135deg, #E30613 0%, #a40000 100%);
+  box-shadow:
+    0 0 18px rgba(227, 6, 19, 0.22),
+    0 14px 34px rgba(0, 0, 0, 0.2);
+}
+
+.dric-info-image {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 24px 64px rgba(0, 0, 0, 0.22);
+}
+
+.dric-info-image::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 24% 18%, rgba(197, 157, 255, 0.18), transparent 36%),
+    radial-gradient(circle at 78% 72%, rgba(227, 6, 19, 0.14), transparent 34%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+}
+
+.dric-info-image img {
+  z-index: 2;
+}
+
+.dric-info-image-placeholder {
+  z-index: 1;
+}
+
+.dric-info-panel,
+.dric-info-resource {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 16px 38px rgba(0, 0, 0, 0.12);
+}
+
+html[data-theme="light"] .dric-info-mobility-page {
+  background:
+    radial-gradient(circle at 15% 8%, rgba(255, 255, 255, 0.96), transparent 28%),
+    radial-gradient(circle at 82% 12%, rgba(186, 216, 255, 0.72), transparent 32%),
+    radial-gradient(circle at 14% 86%, rgba(255, 205, 224, 0.56), transparent 34%),
+    linear-gradient(135deg, #f9fafb 0%, #e8edf5 46%, #f7f9fc 100%) !important;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: 100vw 100vh;
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-info-mobility-page,
+html[data-theme="light"] .dric-info-mobility-page section,
+html[data-theme="light"] .dric-info-mobility-page h1,
+html[data-theme="light"] .dric-info-mobility-page h2 {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-info-mobility-page p,
+html[data-theme="light"] .dric-info-mobility-page li,
+html[data-theme="light"] .dric-info-mobility-page span {
+  color: rgba(71, 85, 105, 0.78) !important;
+}
+
+html[data-theme="light"] .dric-info-back,
+html[data-theme="light"] .dric-info-eyebrow,
+html[data-theme="light"] .dric-info-card-inner,
+html[data-theme="light"] .dric-info-panel,
+html[data-theme="light"] .dric-info-resource,
+html[data-theme="light"] .dric-info-image {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.68), rgba(255, 255, 255, 0.26)) !important;
+  border-color: rgba(255, 255, 255, 0.82) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 22px 56px rgba(15, 23, 42, 0.1) !important;
+  backdrop-filter: blur(10px) saturate(130%);
+}
+
+html[data-theme="light"] .dric-info-card {
+  background: transparent !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.86),
+    0 22px 56px rgba(15, 23, 42, 0.12) !important;
+}
+
+html[data-theme="light"] .dric-info-mobility-page .text-cyan-200 {
+  color: #a40000 !important;
+}
+
+html[data-theme="light"] .dric-info-mobility-page .text-white,
+html[data-theme="light"] .dric-info-mobility-page .font-bold {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-info-mobility-page .dric-site-header .dric-site-header-shell {
+  background: rgba(0, 25, 53, 0.88) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25) !important;
+}
+
+html[data-theme="light"] .dric-info-mobility-page .dric-site-header .dric-site-header-button {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: #ffffff !important;
+  box-shadow: none !important;
+}
+
+html[data-theme="light"] .dric-info-mobility-page .dric-site-header .dric-site-header-button svg {
+  color: #ffffff !important;
+}
+
+html[data-theme="light"] .dric-info-resource:hover {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.82), rgba(255, 238, 240, 0.48)) !important;
+  border-color: rgba(227, 6, 19, 0.34) !important;
+}
+
+html[data-theme="light"] .dric-memberships-hero-glow {
+  opacity: 0;
+}
+
+.dric-memberships-page {
+  background: #020617 !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="light"] .dric-memberships-page {
+  background:
+    radial-gradient(circle at 15% 8%, rgba(255, 255, 255, 0.96), transparent 28%),
+    radial-gradient(circle at 82% 12%, rgba(186, 216, 255, 0.72), transparent 32%),
+    radial-gradient(circle at 14% 86%, rgba(255, 205, 224, 0.56), transparent 34%),
+    linear-gradient(135deg, #f9fafb 0%, #e8edf5 46%, #f7f9fc 100%) !important;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: 100vw 100vh;
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-memberships-page .dric-memberships-hero > .absolute.inset-0,
+html[data-theme="light"] .dric-memberships-page .dric-memberships-section > .absolute.inset-0 {
+  background: transparent !important;
+}
+
+html[data-theme="light"] .dric-memberships-page .dric-memberships-hero,
+html[data-theme="light"] .dric-memberships-page .dric-memberships-section {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-memberships-page .dric-memberships-hero h1,
+html[data-theme="light"] .dric-memberships-page .dric-memberships-section h2,
+html[data-theme="light"] .dric-memberships-page .dric-memberships-section h3 {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-memberships-page .dric-memberships-hero p:not(:first-child),
+html[data-theme="light"] .dric-memberships-page .dric-memberships-section p {
+  color: rgba(71, 85, 105, 0.78) !important;
+}
+
+html[data-theme="light"] .dric-memberships-page .dric-memberships-card,
+html[data-theme="light"] .dric-memberships-page .dric-memberships-card-inner,
+html[data-theme="light"] .dric-memberships-page .dric-memberships-info-panel {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0.18)),
+    radial-gradient(circle at 16% 12%, rgba(255, 255, 255, 0.9), transparent 30%),
+    radial-gradient(circle at 86% 16%, rgba(125, 211, 252, 0.2), transparent 34%) !important;
+  color: #0f172a !important;
+  border-color: rgba(255, 255, 255, 0.74) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.94),
+    0 22px 56px rgba(15, 23, 42, 0.1) !important;
+  backdrop-filter: blur(10px) saturate(130%);
+}
+
+html[data-theme="light"] .dric-memberships-page .dric-memberships-card h3,
+html[data-theme="light"] .dric-memberships-page .dric-memberships-info-panel h2 {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-memberships-page .dric-memberships-card p,
+html[data-theme="light"] .dric-memberships-page .dric-memberships-info-panel p {
+  color: rgba(71, 85, 105, 0.78) !important;
+}
+
+html[data-theme="light"] .dric-memberships-page .dric-memberships-note {
+  background: rgba(255, 251, 235, 0.72) !important;
+  border-color: rgba(245, 158, 11, 0.28) !important;
+}
+
+html[data-theme="light"] .dric-memberships-page .dric-memberships-note a {
+  color: #003770 !important;
+}
+
+html[data-theme="light"] .dric-memberships-page .dric-memberships-card-button {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0.22)) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.82),
+    0 12px 30px rgba(15, 23, 42, 0.1) !important;
+}
+
+html[data-theme="light"] .dric-memberships-page .dric-memberships-info-panel a {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-regulations-page {
+  background:
+    radial-gradient(circle at 18% 8%, rgba(255, 255, 255, 0.96), transparent 28%),
+    radial-gradient(circle at 82% 12%, rgba(186, 216, 255, 0.72), transparent 32%),
+    radial-gradient(circle at 14% 86%, rgba(255, 205, 224, 0.62), transparent 34%),
+    linear-gradient(135deg, #f9fafb 0%, #e8edf5 46%, #f7f9fc 100%) !important;
+}
+
+html[data-theme="light"] .dric-regulations-page .dric-regulations-section > .absolute.inset-0 {
+  background:
+    radial-gradient(circle at top, rgba(0, 55, 112, 0.16), transparent 38%),
+    radial-gradient(circle at bottom right, rgba(0, 55, 112, 0.18), transparent 36%) !important;
+}
+
+html[data-theme="light"] .dric-regulations-page .dric-regulations-section {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-regulations-page .dric-regulations-section h1 {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-regulations-page .dric-regulations-section p {
+  color: rgba(71, 85, 105, 0.78) !important;
+}
+
+html[data-theme="light"] .dric-regulations-page .dric-regulations-panel,
+html[data-theme="light"] .dric-regulations-page .dric-regulations-list,
+html[data-theme="light"] .dric-regulations-page .dric-regulations-row {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0.18)),
+    radial-gradient(circle at 16% 12%, rgba(255, 255, 255, 0.9), transparent 30%),
+    radial-gradient(circle at 86% 16%, rgba(125, 211, 252, 0.2), transparent 34%) !important;
+  color: #0f172a !important;
+  border-color: rgba(255, 255, 255, 0.74) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.94),
+    0 22px 56px rgba(15, 23, 42, 0.1) !important;
+  backdrop-filter: blur(10px) saturate(130%);
+}
+
+html[data-theme="light"] .dric-regulations-page .dric-regulations-row:hover {
+  background: rgba(0, 55, 112, 0.1) !important;
+}
+
+html[data-theme="light"] .dric-regulations-page .dric-regulations-input,
+html[data-theme="light"] .dric-regulations-page .dric-regulations-select {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.28)) !important;
+  color: #0f172a !important;
+  border-color: rgba(255, 255, 255, 0.74) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.82),
+    0 12px 30px rgba(15, 23, 42, 0.1) !important;
+}
+
+html[data-theme="light"] .dric-regulations-page .dric-regulations-input::placeholder {
+  color: rgba(71, 85, 105, 0.58) !important;
+}
+
+html[data-theme="light"] .dric-regulations-page .dric-regulations-input input {
+  color: #0f172a !important;
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+html[data-theme="light"] .dric-regulations-page .dric-regulations-input input::placeholder {
+  color: rgba(71, 85, 105, 0.58) !important;
+}
+
+.dric-regulations-filter-menu,
+.dric-regulations-secondary-action,
+.dric-regulations-download {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 0.75rem 1.1rem;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    background 180ms ease,
+    color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.dric-regulations-filter-menu:hover,
+.dric-regulations-download {
+  border-color: rgba(103, 232, 249, 0.45);
+  background: rgba(103, 232, 249, 0.1);
+  color: #67e8f9;
+}
+
+.dric-regulations-category-select option {
+  background: #020617;
+  color: #ffffff;
+}
+
+.dric-regulations-download:hover,
+.dric-regulations-secondary-action:hover {
+  transform: translateY(-1px);
+  border-color: rgba(103, 232, 249, 0.65);
+  color: #ffffff;
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.18);
+}
+
+.dric-regulations-secondary-action {
+  background: rgba(255, 255, 255, 0.035);
+}
+
+html[data-theme="light"] .dric-regulations-page .dric-regulations-stats > div,
+html[data-theme="light"] .dric-regulations-page .dric-regulations-card {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.68), rgba(255, 255, 255, 0.22)),
+    radial-gradient(circle at 88% 12%, rgba(125, 211, 252, 0.18), transparent 36%) !important;
+  border-color: rgba(255, 255, 255, 0.76) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 20px 52px rgba(15, 23, 42, 0.1) !important;
+}
+
+html[data-theme="light"] .dric-regulations-page .dric-regulations-stats p:first-child,
+html[data-theme="light"] .dric-regulations-page .dric-regulations-card h2 {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-regulations-page .dric-regulations-stats p:last-child {
+  color: rgba(71, 85, 105, 0.66) !important;
+}
+
+html[data-theme="light"] .dric-regulations-page .dric-regulations-filter-menu,
+html[data-theme="light"] .dric-regulations-page .dric-regulations-icon,
+html[data-theme="light"] .dric-regulations-page .dric-regulations-secondary-action {
+  background: rgba(255, 255, 255, 0.42) !important;
+  border-color: rgba(15, 23, 42, 0.08) !important;
+  color: rgba(15, 23, 42, 0.68) !important;
+}
+
+html[data-theme="light"] .dric-regulations-page .dric-regulations-filter-menu:hover {
+  background: rgba(255, 255, 255, 0.58) !important;
+  border-color: rgba(0, 55, 112, 0.24) !important;
+  color: #003770 !important;
+  box-shadow: 0 16px 34px rgba(0, 55, 112, 0.1) !important;
+}
+
+html[data-theme="light"] .dric-regulations-page .dric-regulations-download {
+  background: rgba(0, 55, 112, 0.9) !important;
+  border-color: rgba(0, 55, 112, 0.18) !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="light"] .dric-regulations-page .dric-regulations-category-select {
+  color: #0f172a !important;
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+html[data-theme="light"] .dric-regulations-page .dric-regulations-filter-menu:hover .dric-regulations-category-select {
+  color: #003770 !important;
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+html[data-theme="light"] .dric-regulations-page .dric-regulations-category-select option {
+  background: #ffffff;
+  color: #0f172a;
+}
+
+html[data-theme="light"] .dric-regulations-page .dric-regulations-card p,
+html[data-theme="light"] .dric-regulations-page .dric-regulations-icon svg {
+  color: #003770 !important;
+}
+
+html[data-theme="light"] .dric-regulations-page .dric-regulations-category {
+  background: rgba(227, 6, 19, 0.06) !important;
+  border-color: rgba(227, 6, 19, 0.22) !important;
+  color: #c70511 !important;
+}
+
+@media (max-width: 640px) {
+  .dric-regulations-page .dric-regulations-section {
+    padding-inline: 1rem !important;
+    padding-top: 8.75rem !important;
+  }
+
+  .dric-regulations-page .dric-regulations-section h1 {
+    max-width: 100%;
+    font-size: clamp(3.2rem, 18vw, 4.45rem) !important;
+    line-height: 0.98 !important;
+    letter-spacing: 0 !important;
+    overflow-wrap: anywhere;
+  }
+
+  .dric-regulations-page .dric-regulations-section p:first-child {
+    font-size: 0.75rem !important;
+    letter-spacing: 0.28em !important;
+  }
+
+  .dric-regulations-page .dric-regulations-section h1 + p {
+    max-width: 100%;
+    font-size: 1.15rem !important;
+    line-height: 1.55 !important;
+  }
+
+  .dric-regulations-page .dric-regulations-panel {
+    margin-top: 3.75rem !important;
+    padding: 1.15rem !important;
+    border-radius: 1.65rem !important;
+  }
+
+  .dric-regulations-page .dric-regulations-toolbar {
+    grid-template-columns: 1fr !important;
+  }
+
+  .dric-regulations-page .dric-regulations-input,
+  .dric-regulations-page .dric-regulations-filter-menu {
+    width: 100%;
+  }
+
+  .dric-regulations-page .dric-regulations-category-select {
+    width: 100%;
+  }
+}
+
+html[data-theme="light"] .dric-reports-hero-glow {
+  opacity: 0;
+}
+
+.dric-reports-page {
+  background: #020617 !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="light"] .dric-reports-page {
+  background:
+    radial-gradient(circle at 15% 8%, rgba(255, 255, 255, 0.96), transparent 28%),
+    radial-gradient(circle at 82% 12%, rgba(186, 216, 255, 0.72), transparent 32%),
+    radial-gradient(circle at 14% 86%, rgba(255, 205, 224, 0.56), transparent 34%),
+    linear-gradient(135deg, #f9fafb 0%, #e8edf5 46%, #f7f9fc 100%) !important;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: 100vw 100vh;
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-reports-page .dric-reports-hero > .absolute.inset-0,
+html[data-theme="light"] .dric-reports-page .dric-reports-section > .absolute.inset-0 {
+  background: transparent !important;
+}
+
+html[data-theme="light"] .dric-reports-page .dric-reports-hero,
+html[data-theme="light"] .dric-reports-page .dric-reports-section {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-reports-page .dric-reports-hero h1,
+html[data-theme="light"] .dric-reports-page .dric-reports-section h2 {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-reports-page .dric-reports-hero p:not(:first-child),
+html[data-theme="light"] .dric-reports-page .dric-reports-section p {
+  color: rgba(71, 85, 105, 0.78) !important;
+}
+
+html[data-theme="light"] .dric-reports-page .dric-reports-summary,
+html[data-theme="light"] .dric-reports-page .dric-reports-search,
+html[data-theme="light"] .dric-reports-page .dric-reports-card,
+html[data-theme="light"] .dric-reports-page .dric-reports-card-body {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0.18)),
+    radial-gradient(circle at 16% 12%, rgba(255, 255, 255, 0.9), transparent 30%),
+    radial-gradient(circle at 86% 16%, rgba(125, 211, 252, 0.2), transparent 34%) !important;
+  color: #0f172a !important;
+  border-color: rgba(255, 255, 255, 0.74) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.94),
+    0 22px 56px rgba(15, 23, 42, 0.1) !important;
+  backdrop-filter: blur(10px) saturate(130%);
+}
+
+html[data-theme="light"] .dric-reports-page .dric-reports-summary p,
+html[data-theme="light"] .dric-reports-page .dric-reports-card h3,
+html[data-theme="light"] .dric-reports-page .dric-reports-card-body p {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-reports-page .MuiOutlinedInput-root {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  color: #0f172a !important;
+  box-shadow: none !important;
+}
+
+html[data-theme="light"] .dric-reports-page .MuiInputBase-input {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-reports-page .MuiInputBase-input::placeholder {
+  color: rgba(71, 85, 105, 0.58) !important;
+  opacity: 1;
+}
+
+html[data-theme="light"] .dric-reports-page .dric-reports-search-input {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  color: #0f172a !important;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+html[data-theme="light"] .dric-reports-page .dric-reports-search-input::placeholder {
+  color: rgba(71, 85, 105, 0.58) !important;
+  opacity: 1;
+}
+
+.dric-reports-search-input::-webkit-search-decoration,
+.dric-reports-search-input::-webkit-search-cancel-button,
+.dric-reports-search-input::-webkit-search-results-button,
+.dric-reports-search-input::-webkit-search-results-decoration {
+  display: none;
+}
+
+html[data-theme="light"] .dric-reports-page .dric-reports-cover-accent {
+  background:
+    linear-gradient(180deg, rgba(227, 6, 19, 0.72), rgba(227, 6, 19, 0.42)),
+    radial-gradient(circle at 20% 10%, rgba(255, 255, 255, 0.34), transparent 34%) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.36);
+  box-shadow:
+    inset 1px 0 0 rgba(255, 255, 255, 0.28),
+    18px 0 44px rgba(227, 6, 19, 0.12);
+  backdrop-filter: blur(10px) saturate(125%);
+}
+
+.dric-reports-book-card {
+  perspective: 1200px;
+}
+
+.dric-reports-book-shell {
+  position: relative;
+  height: 100%;
+  border-radius: 26px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.025)),
+    #0b1020;
+  box-shadow:
+    0 24px 70px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition:
+    transform 220ms ease,
+    border-color 220ms ease,
+    box-shadow 220ms ease;
+}
+
+.dric-reports-book-card:hover .dric-reports-book-shell {
+  transform: translateY(-6px) rotateX(1.2deg);
+  border-color: rgba(103, 232, 249, 0.34);
+  box-shadow:
+    0 34px 86px rgba(0, 0, 0, 0.34),
+    0 0 0 1px rgba(103, 232, 249, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+
+.dric-reports-book-shell::before,
+.dric-reports-book-shell::after {
+  content: "";
+  position: absolute;
+  inset: 10px -9px 18px auto;
+  width: 16px;
+  border-radius: 0 20px 20px 0;
+  background:
+    repeating-linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.56) 0 2px,
+      rgba(148, 163, 184, 0.2) 2px 4px
+    );
+  opacity: 0.26;
+  transform: skewY(-2deg);
+}
+
+.dric-reports-book-shell::after {
+  inset: 18px -15px 30px auto;
+  width: 10px;
+  opacity: 0.14;
+}
+
+.dric-reports-book-cover {
+  border-radius: 26px 26px 10px 10px;
+  background:
+    linear-gradient(90deg, rgba(2, 6, 23, 0.82), transparent 25%),
+    radial-gradient(circle at 82% 8%, rgba(103, 232, 249, 0.28), transparent 30%),
+    radial-gradient(circle at 85% 88%, rgba(227, 6, 19, 0.24), transparent 32%),
+    linear-gradient(135deg, #12203f 0%, #003770 54%, #0f766e 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 -22px 40px rgba(2, 6, 23, 0.2);
+}
+
+.dric-reports-book-cover::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(120deg, transparent 0 34%, rgba(255, 255, 255, 0.14) 35%, transparent 42%),
+    repeating-linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 0.035) 0 1px,
+      transparent 1px 8px
+    );
+  opacity: 0.72;
+}
+
+.dric-reports-book-spine {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 58px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 1.35rem;
+  background:
+    linear-gradient(180deg, rgba(227, 6, 19, 0.95), rgba(127, 29, 29, 0.88)),
+    radial-gradient(circle at 50% 18%, rgba(255, 255, 255, 0.28), transparent 30%);
+  border-right: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow:
+    inset -10px 0 22px rgba(0, 0, 0, 0.22),
+    16px 0 32px rgba(2, 6, 23, 0.24);
+}
+
+.dric-reports-book-spine span {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-size: 0.84rem;
+  font-weight: 900;
+  letter-spacing: 0.24em;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.dric-reports-book-edge {
+  position: absolute;
+  inset: 16px 14px 16px auto;
+  width: 9px;
+  border-radius: 99px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(203, 213, 225, 0.24));
+  opacity: 0.32;
+}
+
+.dric-reports-book-year {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(3.8rem, 11vw, 6.2rem);
+  font-weight: 700;
+  line-height: 0.82;
+  letter-spacing: -0.08em;
+  color: rgba(255, 255, 255, 0.92);
+  text-shadow: 0 12px 34px rgba(2, 6, 23, 0.34);
+}
+
+.dric-reports-book-card:nth-child(3n + 2) .dric-reports-book-cover {
+  background:
+    linear-gradient(90deg, rgba(2, 6, 23, 0.82), transparent 25%),
+    radial-gradient(circle at 84% 8%, rgba(251, 191, 36, 0.26), transparent 30%),
+    radial-gradient(circle at 84% 86%, rgba(103, 232, 249, 0.22), transparent 32%),
+    linear-gradient(135deg, #1e293b 0%, #3b2f6f 52%, #0f766e 100%);
+}
+
+.dric-reports-book-card:nth-child(3n + 2) .dric-reports-book-spine {
+  background:
+    linear-gradient(180deg, rgba(14, 116, 144, 0.96), rgba(12, 74, 110, 0.92)),
+    radial-gradient(circle at 50% 18%, rgba(255, 255, 255, 0.24), transparent 30%);
+}
+
+.dric-reports-book-card:nth-child(3n + 3) .dric-reports-book-cover {
+  background:
+    linear-gradient(90deg, rgba(2, 6, 23, 0.82), transparent 25%),
+    radial-gradient(circle at 84% 8%, rgba(45, 212, 191, 0.22), transparent 30%),
+    radial-gradient(circle at 86% 86%, rgba(227, 6, 19, 0.22), transparent 32%),
+    linear-gradient(135deg, #111827 0%, #0f3d5f 48%, #4a1d31 100%);
+}
+
+.dric-reports-book-card:nth-child(3n + 3) .dric-reports-book-spine {
+  background:
+    linear-gradient(180deg, rgba(124, 45, 18, 0.95), rgba(127, 29, 29, 0.92)),
+    radial-gradient(circle at 50% 18%, rgba(255, 255, 255, 0.22), transparent 30%);
+}
+
+.dric-reports-card-body {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.025));
+}
+
+.dric-reports-download-button:hover {
+  filter: brightness(1.08);
+}
+
+html[data-theme="light"] .dric-reports-page .dric-reports-book-card {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+html[data-theme="light"] .dric-reports-page .dric-reports-book-shell {
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.82), rgba(241, 245, 249, 0.48)),
+    #eef4fb !important;
+  border-color: rgba(255, 255, 255, 0.82) !important;
+  box-shadow:
+    0 24px 64px rgba(15, 23, 42, 0.13),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+}
+
+html[data-theme="light"] .dric-reports-page .dric-reports-book-cover {
+  background:
+    linear-gradient(90deg, rgba(15, 23, 42, 0.28), transparent 25%),
+    radial-gradient(circle at 82% 8%, rgba(125, 211, 252, 0.32), transparent 30%),
+    radial-gradient(circle at 85% 88%, rgba(227, 6, 19, 0.16), transparent 32%),
+    linear-gradient(135deg, #f8fbff 0%, #dbeafe 48%, #c7f9f2 100%) !important;
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-reports-page .dric-reports-book-cover p,
+html[data-theme="light"] .dric-reports-page .dric-reports-book-cover h3 {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-reports-page .dric-reports-book-year {
+  color: rgba(15, 23, 42, 0.86) !important;
+  text-shadow: none;
+}
+
+html[data-theme="light"] .dric-reports-page .dric-reports-card-body {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.68), rgba(255, 255, 255, 0.3)) !important;
+  border-top-color: rgba(15, 23, 42, 0.08) !important;
+}
+
+html[data-theme="light"] .dric-reports-page .dric-reports-card-body h3 {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-contact-hero-glow {
+  opacity: 0;
+}
+
+.dric-contact-page {
+  background: #020617 !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="light"] .dric-contact-page {
+  background:
+    radial-gradient(circle at 15% 8%, rgba(255, 255, 255, 0.96), transparent 28%),
+    radial-gradient(circle at 82% 12%, rgba(186, 216, 255, 0.72), transparent 32%),
+    radial-gradient(circle at 14% 86%, rgba(255, 205, 224, 0.56), transparent 34%),
+    linear-gradient(135deg, #f9fafb 0%, #e8edf5 46%, #f7f9fc 100%) !important;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: 100vw 100vh;
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-contact-page .dric-contact-hero > .absolute.inset-0,
+html[data-theme="light"] .dric-contact-page .dric-contact-section > .absolute.inset-0 {
+  background: transparent !important;
+}
+
+html[data-theme="light"] .dric-contact-page .dric-contact-hero,
+html[data-theme="light"] .dric-contact-page .dric-contact-section {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-contact-page .dric-contact-hero h1,
+html[data-theme="light"] .dric-contact-page .dric-contact-section h2 {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-contact-page .dric-contact-hero p:not(:first-child),
+html[data-theme="light"] .dric-contact-page .dric-contact-section p {
+  color: rgba(71, 85, 105, 0.78) !important;
+}
+
+html[data-theme="light"] .dric-contact-page .dric-contact-card,
+html[data-theme="light"] .dric-contact-page .dric-contact-map-card,
+html[data-theme="light"] .dric-contact-page .dric-contact-map-inner {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0.18)),
+    radial-gradient(circle at 16% 12%, rgba(255, 255, 255, 0.9), transparent 30%),
+    radial-gradient(circle at 86% 16%, rgba(125, 211, 252, 0.2), transparent 34%) !important;
+  color: #0f172a !important;
+  border-color: rgba(255, 255, 255, 0.74) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.94),
+    0 22px 56px rgba(15, 23, 42, 0.1) !important;
+  backdrop-filter: blur(10px) saturate(130%);
+}
+
+html[data-theme="light"] .dric-contact-page .dric-contact-card h2,
+html[data-theme="light"] .dric-contact-page .dric-contact-map-card h2,
+html[data-theme="light"] .dric-contact-page .dric-contact-card p,
+html[data-theme="light"] .dric-contact-page .dric-contact-map-card p {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-contact-page .dric-contact-card a:hover {
+  background: rgba(0, 55, 112, 0.1) !important;
+}
+
+html[data-theme="light"] .dric-contact-page .dric-contact-card [class*="bg-white/10"] {
+  background: rgba(255, 255, 255, 0.58) !important;
+  color: #E30613 !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    0 14px 28px rgba(15, 23, 42, 0.1) !important;
+}
+
+html[data-theme="light"] .dric-contact-page .dric-contact-card .text-cyan-300 {
+  color: #003770 !important;
+}
+
+html[data-theme="light"] .dric-contact-page .dric-contact-map-inner iframe {
+  filter: saturate(0.95) contrast(1.02);
+}
+
+html[data-theme="light"] .dric-appointment-page {
+  background:
+    radial-gradient(circle at 16% 6%, rgba(255, 255, 255, 0.95), transparent 30%),
+    radial-gradient(circle at 84% 12%, rgba(186, 216, 255, 0.58), transparent 34%),
+    linear-gradient(135deg, #f8fafc 0%, #e8eef6 48%, #ffffff 100%) !important;
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-appointment-section {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-appointment-glow {
+  background:
+    radial-gradient(circle at top left, rgba(0, 55, 112, 0.12), transparent 34%),
+    radial-gradient(circle at bottom right, rgba(227, 6, 19, 0.08), transparent 36%) !important;
+}
+
+html[data-theme="light"] .dric-appointment-muted {
+  color: rgba(71, 85, 105, 0.84) !important;
+}
+
+html[data-theme="light"] .dric-appointment-note,
+html[data-theme="light"] .dric-appointment-form {
+  background:
+    radial-gradient(circle at 12% 8%, rgba(255, 255, 255, 0.94), transparent 30%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.54)) !important;
+  border-color: rgba(255, 255, 255, 0.78) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.92),
+    0 24px 70px rgba(15, 23, 42, 0.12) !important;
+}
+
+html[data-theme="light"] .dric-appointment-field {
+  background: rgba(255, 255, 255, 0.86) !important;
+  border-color: rgba(148, 163, 184, 0.42) !important;
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-appointment-field::placeholder {
+  color: rgba(100, 116, 139, 0.72) !important;
+}
+
+html[data-theme="light"] .dric-appointment-field:focus {
+  border-color: #003770 !important;
+  box-shadow: 0 0 0 3px rgba(0, 55, 112, 0.12) !important;
+}
+
+.dric-appointment-submit,
+.dric-appointment-submit:hover,
+.dric-appointment-submit:focus,
+html[data-theme="light"] .dric-appointment-submit,
+html[data-theme="light"] .dric-appointment-submit:hover,
+html[data-theme="light"] .dric-appointment-submit:focus {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+.dric-mobile-menu {
+  background:
+    radial-gradient(circle at 0% 14%, rgba(227, 6, 19, 0.24), transparent 34%),
+    radial-gradient(circle at 100% 8%, rgba(0, 55, 112, 0.44), transparent 38%),
+    radial-gradient(circle at 44% 48%, rgba(15, 23, 42, 0.78), transparent 46%),
+    linear-gradient(145deg, #020617 0%, #08111f 45%, #12070a 100%) !important;
+  background-attachment: local;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+html[data-theme="light"] .dric-mobile-menu {
+  background:
+    radial-gradient(circle at 18% 8%, rgba(255, 255, 255, 0.96), transparent 28%),
+    radial-gradient(circle at 82% 12%, rgba(186, 216, 255, 0.72), transparent 32%),
+    radial-gradient(circle at 14% 86%, rgba(255, 205, 224, 0.62), transparent 34%),
+    linear-gradient(135deg, rgba(248, 250, 252, 0.96), rgba(232, 239, 248, 0.94)) !important;
+  color: #0f172a !important;
+  backdrop-filter: blur(22px) saturate(135%);
+}
+
+html[data-theme="light"] .dric-mobile-menu-header,
+html[data-theme="light"] .dric-mobile-menu-footer {
+  border-color: rgba(15, 23, 42, 0.1) !important;
+  color: rgba(30, 41, 59, 0.64) !important;
+}
+
+html[data-theme="light"] .dric-mobile-menu-footer {
+  border-top: 0 !important;
+}
+
+html[data-theme="light"] .dric-mobile-menu-logo {
+  background: rgba(255, 255, 255, 0.78) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 18px 40px rgba(15, 23, 42, 0.12) !important;
+}
+
+html[data-theme="light"] .dric-mobile-menu-brand,
+html[data-theme="light"] .dric-mobile-menu-kicker {
+  color: #E30613 !important;
+}
+
+html[data-theme="light"] .dric-mobile-menu-subtitle,
+html[data-theme="light"] .dric-mobile-menu-copy,
+html[data-theme="light"] .dric-mobile-menu-link-description {
+  color: rgba(51, 65, 85, 0.72) !important;
+}
+
+html[data-theme="light"] .dric-mobile-menu-title,
+html[data-theme="light"] .dric-mobile-menu-link-title {
+  color: #0f2344 !important;
+}
+
+html[data-theme="light"] .dric-mobile-menu-close,
+html[data-theme="light"] .dric-mobile-menu-feature,
+html[data-theme="light"] .dric-mobile-menu-link {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.68), rgba(255, 255, 255, 0.24)),
+    radial-gradient(circle at 16% 12%, rgba(255, 255, 255, 0.92), transparent 30%),
+    radial-gradient(circle at 86% 16%, rgba(125, 211, 252, 0.22), transparent 34%) !important;
+  border-color: rgba(255, 255, 255, 0.74) !important;
+  color: #0f2344 !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.92),
+    0 22px 56px rgba(15, 23, 42, 0.1) !important;
+  backdrop-filter: blur(12px) saturate(135%);
+}
+
+html[data-theme="light"] .dric-mobile-menu-close:hover,
+html[data-theme="light"] .dric-mobile-menu-link:hover {
+  border-color: rgba(0, 55, 112, 0.55) !important;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.78), rgba(224, 247, 255, 0.34)) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.94),
+    0 26px 62px rgba(15, 23, 42, 0.12),
+    0 0 36px rgba(0, 55, 112, 0.12) !important;
+}
+
+html[data-theme="light"] .dric-mobile-menu-link:hover .dric-mobile-menu-link-description {
+  color: #003770 !important;
+}
+
+.dric-presentation-page {
+  background: #020617 !important;
+}
+
+html[data-theme="light"] .dric-presentation-page {
+  background:
+    radial-gradient(circle at 15% 8%, rgba(255, 255, 255, 0.96), transparent 28%),
+    radial-gradient(circle at 82% 12%, rgba(186, 216, 255, 0.72), transparent 32%),
+    radial-gradient(circle at 14% 86%, rgba(255, 205, 224, 0.56), transparent 34%),
+    linear-gradient(135deg, #f9fafb 0%, #e8edf5 46%, #f7f9fc 100%) !important;
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-presentation-content {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-presentation-content [class*="text-white"] {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-presentation-content [class*="text-white/"],
+html[data-theme="light"] .dric-presentation-content [class*="text-slate-300"],
+html[data-theme="light"] .dric-presentation-content [class*="text-slate-400"],
+html[data-theme="light"] .dric-presentation-content [class*="text-slate-500"],
+html[data-theme="light"] .dric-presentation-content [class*="text-slate-600"],
+html[data-theme="light"] .dric-presentation-content [class*="text-slate-700"] {
+  color: rgba(71, 85, 105, 0.82) !important;
+}
+
+html[data-theme="light"] .dric-presentation-content [class*="border-white"] {
+  border-color: rgba(255, 255, 255, 0.74) !important;
+}
+
+html[data-theme="light"] .dric-presentation-content [class*="bg-white/"],
+html[data-theme="light"] .dric-presentation-content [class*="bg-white["] {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.28)) !important;
+  border-color: rgba(255, 255, 255, 0.74) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 18px 46px rgba(15, 23, 42, 0.1) !important;
+}
+
+html[data-theme="light"] .dric-presentation-content .MuiPaper-root {
+  background:
+    radial-gradient(circle at 12% 8%, rgba(255, 255, 255, 0.9), transparent 30%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.76), rgba(255, 255, 255, 0.38)) !important;
+  color: #0f172a !important;
+  border: 1px solid rgba(255, 255, 255, 0.76) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 22px 60px rgba(15, 23, 42, 0.1) !important;
+}
+
+html[data-theme="light"] .dric-presentation-content .MuiChip-root {
+  background-color: rgba(227, 6, 19, 0.08) !important;
+  color: #E30613 !important;
+}
+
+.dric-mobile-menu a,
+.dric-mobile-menu a:hover,
+.dric-mobile-menu a:focus,
+.dric-mobile-menu a:active,
+.dric-mobile-menu a:visited {
+  text-decoration: none !important;
+  outline: none !important;
+}
+
+.dric-mobile-menu-link,
+.dric-mobile-menu-link:hover,
+.dric-mobile-menu-link:focus,
+.dric-mobile-menu-link:active,
+.dric-mobile-menu-link *,
+.dric-mobile-menu-link *:hover,
+.dric-mobile-menu-link *:focus,
+.dric-mobile-menu-link *:active {
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.dric-mobile-menu-link::before,
+.dric-mobile-menu-link::after,
+.dric-mobile-menu-link-title::before,
+.dric-mobile-menu-link-title::after,
+.dric-mobile-menu-link-description::before,
+.dric-mobile-menu-link-description::after {
+  content: none !important;
+  display: none !important;
+}
+
+a.dric-final-cta-button,
+a.dric-final-cta-button:hover,
+a.dric-final-cta-button:focus,
+a.dric-final-cta-button:active,
+a.dric-final-cta-button:visited,
+html[data-theme="light"] .dric-theme-page a.dric-final-cta-button,
+html[data-theme="light"] .dric-theme-page a.dric-final-cta-button:hover,
+html[data-theme="light"] .dric-theme-page a.dric-final-cta-button:focus,
+html[data-theme="light"] .dric-theme-page a.dric-final-cta-button:active,
+html[data-theme="light"] .dric-theme-page a.dric-final-cta-button:visited {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+.dric-news-page {
+  background: #020617 !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .dric-news-page .dric-news-card-date,
+html[data-theme="dark"] .dric-news-page .dric-news-card-date svg {
+  color: #67e8f9 !important;
+}
+
+html[data-theme="dark"] .dric-news-page .dric-news-card-button {
+  color: #67e8f9 !important;
+  border-color: rgba(103, 232, 249, 0.42) !important;
+}
+
+html[data-theme="dark"] .dric-news-page .dric-news-card-button svg {
+  color: #67e8f9 !important;
+}
+
+html[data-theme="dark"] .dric-news-page .dric-news-card-button:hover {
+  border-color: rgba(103, 232, 249, 0.78) !important;
+  background: rgba(103, 232, 249, 0.08) !important;
+}
+
+html[data-theme="light"] .dric-news-page {
+  background:
+    radial-gradient(circle at 15% 8%, rgba(255, 255, 255, 0.96), transparent 28%),
+    radial-gradient(circle at 82% 12%, rgba(186, 216, 255, 0.72), transparent 32%),
+    radial-gradient(circle at 14% 86%, rgba(255, 205, 224, 0.56), transparent 34%),
+    linear-gradient(135deg, #f9fafb 0%, #e8edf5 46%, #f7f9fc 100%) !important;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: 100vw 100vh;
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-news-page section,
+html[data-theme="light"] .dric-news-page h1,
+html[data-theme="light"] .dric-news-page h2,
+html[data-theme="light"] .dric-news-page h3 {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-news-page p {
+  color: rgba(71, 85, 105, 0.78) !important;
+}
+
+html[data-theme="light"] .dric-news-page input {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  color: #0f172a !important;
+  outline: none !important;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+html[data-theme="light"] .dric-news-page input::placeholder {
+  color: rgba(71, 85, 105, 0.58) !important;
+  opacity: 1;
+}
+
+html[data-theme="light"] .dric-news-page .dric-news-search {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.54), rgba(255, 255, 255, 0.2)) !important;
+  border-color: rgba(255, 255, 255, 0.88) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.92),
+    0 14px 34px rgba(15, 23, 42, 0.08) !important;
+  backdrop-filter: blur(12px) saturate(128%);
+}
+
+html[data-theme="light"] .dric-news-page .dric-news-search-input {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+html[data-theme="light"] .dric-news-page [class*="bg-white/"]:not(.dric-site-header-button):not(.dric-news-search) {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0.18)),
+    radial-gradient(circle at 16% 12%, rgba(255, 255, 255, 0.9), transparent 30%),
+    radial-gradient(circle at 86% 16%, rgba(125, 211, 252, 0.2), transparent 34%) !important;
+  color: #0f172a !important;
+  border-color: rgba(255, 255, 255, 0.74) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.94),
+    0 22px 56px rgba(15, 23, 42, 0.1) !important;
+  backdrop-filter: blur(10px) saturate(130%);
+}
+
+html[data-theme="light"] .dric-news-page .dric-site-header .dric-site-header-button {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: #ffffff !important;
+  box-shadow: none !important;
+}
+
+html[data-theme="light"] .dric-news-page .MuiCard-root {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0.18)),
+    radial-gradient(circle at 16% 12%, rgba(255, 255, 255, 0.9), transparent 30%),
+    radial-gradient(circle at 86% 16%, rgba(125, 211, 252, 0.2), transparent 34%) !important;
+  color: #0f172a !important;
+  border-color: rgba(255, 255, 255, 0.74) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.94),
+    0 22px 56px rgba(15, 23, 42, 0.1) !important;
+}
+
+.dric-news-article-page {
+  background: #020617 !important;
+  color: #ffffff !important;
+}
+
+.dric-news-article-title {
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+.dric-news-article-drop-title {
+  font-family: Georgia, "Times New Roman", serif;
+  color: #fff5f5 !important;
+  text-shadow:
+    0 0 4px rgba(255, 255, 255, 0.78),
+    0 0 16px rgba(197, 157, 255, 0.5),
+    0 0 34px rgba(84, 36, 187, 0.34);
+}
+
+.dric-news-article-photo {
+  aspect-ratio: 16 / 8.2;
+  box-shadow:
+    0 0 18px rgba(197, 157, 255, 0.16),
+    0 0 42px rgba(84, 36, 187, 0.12),
+    0 30px 80px rgba(0, 0, 0, 0.24);
+}
+
+.dric-news-article-photo::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 18% 22%, rgba(197, 157, 255, 0.18), transparent 34%),
+    radial-gradient(circle at 84% 72%, rgba(227, 6, 19, 0.12), transparent 34%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+}
+
+.dric-news-article-photo img {
+  z-index: 2;
+}
+
+.dric-news-article-photo-placeholder {
+  z-index: 1;
+}
+
+.dric-news-article-body {
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+.dric-news-article-body .dric-news-dropcap::first-letter {
+  float: left;
+  margin: 0.08em 0.12em 0 0;
+  color: #67e8f9;
+  font-size: 4.8em;
+  line-height: 0.8;
+}
+
+.dric-news-article-rich {
+  color: rgba(255, 255, 255, 0.78);
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+.dric-news-article-rich p {
+  margin-top: 1.75rem;
+  font-size: 1.25rem;
+  line-height: 2.5rem;
+}
+
+.dric-news-article-rich p.dric-news-dropcap::first-letter {
+  float: left;
+  margin: 0.08em 0.12em 0 0;
+  color: #67e8f9;
+  font-size: 4.8em;
+  line-height: 0.8;
+}
+
+.dric-news-article-rich h2,
+.dric-news-article-rich h3 {
+  color: #fff;
+  font-weight: 600;
+  line-height: 1.15;
+  margin-top: 2.5rem;
+}
+
+.dric-news-article-rich h2 {
+  font-size: 2.5rem;
+}
+
+.dric-news-article-rich h3 {
+  font-size: 1.8rem;
+}
+
+.dric-news-article-rich ul,
+.dric-news-article-rich ol {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  margin-top: 1.75rem;
+  padding: 1.75rem 0 1.75rem 2rem;
+}
+
+.dric-news-article-rich ul {
+  list-style: disc outside !important;
+}
+
+.dric-news-article-rich ol {
+  list-style: decimal outside !important;
+}
+
+.dric-news-article-rich li {
+  display: list-item !important;
+  font-size: 1.125rem;
+  line-height: 2.25rem;
+  margin-top: 0.9rem;
+}
+
+.dric-news-article-rich li::marker {
+  color: #67e8f9;
+}
+
+.dric-news-article-rich blockquote {
+  border-left: 4px solid #67e8f9;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 1.45rem;
+  font-style: italic;
+  line-height: 2.35rem;
+  margin-top: 2rem;
+  padding-left: 1.5rem;
+}
+
+.dric-news-article-rich a {
+  color: #67e8f9;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+@media (max-width: 639px) {
+  .dric-news-article-page article {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+    padding-top: 8rem !important;
+  }
+
+  .dric-news-article-back {
+    display: inline-flex !important;
+    position: relative;
+    pointer-events: auto;
+    margin-top: 1rem;
+  }
+
+  .dric-news-article-page > .dric-site-header {
+    margin-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+
+  .dric-news-article-page article > div > header {
+    margin-top: 2rem !important;
+    padding-bottom: 1.8rem !important;
+  }
+
+  .dric-news-article-title {
+    font-size: clamp(1.75rem, 8.4vw, 2.35rem) !important;
+    line-height: 1.08 !important;
+    letter-spacing: normal !important;
+    overflow-wrap: anywhere;
+    word-break: normal;
+  }
+
+  .dric-news-article-page article > div > header > p {
+    font-size: 0.98rem !important;
+    line-height: 1.72rem !important;
+    margin-top: 1.15rem !important;
+  }
+
+  .dric-news-article-photo {
+    aspect-ratio: 16 / 10.5 !important;
+    border-radius: 1.1rem !important;
+    margin-top: 1.75rem !important;
+  }
+
+  .dric-news-article-body {
+    margin-top: 1.8rem !important;
+  }
+
+  .dric-news-article-drop-title {
+    font-size: 1.7rem !important;
+    line-height: 1.15 !important;
+    letter-spacing: -0.01em !important;
+    overflow-wrap: anywhere;
+  }
+
+  .dric-news-article-rich {
+    margin-top: 1.3rem !important;
+  }
+
+  .dric-news-article-rich p,
+  .dric-news-article-body > div p {
+    font-size: 0.95rem !important;
+    line-height: 1.72rem !important;
+    margin-top: 1.2rem !important;
+    overflow-wrap: anywhere;
+  }
+
+  .dric-news-article-body .dric-news-dropcap::first-letter,
+  .dric-news-article-rich p.dric-news-dropcap::first-letter {
+    font-size: 2.6em !important;
+    line-height: 0.9 !important;
+    margin: 0.06em 0.1em 0 0 !important;
+  }
+
+  .dric-news-article-rich h2 {
+    font-size: 1.7rem !important;
+    line-height: 1.16 !important;
+  }
+
+  .dric-news-article-rich h3 {
+    font-size: 1.35rem !important;
+    line-height: 1.22 !important;
+  }
+
+  .dric-news-article-rich ul,
+  .dric-news-article-rich ol {
+    margin-top: 1.25rem !important;
+    padding: 1.25rem 0 1.25rem 1.25rem !important;
+  }
+
+  .dric-news-article-rich li {
+    font-size: 0.94rem !important;
+    line-height: 1.7rem !important;
+    margin-top: 0.7rem !important;
+    overflow-wrap: anywhere;
+  }
+
+  .dric-news-article-rich blockquote {
+    font-size: 1rem !important;
+    line-height: 1.75rem !important;
+    padding-left: 1rem !important;
+  }
+}
+
+html[data-theme="light"] .dric-news-article-page {
+  background:
+    radial-gradient(circle at 15% 8%, rgba(255, 255, 255, 0.96), transparent 28%),
+    radial-gradient(circle at 82% 12%, rgba(186, 216, 255, 0.72), transparent 32%),
+    radial-gradient(circle at 14% 86%, rgba(255, 205, 224, 0.56), transparent 34%),
+    linear-gradient(135deg, #f9fafb 0%, #e8edf5 46%, #f7f9fc 100%) !important;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: 100vw 100vh;
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-news-article-page,
+html[data-theme="light"] .dric-news-article-page section,
+html[data-theme="light"] .dric-news-article-page article,
+html[data-theme="light"] .dric-news-article-page h1,
+html[data-theme="light"] .dric-news-article-page h2 {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-news-article-page p,
+html[data-theme="light"] .dric-news-article-page li,
+html[data-theme="light"] .dric-news-article-page span {
+  color: rgba(71, 85, 105, 0.82) !important;
+}
+
+html[data-theme="light"] .dric-news-article-page header .text-\[\#67e8f9\],
+html[data-theme="light"] .dric-news-article-page header .text-\[\#67e8f9\] span,
+html[data-theme="light"] .dric-news-article-page header .text-\[\#67e8f9\] svg,
+html[data-theme="light"] .dric-news-article-body .dric-news-dropcap::first-letter {
+  color: #0891b2 !important;
+}
+
+html[data-theme="light"] .dric-news-article-rich p,
+html[data-theme="light"] .dric-news-article-rich li {
+  color: rgba(71, 85, 105, 0.82) !important;
+}
+
+html[data-theme="light"] .dric-news-article-rich h2,
+html[data-theme="light"] .dric-news-article-rich h3,
+html[data-theme="light"] .dric-news-article-rich blockquote {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .dric-news-article-rich p.dric-news-dropcap::first-letter,
+html[data-theme="light"] .dric-news-article-rich li::marker,
+html[data-theme="light"] .dric-news-article-rich a {
+  color: #0891b2 !important;
+}
+
+html[data-theme="light"] .dric-news-article-photo {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.68), rgba(255, 255, 255, 0.26)) !important;
+  border-color: rgba(255, 255, 255, 0.82) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 22px 56px rgba(15, 23, 42, 0.1) !important;
+  backdrop-filter: blur(10px) saturate(130%);
+}
+
+html[data-theme="light"] .dric-news-article-back {
+  background: rgba(0, 25, 53, 0.88) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: #ffffff !important;
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.18) !important;
+}
+
+html[data-theme="light"] .dric-news-article-back span,
+html[data-theme="light"] .dric-news-article-back svg {
+  color: #ffffff !important;
+}
+
+html[data-theme="light"] .dric-news-article-drop-title {
+  color: #0f172a !important;
+  text-shadow:
+    0 0 3px rgba(255, 255, 255, 0.96),
+    0 0 16px rgba(0, 55, 112, 0.18),
+    0 16px 38px rgba(15, 23, 42, 0.12);
+}
+
+html[data-theme="light"] .dric-news-article-page .dric-site-header .dric-site-header-shell {
+  background: rgba(0, 25, 53, 0.88) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25) !important;
+}
+
+html[data-theme="light"] .dric-news-article-page .dric-site-header .dric-site-header-button {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: #ffffff !important;
+  box-shadow: none !important;
+}
+
+html[data-theme="light"] .dric-news-article-page .dric-site-header .dric-site-header-button svg {
+  color: #ffffff !important;
+}
+
+.dric-other-agreements-page {
+  background: #020617;
+  color: #ffffff;
+}
+
+.dric-other-agreements-section::before {
+  content: none;
+}
+
+.dric-other-agreements-eyebrow,
+.dric-other-agreement-number {
+  color: #ff4d5a;
+}
+
+.dric-other-agreements-title,
+.dric-other-agreement-title {
+  color: #ffffff;
+}
+
+.dric-other-agreements-muted {
+  color: rgba(255, 255, 255, 0.66);
+}
+
+.dric-other-agreements-intro,
+.dric-other-agreements-list,
+.dric-government-agreement-section {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.095), rgba(255, 255, 255, 0.035));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 34px 110px rgba(0, 0, 0, 0.38);
+}
+
+.dric-government-agreement-heading {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background:
+    linear-gradient(90deg, rgba(227, 6, 19, 0.13), transparent 45%),
+    rgba(255, 255, 255, 0.03);
+}
+
+.dric-government-agreement-section-title {
+  color: #ffffff;
+}
+
+.dric-other-agreements-count {
+  border: 1px solid rgba(125, 211, 252, 0.2);
+  background: rgba(125, 211, 252, 0.08);
+  color: #a5f3fc;
+}
+
+.dric-other-agreements-search {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.11), rgba(255, 255, 255, 0.04)),
+    radial-gradient(circle at 10% 0%, rgba(125, 211, 252, 0.12), transparent 30%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.32),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.08),
+    0 26px 80px rgba(0, 0, 0, 0.26);
+  color: #a5f3fc;
+}
+
+.dric-other-agreements-search::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  pointer-events: none;
+  border-radius: inherit;
+  background:
+    linear-gradient(120deg, rgba(255, 255, 255, 0.34), transparent 28%),
+    linear-gradient(300deg, rgba(125, 211, 252, 0.16), transparent 36%);
+  opacity: 0.9;
+}
+
+.dric-other-agreements-search > * {
+  position: relative;
+  z-index: 1;
+}
+
+.dric-other-agreements-search:focus-within {
+  border-color: rgba(165, 243, 252, 0.42);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 0 0 4px rgba(125, 211, 252, 0.1),
+    0 30px 90px rgba(0, 0, 0, 0.3);
+}
+
+.dric-other-agreements-search-input {
+  appearance: none;
+  -webkit-appearance: none;
+  color: #ffffff;
+}
+
+.dric-other-agreements-search-input::placeholder {
+  color: rgba(255, 255, 255, 0.48);
+}
+
+.dric-other-agreements-search-input::-webkit-search-decoration,
+.dric-other-agreements-search-input::-webkit-search-cancel-button,
+.dric-other-agreements-search-input::-webkit-search-results-button,
+.dric-other-agreements-search-input::-webkit-search-results-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+  display: none;
+}
+
+.dric-other-agreements-search-clear {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+.dric-other-agreements-search-clear:hover,
+.dric-other-agreements-search-clear:focus-visible {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.dric-other-agreement-row {
+  isolation: isolate;
+}
+
+.dric-other-agreement-row:not(:last-child) {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+.dric-other-agreement-row::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(90deg, rgba(227, 6, 19, 0.18), transparent 34%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(0, 55, 112, 0.16));
+  opacity: 0;
+  transition: opacity 300ms ease;
+}
+
+.dric-other-agreement-row:hover::before,
+.dric-other-agreement-row:focus-visible::before {
+  opacity: 1;
+}
+
+.dric-other-agreement-icon {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.08);
+  color: #a5f3fc;
+}
+
+.dric-other-agreement-rule {
+  background: linear-gradient(90deg, rgba(227, 6, 19, 0.55), transparent);
+}
+
+.dric-other-agreement-row:hover .dric-other-agreement-icon,
+.dric-other-agreement-row:focus-visible .dric-other-agreement-icon {
+  border-color: rgba(255, 255, 255, 0.24);
+  background: rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+.dric-other-agreement-row:hover .dric-other-agreement-number,
+.dric-other-agreement-row:focus-visible .dric-other-agreement-number {
+  color: #a5f3fc;
+}
+
+.dric-other-agreement-row:hover .dric-other-agreement-rule,
+.dric-other-agreement-row:focus-visible .dric-other-agreement-rule {
+  background: linear-gradient(90deg, rgba(165, 243, 252, 0.75), transparent);
+}
+
+html[data-theme="light"] .dric-other-agreements-page {
+  background:
+    radial-gradient(circle at 15% 8%, rgba(255, 255, 255, 0.96), transparent 28%),
+    radial-gradient(circle at 82% 12%, rgba(186, 216, 255, 0.72), transparent 32%),
+    radial-gradient(circle at 14% 86%, rgba(255, 205, 224, 0.56), transparent 34%),
+    linear-gradient(135deg, #f9fafb 0%, #e8edf5 46%, #f7f9fc 100%);
+  color: #0f172a;
+}
+
+html[data-theme="light"] .dric-other-agreements-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(rgba(0, 55, 112, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 55, 112, 0.045) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: linear-gradient(to bottom, black, transparent 78%);
+}
+
+html[data-theme="light"] .dric-other-agreements-title,
+html[data-theme="light"] .dric-other-agreement-title {
+  color: #101827;
+}
+
+html[data-theme="light"] .dric-other-agreements-muted {
+  color: #526070;
+}
+
+html[data-theme="light"] .dric-other-agreements-intro,
+html[data-theme="light"] .dric-other-agreements-list,
+html[data-theme="light"] .dric-government-agreement-section {
+  border-color: rgba(255, 255, 255, 0.76);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.38));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 34px 110px rgba(15, 23, 42, 0.13);
+}
+
+html[data-theme="light"] .dric-government-agreement-heading {
+  border-bottom-color: rgba(15, 23, 42, 0.08);
+  background:
+    linear-gradient(90deg, rgba(227, 6, 19, 0.08), transparent 45%),
+    rgba(255, 255, 255, 0.4);
+}
+
+html[data-theme="light"] .dric-government-agreement-section-title {
+  color: #101827;
+}
+
+html[data-theme="light"] .dric-other-agreements-count {
+  border-color: rgba(0, 55, 112, 0.12);
+  background: rgba(0, 55, 112, 0.06);
+  color: #003770;
+}
+
+html[data-theme="light"] .dric-other-agreements-search {
+  border-color: rgba(255, 255, 255, 0.92);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.76), rgba(255, 255, 255, 0.38)),
+    radial-gradient(circle at 10% 0%, rgba(0, 55, 112, 0.08), transparent 30%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.98),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.34),
+    0 26px 80px rgba(15, 23, 42, 0.1);
+  color: #003770;
+}
+
+html[data-theme="light"] .dric-other-agreements-search::before {
+  background:
+    linear-gradient(120deg, rgba(255, 255, 255, 0.82), transparent 28%),
+    linear-gradient(300deg, rgba(0, 55, 112, 0.08), transparent 36%);
+}
+
+html[data-theme="light"] .dric-other-agreements-search:focus-within {
+  border-color: rgba(0, 55, 112, 0.22);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 0 0 4px rgba(0, 55, 112, 0.06),
+    0 30px 90px rgba(15, 23, 42, 0.12);
+}
+
+html[data-theme="light"] .dric-other-agreements-search-input {
+  color: #101827;
+}
+
+html[data-theme="light"] .dric-other-agreements-search-input::placeholder {
+  color: rgba(15, 23, 42, 0.42);
+}
+
+html[data-theme="light"] .dric-other-agreements-search-clear {
+  border-color: rgba(0, 55, 112, 0.1);
+  background: rgba(255, 255, 255, 0.66);
+  color: #003770;
+}
+
+html[data-theme="light"] .dric-other-agreements-search-clear:hover,
+html[data-theme="light"] .dric-other-agreements-search-clear:focus-visible {
+  background: #ffffff;
+}
+
+html[data-theme="light"] .dric-other-agreement-row:not(:last-child) {
+  border-bottom-color: rgba(15, 23, 42, 0.08);
+}
+
+html[data-theme="light"] .dric-other-agreement-row::before {
+  background:
+    linear-gradient(90deg, rgba(227, 6, 19, 0.08), transparent 30%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(221, 232, 244, 0.92));
+}
+
+html[data-theme="light"] .dric-other-agreement-icon {
+  border-color: rgba(0, 55, 112, 0.1);
+  background: rgba(255, 255, 255, 0.72);
+  color: #003770;
+}
+
+html[data-theme="light"] .dric-other-agreement-row:hover .dric-other-agreement-title,
+html[data-theme="light"] .dric-other-agreement-row:focus-visible .dric-other-agreement-title {
+  color: #0f172a;
+}
+
+html[data-theme="light"] .dric-other-agreement-row:hover .dric-other-agreement-icon,
+html[data-theme="light"] .dric-other-agreement-row:focus-visible .dric-other-agreement-icon {
+  border-color: rgba(0, 55, 112, 0.22);
+  background: rgba(255, 255, 255, 0.86);
+  color: #003770;
+}
+
+html[data-theme="light"] .dric-other-agreement-row:hover .dric-other-agreement-number,
+html[data-theme="light"] .dric-other-agreement-row:focus-visible .dric-other-agreement-number {
+  color: #a40000;
+}
+
+html[data-theme="light"] .dric-other-agreement-row:hover .dric-other-agreement-rule,
+html[data-theme="light"] .dric-other-agreement-row:focus-visible .dric-other-agreement-rule {
+  background: linear-gradient(90deg, rgba(164, 0, 0, 0.55), transparent);
+}
+
+html[data-theme="light"] main.dric-regulations-page .dric-regulations-input > .dric-regulations-search-field,
+html[data-theme="light"] main.dric-regulations-page .dric-regulations-filter-menu .dric-regulations-category-select {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  outline: 0 !important;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+html[data-theme="light"] main.dric-regulations-page .dric-regulations-input > .dric-regulations-search-field:-webkit-autofill,
+html[data-theme="light"] main.dric-regulations-page .dric-regulations-input > .dric-regulations-search-field:-webkit-autofill:hover,
+html[data-theme="light"] main.dric-regulations-page .dric-regulations-input > .dric-regulations-search-field:-webkit-autofill:focus {
+  -webkit-text-fill-color: #0f172a;
+  box-shadow: 0 0 0 1000px transparent inset !important;
+  transition: background-color 9999s ease-out;
 }

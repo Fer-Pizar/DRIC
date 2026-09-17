@@ -1,55 +1,186 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
-import { Menu } from "lucide-react";
-import { useTranslations } from "next-intl";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import type { MouseEvent } from "react";
+import { useEffect, useState } from "react";
+import { Menu, Moon, Sun, Languages } from "lucide-react";
+import { useLocale } from "next-intl";
 import MobileMenu from "./MobileMenu";
+import { mobilityData, slugifyProgramTitle, type Program } from "@/app/[locale]/(public)/becas-movilidad/movilidad-pasantias/data";
+
+const LANGUAGE_SCROLL_KEY = "dric-language-scroll-y";
+
+function getLocalizedPath(pathname: string, locale: string, nextLocale: "es" | "en") {
+  const nextPath = pathname.startsWith(`/${locale}`)
+    ? pathname.replace(`/${locale}`, `/${nextLocale}`)
+    : `/${nextLocale}/inicio`;
+
+  const mobilityDetailPrefix = `/${locale}/becas-movilidad/movilidad-pasantias/`;
+
+  if (!pathname.startsWith(mobilityDetailPrefix)) {
+    return nextPath;
+  }
+
+  const currentSlug = pathname.slice(mobilityDetailPrefix.length);
+  const currentData = locale === "en" ? mobilityData.en : mobilityData.es;
+  const nextData = nextLocale === "en" ? mobilityData.en : mobilityData.es;
+  const currentStudentPrograms = currentData.studentPrograms as Program[];
+  const currentStaffPrograms = currentData.staffPrograms as Program[];
+  const nextStudentPrograms = nextData.studentPrograms as Program[];
+  const nextStaffPrograms = nextData.staffPrograms as Program[];
+  const canonicalStudentPrograms = mobilityData.es.studentPrograms as Program[];
+  const canonicalStaffPrograms = mobilityData.es.staffPrograms as Program[];
+
+  const tracks = [
+    {
+      id: "estudiantes",
+      currentPrograms: currentStudentPrograms,
+      nextPrograms: nextStudentPrograms,
+      canonicalPrograms: canonicalStudentPrograms,
+    },
+    {
+      id: "docentes-administrativos",
+      currentPrograms: currentStaffPrograms,
+      nextPrograms: nextStaffPrograms,
+      canonicalPrograms: canonicalStaffPrograms,
+    },
+  ];
+
+  for (const track of tracks) {
+    const programIndex = track.currentPrograms.findIndex(
+      (program) => programSlugCandidates(program, track.id).includes(currentSlug),
+    );
+
+    if (programIndex >= 0) {
+      const nextProgram = track.nextPrograms[programIndex];
+      const canonicalProgram = track.canonicalPrograms[programIndex];
+      const nextSlug =
+        nextProgram?.slug ||
+        canonicalProgram?.slug ||
+        slugifyProgramTitle(canonicalProgram?.title || nextProgram?.title || currentSlug, track.id);
+
+      return `/${nextLocale}/becas-movilidad/movilidad-pasantias/${nextSlug}`;
+    }
+  }
+
+  return nextPath;
+}
+
+function programSlugCandidates(program: { title: string; slug?: string; href?: string }, trackId: string) {
+  return [
+    program.slug,
+    program.href?.split("/").filter(Boolean).pop(),
+    slugifyProgramTitle(program.title, trackId),
+  ].filter((value): value is string => typeof value === "string" && value.length > 0);
+}
 
 export default function Header() {
   const [open, setOpen] = useState(false);
-  const t = useTranslations("nav");
+  const [theme, setTheme] = useState<"dark" | "light">("dark");
 
-  const items = [
-    t("home"),
-    t("presentation"),
-    t("agreements"),
-    t("projects"),
-    t("mobility"),
-    t("memberships"),
-    t("events"),
-    t("regulations"),
-    t("reports"),
-    t("contact"),
-  ];
+  const locale = useLocale();
+  const pathname = usePathname();
+  const router = useRouter();
+  const homePath = `/${locale}/inicio`;
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("dric-theme") as "dark" | "light" | null;
+    const initialTheme = savedTheme ?? "dark";
+
+    queueMicrotask(() => setTheme(initialTheme));
+    document.documentElement.dataset.theme = initialTheme;
+  }, []);
+
+  useEffect(() => {
+    const savedScroll = sessionStorage.getItem(LANGUAGE_SCROLL_KEY);
+
+    if (!savedScroll) {
+      return;
+    }
+
+    sessionStorage.removeItem(LANGUAGE_SCROLL_KEY);
+
+    requestAnimationFrame(() => {
+      window.scrollTo({ top: Number(savedScroll), behavior: "instant" });
+    });
+  }, [pathname]);
+
+  const toggleTheme = () => {
+    const nextTheme = theme === "dark" ? "light" : "dark";
+
+    setTheme(nextTheme);
+    localStorage.setItem("dric-theme", nextTheme);
+    document.documentElement.dataset.theme = nextTheme;
+  };
+
+  const toggleLanguage = () => {
+    const nextLocale = locale === "es" ? "en" : "es";
+    const nextPath = getLocalizedPath(pathname, locale, nextLocale);
+    const nextUrl = `${nextPath}${window.location.search}${window.location.hash}`;
+
+    sessionStorage.setItem(LANGUAGE_SCROLL_KEY, String(window.scrollY));
+    router.push(nextUrl, { scroll: false });
+  };
+
+  const handleLogoClick = (event: MouseEvent<HTMLAnchorElement>) => {
+    if (pathname === homePath) {
+      event.preventDefault();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
 
   return (
     <>
-      <header className="fixed inset-x-0 top-0 z-50">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-5 md:px-8 lg:px-12">
-          <a href="/es/inicio" className="flex items-center">
+      <header className="dric-site-header fixed inset-x-0 top-0 z-50 px-4 md:px-6">
+        <div className="dric-site-header-shell mx-auto mt-4 flex w-full max-w-7xl items-center justify-between rounded-full border border-white/10 bg-[#001935]/75 px-4 py-2.5 shadow-2xl shadow-black/25 backdrop-blur-xl sm:px-5 sm:py-3 md:px-7">
+          <Link href={homePath} onClick={handleLogoClick} className="flex items-center">
             <Image
               src="/images/brand/DRIC_logo.png"
               alt="DRIC"
-              width={130}
-              height={52}
+              width={70}
+              height={70}
               priority
-              className="h-auto w-[110px] object-contain md:w-[130px]"
+              className="h-auto w-[48px] object-contain sm:w-[58px] md:w-[62px]"
             />
-          </a>
+          </Link>
 
-          <button
-            type="button"
-            onClick={() => setOpen(true)}
-            className="rounded-xl p-2 text-white/90 transition hover:bg-white/5"
-            aria-label="Open menu"
-          >
-            <Menu className="h-8 w-8" />
-          </button>
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            <button
+              type="button"
+              onClick={toggleLanguage}
+              className="dric-site-header-button inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/10 text-white transition hover:bg-white/20 sm:h-10 sm:w-10"
+              aria-label={locale === "es" ? "Change to English" : "Cambiar a español"}
+              title={locale === "es" ? "Change to English" : "Cambiar a español"}
+            >
+              <Languages className="h-5 w-5" />
+            </button>
+
+            <button
+              type="button"
+              onClick={toggleTheme}
+              className="dric-site-header-button inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/10 text-white transition hover:bg-white/20 sm:h-10 sm:w-10"
+              aria-label={theme === "dark" ? "Change to light mode" : "Change to dark mode"}
+              title={theme === "dark" ? "Change to light mode" : "Change to dark mode"}
+            >
+              {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setOpen((isOpen) => !isOpen)}
+              className="dric-site-header-button inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/10 text-white transition hover:bg-white/20 sm:h-10 sm:w-10"
+              aria-label={open ? "Close menu" : "Open menu"}
+              title={open ? "Close menu" : "Open menu"}
+            >
+              <Menu className="h-6 w-6" />
+            </button>
+          </div>
         </div>
       </header>
 
-      <MobileMenu open={open} onClose={() => setOpen(false)} items={items} />
+      <MobileMenu open={open} onClose={() => setOpen(false)} />
     </>
   );
 }

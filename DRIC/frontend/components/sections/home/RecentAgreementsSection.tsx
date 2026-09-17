@@ -14,6 +14,10 @@ export default function RecentAgreementsSection({
   section,
   locale = "es",
 }: Props) {
+  const eyebrow =
+    section.subtitle ||
+    (locale === "en" ? "International Cooperation" : "Cooperación internacional");
+
   return (
     <section className="relative overflow-hidden px-6 py-24 md:px-10 lg:px-16">
       {/* Background cinematic blur */}
@@ -30,8 +34,8 @@ export default function RecentAgreementsSection({
           transition={{ duration: 0.8 }}
           className="mb-16"
         >
-          <p className="mb-4 text-sm uppercase tracking-[0.3em] text-cyan-300">
-            International Cooperation
+          <p className="dric-recent-agreements-eyebrow mb-4 text-sm uppercase tracking-[0.3em] text-cyan-300">
+            {eyebrow}
           </p>
 
           <h2 className="max-w-3xl text-4xl font-bold leading-tight text-white md:text-6xl">
@@ -61,6 +65,17 @@ export default function RecentAgreementsSection({
                   .replace(/[\u0300-\u036f]/g, "") ??
                 "agreement"
             );
+            const normalizedSlug = slug
+              .toLowerCase()
+              .normalize("NFD")
+              .replace(/[\u0300-\u036f]/g, "");
+            const rawHref =
+              block.link_url ??
+              (normalizedSlug === "alianzas-estrategicas" ||
+              normalizedSlug === "strategic-partnerships"
+                ? `/${locale}/membresias`
+                : `/${locale}/convenios/${slug}`);
+            const href = resolveLocalizedHref(rawHref, locale);
 
             return (
               <motion.div
@@ -74,7 +89,7 @@ export default function RecentAgreementsSection({
                 }}
               >
                 <Link
-                  href={`/${locale}/convenios/${slug}`}
+                  href={href}
                   className="group relative block overflow-hidden rounded-[34px] border border-white/10 bg-white/[0.03] backdrop-blur-xl"
                 >
                   {/* Image */}
@@ -119,12 +134,13 @@ export default function RecentAgreementsSection({
 
                   {/* Content */}
                   <div className="absolute bottom-0 left-0 z-10 p-8">
-                    <p className="mb-3 text-xs uppercase tracking-[0.25em] text-cyan-300">
+                    <p className="dric-recent-agreement-kicker mb-3 text-xs uppercase tracking-[0.25em] text-cyan-300">
                       DRIC UMSS
                     </p>
 
                     <h3
                       className="
+                        dric-recent-agreement-title
                         max-w-xs
                         text-3xl
                         font-semibold
@@ -160,4 +176,16 @@ export default function RecentAgreementsSection({
       </div>
     </section>
   );
+}
+
+function resolveLocalizedHref(href: string, locale: string): string {
+  if (href.startsWith("http") || href.startsWith(`/${locale}/`)) {
+    return href;
+  }
+
+  if (href.startsWith("/")) {
+    return `/${locale}${href}`;
+  }
+
+  return href;
 }

@@ -19,9 +19,9 @@ class PublicPageController extends Controller
             ->with([
                 'translations.language',
                 'seo',
-                'sections' => fn ($query) => $query->orderBy('sort_order'),
+                'sections' => fn ($query) => $query->where('is_active', true)->orderBy('sort_order'),
                 'sections.translations.language',
-                'sections.contentBlocks' => fn ($query) => $query->orderBy('sort_order'),
+                'sections.contentBlocks' => fn ($query) => $query->where('is_active', true)->orderBy('sort_order'),
                 'sections.contentBlocks.translations.language',
                 'sections.contentBlocks.mediaAsset',
                 'sections.contentBlocks.mediaAsset.translations',

@@ -4,9 +4,9 @@
 
 <div style="display: grid; gap: 18px;">
     <div>
-        <label for="parent_id" style="display:block; margin-bottom:6px; font-weight:bold;">Parent Page</label>
+        <label for="parent_id" style="display:block; margin-bottom:6px; font-weight:bold;">Página superior</label>
         <select name="parent_id" id="parent_id" style="width:100%; padding:10px; border:1px solid #d1d5db; border-radius:8px;">
-            <option value="">No parent</option>
+            <option value="">Sin página superior</option>
             @foreach ($parentPages as $parentPage)
                 <option value="{{ $parentPage->id }}"
                     {{ old('parent_id', $page->parent_id ?? '') == $parentPage->id ? 'selected' : '' }}>
@@ -20,7 +20,7 @@
     </div>
 
     <div>
-        <label for="slug" style="display:block; margin-bottom:6px; font-weight:bold;">Slug</label>
+        <label for="slug" style="display:block; margin-bottom:6px; font-weight:bold;">Identificador de URL</label>
         <input
             type="text"
             name="slug"
@@ -34,13 +34,13 @@
     </div>
 
     <div>
-        <label for="page_type" style="display:block; margin-bottom:6px; font-weight:bold;">Page Type</label>
+        <label for="page_type" style="display:block; margin-bottom:6px; font-weight:bold;">Tipo de página</label>
         <input
             type="text"
             name="page_type"
             id="page_type"
             value="{{ old('page_type', $page->page_type ?? '') }}"
-            placeholder="example: main, content, legal"
+            placeholder="Ejemplo: static, page, content"
             style="width:100%; padding:10px; border:1px solid #d1d5db; border-radius:8px;"
         >
         @error('page_type')
@@ -49,11 +49,11 @@
     </div>
 
     <div>
-        <label for="status" style="display:block; margin-bottom:6px; font-weight:bold;">Status</label>
+        <label for="status" style="display:block; margin-bottom:6px; font-weight:bold;">Estado</label>
         <select name="status" id="status" style="width:100%; padding:10px; border:1px solid #d1d5db; border-radius:8px;">
-            <option value="draft" {{ old('status', $page->status ?? 'draft') === 'draft' ? 'selected' : '' }}>Draft</option>
-            <option value="published" {{ old('status', $page->status ?? '') === 'published' ? 'selected' : '' }}>Published</option>
-            <option value="archived" {{ old('status', $page->status ?? '') === 'archived' ? 'selected' : '' }}>Archived</option>
+            <option value="draft" {{ old('status', $page->status ?? 'draft') === 'draft' ? 'selected' : '' }}>Borrador</option>
+            <option value="published" {{ old('status', $page->status ?? '') === 'published' ? 'selected' : '' }}>Publicado</option>
+            <option value="archived" {{ old('status', $page->status ?? '') === 'archived' ? 'selected' : '' }}>Archivado</option>
         </select>
         @error('status')
             <div style="color:#dc2626; margin-top:6px;">{{ $message }}</div>
@@ -61,7 +61,7 @@
     </div>
 
     <div>
-        <label for="sort_order" style="display:block; margin-bottom:6px; font-weight:bold;">Sort Order</label>
+        <label for="sort_order" style="display:block; margin-bottom:6px; font-weight:bold;">Orden</label>
         <input
             type="number"
             name="sort_order"
@@ -76,7 +76,7 @@
     </div>
 
     <div>
-        <label for="published_at" style="display:block; margin-bottom:6px; font-weight:bold;">Published At</label>
+        <label for="published_at" style="display:block; margin-bottom:6px; font-weight:bold;">Fecha de publicación</label>
         <input
             type="datetime-local"
             name="published_at"

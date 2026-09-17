@@ -16,5 +16,26 @@ export async function getPageBySlug(slug: string, locale: string): Promise<CmsPa
 
   const json = await response.json();
 
-  return json.data;
+  return json.data ?? json;
+}
+
+export async function getOptionalPageBySlug(slug: string, locale: string): Promise<CmsPage | null> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/pages/${slug}?locale=${locale}`, {
+      headers: {
+        Accept: "application/json",
+      },
+      cache: "no-store",
+    });
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const json = await response.json();
+
+    return json.data ?? json;
+  } catch {
+    return null;
+  }
 }

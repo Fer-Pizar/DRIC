@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Edit Page</title>
+    <title>Panel DRIC - Editar página</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -49,17 +49,73 @@
             color: #fff;
         }
 
+        .btn-content {
+            background: #164194;
+            color: #fff;
+        }
+
         form {
             display: grid;
             gap: 20px;
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 16px;
+            }
+
+            .container {
+                padding: 18px;
+                border-radius: 10px;
+            }
+
+            .header {
+                align-items: stretch;
+                flex-direction: column;
+                gap: 14px;
+            }
+
+            h1 {
+                font-size: 28px;
+                line-height: 1.15;
+            }
+
+            .btn {
+                box-sizing: border-box;
+                text-align: center;
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>Edit Page</h1>
-            <a href="{{ route('admin.pages.index') }}" class="btn btn-secondary">Back</a>
+            <h1>Editar página</h1>
+            <div>
+                @if ($page->slug === 'presentacion')
+                    <a href="{{ route('admin.pages.presentation.edit', $page) }}" class="btn btn-content">Editar contenido</a>
+                @endif
+                @if ($page->slug === 'convenios')
+                    <a href="{{ route('admin.pages.agreements.edit', $page) }}" class="btn btn-content">Editar contenido</a>
+                @endif
+                @if ($page->slug === 'convenios-otros')
+                    <a href="{{ route('admin.agreement-lists.edit', 'otros') }}" class="btn btn-content">Editar contenido</a>
+                @endif
+                @if ($page->slug === 'convenios-ceub-gobierno')
+                    <a href="{{ route('admin.agreement-lists.edit', 'ceub-gobierno') }}" class="btn btn-content">Editar contenido</a>
+                @endif
+                @if ($page->slug === 'proyectos')
+                    <a href="{{ route('admin.pages.projects.edit', $page) }}" class="btn btn-content">Editar contenido</a>
+                @endif
+                @if ($page->slug === 'proyectos-apoyo-financiero')
+                    <a href="{{ route('admin.project-funding.edit') }}" class="btn btn-content">Editar contenido</a>
+                @endif
+                @if ($page->slug === 'membresias')
+                    <a href="{{ route('admin.pages.memberships.edit', $page) }}" class="btn btn-content">Editar contenido</a>
+                @endif
+                <a href="{{ route('admin.pages.index') }}" class="btn btn-secondary">Volver</a>
+            </div>
         </div>
 
         <form action="{{ route('admin.pages.update', $page) }}" method="POST">
@@ -69,7 +125,7 @@
             @include('admin.pages._form')
 
             <div>
-                <button type="submit" class="btn btn-primary">Update Page</button>
+                <button type="submit" class="btn btn-primary">Actualizar página</button>
             </div>
         </form>
     </div>

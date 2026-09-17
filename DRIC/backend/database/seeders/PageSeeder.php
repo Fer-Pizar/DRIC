@@ -61,7 +61,7 @@ class PageSeeder extends Seeder
                 'updated_by' => null,
             ],
             [
-                'slug' => 'membresias',
+                'slug' => 'internacionalizacion',
                 'page_type' => 'static',
                 'status' => 'draft',
                 'published_at' => null,
@@ -71,7 +71,7 @@ class PageSeeder extends Seeder
                 'updated_by' => null,
             ],
             [
-                'slug' => 'eventos',
+                'slug' => 'membresias',
                 'page_type' => 'static',
                 'status' => 'draft',
                 'published_at' => null,
@@ -81,7 +81,7 @@ class PageSeeder extends Seeder
                 'updated_by' => null,
             ],
             [
-                'slug' => 'normativas',
+                'slug' => 'noticias',
                 'page_type' => 'static',
                 'status' => 'draft',
                 'published_at' => null,
@@ -91,17 +91,7 @@ class PageSeeder extends Seeder
                 'updated_by' => null,
             ],
             [
-                'slug' => 'informes-gestion',
-                'page_type' => 'static',
-                'status' => 'draft',
-                'published_at' => null,
-                'sort_order' => 9,
-                'parent_id' => null,
-                'created_by' => null,
-                'updated_by' => null,
-            ],
-            [
-                'slug' => 'contacto',
+                'slug' => 'normativas',
                 'page_type' => 'static',
                 'status' => 'draft',
                 'published_at' => null,
@@ -111,7 +101,7 @@ class PageSeeder extends Seeder
                 'updated_by' => null,
             ],
             [
-                'slug' => 'campus-life',
+                'slug' => 'informes-gestion',
                 'page_type' => 'static',
                 'status' => 'draft',
                 'published_at' => null,
@@ -120,13 +110,74 @@ class PageSeeder extends Seeder
                 'created_by' => null,
                 'updated_by' => null,
             ],
+            [
+                'slug' => 'contacto',
+                'page_type' => 'static',
+                'status' => 'draft',
+                'published_at' => null,
+                'sort_order' => 12,
+                'parent_id' => null,
+                'created_by' => null,
+                'updated_by' => null,
+            ],
+            [
+                'slug' => 'validar-certificado',
+                'page_type' => 'static',
+                'status' => 'draft',
+                'published_at' => null,
+                'sort_order' => 13,
+                'parent_id' => null,
+                'created_by' => null,
+                'updated_by' => null,
+            ],
+            [
+                'slug' => 'campus-life',
+                'page_type' => 'static',
+                'status' => 'draft',
+                'published_at' => null,
+                'sort_order' => 14,
+                'parent_id' => null,
+                'created_by' => null,
+                'updated_by' => null,
+            ],
+            [
+                'slug' => 'premios-eventos-cursos-concursos',
+                'page_type' => 'static',
+                'status' => 'draft',
+                'published_at' => null,
+                'sort_order' => 15,
+                'parent_id' => null,
+                'created_by' => null,
+                'updated_by' => null,
+            ],
+            [
+                'slug' => 'informacion-nacionales-extranjeros',
+                'page_type' => 'static',
+                'status' => 'draft',
+                'published_at' => null,
+                'sort_order' => 16,
+                'parent_id' => null,
+                'created_by' => null,
+                'updated_by' => null,
+            ],
         ];
 
         foreach ($pages as $page) {
-            Page::updateOrCreate(
-                ['slug' => $page['slug']],
-                $page
-            );
+            $existing = Page::query()->where('slug', $page['slug'])->first();
+
+            if ($existing) {
+                $existing->fill([
+                    'page_type' => $page['page_type'],
+                    'sort_order' => $page['sort_order'],
+                    'parent_id' => $existing->parent_id ?? $page['parent_id'],
+                    'created_by' => $existing->created_by,
+                    'updated_by' => $existing->updated_by,
+                ])->save();
+
+                continue;
+            }
+
+            Page::create($page);
         }
     }
 }

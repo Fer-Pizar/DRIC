@@ -9,9 +9,28 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
+            RolePermissionSeeder::class,
             LanguageSeeder::class,
             PageSeeder::class,
             HomePageSeeder::class,
+            PresentationPageSeeder::class,
+            CertificatePageSeeder::class,
+            AgreementPageSeeder::class,
+            AgreementArchivePageSeeder::class,
+            ProjectPageSeeder::class,
+            ProjectFundingPageSeeder::class,
+            InternationalizationPageSeeder::class,
+            MembershipPageSeeder::class,
+            NewsPageSeeder::class,
+            NormativePageSeeder::class,
+            ReportPageSeeder::class,
+            ContactPageSeeder::class,
+            CampusLifePageSeeder::class,
+            ScholarshipHubPageSeeder::class,
+            ScholarshipBecasPageSeeder::class,
+            MobilityPasantiasPageSeeder::class,
+            AwardsOpportunityPageSeeder::class,
+            NationalForeignInfoPageSeeder::class,
         ]);
     }
 }

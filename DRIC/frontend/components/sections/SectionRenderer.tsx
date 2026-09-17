@@ -7,6 +7,7 @@ import RecentAgreementsSection from "@/components/sections/home/RecentAgreements
 import DirectorSection from "@/components/sections/home/DirectorSection";
 import FaqSection from "@/components/sections/home/FaqSection";
 import FinalCtaSection from "@/components/sections/home/FinalCtaSection";
+import StudentExperiencesSection from "@/components/sections/StudentExperiencesSection";
 
 import type { CmsSection } from "@/types/cms";
 
@@ -19,6 +20,10 @@ export default function SectionRenderer({ sections, locale = "es" }: Props) {
   return (
     <>
       {sections.map((section) => {
+        if (section.is_active === false) {
+          return null;
+        }
+
         const sectionType = section.type ?? section.section_type;
 
         switch (sectionType) {
@@ -26,7 +31,13 @@ export default function SectionRenderer({ sections, locale = "es" }: Props) {
             return <HeroSection key={section.id} section={section} />;
 
           case "scholarship_country_grid":
-            return <ScholarshipGridSection key={section.id} section={section} />;
+            return (
+              <ScholarshipGridSection
+                key={section.id}
+                section={section}
+                locale={locale}
+              />
+            );
 
           case "about_dric":
             return <AboutDricSection key={section.id} section={section} />;
@@ -46,11 +57,28 @@ export default function SectionRenderer({ sections, locale = "es" }: Props) {
           case "stats":
             return <StatsSection key={section.id} section={section} />;
 
+          case "student_testimonials":
+            return (
+              <StudentExperiencesSection
+                key={section.id}
+                section={section}
+                locale={locale as "es" | "en"}
+              />
+            );
+
           case "faq":
-            return <FaqSection key={section.id} section={section} />;
+            return (
+              <FaqSection key={section.id} section={section} locale={locale} />
+            );
 
           case "final_cta":
-            return <FinalCtaSection key={section.id} section={section} />;
+            return (
+              <FinalCtaSection
+                key={section.id}
+                section={section}
+                locale={locale}
+              />
+            );
 
           default:
             return null;
