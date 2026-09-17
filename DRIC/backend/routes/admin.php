@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\NewsContentController;
 use App\Http\Controllers\Admin\NormativeContentController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\PermissionController;
+use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\PresentationContentController;
 use App\Http\Controllers\Admin\ProjectContentController;
 use App\Http\Controllers\Admin\ProjectFundingContentController;
@@ -28,6 +29,8 @@ use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', DashboardController::class)->name('dashboard');
+Route::get('profile', [ProfileController::class, 'edit'])->name('profile.edit');
+Route::put('profile', [ProfileController::class, 'update'])->name('profile.update');
 Route::get('pages/{page}/home-content', [HomeContentController::class, 'edit'])->name('pages.home.edit');
 Route::put('pages/{page}/home-content', [HomeContentController::class, 'update'])->name('pages.home.update');
 Route::get('pages/{page}/home-testimonials', [HomeTestimonialContentController::class, 'edit'])->name('home-testimonials.edit');

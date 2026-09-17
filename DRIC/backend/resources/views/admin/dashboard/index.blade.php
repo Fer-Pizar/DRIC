@@ -1,10 +1,13 @@
 @php
+    use Illuminate\Support\Facades\Storage;
+
     $user = auth()->user();
     $displayName = $user->name ?? $user->email;
     $roleLabel = $isAdmin ? 'Administrador' : 'Editor';
     $roleDescription = $isAdmin
         ? 'Acceso completo a paginas, usuarios, roles y permisos.'
         : 'Acceso limitado a las secciones asignadas por Direccion.';
+    $photoUrl = ! $isAdmin && $user->profile_photo_path ? Storage::disk('public')->url($user->profile_photo_path) : null;
 @endphp
 
 <!DOCTYPE html>
@@ -121,6 +124,13 @@
             color: #fff;
             background: linear-gradient(135deg, var(--blue), #2d6cdf);
             box-shadow: 0 16px 30px rgba(22, 65, 148, 0.22);
+            overflow: hidden;
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .identity h2 {
@@ -157,6 +167,35 @@
             margin-top: 22px;
         }
 
+        .panel-actions {
+            display: grid;
+            gap: 10px;
+            margin-top: 22px;
+        }
+
+        .panel-actions .logout {
+            margin-top: 0;
+        }
+
+        .profile-link {
+            width: 100%;
+            min-height: 46px;
+            padding: 12px 16px;
+            border: 1px solid rgba(22, 65, 148, 0.18);
+            border-radius: 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            background: #eaf0ff;
+            color: var(--blue-dark);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 900;
+            line-height: 1.2;
+            transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+        }
+
         button,
         .card {
             transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
@@ -174,9 +213,15 @@
             cursor: pointer;
         }
 
+        .profile-link:hover,
         button:hover,
         .card:hover {
             transform: translateY(-2px);
+        }
+
+        .profile-link:hover {
+            border-color: rgba(22, 65, 148, 0.34);
+            box-shadow: 0 16px 30px rgba(22, 65, 148, 0.16);
         }
 
         button:hover {
@@ -334,7 +379,11 @@
                 <div>
                     <div class="identity">
                         <span class="avatar" aria-hidden="true">
-                            <svg viewBox="0 0 24 24"><path d="M20 21a8 8 0 0 0-16 0"/><circle cx="12" cy="7" r="4"/></svg>
+                            @if ($photoUrl)
+                                <img src="{{ $photoUrl }}" alt="">
+                            @else
+                                <svg viewBox="0 0 24 24"><path d="M20 21a8 8 0 0 0-16 0"/><circle cx="12" cy="7" r="4"/></svg>
+                            @endif
                         </span>
                         <div>
                             <h2>{{ $displayName }}</h2>
@@ -351,10 +400,19 @@
                     </div>
                 </div>
 
-                <form class="logout" method="POST" action="{{ route('admin.logout') }}">
-                    @csrf
-                    <button type="submit">Cerrar sesion</button>
-                </form>
+                <div class="panel-actions">
+                    @unless ($isAdmin)
+                        <a class="profile-link" href="{{ route('admin.profile.edit') }}">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 21a8 8 0 0 0-16 0"/><circle cx="12" cy="7" r="4"/></svg>
+                            Perfil
+                        </a>
+                    @endunless
+
+                    <form class="logout" method="POST" action="{{ route('admin.logout') }}">
+                        @csrf
+                        <button type="submit">Cerrar sesion</button>
+                    </form>
+                </div>
             </aside>
         </section>
 
