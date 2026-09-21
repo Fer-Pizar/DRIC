@@ -1,3 +1,20 @@
+@php
+    $frontendUrl = rtrim(config('app.frontend_url', env('FRONTEND_URL', 'http://localhost:3000')), '/');
+    $preview = function (?string $path) use ($frontendUrl): string {
+        $path = (string) $path;
+        if ($path === '') {
+            return '';
+        }
+        if (\Illuminate\Support\Str::startsWith($path, ['http://', 'https://'])) {
+            return $path;
+        }
+        if (\Illuminate\Support\Str::startsWith($path, '/storage/')) {
+            return url($path);
+        }
+        return $frontendUrl.$path;
+    };
+@endphp
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -21,6 +38,8 @@
         .btn-primary { background: var(--blue); color: #fff; }
         .btn-secondary { background: #e8edf5; color: var(--ink); }
         .btn-danger { background: #fff1f2; color: var(--red-dark); }
+        .btn-undo { align-items: center; background: #eef3fb; color: var(--blue); font-size: 20px; font-weight: 900; line-height: 1; min-width: 40px; padding: 9px 12px; text-shadow: 0 0 0 currentColor, .35px 0 0 currentColor, 0 .35px 0 currentColor; }
+        .btn-undo:disabled { cursor: not-allowed; opacity: .42; }
         .alert { border-radius: 14px; margin-bottom: 18px; padding: 14px 16px; }
         .alert-success { background: #e8f8ee; border: 1px solid #bde8c9; color: #176534; }
         .alert-error { background: #fff1f2; border: 1px solid #b91c1c; color: var(--red-dark); font-weight: 800; }
@@ -28,9 +47,11 @@
         .panel { padding: 24px; }
         .panel-header { align-items: start; border-bottom: 1px solid var(--line); display: flex; gap: 16px; justify-content: space-between; margin-bottom: 20px; padding-bottom: 16px; }
         .language-grid, .membership-fields { display: grid; gap: 18px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-        .language-card, .membership-row { box-shadow: none; padding: 18px; }
+        .language-card, .membership-row { box-shadow: none; padding: 18px; position: relative; }
         .membership-row { display: grid; gap: 14px; }
         .row-header { align-items: center; display: flex; justify-content: space-between; }
+        .row-actions { align-items: center; display: flex; flex-wrap: wrap; gap: 10px; }
+        .undo-floating { position: absolute; right: 12px; top: 12px; z-index: 4; }
         .full { grid-column: 1 / -1; }
         .toggle-field { align-items: center; background: #f8fafc; border: 1px solid var(--line); border-radius: 14px; display: flex; gap: 12px; justify-content: space-between; padding: 12px 14px; }
         .toggle-field input { height: 18px; width: 18px; }
@@ -41,8 +62,10 @@
         .field-error, .live-error { color: var(--red-dark); font-size: 12px; font-weight: 800; line-height: 1.45; }
         .live-error:empty { display: none; }
         .is-invalid { border-color: var(--red-dark) !important; box-shadow: 0 0 0 3px rgba(127, 0, 16, 0.10); }
-        .preview { align-items: center; background: #e8edf5; border-radius: 14px; display: flex; height: 130px; justify-content: center; overflow: hidden; }
-        .preview img { height: 100%; object-fit: contain; padding: 12px; width: 100%; }
+        .preview { align-items: center; background: #f8fafc; border: 1px solid #d6deeb; border-radius: 14px; display: flex; height: 112px; justify-content: center; max-width: 260px; overflow: visible; position: relative; }
+        .preview img { height: auto; max-height: 96px; max-width: 220px; object-fit: contain; padding: 10px; width: auto; }
+        .preview-empty { color: var(--muted); font-size: 12px; font-weight: 800; padding: 14px; text-align: center; }
+        .btn-image-remove { align-items: center; background: rgba(127,0,16,.96); border: 2px solid rgba(255,255,255,.92); border-radius: 999px; box-shadow: 0 8px 20px rgba(15,23,42,.22); color: #fff; display: inline-flex; font-size: 20px; font-weight: 900; height: 32px; justify-content: center; line-height: 1; padding: 0; position: absolute; right: -8px; top: -8px; width: 32px; z-index: 5; }
         .empty-state { background: var(--soft); border: 1px dashed #cfd6e3; border-radius: 16px; color: var(--muted); padding: 22px; text-align: center; }
         .sticky-actions { align-items: center; background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 16px; bottom: 18px; box-shadow: 0 18px 45px rgba(15,23,42,.12); display: flex; justify-content: space-between; padding: 14px; position: sticky; }
         @media (max-width: 820px) { .topbar, .panel-header, .sticky-actions { align-items: stretch; flex-direction: column; } .language-grid, .membership-fields { grid-template-columns: 1fr; } h1 { font-size: 28px; } }
@@ -130,7 +153,10 @@
                         <h2>Tarjetas de membresías</h2>
                         <p class="muted">Cada tarjeta pública muestra logo, nombre, descripción, información extra opcional y botón al sitio.</p>
                     </div>
-                    <button class="btn btn-primary" type="button" id="add-membership">Agregar membresía</button>
+                    <div class="row-actions">
+                        <button class="btn btn-undo" type="button" id="restore-membership" disabled title="Restaurar última membresía eliminada" aria-label="Restaurar última membresía eliminada">↶</button>
+                        <button class="btn btn-primary" type="button" id="add-membership">Agregar membresía</button>
+                    </div>
                 </div>
 
                 <div class="memberships" id="memberships">
@@ -143,10 +169,14 @@
                         <div class="membership-row">
                             <div class="row-header">
                                 <h3>Membresía <span class="row-number">{{ $loop->iteration }}</span></h3>
-                                <button class="btn btn-danger" type="button" data-remove-row>Quitar</button>
+                                <div class="row-actions">
+                                    <button class="btn btn-undo" type="button" data-undo-row disabled title="Deshacer último cambio" aria-label="Deshacer último cambio">↶</button>
+                                    <button class="btn btn-danger" type="button" data-remove-row>Quitar</button>
+                                </div>
                             </div>
                             <input type="hidden" data-name="id" name="memberships[{{ $index }}][id]" value="{{ $membership['id'] ?? '' }}">
                             <input type="hidden" data-name="existing_image" name="memberships[{{ $index }}][existing_image]" value="{{ $membership['existing_image'] ?? $membership['image'] ?? '' }}">
+                            <input type="hidden" data-name="image_remove" name="memberships[{{ $index }}][image_remove]" value="0" data-remove-image-input>
                             <div class="membership-fields">
                                 <label>
                                     Título en español
@@ -201,11 +231,16 @@
                                 </label>
                                 <label class="full">
                                     Imagen
-                                    @if (!empty($membership['image']))
-                                        <div class="preview"><img src="{{ $membership['image'] }}" alt="Imagen actual"></div>
-                                    @endif
+                                    <div class="preview" data-image-preview>
+                                        @if (!empty($membership['image']))
+                                            <img src="{{ $preview($membership['image']) }}" alt="Logo actual" data-preview-image>
+                                        @else
+                                            <span class="preview-empty" data-preview-empty>Sin logo seleccionado.</span>
+                                        @endif
+                                        <button class="btn-image-remove" type="button" data-remove-image aria-label="Quitar imagen actual">×</button>
+                                    </div>
                                     <input type="file" data-name="image" name="memberships[{{ $index }}][image]" accept=".jpg,.jpeg,.png,image/jpeg,image/png">
-                                    <span class="hint">Solo JPG o PNG. Tamaño máximo: 5 MB.</span>
+                                    <span class="hint">Solo JPG o PNG. Tamaño máximo: 10 MB. Vista previa al tamaño real del logo en la tarjeta.</span>
                                     @error('memberships.'.$index.'.image')<span class="field-error">{{ $message }}</span>@enderror
                                 </label>
                             </div>
@@ -260,10 +295,14 @@
         <div class="membership-row">
             <div class="row-header">
                 <h3>Membresía <span class="row-number"></span></h3>
-                <button class="btn btn-danger" type="button" data-remove-row>Quitar</button>
+                <div class="row-actions">
+                    <button class="btn btn-undo" type="button" data-undo-row disabled title="Deshacer último cambio" aria-label="Deshacer último cambio">↶</button>
+                    <button class="btn btn-danger" type="button" data-remove-row>Quitar</button>
+                </div>
             </div>
             <input type="hidden" data-name="id" value="">
             <input type="hidden" data-name="existing_image" value="">
+            <input type="hidden" data-name="image_remove" value="0" data-remove-image-input>
             <div class="membership-fields">
                 <label>Título en español<input type="text" data-name="title_es" value=""></label>
                 <label>Título en inglés<input type="text" data-name="title_en" value=""></label>
@@ -274,7 +313,7 @@
                 <label class="pador-field">Texto de información extra en español<textarea data-name="pador_text_es"></textarea><span class="hint">Este texto se muestra dentro de la tarjeta cuando el interruptor está activo.</span></label>
                 <label class="pador-field">Texto de información extra en inglés<textarea data-name="pador_text_en"></textarea><span class="hint">Si se deja vacío, se usará el texto en español.</span></label>
                 <label class="pador-field full">Correo de contacto<input type="text" data-name="extra_info_email" value="" placeholder="dric@umss.edu.bo"><span class="hint">Solo este campo permite @ y caracteres propios de un correo.</span></label>
-                <label class="full">Imagen<input type="file" data-name="image" accept=".jpg,.jpeg,.png,image/jpeg,image/png"><span class="hint">Solo JPG o PNG. Tamaño máximo: 5 MB.</span></label>
+                <label class="full">Imagen<div class="preview" data-image-preview><span class="preview-empty" data-preview-empty>Sin logo seleccionado.</span><button class="btn-image-remove" type="button" data-remove-image aria-label="Quitar imagen actual">×</button></div><input type="file" data-name="image" accept=".jpg,.jpeg,.png,image/jpeg,image/png"><span class="hint">Solo JPG o PNG. Tamaño máximo: 10 MB. Vista previa al tamaño real del logo en la tarjeta.</span></label>
             </div>
         </div>
     </template>
@@ -285,6 +324,10 @@
         const container = document.getElementById("memberships");
         const template = document.getElementById("membership-template");
         const emptyState = document.getElementById("empty-state");
+        const restoreMembershipButton = document.getElementById("restore-membership");
+        const rowHistory = new WeakMap();
+        const fieldStartSnapshots = new WeakMap();
+        const removedRows = [];
 
         function ensureLiveError(field) {
             let message = field.parentElement.querySelector(".live-error");
@@ -351,10 +394,256 @@
                 message.textContent = "Ese formato no está permitido. Solo se aceptan imágenes JPG o PNG.";
                 return;
             }
-            if (file.size > 5 * 1024 * 1024) {
+            if (file.size > 10 * 1024 * 1024) {
                 field.classList.add("is-invalid");
-                message.textContent = "La imagen es demasiado pesada. El tamaño máximo permitido es 5 MB.";
+                message.textContent = "La imagen es demasiado pesada. El tamaño máximo permitido es 10 MB.";
+                return;
             }
+
+            showSelectedImage(field.closest(".membership-row"), file);
+        }
+
+        function editableFields(row) {
+            return Array.from(row.querySelectorAll("input:not([type='file']), textarea"));
+        }
+
+        function imageState(row) {
+            const preview = row.querySelector("[data-image-preview]");
+            const image = preview?.querySelector("[data-preview-image]");
+            const empty = preview?.querySelector("[data-preview-empty]");
+            const fileInput = row.querySelector("input[type='file'][data-name='image']");
+            const removeInput = row.querySelector("[data-remove-image-input]");
+
+            return {
+                src: image?.getAttribute("src") || "",
+                imageHidden: image ? image.hidden : true,
+                emptyHidden: empty ? empty.hidden : true,
+                file: fileInput?.files?.[0] || null,
+                removeValue: removeInput?.value || "0",
+            };
+        }
+
+        function snapshotRow(row) {
+            return {
+                fields: editableFields(row).map((field) => ({
+                    name: field.name,
+                    type: field.type,
+                    value: field.value,
+                    checked: field.checked,
+                })),
+                image: imageState(row),
+            };
+        }
+
+        function previewImageElement(preview) {
+            let image = preview.querySelector("[data-preview-image]");
+
+            if (!image) {
+                image = document.createElement("img");
+                image.alt = "Vista previa del logo";
+                image.dataset.previewImage = "";
+                preview.prepend(image);
+            }
+
+            image.hidden = false;
+            return image;
+        }
+
+        function previewEmpty(preview) {
+            let empty = preview.querySelector("[data-preview-empty]");
+
+            if (!empty) {
+                empty = document.createElement("span");
+                empty.className = "preview-empty";
+                empty.dataset.previewEmpty = "";
+                empty.textContent = "Sin logo seleccionado.";
+                preview.appendChild(empty);
+            }
+
+            empty.hidden = false;
+        }
+
+        function restoreImageState(row, state) {
+            if (!state) return;
+
+            const preview = row.querySelector("[data-image-preview]");
+            const fileInput = row.querySelector("input[type='file'][data-name='image']");
+            const removeInput = row.querySelector("[data-remove-image-input]");
+            if (!preview) return;
+
+            const image = previewImageElement(preview);
+            const empty = preview.querySelector("[data-preview-empty]");
+
+            if (state.file) {
+                if (image.dataset.objectUrl) URL.revokeObjectURL(image.dataset.objectUrl);
+                image.dataset.objectUrl = URL.createObjectURL(state.file);
+                image.src = image.dataset.objectUrl;
+                image.hidden = Boolean(state.imageHidden);
+                if (empty) empty.hidden = true;
+            } else if (state.src) {
+                image.src = state.src;
+                image.hidden = Boolean(state.imageHidden);
+                if (empty) empty.hidden = true;
+            } else {
+                image.removeAttribute("src");
+                image.hidden = true;
+                if (empty) empty.hidden = Boolean(state.emptyHidden);
+            }
+
+            if (fileInput) {
+                if (state.file) {
+                    const transfer = new DataTransfer();
+                    transfer.items.add(state.file);
+                    fileInput.files = transfer.files;
+                } else {
+                    fileInput.value = "";
+                }
+            }
+
+            if (removeInput) removeInput.value = state.removeValue || "0";
+        }
+
+        function restoreSnapshot(row, snapshot) {
+            snapshot.fields.forEach((item) => {
+                const field = editableFields(row).find((candidate) => candidate.name === item.name);
+                if (!field) return;
+
+                if (field.type === "checkbox") {
+                    field.checked = item.checked;
+                    return;
+                }
+
+                field.value = item.value;
+            });
+
+            restoreImageState(row, snapshot.image);
+            refreshRows();
+        }
+
+        function historyFor(row) {
+            if (!rowHistory.has(row)) rowHistory.set(row, []);
+            return rowHistory.get(row);
+        }
+
+        function setUndoState(row) {
+            const button = row.querySelector(":scope > [data-undo-row], :scope > [data-undo-card], :scope > .row-header [data-undo-row]");
+            if (button) button.disabled = historyFor(row).length === 0;
+        }
+
+        function pushSnapshot(row, snapshot = snapshotRow(row)) {
+            const history = historyFor(row);
+            const serialized = JSON.stringify(snapshot);
+            const last = history.length ? JSON.stringify(history[history.length - 1]) : null;
+
+            if (serialized !== last) history.push(snapshot);
+            if (history.length > 20) history.shift();
+            setUndoState(row);
+        }
+
+        function undoRow(row) {
+            const snapshot = historyFor(row).pop();
+            if (!snapshot) return;
+
+            restoreSnapshot(row, snapshot);
+            editableFields(row).forEach((field) => fieldStartSnapshots.delete(field));
+            setUndoState(row);
+        }
+
+        function markFieldStart(field) {
+            const row = field.closest(".membership-row, .language-card");
+            if (!row || fieldStartSnapshots.has(field)) return;
+            fieldStartSnapshots.set(field, snapshotRow(row));
+        }
+
+        function rememberFieldChange(field) {
+            const row = field.closest(".membership-row, .language-card");
+            const snapshot = fieldStartSnapshots.get(field);
+            if (!row || !snapshot) return;
+
+            pushSnapshot(row, snapshot);
+            fieldStartSnapshots.delete(field);
+        }
+
+        function showSelectedImage(row, file) {
+            const preview = row.querySelector("[data-image-preview]");
+            const image = previewImageElement(preview);
+            const empty = preview.querySelector("[data-preview-empty]");
+            const removeInput = row.querySelector("[data-remove-image-input]");
+
+            if (image.dataset.objectUrl) URL.revokeObjectURL(image.dataset.objectUrl);
+            image.dataset.objectUrl = URL.createObjectURL(file);
+            image.src = image.dataset.objectUrl;
+            image.hidden = false;
+            if (empty) empty.hidden = true;
+            if (removeInput) removeInput.value = "0";
+        }
+
+        function clearImagePreview(row) {
+            const preview = row.querySelector("[data-image-preview]");
+            const image = preview?.querySelector("[data-preview-image]");
+            const fileInput = row.querySelector("input[type='file'][data-name='image']");
+            const removeInput = row.querySelector("[data-remove-image-input]");
+
+            pushSnapshot(row);
+
+            if (fileInput) {
+                fileInput.value = "";
+                ensureLiveError(fileInput).textContent = "";
+            }
+
+            if (image) {
+                if (image.dataset.objectUrl) {
+                    URL.revokeObjectURL(image.dataset.objectUrl);
+                    delete image.dataset.objectUrl;
+                }
+                image.removeAttribute("src");
+                image.hidden = true;
+            }
+
+            if (preview) previewEmpty(preview);
+            if (removeInput) removeInput.value = "1";
+        }
+
+        function setRestoreMembershipState() {
+            restoreMembershipButton.disabled = removedRows.length === 0;
+        }
+
+        function cleanRemovedRowSnapshot(row) {
+            const clone = row.cloneNode(true);
+            delete clone.dataset.bound;
+            delete clone.dataset.undoBound;
+            clone.querySelectorAll("[data-field-bound]").forEach((field) => {
+                delete field.dataset.fieldBound;
+            });
+            clone.querySelectorAll(".live-error").forEach((message) => message.remove());
+            clone.querySelectorAll(".is-invalid").forEach((field) => field.classList.remove("is-invalid"));
+            return clone.outerHTML;
+        }
+
+        function rememberRemovedRow(row) {
+            const rows = [...container.querySelectorAll(".membership-row")];
+            removedRows.push({
+                html: cleanRemovedRowSnapshot(row),
+                index: rows.indexOf(row),
+            });
+
+            if (removedRows.length > 20) removedRows.shift();
+            setRestoreMembershipState();
+        }
+
+        function restoreRemovedRow() {
+            const snapshot = removedRows.pop();
+            if (!snapshot) return;
+
+            const wrapper = document.createElement("div");
+            wrapper.innerHTML = snapshot.html.trim();
+            const row = wrapper.firstElementChild;
+            const reference = container.querySelectorAll(".membership-row")[snapshot.index] || null;
+
+            container.insertBefore(row, reference);
+            bindRow(row);
+            refreshRows();
+            setRestoreMembershipState();
         }
 
         function refreshRows() {
@@ -373,7 +662,34 @@
             if (emptyState) emptyState.style.display = rows.length ? "none" : "block";
         }
 
+        function bindUndoCard(card) {
+            if (card.dataset.undoBound === "1") return;
+            card.dataset.undoBound = "1";
+
+            const button = document.createElement("button");
+            button.className = "btn btn-undo undo-floating";
+            button.type = "button";
+            button.dataset.undoCard = "";
+            button.disabled = true;
+            button.title = "Deshacer último cambio";
+            button.setAttribute("aria-label", "Deshacer último cambio");
+            button.textContent = "↶";
+            card.appendChild(button);
+            button.addEventListener("click", () => undoRow(card));
+
+            editableFields(card).forEach((field) => {
+                field.addEventListener("focusin", () => markFieldStart(field));
+                field.addEventListener("input", () => rememberFieldChange(field));
+                field.addEventListener("change", () => rememberFieldChange(field));
+            });
+
+            setUndoState(card);
+        }
+
         function bindField(field) {
+            if (field.dataset.fieldBound === "1") return;
+            field.dataset.fieldBound = "1";
+
             if (field.matches("input[type='url']")) {
                 field.addEventListener("input", () => {
                     validateUrl(field);
@@ -390,7 +706,11 @@
                 field.addEventListener("change", refreshRows);
             }
             if (field.matches("input[type='file']")) {
-                field.addEventListener("change", () => validateUpload(field));
+                field.addEventListener("change", () => {
+                    const row = field.closest(".membership-row");
+                    if (row) pushSnapshot(row);
+                    validateUpload(field);
+                });
             }
             if (field.matches("input[type='text']")) {
                 const shouldValidate = cleanFieldNames.some((name) => field.name.includes(`[${name}]`) || field.dataset.name === name);
@@ -402,11 +722,27 @@
         }
 
         function bindRow(row) {
+            if (row.dataset.bound === "1") return;
+            row.dataset.bound = "1";
+
+            row.querySelector("[data-undo-row]")?.addEventListener("click", () => undoRow(row));
+
             row.querySelector("[data-remove-row]").addEventListener("click", () => {
+                rememberRemovedRow(row);
                 row.remove();
                 refreshRows();
             });
+
+            row.querySelector("[data-remove-image]")?.addEventListener("click", () => clearImagePreview(row));
+
+            editableFields(row).forEach((field) => {
+                field.addEventListener("focusin", () => markFieldStart(field));
+                field.addEventListener("input", () => rememberFieldChange(field));
+                field.addEventListener("change", () => rememberFieldChange(field));
+            });
+
             row.querySelectorAll("input, textarea").forEach(bindField);
+            setUndoState(row);
         }
 
         document.getElementById("add-membership").addEventListener("click", () => {
@@ -417,8 +753,12 @@
             row.querySelector("input[type='text']").focus();
         });
 
+        restoreMembershipButton.addEventListener("click", restoreRemovedRow);
+
         document.querySelectorAll("input, textarea").forEach(bindField);
         container.querySelectorAll(".membership-row").forEach(bindRow);
+        document.querySelectorAll(".language-card").forEach(bindUndoCard);
+        setRestoreMembershipState();
         refreshRows();
     </script>
 </body>

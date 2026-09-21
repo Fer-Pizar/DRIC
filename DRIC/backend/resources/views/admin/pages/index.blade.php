@@ -515,7 +515,6 @@
                                 </div>
 
                                 <div class="actions">
-                                    <a href="{{ route('admin.pages.edit', $page) }}" class="btn btn-edit">Editar pagina</a>
                                     @if ($link)
                                         <a href="{{ $link[0] }}" class="btn btn-content">{{ $link[1] }}</a>
                                     @endif

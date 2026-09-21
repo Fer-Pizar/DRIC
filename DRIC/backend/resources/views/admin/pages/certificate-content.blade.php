@@ -31,6 +31,7 @@
         form, .field-grid, .certificates-list { display: grid; gap: 16px; }
         .panel { padding: 24px; }
         .panel-header { border-bottom: 1px solid var(--line); margin-bottom: 20px; padding-bottom: 16px; }
+        .panel-header.with-actions { align-items: flex-start; display: flex; gap: 16px; justify-content: space-between; }
         .language-grid, .certificate-grid { display: grid; gap: 18px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
         .language-card, .certificate-card { box-shadow: none; padding: 18px; }
         .certificate-card { display: grid; gap: 16px; }
@@ -46,7 +47,7 @@
         .field-error { color: var(--red-dark); font-size: 12px; font-weight: 800; line-height: 1.45; }
         .undo-placeholder { align-items: center; background: #fff; border: 1px dashed #b8c2d2; border-radius: 18px; color: var(--muted); display: flex; gap: 12px; justify-content: space-between; padding: 18px; }
         .sticky-actions { align-items: center; background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 16px; bottom: 18px; box-shadow: 0 18px 45px rgba(15,23,42,.12); display: flex; justify-content: space-between; padding: 14px; position: sticky; }
-        @media (max-width: 820px) { .topbar, .sticky-actions, .certificate-header { align-items: stretch; flex-direction: column; } .language-grid, .certificate-grid, .code-row { grid-template-columns: 1fr; } }
+        @media (max-width: 820px) { .topbar, .sticky-actions, .certificate-header, .panel-header.with-actions { align-items: stretch; flex-direction: column; } .language-grid, .certificate-grid, .code-row { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -107,9 +108,12 @@
             </section>
 
             <section class="panel">
-                <div class="panel-header">
-                    <h2>Certificados administrables</h2>
-                    <p class="muted">Cada persona necesita un código único de siete caracteres, nombre, fecha de emisión y descripción bilingüe.</p>
+                <div class="panel-header with-actions">
+                    <div>
+                        <h2>Certificados administrables</h2>
+                        <p class="muted">Cada persona necesita un código único de siete caracteres, nombre, fecha de emisión y descripción bilingüe.</p>
+                    </div>
+                    <button class="btn btn-undo" type="button" id="restore-certificate" disabled title="Restaurar última persona quitada" aria-label="Restaurar última persona quitada">↶</button>
                 </div>
 
                 <div class="certificates-list" id="certificates-list">
@@ -267,6 +271,8 @@
         let nextIndex = {{ count(old('certificates', $certificates)) }};
         const cardHistory = new WeakMap();
         const fieldStartSnapshots = new WeakMap();
+        const removedCertificates = [];
+        const restoreCertificateButton = document.getElementById("restore-certificate");
 
         function editableFields(card) {
             return Array.from(card.querySelectorAll("input, textarea"));
@@ -368,14 +374,28 @@
 
             card.hidden = true;
             card.after(placeholder);
+            removedCertificates.push({ card, placeholder });
+            setRestoreCertificateState();
 
-            placeholder.querySelector("button").addEventListener("click", () => {
-                placeholder.remove();
-                card.hidden = false;
-                editableFields(card).forEach((field) => {
-                    field.disabled = false;
-                });
+            placeholder.querySelector("button").addEventListener("click", () => restoreRemovedCertificate(card, placeholder));
+        }
+
+        function setRestoreCertificateState() {
+            restoreCertificateButton.disabled = removedCertificates.length === 0;
+        }
+
+        function restoreRemovedCertificate(card, placeholder) {
+            const index = removedCertificates.findIndex((entry) => entry.card === card);
+            if (index >= 0) {
+                removedCertificates.splice(index, 1);
+            }
+
+            placeholder?.remove();
+            card.hidden = false;
+            editableFields(card).forEach((field) => {
+                field.disabled = false;
             });
+            setRestoreCertificateState();
         }
 
         function bindUndoScope(scope) {
@@ -418,6 +438,19 @@
 
         document.querySelectorAll("[data-undo-scope]:not([data-certificate-card])").forEach(bindUndoScope);
         document.querySelectorAll("[data-certificate-card]").forEach(bindCard);
+        setRestoreCertificateState();
+
+        restoreCertificateButton.addEventListener("click", () => {
+            const latest = removedCertificates.pop();
+            if (!latest) return;
+
+            latest.placeholder?.remove();
+            latest.card.hidden = false;
+            editableFields(latest.card).forEach((field) => {
+                field.disabled = false;
+            });
+            setRestoreCertificateState();
+        });
 
         addButton.addEventListener("click", () => {
             const html = template.innerHTML.replaceAll("__NAME__", `certificates[${nextIndex}]`);

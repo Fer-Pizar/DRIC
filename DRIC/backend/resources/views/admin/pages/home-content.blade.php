@@ -38,6 +38,10 @@
         .btn-primary { background: var(--blue); color: #fff; }
         .btn-secondary { background: #e8edf5; color: var(--ink); }
         .btn-danger { background: #fff1f2; color: var(--red-dark); }
+        .btn-undo { align-items: center; background: #eef3fb; color: var(--blue); font-size: 20px; font-weight: 900; line-height: 1; min-width: 40px; padding: 9px 12px; text-shadow: 0 0 0 currentColor, .35px 0 0 currentColor, 0 .35px 0 currentColor; }
+        .btn-undo:disabled { cursor: not-allowed; opacity: .42; }
+        .undo-floating { position: absolute; right: 12px; top: 12px; z-index: 4; }
+        [data-image-card] > .undo-floating { right: -10px; top: -10px; z-index: 6; }
         .alert { border-radius: 14px; margin-bottom: 18px; padding: 14px 16px; }
         .alert-success { background: #e8f8ee; border: 1px solid #bde8c9; color: #176534; }
         .alert-error { background: #fff1f2; border: 1px solid #b91c1c; color: var(--red-dark); font-weight: 800; }
@@ -46,14 +50,22 @@
         .panel-header { border-bottom: 1px solid var(--line); margin-bottom: 20px; padding-bottom: 16px; }
         .language-grid, .two-grid, .three-grid { display: grid; gap: 18px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
         .three-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-        .language-card, .item-card { box-shadow: none; padding: 18px; }
+        .language-card, .item-card { box-shadow: none; padding: 18px; position: relative; }
         label { display: grid; gap: 7px; font-size: 13px; font-weight: 800; }
         input, textarea { border: 1px solid #cfd6e3; border-radius: 12px; color: var(--ink); font: inherit; font-weight: 500; padding: 12px 13px; width: 100%; }
         textarea { line-height: 1.55; min-height: 108px; resize: vertical; }
         .hint { color: var(--muted); font-size: 12px; font-weight: 500; line-height: 1.45; }
         .field-error { color: var(--red-dark); font-size: 12px; font-weight: 800; line-height: 1.45; }
-        .preview { align-items: center; background: var(--soft); border-radius: 14px; display: flex; justify-content: center; min-height: 140px; overflow: hidden; padding: 10px; }
-        .preview img { max-height: 180px; max-width: 100%; object-fit: contain; }
+        .preview { align-items: center; background: #111827; border: 1px solid #d6deeb; border-radius: 16px; display: flex; justify-content: center; margin-bottom: 12px; min-height: 140px; overflow: hidden; padding: 0; position: relative; width: 100%; }
+        .preview[data-image-preview] { cursor: pointer; }
+        .preview img { height: 100%; object-fit: cover; width: 100%; }
+        .preview-country { aspect-ratio: 4 / 3; }
+        .preview-about { aspect-ratio: 16 / 10; }
+        .preview-agreement { aspect-ratio: 4 / 5; }
+        .preview-empty { color: rgba(255,255,255,.72); padding: 18px; text-align: center; }
+        .preview-ruler { align-items: center; background: rgba(2,6,23,.76); border: 1px solid rgba(255,255,255,.16); border-radius: 999px; color: #fff; display: inline-flex; font-size: 11px; font-weight: 900; gap: 6px; left: 10px; line-height: 1; padding: 7px 10px; position: absolute; top: 10px; }
+        .preview-ruler::before { content: ""; background: repeating-linear-gradient(90deg, #fff 0 1px, transparent 1px 7px); display: block; height: 10px; opacity: .82; width: 34px; }
+        .btn-image-remove { align-items: center; background: rgba(127,0,16,.92); border: 2px solid rgba(255,255,255,.88); border-radius: 999px; color: #fff; display: inline-flex; font-size: 20px; font-weight: 900; height: 32px; justify-content: center; line-height: 1; padding: 0; position: absolute; right: 10px; top: 10px; width: 32px; z-index: 3; }
         .sticky-actions { align-items: center; background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 16px; bottom: 18px; box-shadow: 0 18px 45px rgba(15,23,42,.12); display: flex; justify-content: space-between; padding: 14px; position: sticky; z-index: 5; }
         .remove-row { align-items: center; display: flex; justify-content: space-between; gap: 12px; }
         .toggle-row { align-items: center; background: var(--soft); border: 1px solid var(--line); border-radius: 16px; display: flex; justify-content: space-between; gap: 18px; margin-bottom: 18px; padding: 16px; }
@@ -68,6 +80,17 @@
         .switch input:checked ~ .switch-text { color: var(--blue); }
         .switch input:checked ~ .switch-text::before { content: "Activo"; }
         .switch:focus-within .switch-track { outline: 3px solid rgba(22,65,148,.18); outline-offset: 3px; }
+        .crop-modal { align-items: center; background: rgba(2,6,23,.78); display: none; inset: 0; justify-content: center; padding: 18px; position: fixed; z-index: 50; }
+        .crop-modal.is-open { display: flex; }
+        .crop-dialog { background: #fff; border: 1px solid var(--line); border-radius: 18px; box-shadow: 0 30px 90px rgba(0,0,0,.34); display: grid; gap: 16px; max-height: calc(100vh - 36px); max-width: 920px; overflow: auto; padding: 18px; width: min(100%, 920px); }
+        .crop-top { align-items: start; display: flex; gap: 16px; justify-content: space-between; }
+        .crop-stage { align-items: center; background: #020617; border-radius: 16px; display: flex; justify-content: center; min-height: 280px; overflow: hidden; padding: 16px; position: relative; touch-action: none; }
+        .crop-frame { border: 2px solid #fff; box-shadow: 0 0 0 999px rgba(2,6,23,.58), 0 18px 44px rgba(0,0,0,.3); cursor: grab; max-height: min(68vh, 620px); overflow: hidden; position: relative; width: min(100%, 740px); }
+        .crop-frame.is-dragging { cursor: grabbing; }
+        .crop-frame img { left: 50%; max-width: none; position: absolute; top: 50%; transform-origin: center; user-select: none; -webkit-user-drag: none; }
+        .crop-controls { align-items: center; display: grid; gap: 10px; grid-template-columns: auto minmax(180px, 1fr); }
+        .crop-controls input { padding: 0; }
+        .crop-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; }
         @media (max-width: 940px) { .topbar, .sticky-actions { align-items: stretch; flex-direction: column; } .language-grid, .two-grid, .three-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
@@ -131,17 +154,28 @@
                 </div>
                 <div class="three-grid">
                     @foreach ($content['countries'] as $index => $country)
-                        <article class="item-card">
+                        <article class="item-card" data-image-card data-crop-aspect="1.333333" data-crop-label="Marco 4:3, similar a la tarjeta de país en Inicio.">
                             <h3>País {{ $index }}</h3>
                             <input type="hidden" name="countries[{{ $index }}][existing_image]" value="{{ old('countries.'.$index.'.existing_image', $country['existing_image']) }}">
+                            <input type="hidden" name="countries[{{ $index }}][image_remove]" value="0" data-remove-image-input>
                             @if ($country['image'])
-                                <div class="preview"><img src="{{ $preview($country['image']) }}" alt="Imagen actual"></div>
+                                <div class="preview preview-country" data-image-preview>
+                                    <img src="{{ $preview($country['image']) }}" alt="Imagen actual" data-preview-image>
+                                    <span class="preview-ruler">4:3 país</span>
+                                    <button class="btn-image-remove" type="button" data-remove-image aria-label="Quitar imagen actual">×</button>
+                                </div>
+                            @else
+                                <div class="preview preview-country" data-image-preview>
+                                    <span class="preview-empty" data-preview-empty>Sin imagen seleccionada.</span>
+                                    <span class="preview-ruler">4:3 país</span>
+                                    <button class="btn-image-remove" type="button" data-remove-image aria-label="Quitar imagen actual">×</button>
+                                </div>
                             @endif
                             <label>Nombre en español<input type="text" name="countries[{{ $index }}][title_es]" value="{{ old('countries.'.$index.'.title_es', $country['title_es']) }}">@error('countries.'.$index.'.title_es')<span class="field-error">{{ $message }}</span>@enderror</label>
                             <label>Nombre en inglés<input type="text" name="countries[{{ $index }}][title_en]" value="{{ old('countries.'.$index.'.title_en', $country['title_en']) }}">@error('countries.'.$index.'.title_en')<span class="field-error">{{ $message }}</span>@enderror</label>
                             <label>Identificador URL<input type="text" name="countries[{{ $index }}][slug]" value="{{ old('countries.'.$index.'.slug', $country['slug']) }}">@error('countries.'.$index.'.slug')<span class="field-error">{{ $message }}</span>@enderror</label>
                             <label>Enlace<input type="text" name="countries[{{ $index }}][href]" value="{{ old('countries.'.$index.'.href', $country['href']) }}">@error('countries.'.$index.'.href')<span class="field-error">{{ $message }}</span>@enderror</label>
-                            <label>Imagen<input type="file" name="countries[{{ $index }}][image]" accept=".jpg,.jpeg,.png,image/jpeg,image/png"><span class="hint">JPG o PNG. Máximo 5 MB.</span>@error('countries.'.$index.'.image')<span class="field-error">{{ $message }}</span>@enderror</label>
+                            <label>Imagen<input type="file" name="countries[{{ $index }}][image]" accept=".jpg,.jpeg,.png,image/jpeg,image/png" data-image-file><span class="hint">JPG o PNG. Máximo 10 MB.</span>@error('countries.'.$index.'.image')<span class="field-error">{{ $message }}</span>@enderror</label>
                         </article>
                     @endforeach
                 </div>
@@ -161,10 +195,19 @@
                         </div>
                     @endforeach
                 </div>
-                <article class="item-card">
+                <article class="item-card" data-image-card data-crop-aspect="1.6" data-crop-label="Marco ancho 16:10 para previsualizar Conócenos.">
                     <h3>Imagen Conócenos</h3>
-                    @if ($content['about_image']) <div class="preview"><img src="{{ $preview($content['about_image']) }}" alt="Imagen actual"></div> @endif
-                    <label>Subir nueva imagen<input type="file" name="about_image" accept=".jpg,.jpeg,.png,image/jpeg,image/png"><span class="hint">No se cambia la imagen anterior hasta guardar una nueva. Máximo 5 MB.</span>@error('about_image')<span class="field-error">{{ $message }}</span>@enderror</label>
+                    <input type="hidden" name="about_image_remove" value="0" data-remove-image-input>
+                    <div class="preview preview-about" data-image-preview>
+                        @if ($content['about_image'])
+                            <img src="{{ $preview($content['about_image']) }}" alt="Imagen actual" data-preview-image>
+                        @else
+                            <span class="preview-empty" data-preview-empty>Sin imagen seleccionada.</span>
+                        @endif
+                        <span class="preview-ruler">16:10 ancho</span>
+                        <button class="btn-image-remove" type="button" data-remove-image aria-label="Quitar imagen actual">×</button>
+                    </div>
+                    <label>Subir nueva imagen<input type="file" name="about_image" accept=".jpg,.jpeg,.png,image/jpeg,image/png" data-image-file><span class="hint">La X vuelve a la imagen base al guardar. Máximo 10 MB.</span>@error('about_image')<span class="field-error">{{ $message }}</span>@enderror</label>
                 </article>
             </section>
 
@@ -182,14 +225,27 @@
                 </div>
                 <div class="three-grid">
                     @foreach ($content['agreements'] as $index => $agreement)
-                        <article class="item-card">
+                        <article class="item-card" data-image-card data-crop-aspect="0.8" data-crop-label="Marco vertical 4:5, similar a las tarjetas de acuerdos recientes.">
                             <h3>Acuerdo {{ $index }}</h3>
                             <input type="hidden" name="agreements[{{ $index }}][existing_image]" value="{{ old('agreements.'.$index.'.existing_image', $agreement['existing_image']) }}">
-                            @if ($agreement['image']) <div class="preview"><img src="{{ $preview($agreement['image']) }}" alt="Imagen actual"></div> @endif
+                            <input type="hidden" name="agreements[{{ $index }}][image_remove]" value="0" data-remove-image-input>
+                            @if ($agreement['image'])
+                                <div class="preview preview-agreement" data-image-preview>
+                                    <img src="{{ $preview($agreement['image']) }}" alt="Imagen actual" data-preview-image>
+                                    <span class="preview-ruler">4:5 acuerdo</span>
+                                    <button class="btn-image-remove" type="button" data-remove-image aria-label="Quitar imagen actual">×</button>
+                                </div>
+                            @else
+                                <div class="preview preview-agreement" data-image-preview>
+                                    <span class="preview-empty" data-preview-empty>Sin imagen seleccionada.</span>
+                                    <span class="preview-ruler">4:5 acuerdo</span>
+                                    <button class="btn-image-remove" type="button" data-remove-image aria-label="Quitar imagen actual">×</button>
+                                </div>
+                            @endif
                             <label>Título español<input type="text" name="agreements[{{ $index }}][title_es]" value="{{ old('agreements.'.$index.'.title_es', $agreement['title_es']) }}">@error('agreements.'.$index.'.title_es')<span class="field-error">{{ $message }}</span>@enderror</label>
                             <label>Título inglés<input type="text" name="agreements[{{ $index }}][title_en]" value="{{ old('agreements.'.$index.'.title_en', $agreement['title_en']) }}">@error('agreements.'.$index.'.title_en')<span class="field-error">{{ $message }}</span>@enderror</label>
                             <label>Enlace<input type="text" name="agreements[{{ $index }}][href]" value="{{ old('agreements.'.$index.'.href', $agreement['href']) }}">@error('agreements.'.$index.'.href')<span class="field-error">{{ $message }}</span>@enderror</label>
-                            <label>Imagen<input type="file" name="agreements[{{ $index }}][image]" accept=".jpg,.jpeg,.png,image/jpeg,image/png"><span class="hint">JPG o PNG. Máximo 5 MB.</span>@error('agreements.'.$index.'.image')<span class="field-error">{{ $message }}</span>@enderror</label>
+                            <label>Imagen<input type="file" name="agreements[{{ $index }}][image]" accept=".jpg,.jpeg,.png,image/jpeg,image/png" data-image-file><span class="hint">JPG o PNG. Máximo 10 MB.</span>@error('agreements.'.$index.'.image')<span class="field-error">{{ $message }}</span>@enderror</label>
                         </article>
                     @endforeach
                 </div>
@@ -345,9 +401,244 @@
         </article>
     </template>
 
+    <div class="crop-modal" id="crop-modal" aria-hidden="true">
+        <div class="crop-dialog" role="dialog" aria-modal="true" aria-labelledby="crop-title">
+            <div class="crop-top">
+                <div>
+                    <h2 id="crop-title">Recortar imagen</h2>
+                    <p class="muted" id="crop-help">Ajusta la imagen dentro del marco y acepta el recorte.</p>
+                </div>
+                <button class="btn btn-danger" type="button" id="crop-close">Cancelar</button>
+            </div>
+            <div class="crop-stage">
+                <div class="crop-frame" id="crop-frame">
+                    <img id="crop-image" alt="Imagen para recortar">
+                </div>
+            </div>
+            <label class="crop-controls">
+                Zoom
+                <input type="range" id="crop-zoom" min="1" max="3" step="0.01" value="1">
+            </label>
+            <div class="crop-actions">
+                <button class="btn btn-secondary" type="button" id="crop-reset">Centrar</button>
+                <button class="btn btn-primary" type="button" id="crop-accept">Aceptar recorte</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         const faqList = document.getElementById("faq-list");
         const faqTemplate = document.getElementById("faq-template");
+        const cardHistory = new WeakMap();
+        const fieldStartSnapshots = new WeakMap();
+        const imageStartSnapshots = new WeakMap();
+        const maxImageBytes = 10 * 1024 * 1024;
+
+        function editableFields(scope) {
+            return Array.from(scope.querySelectorAll("input:not([type='file']), textarea"));
+        }
+
+        function imageCardFor(scope) {
+            if (scope.matches?.("[data-image-card]")) {
+                return scope;
+            }
+
+            return scope.querySelector?.("[data-image-card]") || null;
+        }
+
+        function imageState(scope) {
+            const card = imageCardFor(scope);
+            if (!card) return null;
+
+            const preview = card.querySelector("[data-image-preview]");
+            const image = preview?.querySelector("[data-preview-image]");
+            const empty = preview?.querySelector("[data-preview-empty]");
+            const fileInput = card.querySelector("[data-image-file]");
+            const removeInput = card.querySelector("[data-remove-image-input]");
+
+            return {
+                src: image?.getAttribute("src") || "",
+                imageHidden: image ? image.hidden : true,
+                emptyHidden: empty ? empty.hidden : true,
+                file: fileInput?.files?.[0] || null,
+                removeValue: removeInput?.value || "0",
+            };
+        }
+
+        function snapshotScope(scope) {
+            return {
+                fields: editableFields(scope).map((field) => ({
+                    name: field.name,
+                    type: field.type,
+                    value: field.value,
+                    checked: field.checked,
+                })),
+                image: imageState(scope),
+            };
+        }
+
+        function restoreImageState(scope, state) {
+            if (!state) return;
+
+            const card = imageCardFor(scope);
+            if (!card) return;
+
+            const preview = card.querySelector("[data-image-preview]");
+            const fileInput = card.querySelector("[data-image-file]");
+            const removeInput = card.querySelector("[data-remove-image-input]");
+            const empty = preview?.querySelector("[data-preview-empty]");
+            let image = preview?.querySelector("[data-preview-image]");
+
+            if (image?.dataset.objectUrl) {
+                URL.revokeObjectURL(image.dataset.objectUrl);
+                delete image.dataset.objectUrl;
+            }
+
+            if (state.file && preview) {
+                image = previewImageElement(preview);
+                image.dataset.objectUrl = URL.createObjectURL(state.file);
+                image.src = image.dataset.objectUrl;
+                image.hidden = false;
+                if (empty) empty.hidden = true;
+            } else if (state.src && preview) {
+                image = previewImageElement(preview);
+                image.src = state.src;
+                image.hidden = state.imageHidden;
+                if (empty) empty.hidden = true;
+            } else {
+                if (image) {
+                    image.removeAttribute("src");
+                    image.hidden = true;
+                }
+
+                if (empty) {
+                    empty.hidden = state.emptyHidden;
+                } else if (preview) {
+                    previewEmpty(preview);
+                }
+            }
+
+            if (fileInput) {
+                if (state.file) {
+                    const transfer = new DataTransfer();
+                    transfer.items.add(state.file);
+                    fileInput.files = transfer.files;
+                } else {
+                    fileInput.value = "";
+                }
+
+                imageErrorFor(fileInput).textContent = "";
+            }
+
+            if (removeInput) {
+                removeInput.value = state.removeValue;
+            }
+        }
+
+        function restoreSnapshot(scope, snapshot) {
+            const fields = Array.isArray(snapshot) ? snapshot : snapshot.fields;
+
+            fields.forEach((item) => {
+                const field = editableFields(scope).find((candidate) => candidate.name === item.name);
+                if (!field) return;
+
+                if (field.type === "checkbox") {
+                    field.checked = item.checked;
+                    return;
+                }
+
+                field.value = item.value;
+            });
+
+            if (!Array.isArray(snapshot)) {
+                restoreImageState(scope, snapshot.image);
+            }
+        }
+
+        function historyFor(scope) {
+            if (!cardHistory.has(scope)) {
+                cardHistory.set(scope, []);
+            }
+
+            return cardHistory.get(scope);
+        }
+
+        function setUndoState(scope) {
+            const button = scope.querySelector(":scope > [data-undo-card]");
+            if (!button) return;
+
+            button.disabled = historyFor(scope).length === 0;
+        }
+
+        function pushSnapshot(scope, snapshot = snapshotScope(scope)) {
+            const history = historyFor(scope);
+            const serialized = JSON.stringify(snapshot);
+            const last = history.length ? JSON.stringify(history[history.length - 1]) : null;
+
+            if (serialized !== last) {
+                history.push(snapshot);
+            }
+
+            if (history.length > 20) {
+                history.shift();
+            }
+
+            setUndoState(scope);
+        }
+
+        function undoScope(scope) {
+            const snapshot = historyFor(scope).pop();
+            if (!snapshot) return;
+
+            restoreSnapshot(scope, snapshot);
+            editableFields(scope).forEach((field) => fieldStartSnapshots.delete(field));
+            setUndoState(scope);
+        }
+
+        function markFieldStart(field) {
+            const scope = field.closest("[data-undo-scope]");
+            if (!scope || fieldStartSnapshots.has(field)) return;
+
+            fieldStartSnapshots.set(field, snapshotScope(scope));
+        }
+
+        function rememberFieldChange(field) {
+            const scope = field.closest("[data-undo-scope]");
+            const snapshot = fieldStartSnapshots.get(field);
+            if (!scope || !snapshot) return;
+
+            pushSnapshot(scope, snapshot);
+            fieldStartSnapshots.delete(field);
+        }
+
+        function bindUndoScope(scope) {
+            if (scope.dataset.undoBound === "1") return;
+
+            scope.dataset.undoScope = "";
+            scope.dataset.undoBound = "1";
+
+            const button = document.createElement("button");
+            button.className = "btn btn-undo undo-floating";
+            button.type = "button";
+            button.dataset.undoCard = "";
+            button.disabled = true;
+            button.title = "Deshacer último cambio";
+            button.setAttribute("aria-label", "Deshacer último cambio");
+            button.textContent = "↶";
+            scope.appendChild(button);
+
+            button.addEventListener("click", () => undoScope(scope));
+
+            editableFields(scope).forEach((field) => {
+                field.addEventListener("focusin", () => markFieldStart(field));
+                field.addEventListener("input", () => rememberFieldChange(field));
+                field.addEventListener("change", () => rememberFieldChange(field));
+            });
+        }
+
+        function bindUndoScopes(root = document) {
+            root.querySelectorAll(".language-card, .item-card, .toggle-row").forEach(bindUndoScope);
+        }
 
         function renameFaqs() {
             [...faqList.querySelectorAll(".faq-row")].forEach((row, index) => {
@@ -358,8 +649,10 @@
         }
 
         document.getElementById("add-faq").addEventListener("click", () => {
-            faqList.appendChild(faqTemplate.content.firstElementChild.cloneNode(true));
+            const row = faqTemplate.content.firstElementChild.cloneNode(true);
+            faqList.appendChild(row);
             renameFaqs();
+            bindUndoScope(row);
         });
 
         faqList.addEventListener("click", (event) => {
@@ -368,27 +661,384 @@
             renameFaqs();
         });
 
-        document.getElementById("home-form").addEventListener("change", (event) => {
-            const input = event.target;
-            if (input.type !== "file" || !input.files.length) return;
-            const file = input.files[0];
+        function imageErrorFor(input) {
             let error = input.parentElement.querySelector(".client-file-error");
             if (!error) {
                 error = document.createElement("span");
                 error.className = "field-error client-file-error";
                 input.parentElement.appendChild(error);
             }
+
+            return error;
+        }
+
+        function validateImageInput(input) {
+            const file = input.files?.[0];
+            const error = imageErrorFor(input);
             error.textContent = "";
+
+            if (!file) {
+                return false;
+            }
+
             if (!["image/jpeg", "image/png"].includes(file.type)) {
                 error.textContent = "Ese formato no está permitido. Solo se aceptan imágenes JPG o PNG.";
                 input.value = "";
-                return;
+                return false;
             }
-            if (file.size > 5 * 1024 * 1024) {
-                error.textContent = "La imagen es demasiado pesada. El tamaño máximo permitido es 5 MB.";
+
+            if (file.size > maxImageBytes) {
+                error.textContent = "La imagen es demasiado pesada. El tamaño máximo permitido es 10 MB.";
                 input.value = "";
+                return false;
+            }
+
+            return true;
+        }
+
+        function previewEmpty(preview) {
+            let empty = preview.querySelector("[data-preview-empty]");
+
+            if (!empty) {
+                empty = document.createElement("span");
+                empty.className = "preview-empty";
+                empty.dataset.previewEmpty = "";
+                empty.textContent = "Sin imagen seleccionada. Puedes subir una nueva antes de guardar.";
+                preview.appendChild(empty);
+            }
+
+            empty.hidden = false;
+        }
+
+        function previewImageElement(preview) {
+            let image = preview.querySelector("[data-preview-image]");
+
+            if (!image) {
+                image = document.createElement("img");
+                image.alt = "Vista previa de la imagen seleccionada";
+                image.dataset.previewImage = "";
+                preview.prepend(image);
+            }
+
+            image.hidden = false;
+            return image;
+        }
+
+        function clearImagePreview(card) {
+            const scope = card.closest("[data-undo-scope]") || card;
+            const preview = card.querySelector("[data-image-preview]");
+            const image = preview.querySelector("[data-preview-image]");
+            const fileInput = card.querySelector("[data-image-file]");
+            const removeInput = card.querySelector("[data-remove-image-input]");
+
+            pushSnapshot(scope);
+
+            if (fileInput) {
+                fileInput.value = "";
+                imageErrorFor(fileInput).textContent = "";
+            }
+
+            if (image) {
+                if (image.dataset.objectUrl) {
+                    URL.revokeObjectURL(image.dataset.objectUrl);
+                    delete image.dataset.objectUrl;
+                }
+
+                image.removeAttribute("src");
+                image.hidden = true;
+            }
+
+            previewEmpty(preview);
+            if (removeInput) {
+                removeInput.value = "1";
+            }
+        }
+
+        function showSelectedImage(card, file) {
+            const preview = card.querySelector("[data-image-preview]");
+            const image = previewImageElement(preview);
+            const empty = preview.querySelector("[data-preview-empty]");
+            const removeInput = card.querySelector("[data-remove-image-input]");
+
+            if (image.dataset.objectUrl) {
+                URL.revokeObjectURL(image.dataset.objectUrl);
+            }
+
+            image.dataset.objectUrl = URL.createObjectURL(file);
+            image.src = image.dataset.objectUrl;
+
+            if (empty) {
+                empty.hidden = true;
+            }
+
+            if (removeInput) {
+                removeInput.value = "0";
+            }
+        }
+
+        function bindImageCard(card) {
+            if (card.dataset.imageBound === "1") return;
+            card.dataset.imageBound = "1";
+
+            const fileInput = card.querySelector("[data-image-file]");
+            const removeButton = card.querySelector("[data-remove-image]");
+            const preview = card.querySelector("[data-image-preview]");
+
+            function requestImageFile() {
+                if (!fileInput) return;
+
+                const scope = card.closest("[data-undo-scope]") || card;
+                imageStartSnapshots.set(fileInput, snapshotScope(scope));
+                fileInput.click();
+            }
+
+            preview?.addEventListener("click", (event) => {
+                if (event.target.closest("[data-remove-image]")) return;
+                requestImageFile();
+            });
+
+            removeButton?.addEventListener("click", (event) => {
+                event.stopPropagation();
+                clearImagePreview(card);
+            });
+
+            fileInput?.addEventListener("change", () => {
+                if (!validateImageInput(fileInput)) return;
+                openCropTool(card, fileInput.files[0]);
+            });
+
+            fileInput?.addEventListener("click", () => {
+                const scope = card.closest("[data-undo-scope]") || card;
+                imageStartSnapshots.set(fileInput, snapshotScope(scope));
+            });
+        }
+
+        const cropModal = document.getElementById("crop-modal");
+        const cropFrame = document.getElementById("crop-frame");
+        const cropImage = document.getElementById("crop-image");
+        const cropZoom = document.getElementById("crop-zoom");
+        const cropHelp = document.getElementById("crop-help");
+        const cropAccept = document.getElementById("crop-accept");
+        const cropReset = document.getElementById("crop-reset");
+        const cropClose = document.getElementById("crop-close");
+        const cropState = {
+            card: null,
+            file: null,
+            objectUrl: "",
+            naturalWidth: 0,
+            naturalHeight: 0,
+            baseScale: 1,
+            zoom: 1,
+            offsetX: 0,
+            offsetY: 0,
+            dragging: false,
+            pointerX: 0,
+            pointerY: 0,
+        };
+
+        function cropAspectFor(card) {
+            return Number(card.dataset.cropAspect || "1.333333");
+        }
+
+        function frameSizeForAspect(aspect) {
+            const availableWidth = Math.min(740, cropFrame.parentElement.clientWidth - 32);
+            const availableHeight = Math.min(620, window.innerHeight * 0.58);
+            let width = availableWidth;
+            let height = width / aspect;
+
+            if (height > availableHeight) {
+                height = availableHeight;
+                width = height * aspect;
+            }
+
+            return { width, height };
+        }
+
+        function clampCropOffsets() {
+            const frameWidth = cropFrame.clientWidth;
+            const frameHeight = cropFrame.clientHeight;
+            const imageWidth = cropState.naturalWidth * cropState.baseScale * cropState.zoom;
+            const imageHeight = cropState.naturalHeight * cropState.baseScale * cropState.zoom;
+            const maxX = Math.max(0, (imageWidth - frameWidth) / 2);
+            const maxY = Math.max(0, (imageHeight - frameHeight) / 2);
+
+            cropState.offsetX = Math.min(maxX, Math.max(-maxX, cropState.offsetX));
+            cropState.offsetY = Math.min(maxY, Math.max(-maxY, cropState.offsetY));
+        }
+
+        function renderCrop() {
+            clampCropOffsets();
+            cropImage.style.width = `${cropState.naturalWidth * cropState.baseScale * cropState.zoom}px`;
+            cropImage.style.height = `${cropState.naturalHeight * cropState.baseScale * cropState.zoom}px`;
+            cropImage.style.transform = `translate(calc(-50% + ${cropState.offsetX}px), calc(-50% + ${cropState.offsetY}px))`;
+        }
+
+        function resetCropPosition() {
+            cropState.baseScale = Math.max(
+                cropFrame.clientWidth / cropState.naturalWidth,
+                cropFrame.clientHeight / cropState.naturalHeight
+            );
+            cropState.zoom = 1;
+            cropState.offsetX = 0;
+            cropState.offsetY = 0;
+            cropZoom.value = "1";
+            renderCrop();
+        }
+
+        function openCropTool(card, file) {
+            const aspect = cropAspectFor(card);
+
+            if (cropState.objectUrl) {
+                URL.revokeObjectURL(cropState.objectUrl);
+            }
+
+            cropState.card = card;
+            cropState.file = file;
+            cropState.objectUrl = URL.createObjectURL(file);
+            cropHelp.textContent = card.dataset.cropLabel || "Ajusta la imagen dentro del marco y acepta el recorte.";
+            cropModal.classList.add("is-open");
+            cropModal.setAttribute("aria-hidden", "false");
+
+            const size = frameSizeForAspect(aspect);
+            cropFrame.style.width = `${size.width}px`;
+            cropFrame.style.height = `${size.height}px`;
+            cropImage.src = cropState.objectUrl;
+        }
+
+        function closeCropTool(clearSelection = false) {
+            const card = cropState.card;
+
+            cropModal.classList.remove("is-open");
+            cropModal.setAttribute("aria-hidden", "true");
+
+            if (clearSelection && card) {
+                const fileInput = card.querySelector("[data-image-file]");
+                if (fileInput) {
+                    const scope = card.closest("[data-undo-scope]") || card;
+                    const snapshot = imageStartSnapshots.get(fileInput);
+
+                    if (snapshot) {
+                        restoreImageState(scope, snapshot.image);
+                        imageStartSnapshots.delete(fileInput);
+                    } else {
+                        fileInput.value = "";
+                    }
+                }
+            }
+
+            if (cropState.objectUrl) {
+                URL.revokeObjectURL(cropState.objectUrl);
+            }
+
+            cropState.card = null;
+            cropState.file = null;
+            cropState.objectUrl = "";
+            cropImage.removeAttribute("src");
+        }
+
+        function croppedFileName(file) {
+            const base = file.name.replace(/\.[^.]+$/, "") || "home-image";
+            return `${base}-recortada.jpg`;
+        }
+
+        function acceptCrop() {
+            const card = cropState.card;
+            const file = cropState.file;
+            if (!card || !file) return;
+
+            const scale = cropState.baseScale * cropState.zoom;
+            const visibleLeft = (cropState.naturalWidth * scale - cropFrame.clientWidth) / 2 - cropState.offsetX;
+            const visibleTop = (cropState.naturalHeight * scale - cropFrame.clientHeight) / 2 - cropState.offsetY;
+            const sourceX = Math.max(0, visibleLeft / scale);
+            const sourceY = Math.max(0, visibleTop / scale);
+            const sourceWidth = Math.min(cropState.naturalWidth - sourceX, cropFrame.clientWidth / scale);
+            const sourceHeight = Math.min(cropState.naturalHeight - sourceY, cropFrame.clientHeight / scale);
+            const aspect = cropAspectFor(card);
+            const outputWidth = aspect < 1 ? 900 : 1200;
+            const outputHeight = Math.round(outputWidth / aspect);
+            const canvas = document.createElement("canvas");
+            const context = canvas.getContext("2d");
+
+            canvas.width = outputWidth;
+            canvas.height = outputHeight;
+            context.drawImage(cropImage, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, outputWidth, outputHeight);
+
+            canvas.toBlob((blob) => {
+                if (!blob) return;
+
+                const cropped = new File([blob], croppedFileName(file), { type: "image/jpeg" });
+                const transfer = new DataTransfer();
+                const fileInput = card.querySelector("[data-image-file]");
+                const scope = card.closest("[data-undo-scope]") || card;
+                const snapshot = imageStartSnapshots.get(fileInput) || snapshotScope(scope);
+
+                transfer.items.add(cropped);
+                pushSnapshot(scope, snapshot);
+                fileInput.files = transfer.files;
+                imageStartSnapshots.delete(fileInput);
+                showSelectedImage(card, cropped);
+                imageErrorFor(fileInput).textContent = "";
+                closeCropTool(false);
+            }, "image/jpeg", .92);
+        }
+
+        cropImage.addEventListener("load", () => {
+            cropState.naturalWidth = cropImage.naturalWidth;
+            cropState.naturalHeight = cropImage.naturalHeight;
+            resetCropPosition();
+        });
+
+        cropZoom.addEventListener("input", () => {
+            cropState.zoom = Number(cropZoom.value);
+            renderCrop();
+        });
+
+        cropFrame.addEventListener("pointerdown", (event) => {
+            cropState.dragging = true;
+            cropState.pointerX = event.clientX;
+            cropState.pointerY = event.clientY;
+            cropFrame.classList.add("is-dragging");
+            cropFrame.setPointerCapture(event.pointerId);
+        });
+
+        cropFrame.addEventListener("pointermove", (event) => {
+            if (!cropState.dragging) return;
+
+            cropState.offsetX += event.clientX - cropState.pointerX;
+            cropState.offsetY += event.clientY - cropState.pointerY;
+            cropState.pointerX = event.clientX;
+            cropState.pointerY = event.clientY;
+            renderCrop();
+        });
+
+        cropFrame.addEventListener("pointerup", (event) => {
+            cropState.dragging = false;
+            cropFrame.classList.remove("is-dragging");
+            cropFrame.releasePointerCapture(event.pointerId);
+        });
+
+        cropFrame.addEventListener("pointercancel", () => {
+            cropState.dragging = false;
+            cropFrame.classList.remove("is-dragging");
+        });
+
+        cropReset.addEventListener("click", resetCropPosition);
+        cropAccept.addEventListener("click", acceptCrop);
+        cropClose.addEventListener("click", () => closeCropTool(true));
+        cropModal.addEventListener("click", (event) => {
+            if (event.target === cropModal) {
+                closeCropTool(true);
             }
         });
+
+        window.addEventListener("keydown", (event) => {
+            if (event.key === "Escape" && cropModal.classList.contains("is-open")) {
+                closeCropTool(true);
+            }
+        });
+
+        bindUndoScopes();
+        document.querySelectorAll("[data-image-card]").forEach(bindImageCard);
     </script>
 </body>
 </html>

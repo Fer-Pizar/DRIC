@@ -108,6 +108,23 @@
             color: var(--red-dark);
         }
 
+        .btn-undo {
+            align-items: center;
+            background: #eef3fb;
+            color: var(--blue);
+            font-size: 20px;
+            font-weight: 900;
+            line-height: 1;
+            min-width: 40px;
+            padding: 9px 12px;
+            text-shadow: 0 0 0 currentColor, .35px 0 0 currentColor, 0 .35px 0 currentColor;
+        }
+
+        .btn-undo:disabled {
+            cursor: not-allowed;
+            opacity: .42;
+        }
+
         .pagination {
             align-items: center;
             display: flex;
@@ -334,6 +351,7 @@
                                 </select>
                             </label>
                         @endif
+                        <button class="btn btn-undo" type="button" id="restore-document" disabled title="Restaurar último documento quitado" aria-label="Restaurar último documento quitado">↶</button>
                         <button class="btn btn-primary" type="button" id="add-document">Agregar documento</button>
                     </div>
                 </div>
@@ -351,7 +369,10 @@
                         <div class="document-row">
                             <div class="row-header">
                                 <h3>Documento <span class="row-number">{{ $loop->iteration }}</span></h3>
-                                <button class="btn btn-danger" type="button" data-remove-row>Quitar</button>
+                                <div class="actions">
+                                    <button class="btn btn-undo" type="button" data-undo-row disabled title="Deshacer último cambio" aria-label="Deshacer último cambio">↶</button>
+                                    <button class="btn btn-danger" type="button" data-remove-row>Quitar</button>
+                                </div>
                             </div>
                             <input type="hidden" name="documents[{{ $index }}][id]" value="{{ $document['id'] ?? '' }}">
                             <div class="field-grid">
@@ -393,7 +414,10 @@
         <div class="document-row">
             <div class="row-header">
                 <h3>Documento <span class="row-number"></span></h3>
-                <button class="btn btn-danger" type="button" data-remove-row>Quitar</button>
+                <div class="actions">
+                    <button class="btn btn-undo" type="button" data-undo-row disabled title="Deshacer último cambio" aria-label="Deshacer último cambio">↶</button>
+                    <button class="btn btn-danger" type="button" data-remove-row>Quitar</button>
+                </div>
             </div>
             <input type="hidden" data-name="id" value="">
             <div class="field-grid">
@@ -421,7 +445,90 @@
         const visibleLimit = document.getElementById("visible-limit");
         const visibleStatus = document.getElementById("visible-status");
         const pagination = document.getElementById("pagination");
+        const restoreDocumentButton = document.getElementById("restore-document");
+        const rowHistory = new WeakMap();
+        const fieldStartSnapshots = new WeakMap();
+        const removedRows = [];
         let currentPage = 1;
+
+        function editableFields(row) {
+            return Array.from(row.querySelectorAll("input"));
+        }
+
+        function snapshotRow(row) {
+            return editableFields(row).map((field) => ({
+                name: field.name,
+                value: field.value,
+            }));
+        }
+
+        function restoreSnapshot(row, snapshot) {
+            snapshot.forEach((item) => {
+                const field = editableFields(row).find((candidate) => candidate.name === item.name);
+                if (!field) return;
+
+                field.value = item.value;
+                if (field.type === "url") {
+                    validateUrl(field);
+                }
+            });
+        }
+
+        function historyFor(row) {
+            if (!rowHistory.has(row)) {
+                rowHistory.set(row, []);
+            }
+
+            return rowHistory.get(row);
+        }
+
+        function setUndoState(row) {
+            const button = row.querySelector("[data-undo-row]");
+            if (!button) return;
+
+            button.disabled = historyFor(row).length === 0;
+        }
+
+        function pushSnapshot(row, snapshot = snapshotRow(row)) {
+            const history = historyFor(row);
+            const serialized = JSON.stringify(snapshot);
+            const last = history.length ? JSON.stringify(history[history.length - 1]) : null;
+
+            if (serialized !== last) {
+                history.push(snapshot);
+            }
+
+            if (history.length > 20) {
+                history.shift();
+            }
+
+            setUndoState(row);
+        }
+
+        function undoRow(row) {
+            const snapshot = historyFor(row).pop();
+            if (!snapshot) return;
+
+            restoreSnapshot(row, snapshot);
+            editableFields(row).forEach((field) => fieldStartSnapshots.delete(field));
+            setUndoState(row);
+        }
+
+        function markFieldStart(field) {
+            const row = field.closest(".document-row");
+            if (!row || fieldStartSnapshots.has(field)) return;
+
+            fieldStartSnapshots.set(field, snapshotRow(row));
+        }
+
+        function rememberFieldChange(field) {
+            const row = field.closest(".document-row");
+            const snapshot = fieldStartSnapshots.get(field);
+            if (!row || !snapshot) return;
+
+            pushSnapshot(row, snapshot);
+            fieldStartSnapshots.delete(field);
+        }
 
         function ensureLiveError(field) {
             let message = field.parentElement.querySelector(".live-error");
@@ -564,16 +671,72 @@
             pagination.append(pageButton("Siguiente", currentPage + 1, { disabled: currentPage === totalPages }));
         }
 
+        function setRestoreDocumentState() {
+            restoreDocumentButton.disabled = removedRows.length === 0;
+        }
+
+        function snapshotRemovedRow(row) {
+            const clone = row.cloneNode(true);
+            delete clone.dataset.bound;
+            clone.querySelectorAll(".live-error").forEach((message) => message.remove());
+            clone.querySelectorAll(".is-invalid").forEach((field) => field.classList.remove("is-invalid"));
+
+            return clone.outerHTML;
+        }
+
+        function rememberRemovedRow(row) {
+            const rows = [...container.querySelectorAll(".document-row")];
+            removedRows.push({
+                html: snapshotRemovedRow(row),
+                index: rows.indexOf(row),
+            });
+
+            if (removedRows.length > 20) {
+                removedRows.shift();
+            }
+
+            setRestoreDocumentState();
+        }
+
+        function restoreRemovedRow() {
+            const snapshot = removedRows.pop();
+            if (!snapshot) return;
+
+            const wrapper = document.createElement("div");
+            wrapper.innerHTML = snapshot.html.trim();
+            const row = wrapper.firstElementChild;
+            const reference = container.querySelectorAll(".document-row")[snapshot.index] || null;
+
+            container.insertBefore(row, reference);
+            bindRow(row);
+            refreshRows();
+            setRestoreDocumentState();
+        }
+
         function bindRow(row) {
+            if (row.dataset.bound === "1") return;
+            row.dataset.bound = "1";
+
+            row.querySelector("[data-undo-row]")?.addEventListener("click", () => undoRow(row));
+
             row.querySelector("[data-remove-row]").addEventListener("click", () => {
+                rememberRemovedRow(row);
                 row.remove();
                 refreshRows();
+            });
+
+            editableFields(row).forEach((field) => {
+                field.addEventListener("focusin", () => markFieldStart(field));
+                field.addEventListener("input", () => rememberFieldChange(field));
+                field.addEventListener("change", () => rememberFieldChange(field));
             });
 
             row.querySelectorAll("input[type='url']").forEach((field) => {
                 field.addEventListener("input", () => validateUrl(field));
                 field.addEventListener("blur", () => validateUrl(field));
             });
+
+            setUndoState(row);
         }
 
         document.getElementById("add-document").addEventListener("click", () => {
@@ -588,12 +751,15 @@
             row.querySelector("input[type='text']").focus();
         });
 
+        restoreDocumentButton.addEventListener("click", restoreRemovedRow);
+
         visibleLimit?.addEventListener("change", () => {
             currentPage = 1;
             applyPagination();
         });
 
         container.querySelectorAll(".document-row").forEach(bindRow);
+        setRestoreDocumentState();
         refreshRows();
     </script>
 </body>

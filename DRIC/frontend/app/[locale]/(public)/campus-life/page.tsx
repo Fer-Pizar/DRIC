@@ -10,6 +10,7 @@ import SchoolRoundedIcon from "@mui/icons-material/SchoolRounded";
 import PublicRoundedIcon from "@mui/icons-material/PublicRounded";
 import GroupsRoundedIcon from "@mui/icons-material/GroupsRounded";
 import { getOptionalPageBySlug } from "@/lib/api/pages";
+import { publicAssetHref } from "@/lib/api/assets";
 import type { CmsBlock, CmsPage, CmsSection } from "@/types/cms";
 
 type Props = {
@@ -398,6 +399,7 @@ function mergeCampusCopy(defaults: {
   const official = section(page, "campus.official");
   const basic = section(page, "campus.basic");
   const officialLogo = block(page, "campus.official.logo");
+  const heroImage = block(page, "campus.hero.image");
 
   return {
     ...defaults,
@@ -410,8 +412,8 @@ function mergeCampusCopy(defaults: {
     basicTitle: basic?.title || defaults.basicTitle,
     basicText: basic?.summary || official?.summary || defaults.basicText,
     officialUrl: dataString(officialLogo, "url") || defaults.officialUrl,
-    heroImage: defaults.heroImage,
-    officialLogo: defaults.officialLogo,
+    heroImage: publicAssetHref(heroImage?.media?.url, defaults.heroImage),
+    officialLogo: publicAssetHref(officialLogo?.media?.url, defaults.officialLogo),
   };
 }
 
@@ -455,7 +457,7 @@ function cmsStories(page: CmsPage | null) {
         title: story.title || "",
         text: story.summary || "",
         button: story.cta_label || null,
-        image: systemImages[index] || "/images/campus-life/library.png",
+        image: publicAssetHref(story.media?.url, systemImages[index] || "/images/campus-life/library.png"),
         href: dataString(story, "url") || "#",
       }))
       .filter((story) => story.title && story.text) ?? []

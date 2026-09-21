@@ -94,6 +94,11 @@
 
         .btn-primary { background: var(--blue); color: #fff; }
         .btn-secondary { background: #e8edf5; color: var(--ink); }
+        .btn-danger { background: #fff1f2; color: var(--red-dark); }
+        .btn-undo { align-items: center; background: #eef3fb; color: var(--blue); font-size: 20px; font-weight: 900; line-height: 1; min-width: 40px; padding: 9px 12px; text-shadow: 0 0 0 currentColor, .35px 0 0 currentColor, 0 .35px 0 currentColor; }
+        .btn-undo:disabled { cursor: not-allowed; opacity: .42; }
+        .undo-floating { position: absolute; right: 12px; top: 12px; z-index: 4; }
+        .media-card > .undo-floating { right: -10px; top: -10px; z-index: 6; }
 
         .alert {
             border-radius: 14px;
@@ -147,6 +152,7 @@
             border-radius: 18px;
             box-shadow: none;
             padding: 18px;
+            position: relative;
         }
 
         label {
@@ -199,19 +205,79 @@
 
         .preview {
             align-items: center;
-            background: #e8edf5;
-            border-radius: 14px;
+            background: #111827;
+            border: 1px solid #d6deeb;
+            border-radius: 16px;
+            cursor: pointer;
             display: flex;
-            height: 170px;
             justify-content: center;
             margin-bottom: 14px;
             overflow: hidden;
+            position: relative;
+            width: 100%;
+        }
+
+        .preview-project-card {
+            aspect-ratio: 2 / 1;
+            min-height: 180px;
         }
 
         .preview img {
             height: 100%;
             object-fit: cover;
             width: 100%;
+        }
+
+        .preview-empty {
+            color: rgba(255,255,255,.72);
+            padding: 18px;
+            text-align: center;
+        }
+
+        .preview-ruler {
+            align-items: center;
+            background: rgba(2,6,23,.76);
+            border: 1px solid rgba(255,255,255,.16);
+            border-radius: 999px;
+            color: #fff;
+            display: inline-flex;
+            font-size: 11px;
+            font-weight: 900;
+            gap: 6px;
+            left: 10px;
+            line-height: 1;
+            padding: 7px 10px;
+            position: absolute;
+            top: 10px;
+        }
+
+        .preview-ruler::before {
+            background: repeating-linear-gradient(90deg, #fff 0 1px, transparent 1px 7px);
+            content: "";
+            display: block;
+            height: 10px;
+            opacity: .82;
+            width: 34px;
+        }
+
+        .btn-image-remove {
+            align-items: center;
+            background: rgba(127,0,16,.92);
+            border: 2px solid rgba(255,255,255,.88);
+            border-radius: 999px;
+            color: #fff;
+            display: inline-flex;
+            font-size: 20px;
+            font-weight: 900;
+            height: 32px;
+            justify-content: center;
+            line-height: 1;
+            padding: 0;
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            width: 32px;
+            z-index: 3;
         }
 
         .sticky-actions {
@@ -232,6 +298,18 @@
             border-radius: 16px;
             padding: 18px;
         }
+
+        .crop-modal { align-items: center; background: rgba(2,6,23,.78); display: none; inset: 0; justify-content: center; padding: 18px; position: fixed; z-index: 50; }
+        .crop-modal.is-open { display: flex; }
+        .crop-dialog { background: #fff; border: 1px solid var(--line); border-radius: 18px; box-shadow: 0 30px 90px rgba(0,0,0,.34); display: grid; gap: 16px; max-height: calc(100vh - 36px); max-width: 920px; overflow: auto; padding: 18px; width: min(100%, 920px); }
+        .crop-top { align-items: start; display: flex; gap: 16px; justify-content: space-between; }
+        .crop-stage { align-items: center; background: #020617; border-radius: 16px; display: flex; justify-content: center; min-height: 280px; overflow: hidden; padding: 16px; position: relative; touch-action: none; }
+        .crop-frame { border: 2px solid #fff; box-shadow: 0 0 0 999px rgba(2,6,23,.58), 0 18px 44px rgba(0,0,0,.3); cursor: grab; max-height: min(68vh, 620px); overflow: hidden; position: relative; width: min(100%, 740px); }
+        .crop-frame.is-dragging { cursor: grabbing; }
+        .crop-frame img { left: 50%; max-width: none; position: absolute; top: 50%; transform-origin: center; user-select: none; -webkit-user-drag: none; }
+        .crop-controls { align-items: center; display: grid; gap: 10px; grid-template-columns: auto minmax(180px, 1fr); }
+        .crop-controls input { padding: 0; }
+        .crop-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; }
 
         @media (max-width: 820px) {
             .topbar,
@@ -366,18 +444,21 @@
                                     <span class="hint">Puedes usar una URL completa o una ruta interna como apoyo-financiero.</span>
                                     @error('card_'.$index.'_href')<span class="field-error">{{ $message }}</span>@enderror
                                 </label>
-                                <div class="media-card">
-                                    <div class="preview">
+                                <div class="media-card" data-image-card data-crop-aspect="2" data-crop-label="Marco ancho 2:1, similar a la imagen superior de la tarjeta pública de Proyectos.">
+                                    <div class="preview preview-project-card" data-image-preview>
                                         @if ($content['card_'.$index.'_image_url'])
-                                            <img src="{{ $preview($content['card_'.$index.'_image_url']) }}" alt="Imagen de la tarjeta {{ $index }}">
+                                            <img src="{{ $preview($content['card_'.$index.'_image_url']) }}" alt="Imagen de la tarjeta {{ $index }}" data-preview-image>
                                         @else
-                                            <span class="muted">Se usará la imagen actual del sitio hasta subir una nueva.</span>
+                                            <span class="preview-empty" data-preview-empty>Se usará la imagen actual del sitio hasta subir una nueva.</span>
                                         @endif
+                                        <span class="preview-ruler">2:1 tarjeta</span>
+                                        <button class="btn-image-remove" type="button" data-remove-image aria-label="Quitar imagen actual">×</button>
                                     </div>
+                                    <input type="hidden" name="card_{{ $index }}_image_remove" value="0" data-remove-image-input>
                                     <label>
                                         Imagen de la tarjeta {{ $index }}
-                                        <input type="file" name="card_{{ $index }}_image" accept=".jpg,.jpeg,.png,image/jpeg,image/png">
-                                        <span class="hint">Solo JPG o PNG. Tamaño máximo: 5 MB.</span>
+                                        <input type="file" name="card_{{ $index }}_image" accept=".jpg,.jpeg,.png,image/jpeg,image/png" data-image-file>
+                                        <span class="hint">La X quita la selección actual. Solo JPG o PNG. Tamaño máximo: 10 MB.</span>
                                         @error('card_'.$index.'_image')<span class="field-error">{{ $message }}</span>@enderror
                                     </label>
                                 </div>
@@ -408,6 +489,31 @@
         </form>
     </main>
 
+    <div class="crop-modal" id="crop-modal" aria-hidden="true">
+        <div class="crop-dialog" role="dialog" aria-modal="true" aria-labelledby="crop-title">
+            <div class="crop-top">
+                <div>
+                    <h2 id="crop-title">Recortar imagen</h2>
+                    <p class="muted" id="crop-help">Ajusta la imagen dentro del marco y acepta el recorte.</p>
+                </div>
+                <button class="btn btn-danger" type="button" id="crop-close">Cancelar</button>
+            </div>
+            <div class="crop-stage">
+                <div class="crop-frame" id="crop-frame">
+                    <img id="crop-image" alt="Imagen para recortar">
+                </div>
+            </div>
+            <label class="crop-controls">
+                Zoom
+                <input type="range" id="crop-zoom" min="1" max="3" step="0.01" value="1">
+            </label>
+            <div class="crop-actions">
+                <button class="btn btn-secondary" type="button" id="crop-reset">Centrar</button>
+                <button class="btn btn-primary" type="button" id="crop-accept">Aceptar recorte</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         const cleanLabelPattern = /^[\p{L}\s.,]+$/u;
         const cleanFieldNames = [
@@ -418,6 +524,214 @@
             "card_2_title",
             "card_2_button",
         ];
+        const cardHistory = new WeakMap();
+        const fieldStartSnapshots = new WeakMap();
+        const imageStartSnapshots = new WeakMap();
+        const maxImageBytes = 10 * 1024 * 1024;
+        const maxPdfBytes = 20 * 1024 * 1024;
+
+        function editableFields(scope) {
+            return Array.from(scope.querySelectorAll("input:not([type='file']), textarea"));
+        }
+
+        function imageCardFor(scope) {
+            if (scope.matches?.("[data-image-card]")) {
+                return scope;
+            }
+
+            return scope.querySelector?.("[data-image-card]") || null;
+        }
+
+        function imageState(scope) {
+            const card = imageCardFor(scope);
+            if (!card) return null;
+
+            const preview = card.querySelector("[data-image-preview]");
+            const image = preview?.querySelector("[data-preview-image]");
+            const empty = preview?.querySelector("[data-preview-empty]");
+            const fileInput = card.querySelector("[data-image-file]");
+            const removeInput = card.querySelector("[data-remove-image-input]");
+
+            return {
+                src: image?.getAttribute("src") || "",
+                imageHidden: image ? image.hidden : true,
+                emptyHidden: empty ? empty.hidden : true,
+                file: fileInput?.files?.[0] || null,
+                removeValue: removeInput?.value || "0",
+            };
+        }
+
+        function snapshotScope(scope) {
+            return {
+                fields: editableFields(scope).map((field) => ({
+                    name: field.name,
+                    type: field.type,
+                    value: field.value,
+                    checked: field.checked,
+                })),
+                image: imageState(scope),
+            };
+        }
+
+        function restoreImageState(scope, state) {
+            if (!state) return;
+
+            const card = imageCardFor(scope);
+            if (!card) return;
+
+            const preview = card.querySelector("[data-image-preview]");
+            const fileInput = card.querySelector("[data-image-file]");
+            const removeInput = card.querySelector("[data-remove-image-input]");
+            const empty = preview?.querySelector("[data-preview-empty]");
+            let image = preview?.querySelector("[data-preview-image]");
+
+            if (image?.dataset.objectUrl) {
+                URL.revokeObjectURL(image.dataset.objectUrl);
+                delete image.dataset.objectUrl;
+            }
+
+            if (state.file && preview) {
+                image = previewImageElement(preview);
+                image.dataset.objectUrl = URL.createObjectURL(state.file);
+                image.src = image.dataset.objectUrl;
+                image.hidden = false;
+                if (empty) empty.hidden = true;
+            } else if (state.src && preview) {
+                image = previewImageElement(preview);
+                image.src = state.src;
+                image.hidden = state.imageHidden;
+                if (empty) empty.hidden = true;
+            } else {
+                if (image) {
+                    image.removeAttribute("src");
+                    image.hidden = true;
+                }
+
+                if (empty) {
+                    empty.hidden = state.emptyHidden;
+                } else if (preview) {
+                    previewEmpty(preview);
+                }
+            }
+
+            if (fileInput) {
+                if (state.file) {
+                    const transfer = new DataTransfer();
+                    transfer.items.add(state.file);
+                    fileInput.files = transfer.files;
+                } else {
+                    fileInput.value = "";
+                }
+
+                ensureLiveError(fileInput).textContent = "";
+            }
+
+            if (removeInput) {
+                removeInput.value = state.removeValue;
+            }
+        }
+
+        function restoreSnapshot(scope, snapshot) {
+            const fields = Array.isArray(snapshot) ? snapshot : snapshot.fields;
+
+            fields.forEach((item) => {
+                const field = editableFields(scope).find((candidate) => candidate.name === item.name);
+                if (!field) return;
+
+                if (field.type === "checkbox") {
+                    field.checked = item.checked;
+                    return;
+                }
+
+                field.value = item.value;
+                field.dispatchEvent(new Event("input", { bubbles: true }));
+            });
+
+            if (!Array.isArray(snapshot)) {
+                restoreImageState(scope, snapshot.image);
+            }
+        }
+
+        function historyFor(scope) {
+            if (!cardHistory.has(scope)) {
+                cardHistory.set(scope, []);
+            }
+
+            return cardHistory.get(scope);
+        }
+
+        function setUndoState(scope) {
+            const button = scope.querySelector(":scope > [data-undo-card]");
+            if (!button) return;
+
+            button.disabled = historyFor(scope).length === 0;
+        }
+
+        function pushSnapshot(scope, snapshot = snapshotScope(scope)) {
+            const history = historyFor(scope);
+            const serialized = JSON.stringify(snapshot);
+            const last = history.length ? JSON.stringify(history[history.length - 1]) : null;
+
+            if (serialized !== last) {
+                history.push(snapshot);
+            }
+
+            if (history.length > 20) {
+                history.shift();
+            }
+
+            setUndoState(scope);
+        }
+
+        function undoScope(scope) {
+            const snapshot = historyFor(scope).pop();
+            if (!snapshot) return;
+
+            restoreSnapshot(scope, snapshot);
+            editableFields(scope).forEach((field) => fieldStartSnapshots.delete(field));
+            setUndoState(scope);
+        }
+
+        function markFieldStart(field) {
+            const scope = field.closest("[data-undo-scope]");
+            if (!scope || fieldStartSnapshots.has(field)) return;
+
+            fieldStartSnapshots.set(field, snapshotScope(scope));
+        }
+
+        function rememberFieldChange(field) {
+            const scope = field.closest("[data-undo-scope]");
+            const snapshot = fieldStartSnapshots.get(field);
+            if (!scope || !snapshot) return;
+
+            pushSnapshot(scope, snapshot);
+            fieldStartSnapshots.delete(field);
+        }
+
+        function bindUndoScope(scope) {
+            if (scope.dataset.undoBound === "1") return;
+
+            scope.dataset.undoScope = "";
+            scope.dataset.undoBound = "1";
+
+            const button = document.createElement("button");
+            button.className = "btn btn-undo undo-floating";
+            button.type = "button";
+            button.dataset.undoCard = "";
+            button.disabled = true;
+            button.title = "Deshacer último cambio";
+            button.setAttribute("aria-label", "Deshacer último cambio");
+            button.textContent = "↶";
+            scope.appendChild(button);
+
+            button.addEventListener("click", () => undoScope(scope));
+
+            editableFields(scope).forEach((field) => {
+                field.addEventListener("focusin", () => markFieldStart(field));
+                field.addEventListener("input", () => rememberFieldChange(field));
+                field.addEventListener("change", () => rememberFieldChange(field));
+            });
+        }
 
         function ensureLiveError(field) {
             let message = field.parentElement.querySelector(".live-error");
@@ -469,7 +783,7 @@
             message.textContent = "";
 
             if (!file) {
-                return;
+                return false;
             }
 
             const isPdf = field.name === "procedure_pdf";
@@ -480,18 +794,362 @@
                 message.textContent = isPdf
                     ? "Ese formato no está permitido. Solo se aceptan archivos PDF."
                     : "Ese formato no está permitido. Solo se aceptan imágenes JPG o PNG.";
-                return;
+                field.value = "";
+                return false;
             }
 
-            const maxSize = isPdf ? 20 * 1024 * 1024 : 5 * 1024 * 1024;
+            const maxSize = isPdf ? maxPdfBytes : maxImageBytes;
 
             if (file.size > maxSize) {
                 field.classList.add("is-invalid");
                 message.textContent = isPdf
                     ? "El PDF es demasiado pesado. El tamaño máximo permitido es 20 MB."
-                    : "La imagen es demasiado pesada. El tamaño máximo permitido es 5 MB.";
+                    : "La imagen es demasiado pesada. El tamaño máximo permitido es 10 MB.";
+                field.value = "";
+                return false;
+            }
+
+            return true;
+        }
+
+        function previewEmpty(preview) {
+            let empty = preview.querySelector("[data-preview-empty]");
+
+            if (!empty) {
+                empty = document.createElement("span");
+                empty.className = "preview-empty";
+                empty.dataset.previewEmpty = "";
+                empty.textContent = "Sin imagen seleccionada. Puedes subir una nueva antes de guardar.";
+                preview.appendChild(empty);
+            }
+
+            empty.hidden = false;
+        }
+
+        function previewImageElement(preview) {
+            let image = preview.querySelector("[data-preview-image]");
+
+            if (!image) {
+                image = document.createElement("img");
+                image.alt = "Vista previa de la imagen seleccionada";
+                image.dataset.previewImage = "";
+                preview.prepend(image);
+            }
+
+            image.hidden = false;
+            return image;
+        }
+
+        function clearImagePreview(card) {
+            const scope = card.closest("[data-undo-scope]") || card;
+            const preview = card.querySelector("[data-image-preview]");
+            const image = preview.querySelector("[data-preview-image]");
+            const fileInput = card.querySelector("[data-image-file]");
+            const removeInput = card.querySelector("[data-remove-image-input]");
+
+            pushSnapshot(scope);
+
+            if (fileInput) {
+                fileInput.value = "";
+                ensureLiveError(fileInput).textContent = "";
+            }
+
+            if (image) {
+                if (image.dataset.objectUrl) {
+                    URL.revokeObjectURL(image.dataset.objectUrl);
+                    delete image.dataset.objectUrl;
+                }
+
+                image.removeAttribute("src");
+                image.hidden = true;
+            }
+
+            previewEmpty(preview);
+            if (removeInput) {
+                removeInput.value = "1";
             }
         }
+
+        function showSelectedImage(card, file) {
+            const preview = card.querySelector("[data-image-preview]");
+            const image = previewImageElement(preview);
+            const empty = preview.querySelector("[data-preview-empty]");
+            const removeInput = card.querySelector("[data-remove-image-input]");
+
+            if (image.dataset.objectUrl) {
+                URL.revokeObjectURL(image.dataset.objectUrl);
+            }
+
+            image.dataset.objectUrl = URL.createObjectURL(file);
+            image.src = image.dataset.objectUrl;
+
+            if (empty) {
+                empty.hidden = true;
+            }
+
+            if (removeInput) {
+                removeInput.value = "0";
+            }
+        }
+
+        function bindImageCard(card) {
+            if (card.dataset.imageBound === "1") return;
+            card.dataset.imageBound = "1";
+
+            const fileInput = card.querySelector("[data-image-file]");
+            const removeButton = card.querySelector("[data-remove-image]");
+            const preview = card.querySelector("[data-image-preview]");
+
+            function rememberImageStart() {
+                const scope = card.closest("[data-undo-scope]") || card;
+                imageStartSnapshots.set(fileInput, snapshotScope(scope));
+            }
+
+            preview?.addEventListener("click", (event) => {
+                if (event.target.closest("[data-remove-image]")) return;
+
+                if (fileInput) {
+                    rememberImageStart();
+                }
+
+                fileInput?.click();
+            });
+
+            removeButton?.addEventListener("click", (event) => {
+                event.stopPropagation();
+                clearImagePreview(card);
+            });
+
+            fileInput?.addEventListener("click", rememberImageStart);
+            fileInput?.addEventListener("change", () => {
+                if (!validateUpload(fileInput)) return;
+                openCropTool(card, fileInput.files[0]);
+            });
+        }
+
+        const cropModal = document.getElementById("crop-modal");
+        const cropFrame = document.getElementById("crop-frame");
+        const cropImage = document.getElementById("crop-image");
+        const cropZoom = document.getElementById("crop-zoom");
+        const cropHelp = document.getElementById("crop-help");
+        const cropAccept = document.getElementById("crop-accept");
+        const cropReset = document.getElementById("crop-reset");
+        const cropClose = document.getElementById("crop-close");
+        const cropState = {
+            card: null,
+            file: null,
+            objectUrl: "",
+            naturalWidth: 0,
+            naturalHeight: 0,
+            baseScale: 1,
+            zoom: 1,
+            offsetX: 0,
+            offsetY: 0,
+            dragging: false,
+            pointerX: 0,
+            pointerY: 0,
+        };
+
+        function cropAspectFor(card) {
+            return Number(card.dataset.cropAspect || "2");
+        }
+
+        function frameSizeForAspect(aspect) {
+            const availableWidth = Math.min(740, cropFrame.parentElement.clientWidth - 32);
+            const availableHeight = Math.min(620, window.innerHeight * 0.58);
+            let width = availableWidth;
+            let height = width / aspect;
+
+            if (height > availableHeight) {
+                height = availableHeight;
+                width = height * aspect;
+            }
+
+            return { width, height };
+        }
+
+        function clampCropOffsets() {
+            const frameWidth = cropFrame.clientWidth;
+            const frameHeight = cropFrame.clientHeight;
+            const imageWidth = cropState.naturalWidth * cropState.baseScale * cropState.zoom;
+            const imageHeight = cropState.naturalHeight * cropState.baseScale * cropState.zoom;
+            const maxX = Math.max(0, (imageWidth - frameWidth) / 2);
+            const maxY = Math.max(0, (imageHeight - frameHeight) / 2);
+
+            cropState.offsetX = Math.min(maxX, Math.max(-maxX, cropState.offsetX));
+            cropState.offsetY = Math.min(maxY, Math.max(-maxY, cropState.offsetY));
+        }
+
+        function renderCrop() {
+            clampCropOffsets();
+            cropImage.style.width = `${cropState.naturalWidth * cropState.baseScale * cropState.zoom}px`;
+            cropImage.style.height = `${cropState.naturalHeight * cropState.baseScale * cropState.zoom}px`;
+            cropImage.style.transform = `translate(calc(-50% + ${cropState.offsetX}px), calc(-50% + ${cropState.offsetY}px))`;
+        }
+
+        function resetCropPosition() {
+            cropState.baseScale = Math.max(
+                cropFrame.clientWidth / cropState.naturalWidth,
+                cropFrame.clientHeight / cropState.naturalHeight
+            );
+            cropState.zoom = 1;
+            cropState.offsetX = 0;
+            cropState.offsetY = 0;
+            cropZoom.value = "1";
+            renderCrop();
+        }
+
+        function openCropTool(card, file) {
+            const aspect = cropAspectFor(card);
+
+            if (cropState.objectUrl) {
+                URL.revokeObjectURL(cropState.objectUrl);
+            }
+
+            cropState.card = card;
+            cropState.file = file;
+            cropState.objectUrl = URL.createObjectURL(file);
+            cropHelp.textContent = card.dataset.cropLabel || "Ajusta la imagen dentro del marco y acepta el recorte.";
+            cropModal.classList.add("is-open");
+            cropModal.setAttribute("aria-hidden", "false");
+
+            const size = frameSizeForAspect(aspect);
+            cropFrame.style.width = `${size.width}px`;
+            cropFrame.style.height = `${size.height}px`;
+            cropImage.src = cropState.objectUrl;
+        }
+
+        function closeCropTool(clearSelection = false) {
+            const card = cropState.card;
+
+            cropModal.classList.remove("is-open");
+            cropModal.setAttribute("aria-hidden", "true");
+
+            if (clearSelection && card) {
+                const fileInput = card.querySelector("[data-image-file]");
+                if (fileInput) {
+                    const scope = card.closest("[data-undo-scope]") || card;
+                    const snapshot = imageStartSnapshots.get(fileInput);
+
+                    if (snapshot) {
+                        restoreImageState(scope, snapshot.image);
+                        imageStartSnapshots.delete(fileInput);
+                    } else {
+                        fileInput.value = "";
+                    }
+                }
+            }
+
+            if (cropState.objectUrl) {
+                URL.revokeObjectURL(cropState.objectUrl);
+            }
+
+            cropState.card = null;
+            cropState.file = null;
+            cropState.objectUrl = "";
+            cropImage.removeAttribute("src");
+        }
+
+        function croppedFileName(file) {
+            const base = file.name.replace(/\.[^.]+$/, "") || "project-image";
+            return `${base}-recortada.jpg`;
+        }
+
+        function acceptCrop() {
+            const card = cropState.card;
+            const file = cropState.file;
+            if (!card || !file) return;
+
+            const scale = cropState.baseScale * cropState.zoom;
+            const visibleLeft = (cropState.naturalWidth * scale - cropFrame.clientWidth) / 2 - cropState.offsetX;
+            const visibleTop = (cropState.naturalHeight * scale - cropFrame.clientHeight) / 2 - cropState.offsetY;
+            const sourceX = Math.max(0, visibleLeft / scale);
+            const sourceY = Math.max(0, visibleTop / scale);
+            const sourceWidth = Math.min(cropState.naturalWidth - sourceX, cropFrame.clientWidth / scale);
+            const sourceHeight = Math.min(cropState.naturalHeight - sourceY, cropFrame.clientHeight / scale);
+            const aspect = cropAspectFor(card);
+            const outputWidth = 1400;
+            const outputHeight = Math.round(outputWidth / aspect);
+            const canvas = document.createElement("canvas");
+            const context = canvas.getContext("2d");
+
+            canvas.width = outputWidth;
+            canvas.height = outputHeight;
+            context.drawImage(cropImage, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, outputWidth, outputHeight);
+
+            canvas.toBlob((blob) => {
+                if (!blob) return;
+
+                const cropped = new File([blob], croppedFileName(file), { type: "image/jpeg" });
+                const transfer = new DataTransfer();
+                const fileInput = card.querySelector("[data-image-file]");
+                const scope = card.closest("[data-undo-scope]") || card;
+                const snapshot = imageStartSnapshots.get(fileInput) || snapshotScope(scope);
+
+                transfer.items.add(cropped);
+                pushSnapshot(scope, snapshot);
+                fileInput.files = transfer.files;
+                imageStartSnapshots.delete(fileInput);
+                showSelectedImage(card, cropped);
+                ensureLiveError(fileInput).textContent = "";
+                closeCropTool(false);
+            }, "image/jpeg", .92);
+        }
+
+        cropImage.addEventListener("load", () => {
+            cropState.naturalWidth = cropImage.naturalWidth;
+            cropState.naturalHeight = cropImage.naturalHeight;
+            resetCropPosition();
+        });
+
+        cropZoom.addEventListener("input", () => {
+            cropState.zoom = Number(cropZoom.value);
+            renderCrop();
+        });
+
+        cropFrame.addEventListener("pointerdown", (event) => {
+            cropState.dragging = true;
+            cropState.pointerX = event.clientX;
+            cropState.pointerY = event.clientY;
+            cropFrame.classList.add("is-dragging");
+            cropFrame.setPointerCapture(event.pointerId);
+        });
+
+        cropFrame.addEventListener("pointermove", (event) => {
+            if (!cropState.dragging) return;
+
+            cropState.offsetX += event.clientX - cropState.pointerX;
+            cropState.offsetY += event.clientY - cropState.pointerY;
+            cropState.pointerX = event.clientX;
+            cropState.pointerY = event.clientY;
+            renderCrop();
+        });
+
+        cropFrame.addEventListener("pointerup", (event) => {
+            cropState.dragging = false;
+            cropFrame.classList.remove("is-dragging");
+            cropFrame.releasePointerCapture(event.pointerId);
+        });
+
+        cropFrame.addEventListener("pointercancel", () => {
+            cropState.dragging = false;
+            cropFrame.classList.remove("is-dragging");
+        });
+
+        cropReset.addEventListener("click", resetCropPosition);
+        cropAccept.addEventListener("click", acceptCrop);
+        cropClose.addEventListener("click", () => closeCropTool(true));
+        cropModal.addEventListener("click", (event) => {
+            if (event.target === cropModal) {
+                closeCropTool(true);
+            }
+        });
+
+        window.addEventListener("keydown", (event) => {
+            if (event.key === "Escape" && cropModal.classList.contains("is-open")) {
+                closeCropTool(true);
+            }
+        });
 
         document.querySelectorAll("input[type='text']").forEach((field) => {
             const shouldValidate = cleanFieldNames.some((name) => field.name.includes(`[${name}]`));
@@ -502,9 +1160,12 @@
             }
         });
 
-        document.querySelectorAll("input[type='file']").forEach((field) => {
+        document.querySelectorAll("input[type='file']:not([data-image-file])").forEach((field) => {
             field.addEventListener("change", () => validateUpload(field));
         });
+
+        document.querySelectorAll(".language-card, .media-card").forEach(bindUndoScope);
+        document.querySelectorAll("[data-image-card]").forEach(bindImageCard);
     </script>
 </body>
 </html>

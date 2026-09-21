@@ -21,7 +21,7 @@ use Illuminate\View\View;
 
 class PresentationContentController extends Controller
 {
-    private const MAX_IMAGE_KB = 3072;
+    private const MAX_IMAGE_KB = 10240;
     private const CLEAN_LABEL_REGEX = '/\A[\p{L}\s.,]+\z/u';
 
     public function edit(Page $page): View
@@ -164,12 +164,16 @@ class PresentationContentController extends Controller
                 $historyImage->update([
                     'media_asset_id' => $this->storeImage($request, 'team_image', 'presentation/equipo')->id,
                 ]);
+            } elseif ($request->boolean('team_image_remove')) {
+                $historyImage->update(['media_asset_id' => null]);
             }
 
             if ($request->hasFile('director_image')) {
                 $directorImage->update([
                     'media_asset_id' => $this->storeImage($request, 'director_image', 'presentation/director')->id,
                 ]);
+            } elseif ($request->boolean('director_image_remove')) {
+                $directorImage->update(['media_asset_id' => null]);
             }
         });
 
@@ -207,6 +211,8 @@ class PresentationContentController extends Controller
             'director_emails' => ['required', 'string', 'max:500'],
             'team_image' => ['nullable', 'file', 'mimes:jpg,jpeg,png', 'max:'.self::MAX_IMAGE_KB],
             'director_image' => ['nullable', 'file', 'mimes:jpg,jpeg,png', 'max:'.self::MAX_IMAGE_KB],
+            'team_image_remove' => ['nullable', 'boolean'],
+            'director_image_remove' => ['nullable', 'boolean'],
         ]);
     }
 
@@ -219,8 +225,8 @@ class PresentationContentController extends Controller
             'regex' => 'Este campo solo puede contener letras, espacios, puntos y comas. No uses números ni símbolos especiales.',
             'file' => 'Debes subir un archivo válido.',
             'mimes' => 'Ese formato no está permitido. Solo se aceptan imágenes JPG o PNG.',
-            'team_image.max' => 'La imagen del equipo es demasiado pesada. El tamaño máximo permitido es 3 MB.',
-            'director_image.max' => 'La imagen del director es demasiado pesada. El tamaño máximo permitido es 3 MB.',
+            'team_image.max' => 'La imagen del equipo es demasiado pesada. El tamaño máximo permitido es 10 MB.',
+            'director_image.max' => 'La imagen del director es demasiado pesada. El tamaño máximo permitido es 10 MB.',
         ];
     }
 
@@ -276,8 +282,8 @@ class PresentationContentController extends Controller
                 'projects_team_people' => $this->blockLines($page, 'presentation.projects-team', 'people_en', ['Head of Department: Mgr. Daniel Vasquez Torrez', 'Eng. John Medina']),
             ],
             'director_emails' => $this->blockLines($page, 'presentation.director', 'emails', ['director-dric@umss.edu.bo', 'rrii@umss.edu.bo']),
-            'team_image_url' => $this->blockImageUrl($page, 'presentation.history-image'),
-            'director_image_url' => $this->blockImageUrl($page, 'presentation.director-image'),
+            'team_image_url' => $this->blockImageUrl($page, 'presentation.history-image', '/images/presentation/dric-team.JPG'),
+            'director_image_url' => $this->blockImageUrl($page, 'presentation.director-image', '/images/presentation/director.JPG'),
         ];
     }
 
@@ -376,15 +382,15 @@ class PresentationContentController extends Controller
         return implode("\n", is_array($lines) ? $lines : $fallback);
     }
 
-    private function blockImageUrl(Page $page, string $key): ?string
+    private function blockImageUrl(Page $page, string $key, string $fallback): string
     {
         $media = $this->block($page, $key)?->mediaAsset;
 
-        if (! $media?->file_path) {
-            return null;
+        if ($media?->file_path) {
+            return '/storage/'.ltrim($media->file_path, '/');
         }
 
-        return '/storage/'.ltrim($media->file_path, '/');
+        return $fallback;
     }
 
     private function block(Page $page, string $key): ?ContentBlock

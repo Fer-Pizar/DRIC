@@ -22,6 +22,9 @@
         .btn-secondary { background: #e8edf5; color: var(--ink); }
         .btn-add { background: #2563eb; color: #fff; }
         .btn-remove { background: #fff1f2; color: var(--red-dark); }
+        .btn-undo { align-items: center; background: #eef3fb; color: var(--blue); font-size: 20px; font-weight: 900; line-height: 1; min-width: 40px; padding: 9px 12px; text-shadow: 0 0 0 currentColor, .35px 0 0 currentColor, 0 .35px 0 currentColor; }
+        .btn-undo:disabled { cursor: not-allowed; opacity: .42; }
+        .undo-floating { position: absolute; right: 18px; top: 18px; z-index: 2; }
         .alert { border-radius: 14px; margin-bottom: 18px; padding: 14px 16px; }
         .alert-success { background: #e8f8ee; border: 1px solid #bde8c9; color: #176534; }
         .alert-error { background: #fff1f2; border: 1px solid #b91c1c; color: var(--red-dark); font-weight: 800; }
@@ -29,7 +32,7 @@
         .panel { padding: 24px; }
         .panel-header { border-bottom: 1px solid var(--line); margin-bottom: 20px; padding-bottom: 16px; }
         .language-grid, .report-grid { display: grid; gap: 18px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-        .language-card, .report-card { box-shadow: none; padding: 18px; }
+        .language-card, .report-card { box-shadow: none; padding: 76px 18px 18px; position: relative; }
         .report-card { display: grid; gap: 16px; }
         .report-header { align-items: center; display: flex; gap: 12px; justify-content: space-between; }
         label { display: grid; gap: 7px; font-size: 13px; font-weight: 800; }
@@ -72,7 +75,8 @@
 
                 <div class="language-grid">
                     @foreach (['es' => 'Español', 'en' => 'Inglés'] as $locale => $label)
-                        <div class="language-card">
+                        <div class="language-card" data-undo-scope>
+                            <button class="btn btn-undo undo-floating" type="button" data-undo-section disabled title="Deshacer último cambio" aria-label="Deshacer último cambio">↶</button>
                             <h3>{{ $label }}</h3>
                             <div class="field-grid">
                                 @foreach ([
@@ -105,7 +109,8 @@
 
                 <div class="language-grid">
                     @foreach (['es' => 'Español', 'en' => 'Inglés'] as $locale => $label)
-                        <div class="language-card">
+                        <div class="language-card" data-undo-scope>
+                            <button class="btn btn-undo undo-floating" type="button" data-undo-section disabled title="Deshacer último cambio" aria-label="Deshacer último cambio">↶</button>
                             <h3>{{ $label }}</h3>
                             <div class="field-grid">
                                 <label>
@@ -133,7 +138,8 @@
 
                 <div class="language-grid">
                     @foreach (['es' => 'Español', 'en' => 'Inglés'] as $locale => $label)
-                        <div class="language-card">
+                        <div class="language-card" data-undo-scope>
+                            <button class="btn btn-undo undo-floating" type="button" data-undo-section disabled title="Deshacer último cambio" aria-label="Deshacer último cambio">↶</button>
                             <h3>{{ $label }}</h3>
                             <div class="field-grid">
                                 @foreach ([
@@ -165,6 +171,7 @@
                 <div class="reports-list" id="reports-list">
                     @forelse (old('reports', $reports) as $index => $report)
                         <article class="report-card" data-report-card>
+                            <button class="btn btn-undo undo-floating" type="button" data-undo-card disabled title="Deshacer último cambio" aria-label="Deshacer último cambio">↶</button>
                             <div class="report-header">
                                 <div>
                                     <h3>Informe {{ $index + 1 }}</h3>
@@ -241,7 +248,10 @@
                     @endforelse
                 </div>
 
-                <button class="btn btn-add" type="button" id="add-report">Agregar informe</button>
+                <div class="row-actions">
+                    <button class="btn btn-undo" type="button" id="restore-report" disabled title="Restaurar último informe quitado" aria-label="Restaurar último informe quitado">↶</button>
+                    <button class="btn btn-add" type="button" id="add-report">Agregar informe</button>
+                </div>
             </section>
 
             <div class="sticky-actions">
@@ -252,6 +262,7 @@
 
         <template id="report-template">
             <article class="report-card" data-report-card>
+                <button class="btn btn-undo undo-floating" type="button" data-undo-card disabled title="Deshacer último cambio" aria-label="Deshacer último cambio">↶</button>
                 <div class="report-header">
                     <div>
                         <h3>Nuevo informe</h3>
@@ -312,10 +323,97 @@
         const list = document.getElementById("reports-list");
         const template = document.getElementById("report-template");
         const addButton = document.getElementById("add-report");
+        const restoreButton = document.getElementById("restore-report");
+        const removedReports = [];
+        const undoHistory = new WeakMap();
+        const pendingSnapshots = new WeakMap();
         let nextIndex = {{ count(old('reports', $reports)) }};
 
+        function editableFields(scope) {
+            return [...scope.querySelectorAll("input:not([type='file']), textarea, select")];
+        }
+
+        function captureSnapshot(scope) {
+            return editableFields(scope).map((field) => ({
+                field,
+                checked: field.checked,
+                value: field.value,
+            }));
+        }
+
+        function restoreSnapshot(snapshot) {
+            snapshot.forEach(({ field, checked, value }) => {
+                if (!field.isConnected) return;
+                if (field.type === "checkbox" || field.type === "radio") {
+                    field.checked = checked;
+                } else {
+                    field.value = value;
+                }
+            });
+        }
+
+        function primeSnapshot(scope) {
+            if (!pendingSnapshots.has(scope)) {
+                pendingSnapshots.set(scope, captureSnapshot(scope));
+            }
+        }
+
+        function setUndoState(button, history) {
+            if (button) button.disabled = !history.length;
+        }
+
+        function rememberChange(scope, button) {
+            const history = undoHistory.get(scope) || [];
+            history.push(pendingSnapshots.get(scope) || captureSnapshot(scope));
+            if (history.length > 25) history.shift();
+            undoHistory.set(scope, history);
+            pendingSnapshots.set(scope, captureSnapshot(scope));
+            setUndoState(button, history);
+        }
+
+        function bindUndoScope(scope, buttonSelector) {
+            if (!scope || scope.dataset.undoBound) return;
+            scope.dataset.undoBound = "true";
+            const button = scope.querySelector(buttonSelector);
+            editableFields(scope).forEach((field) => {
+                field.addEventListener("focus", () => primeSnapshot(scope));
+                field.addEventListener("pointerdown", () => primeSnapshot(scope));
+                field.addEventListener("input", () => rememberChange(scope, button));
+                field.addEventListener("change", () => rememberChange(scope, button));
+            });
+            button?.addEventListener("click", () => {
+                const history = undoHistory.get(scope) || [];
+                const snapshot = history.pop();
+                if (!snapshot) return;
+                restoreSnapshot(snapshot);
+                setUndoState(button, history);
+            });
+        }
+
+        function setRestoreState() {
+            restoreButton.disabled = removedReports.length === 0;
+        }
+
+        function refreshReports() {
+            list.querySelectorAll("[data-report-card]").forEach((card, index) => {
+                card.querySelector("h3").textContent = card.dataset.newReport === "true" ? "Nuevo informe" : `Informe ${index + 1}`;
+                card.querySelectorAll("[name^='reports[']").forEach((field) => {
+                    field.name = field.name.replace(/reports\[\d+\]/, `reports[${index}]`);
+                });
+            });
+            nextIndex = list.querySelectorAll("[data-report-card]").length;
+        }
+
         function bindCard(card) {
-            card.querySelector("[data-remove-report]").addEventListener("click", () => card.remove());
+            bindUndoScope(card, "[data-undo-card]");
+            if (card.dataset.cardBound) return;
+            card.dataset.cardBound = "true";
+            card.querySelector("[data-remove-report]").addEventListener("click", () => {
+                removedReports.push(card);
+                card.remove();
+                refreshReports();
+                setRestoreState();
+            });
             card.querySelectorAll("[data-pdf-input]").forEach((input) => {
                 input.addEventListener("change", (event) => {
                     const message = input.closest("label").querySelector("[data-pdf-error]");
@@ -338,16 +436,28 @@
             });
         }
 
+        document.querySelectorAll("[data-undo-scope]").forEach((scope) => bindUndoScope(scope, "[data-undo-section]"));
         document.querySelectorAll("[data-report-card]").forEach(bindCard);
+        refreshReports();
+        setRestoreState();
+
+        restoreButton.addEventListener("click", () => {
+            const card = removedReports.pop();
+            if (!card) return;
+            list.appendChild(card);
+            refreshReports();
+            setRestoreState();
+        });
 
         addButton.addEventListener("click", () => {
             const html = template.innerHTML.replaceAll("__NAME__", `reports[${nextIndex}]`);
             const wrapper = document.createElement("div");
             wrapper.innerHTML = html.trim();
             const card = wrapper.firstElementChild;
+            card.dataset.newReport = "true";
             list.appendChild(card);
             bindCard(card);
-            nextIndex += 1;
+            refreshReports();
         });
     </script>
 </body>

@@ -22,6 +22,9 @@
         .btn-secondary { background: #e8edf5; color: var(--ink); }
         .btn-add { background: #2563eb; color: #fff; }
         .btn-remove { background: #fff1f2; color: var(--red-dark); }
+        .btn-undo { align-items: center; background: #eef3fb; color: var(--blue); font-size: 20px; font-weight: 900; line-height: 1; min-width: 40px; padding: 9px 12px; text-shadow: 0 0 0 currentColor, .35px 0 0 currentColor, 0 .35px 0 currentColor; }
+        .btn-undo:disabled { cursor: not-allowed; opacity: .42; }
+        .undo-floating { position: absolute; right: 18px; top: 18px; z-index: 2; }
         .alert { border-radius: 14px; margin-bottom: 18px; padding: 14px 16px; }
         .alert-success { background: #e8f8ee; border: 1px solid #bde8c9; color: #176534; }
         .alert-error { background: #fff1f2; border: 1px solid #b91c1c; color: var(--red-dark); font-weight: 800; }
@@ -30,6 +33,7 @@
         .panel-header { border-bottom: 1px solid var(--line); margin-bottom: 20px; padding-bottom: 16px; }
         .language-grid, .two-grid { display: grid; gap: 18px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
         .language-card, .social-card, .notice { box-shadow: none; padding: 18px; }
+        .language-card, .social-card { padding-top: 76px; position: relative; }
         .social-card { display: grid; gap: 16px; }
         .social-header { align-items: center; display: flex; gap: 12px; justify-content: space-between; }
         label { display: grid; gap: 7px; font-size: 13px; font-weight: 800; }
@@ -71,7 +75,8 @@
 
                 <div class="language-grid">
                     @foreach (['es' => 'Español', 'en' => 'Inglés'] as $locale => $label)
-                        <div class="language-card">
+                        <div class="language-card" data-undo-scope>
+                            <button class="btn btn-undo undo-floating" type="button" data-undo-section disabled title="Deshacer último cambio" aria-label="Deshacer último cambio">↶</button>
                             <h3>{{ $label }}</h3>
                             <div class="field-grid">
                                 <label>
@@ -99,7 +104,8 @@
 
                 <div class="language-grid">
                     @foreach (['es' => 'Español', 'en' => 'Inglés'] as $locale => $label)
-                        <div class="language-card">
+                        <div class="language-card" data-undo-scope>
+                            <button class="btn btn-undo undo-floating" type="button" data-undo-section disabled title="Deshacer último cambio" aria-label="Deshacer último cambio">↶</button>
                             <h3>{{ $label }}</h3>
                             <div class="field-grid">
                                 <div class="two-grid">
@@ -161,7 +167,8 @@
 
                 <div class="language-grid">
                     @foreach (['es' => 'Español', 'en' => 'Inglés'] as $locale => $label)
-                        <div class="language-card">
+                        <div class="language-card" data-undo-scope>
+                            <button class="btn btn-undo undo-floating" type="button" data-undo-section disabled title="Deshacer último cambio" aria-label="Deshacer último cambio">↶</button>
                             <h3>{{ $label }}</h3>
                             <div class="field-grid">
                                 <label>
@@ -190,6 +197,7 @@
                 <div class="social-list" id="social-list">
                     @forelse (old('social_links', $socialLinks) as $index => $socialLink)
                         <article class="social-card" data-social-card>
+                            <button class="btn btn-undo undo-floating" type="button" data-undo-card disabled title="Deshacer último cambio" aria-label="Deshacer último cambio">↶</button>
                             <div class="social-header">
                                 <h3>Red social {{ $index + 1 }}</h3>
                                 <button class="btn btn-remove" type="button" data-remove-social>Quitar</button>
@@ -222,7 +230,10 @@
                     @endforelse
                 </div>
 
-                <button class="btn btn-add" type="button" id="add-social">Agregar red social</button>
+                <div class="row-actions">
+                    <button class="btn btn-undo" type="button" id="restore-social" disabled title="Restaurar última red social quitada" aria-label="Restaurar última red social quitada">↶</button>
+                    <button class="btn btn-add" type="button" id="add-social">Agregar red social</button>
+                </div>
             </section>
 
             <div class="notice">
@@ -238,6 +249,7 @@
 
         <template id="social-template">
             <article class="social-card" data-social-card>
+                <button class="btn btn-undo undo-floating" type="button" data-undo-card disabled title="Deshacer último cambio" aria-label="Deshacer último cambio">↶</button>
                 <div class="social-header">
                     <h3>Nueva red social</h3>
                     <button class="btn btn-remove" type="button" data-remove-social>Quitar</button>
@@ -266,22 +278,121 @@
         const list = document.getElementById("social-list");
         const template = document.getElementById("social-template");
         const addButton = document.getElementById("add-social");
+        const restoreButton = document.getElementById("restore-social");
+        const removedSocialCards = [];
+        const undoHistory = new WeakMap();
+        const pendingSnapshots = new WeakMap();
         let nextIndex = {{ count(old('social_links', $socialLinks)) }};
 
-        function bindSocialCard(card) {
-            card.querySelector("[data-remove-social]").addEventListener("click", () => card.remove());
+        function editableFields(scope) {
+            return [...scope.querySelectorAll("input, textarea, select")];
         }
 
+        function captureSnapshot(scope) {
+            return editableFields(scope).map((field) => ({
+                field,
+                checked: field.checked,
+                value: field.value,
+            }));
+        }
+
+        function restoreSnapshot(snapshot) {
+            snapshot.forEach(({ field, checked, value }) => {
+                if (!field.isConnected) return;
+                if (field.type === "checkbox" || field.type === "radio") {
+                    field.checked = checked;
+                } else {
+                    field.value = value;
+                }
+            });
+        }
+
+        function primeSnapshot(scope) {
+            if (!pendingSnapshots.has(scope)) {
+                pendingSnapshots.set(scope, captureSnapshot(scope));
+            }
+        }
+
+        function setUndoState(button, history) {
+            if (button) button.disabled = !history.length;
+        }
+
+        function rememberChange(scope, button) {
+            const history = undoHistory.get(scope) || [];
+            history.push(pendingSnapshots.get(scope) || captureSnapshot(scope));
+            if (history.length > 25) history.shift();
+            undoHistory.set(scope, history);
+            pendingSnapshots.set(scope, captureSnapshot(scope));
+            setUndoState(button, history);
+        }
+
+        function bindUndoScope(scope, buttonSelector) {
+            if (!scope || scope.dataset.undoBound) return;
+            scope.dataset.undoBound = "true";
+            const button = scope.querySelector(buttonSelector);
+            editableFields(scope).forEach((field) => {
+                field.addEventListener("focus", () => primeSnapshot(scope));
+                field.addEventListener("pointerdown", () => primeSnapshot(scope));
+                field.addEventListener("input", () => rememberChange(scope, button));
+                field.addEventListener("change", () => rememberChange(scope, button));
+            });
+            button?.addEventListener("click", () => {
+                const history = undoHistory.get(scope) || [];
+                const snapshot = history.pop();
+                if (!snapshot) return;
+                restoreSnapshot(snapshot);
+                setUndoState(button, history);
+            });
+        }
+
+        function setRestoreState() {
+            restoreButton.disabled = removedSocialCards.length === 0;
+        }
+
+        function refreshSocialCards() {
+            list.querySelectorAll("[data-social-card]").forEach((card, index) => {
+                card.querySelector("h3").textContent = card.dataset.newSocial === "true" ? "Nueva red social" : `Red social ${index + 1}`;
+                card.querySelectorAll("[name^='social_links[']").forEach((field) => {
+                    field.name = field.name.replace(/social_links\[\d+\]/, `social_links[${index}]`);
+                });
+            });
+            nextIndex = list.querySelectorAll("[data-social-card]").length;
+        }
+
+        function bindSocialCard(card) {
+            bindUndoScope(card, "[data-undo-card]");
+            if (card.dataset.cardBound) return;
+            card.dataset.cardBound = "true";
+            card.querySelector("[data-remove-social]").addEventListener("click", () => {
+                removedSocialCards.push(card);
+                card.remove();
+                refreshSocialCards();
+                setRestoreState();
+            });
+        }
+
+        document.querySelectorAll("[data-undo-scope]").forEach((scope) => bindUndoScope(scope, "[data-undo-section]"));
         document.querySelectorAll("[data-social-card]").forEach(bindSocialCard);
+        refreshSocialCards();
+        setRestoreState();
+
+        restoreButton.addEventListener("click", () => {
+            const card = removedSocialCards.pop();
+            if (!card) return;
+            list.appendChild(card);
+            refreshSocialCards();
+            setRestoreState();
+        });
 
         addButton.addEventListener("click", () => {
             const html = template.innerHTML.replaceAll("__NAME__", `social_links[${nextIndex}]`);
             const wrapper = document.createElement("div");
             wrapper.innerHTML = html.trim();
             const card = wrapper.firstElementChild;
+            card.dataset.newSocial = "true";
             list.appendChild(card);
             bindSocialCard(card);
-            nextIndex += 1;
+            refreshSocialCards();
         });
     </script>
 </body>

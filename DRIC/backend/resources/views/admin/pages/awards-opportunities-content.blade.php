@@ -24,6 +24,10 @@
         .btn-add { background: #2563eb; color: #fff; margin-top: 14px; }
         .btn-remove { background: #fff1f2; color: var(--red-dark); }
         .btn-tool { background: #f8fafc; border: 1px solid #d7deea; color: var(--ink); font-size: 12px; padding: 8px 10px; }
+        .btn-undo { align-items: center; background: #eef3fb; color: var(--blue); font-size: 20px; font-weight: 900; line-height: 1; min-width: 40px; padding: 9px 12px; text-shadow: 0 0 0 currentColor, .35px 0 0 currentColor, 0 .35px 0 currentColor; }
+        .btn-undo:disabled { cursor: not-allowed; opacity: .42; }
+        .undo-floating { position: absolute; right: 12px; top: 12px; z-index: 4; }
+        .item-card > .undo-floating, .link-card > .undo-floating { right: -10px; top: -10px; z-index: 6; }
         .alert { border-radius: 14px; margin-bottom: 18px; padding: 14px 16px; }
         .alert-success { background: #e8f8ee; border: 1px solid #bde8c9; color: #176534; }
         .alert-error { background: #fff1f2; border: 1px solid #b91c1c; color: var(--red-dark); font-weight: 800; }
@@ -31,7 +35,7 @@
         .panel { padding: 24px; }
         .panel-header { border-bottom: 1px solid var(--line); margin-bottom: 20px; padding-bottom: 16px; }
         .language-grid, .two-grid { display: grid; gap: 18px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-        .language-card, .item-card, .link-card { box-shadow: none; padding: 18px; }
+        .language-card, .item-card, .link-card { box-shadow: none; padding: 18px; position: relative; }
         .item-card { display: grid; gap: 16px; }
         .link-card { background: var(--soft); display: grid; gap: 12px; }
         .item-header { align-items: center; display: flex; gap: 12px; justify-content: space-between; }
@@ -226,6 +230,103 @@
     </template>
 
     <script>
+        const cardHistory = new WeakMap();
+        const fieldStartSnapshots = new WeakMap();
+
+        function editableFields(scope) {
+            return Array.from(scope.querySelectorAll('input, textarea'));
+        }
+
+        function snapshotScope(scope) {
+            return editableFields(scope).map((field) => ({
+                name: field.name,
+                type: field.type,
+                value: field.value,
+                checked: field.checked,
+            }));
+        }
+
+        function restoreSnapshot(scope, snapshot) {
+            snapshot.forEach((item) => {
+                const field = editableFields(scope).find((candidate) => candidate.name === item.name);
+                if (!field) return;
+                if (field.type === 'checkbox') {
+                    field.checked = item.checked;
+                    return;
+                }
+                field.value = item.value;
+            });
+        }
+
+        function historyFor(scope) {
+            if (!cardHistory.has(scope)) cardHistory.set(scope, []);
+            return cardHistory.get(scope);
+        }
+
+        function setUndoState(scope) {
+            const button = scope.querySelector(':scope > [data-undo-card]');
+            if (button) button.disabled = historyFor(scope).length === 0;
+        }
+
+        function pushSnapshot(scope, snapshot = snapshotScope(scope)) {
+            const history = historyFor(scope);
+            const serialized = JSON.stringify(snapshot);
+            const last = history.length ? JSON.stringify(history[history.length - 1]) : null;
+            if (serialized !== last) history.push(snapshot);
+            if (history.length > 20) history.shift();
+            setUndoState(scope);
+        }
+
+        function undoScope(scope) {
+            const snapshot = historyFor(scope).pop();
+            if (!snapshot) return;
+            restoreSnapshot(scope, snapshot);
+            editableFields(scope).forEach((field) => fieldStartSnapshots.delete(field));
+            setUndoState(scope);
+        }
+
+        function markFieldStart(field) {
+            const scope = field.closest('[data-undo-scope]');
+            if (!scope || fieldStartSnapshots.has(field)) return;
+            fieldStartSnapshots.set(field, snapshotScope(scope));
+        }
+
+        function rememberFieldChange(field) {
+            const scope = field.closest('[data-undo-scope]');
+            const snapshot = fieldStartSnapshots.get(field);
+            if (!scope || !snapshot) return;
+            pushSnapshot(scope, snapshot);
+            fieldStartSnapshots.delete(field);
+        }
+
+        function bindUndoScope(scope) {
+            if (scope.dataset.undoBound === '1') return;
+            scope.dataset.undoScope = '';
+            scope.dataset.undoBound = '1';
+
+            const button = document.createElement('button');
+            button.className = 'btn btn-undo undo-floating';
+            button.type = 'button';
+            button.dataset.undoCard = '';
+            button.disabled = true;
+            button.title = 'Deshacer último cambio';
+            button.setAttribute('aria-label', 'Deshacer último cambio');
+            button.textContent = '↶';
+            scope.appendChild(button);
+
+            button.addEventListener('click', () => undoScope(scope));
+            editableFields(scope).forEach((field) => {
+                field.addEventListener('focusin', () => markFieldStart(field));
+                field.addEventListener('input', () => rememberFieldChange(field));
+                field.addEventListener('change', () => rememberFieldChange(field));
+            });
+        }
+
+        function bindUndoScopes(root = document) {
+            if (root.matches?.('.language-card, .item-card, .link-card')) bindUndoScope(root);
+            root.querySelectorAll('.language-card, .item-card, .link-card').forEach(bindUndoScope);
+        }
+
         function reindexOpportunity(card, index) {
             card.querySelectorAll('[name]').forEach((field) => {
                 field.name = field.name.replace(/opportunities\[\d+\]/, `opportunities[${index}]`);
@@ -247,7 +348,9 @@
             const index = document.querySelectorAll('[data-opportunity-card]').length;
             const wrapper = document.createElement('div');
             wrapper.innerHTML = document.getElementById('opportunity-template').innerHTML.replaceAll('__INDEX__', index);
-            list.appendChild(wrapper.firstElementChild);
+            const card = wrapper.firstElementChild;
+            list.appendChild(card);
+            bindUndoScopes(card);
             reindexAll();
         }
 
@@ -258,7 +361,9 @@
             const linkIndex = list.querySelectorAll('[data-link-card]').length;
             const wrapper = document.createElement('div');
             wrapper.innerHTML = document.getElementById('link-template').innerHTML.replaceAll('__OPPORTUNITY__', opportunityIndex).replaceAll('__LINK__', linkIndex);
-            list.appendChild(wrapper.firstElementChild);
+            const linkCard = wrapper.firstElementChild;
+            list.appendChild(linkCard);
+            bindUndoScopes(linkCard);
         }
 
         function reindexLinks(card) {
@@ -271,6 +376,7 @@
         }
 
         reindexAll();
+        bindUndoScopes();
         document.querySelectorAll('[data-add-opportunity]').forEach((button) => {
             button.addEventListener('click', () => addOpportunity(button.dataset.addOpportunity));
         });

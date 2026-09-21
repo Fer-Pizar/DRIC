@@ -21,6 +21,9 @@
         .btn-primary { background: var(--blue); color: #fff; }
         .btn-secondary { background: #e8edf5; color: var(--ink); }
         .btn-light { background: #f8fafc; border: 1px solid var(--line); color: var(--ink); padding: 8px 10px; }
+        .btn-undo { align-items: center; background: #eef3fb; color: var(--blue); font-size: 20px; font-weight: 900; line-height: 1; min-width: 40px; padding: 9px 12px; text-shadow: 0 0 0 currentColor, .35px 0 0 currentColor, 0 .35px 0 currentColor; }
+        .btn-undo:disabled { cursor: not-allowed; opacity: .42; }
+        .undo-floating { position: absolute; right: 16px; top: 16px; z-index: 2; }
         .alert { border-radius: 14px; margin-bottom: 18px; padding: 14px 16px; }
         .alert-success { background: #e8f8ee; border: 1px solid #bde8c9; color: #176534; }
         .alert-error { background: #fff1f2; border: 1px solid #b91c1c; color: var(--red-dark); font-weight: 800; }
@@ -28,7 +31,7 @@
         .panel { padding: 24px; }
         .panel-header { border-bottom: 1px solid var(--line); margin-bottom: 20px; padding-bottom: 16px; }
         .language-grid { display: grid; gap: 18px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-        .language-card { box-shadow: none; padding: 18px; }
+        .language-card { box-shadow: none; padding: 76px 18px 18px; position: relative; }
         label { display: grid; gap: 7px; font-size: 13px; font-weight: 800; }
         textarea, input[type="file"] { border: 1px solid #cfd6e3; border-radius: 12px; color: var(--ink); font: inherit; font-weight: 500; padding: 12px 13px; width: 100%; }
         input[type="text"] { border: 1px solid #cfd6e3; border-radius: 12px; color: var(--ink); font: inherit; font-weight: 500; padding: 12px 13px; width: 100%; }
@@ -41,11 +44,28 @@
         .editor p { margin: 0 0 16px; }
         .editor p.dric-news-dropcap { border-left: 4px solid var(--blue); margin-top: 20px; padding-left: 12px; }
         .editor blockquote { border-left: 4px solid var(--blue); color: #475569; margin: 16px 0; padding-left: 16px; }
-        .images-grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
-        .image-card { box-shadow: none; overflow: hidden; padding: 12px; }
-        .image-card img { aspect-ratio: 16 / 10; border-radius: 12px; display: block; object-fit: cover; width: 100%; }
-        .remove-option { align-items: center; display: flex; gap: 8px; margin-top: 10px; }
-        .remove-option input { height: 16px; width: 16px; }
+        .gallery-actions { align-items: center; display: flex; gap: 10px; justify-content: space-between; margin-bottom: 14px; }
+        .gallery-actions .muted { margin: 0; }
+        .images-grid { display: grid; gap: 18px; grid-template-columns: 1fr; margin: 14px auto 0; max-width: 980px; }
+        .image-card { box-shadow: none; overflow: visible; padding: 12px; position: relative; transition: opacity .2s ease, filter .2s ease; }
+        .image-card img { aspect-ratio: 16 / 8.2; border-radius: 18px; display: block; object-fit: cover; width: 100%; }
+        .image-card .hint { margin-top: 9px; }
+        .image-card.is-removed { opacity: .45; }
+        .image-card.is-removed img { filter: grayscale(1); }
+        .image-card.is-removed::after { align-items: center; background: rgba(23, 32, 51, .72); border-radius: 12px; color: #fff; content: "Se quitará al guardar"; display: flex; font-size: 13px; font-weight: 800; inset: 12px; justify-content: center; position: absolute; text-align: center; }
+        .btn-image-remove { align-items: center; background: var(--red-dark); border: 3px solid #fff; border-radius: 999px; color: #fff; cursor: pointer; display: inline-flex; font-size: 20px; font-weight: 900; height: 34px; justify-content: center; line-height: 1; position: absolute; right: -9px; top: -9px; width: 34px; z-index: 3; }
+        .image-card > .btn-undo { left: -9px; min-height: 40px; position: absolute; top: -9px; z-index: 4; }
+        .selected-images:empty { display: none; }
+        .crop-modal { align-items: center; background: rgba(15, 23, 42, .64); display: none; inset: 0; justify-content: center; padding: 22px; position: fixed; z-index: 50; }
+        .crop-modal.is-open { display: flex; }
+        .crop-dialog { background: #fff; border-radius: 18px; box-shadow: 0 24px 80px rgba(15, 23, 42, .24); display: grid; gap: 16px; max-height: calc(100vh - 44px); max-width: 980px; overflow: auto; padding: 20px; width: min(100%, 980px); }
+        .crop-stage { aspect-ratio: 16 / 8.2; background: #0f172a; border-radius: 18px; overflow: hidden; position: relative; width: 100%; }
+        .crop-stage img { height: 100%; left: 50%; object-fit: cover; position: absolute; top: 50%; transform-origin: center; width: 100%; }
+        .crop-controls { display: grid; gap: 12px; }
+        .crop-controls input[type="range"] { width: 100%; }
+        .crop-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; }
+        .image-card.is-removed .btn-image-remove { display: none; }
+        .sr-only { height: 1px; margin: -1px; overflow: hidden; padding: 0; position: absolute; width: 1px; clip: rect(0,0,0,0); border: 0; }
         .sticky-actions { align-items: center; background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 16px; bottom: 18px; box-shadow: 0 18px 45px rgba(15,23,42,.12); display: flex; justify-content: space-between; padding: 14px; position: sticky; }
         @media (max-width: 820px) { .topbar, .sticky-actions { align-items: stretch; flex-direction: column; } .language-grid { grid-template-columns: 1fr; } }
     </style>
@@ -78,7 +98,8 @@
 
                 <div class="language-grid">
                     @foreach (['es' => 'Español', 'en' => 'Inglés'] as $locale => $label)
-                        <div class="language-card">
+                        <div class="language-card" data-undo-scope>
+                            <button class="btn btn-undo undo-floating" type="button" data-undo-section title="Restaurar esta sección" aria-label="Restaurar esta sección" disabled>↶</button>
                             <h3>{{ $label }}</h3>
                             <div class="field-grid">
                                 <label>
@@ -125,15 +146,20 @@
                     <p class="muted">Puedes subir una o varias imágenes JPG o PNG. Si hay más de una, la página pública las mostrará en carrusel automático.</p>
                 </div>
 
+                <div class="gallery-actions">
+                    <p class="muted">Vista real del carrusel público: marco ancho 16:8.2. Haz clic en una imagen nueva para recortarla.</p>
+                    <button class="btn btn-undo" type="button" id="restore-image" title="Restaurar última imagen quitada" aria-label="Restaurar última imagen quitada" disabled>↶</button>
+                </div>
+
                 @if (count($images))
                     <div class="images-grid">
                         @foreach ($images as $image)
-                            <div class="image-card">
+                            <div class="image-card" data-existing-image-card>
+                                <button class="btn btn-undo" type="button" data-restore-existing-image disabled title="Restaurar esta imagen" aria-label="Restaurar esta imagen">↶</button>
+                                <button class="btn-image-remove" type="button" data-remove-existing-image aria-label="Quitar imagen">×</button>
                                 <img src="{{ $image['url'] ?? '' }}" alt="{{ $image['file_name'] ?? 'Imagen de noticia' }}">
-                                <label class="remove-option">
-                                    <input type="checkbox" name="remove_images[]" value="{{ $image['media_asset_id'] ?? '' }}">
-                                    Quitar imagen
-                                </label>
+                                <span class="hint">Imagen actual guardada.</span>
+                                <input class="sr-only" type="checkbox" name="remove_images[]" value="{{ $image['media_asset_id'] ?? '' }}" data-remove-existing-image-input>
                             </div>
                         @endforeach
                     </div>
@@ -143,11 +169,12 @@
 
                 <label style="margin-top: 18px;">
                     Agregar imágenes
-                    <input type="file" name="images[]" multiple accept=".jpg,.jpeg,.png,image/jpeg,image/png">
+                    <input id="news-images-input" type="file" name="images[]" multiple accept=".jpg,.jpeg,.png,image/jpeg,image/png">
                     <span class="hint">Formatos permitidos: JPG y PNG. Tamaño máximo por imagen: 10 MB.</span>
                     <span class="field-error" id="image-error"></span>
                     @error('images.*')<span class="field-error">{{ $message }}</span>@enderror
                 </label>
+                <div class="images-grid selected-images" id="selected-images"></div>
             </section>
 
             <div class="sticky-actions">
@@ -155,10 +182,298 @@
                 <button class="btn btn-primary" type="submit">Guardar detalle</button>
             </div>
         </form>
+
+        <div class="crop-modal" id="crop-modal" aria-hidden="true">
+            <div class="crop-dialog" role="dialog" aria-modal="true" aria-labelledby="crop-title">
+                <div>
+                    <h2 id="crop-title">Recortar imagen</h2>
+                    <p class="muted">Ajusta el encuadre al formato real del carrusel de noticias.</p>
+                </div>
+                <div class="crop-stage" id="crop-stage">
+                    <img id="crop-image" alt="Vista previa de recorte">
+                </div>
+                <div class="crop-controls">
+                    <label>Zoom<input id="crop-zoom" type="range" min="1" max="3" step="0.01" value="1"></label>
+                    <label>Horizontal<input id="crop-x" type="range" min="-100" max="100" step="1" value="0"></label>
+                    <label>Vertical<input id="crop-y" type="range" min="-100" max="100" step="1" value="0"></label>
+                </div>
+                <div class="crop-actions">
+                    <button class="btn btn-secondary" type="button" id="crop-cancel">Cancelar</button>
+                    <button class="btn btn-primary" type="button" id="crop-accept">Aceptar recorte</button>
+                </div>
+            </div>
+        </div>
     </main>
 
     <script>
         let savedRange = null;
+        const sectionHistory = new WeakMap();
+        const pendingSnapshots = new WeakMap();
+        const removedImages = [];
+        const removedUploads = [];
+        const removalHistory = [];
+        const restoreImageButton = document.getElementById("restore-image");
+        const imageInput = document.getElementById("news-images-input");
+        const selectedImagesContainer = document.getElementById("selected-images");
+        const cropModal = document.getElementById("crop-modal");
+        const cropImage = document.getElementById("crop-image");
+        const cropZoom = document.getElementById("crop-zoom");
+        const cropX = document.getElementById("crop-x");
+        const cropY = document.getElementById("crop-y");
+        const cropCancel = document.getElementById("crop-cancel");
+        const cropAccept = document.getElementById("crop-accept");
+        const cropAspect = 16 / 8.2;
+        let uploadItems = [];
+        let activeCropIndex = null;
+
+        function editableFields(scope) {
+            return [...scope.querySelectorAll("input:not([type='hidden']), textarea, select, [contenteditable='true']")];
+        }
+
+        function captureSnapshot(scope) {
+            return editableFields(scope).map((field) => ({
+                field,
+                checked: field.checked,
+                html: field.isContentEditable ? field.innerHTML : null,
+                value: field.value,
+            }));
+        }
+
+        function restoreSnapshot(snapshot) {
+            snapshot.forEach(({ field, checked, html, value }) => {
+                if (!field.isConnected) return;
+                if (field.isContentEditable) {
+                    field.innerHTML = html;
+                } else if (field.type === "checkbox" || field.type === "radio") {
+                    field.checked = checked;
+                } else {
+                    field.value = value;
+                }
+            });
+        }
+
+        function primeSnapshot(scope) {
+            if (!scope || pendingSnapshots.has(scope)) return;
+            pendingSnapshots.set(scope, captureSnapshot(scope));
+        }
+
+        function setUndoState(button, history) {
+            if (button) button.disabled = !history.length;
+        }
+
+        function rememberChange(scope, button) {
+            if (!scope) return;
+            const history = sectionHistory.get(scope) || [];
+            history.push(pendingSnapshots.get(scope) || captureSnapshot(scope));
+            if (history.length > 25) history.shift();
+            sectionHistory.set(scope, history);
+            pendingSnapshots.set(scope, captureSnapshot(scope));
+            setUndoState(button, history);
+        }
+
+        function bindUndoScope(scope) {
+            if (!scope || scope.dataset.undoBound) return;
+            scope.dataset.undoBound = "true";
+            const button = scope.querySelector("[data-undo-section]");
+            editableFields(scope).forEach((field) => {
+                field.addEventListener("focus", () => primeSnapshot(scope));
+                field.addEventListener("pointerdown", () => primeSnapshot(scope));
+                field.addEventListener("input", () => rememberChange(scope, button));
+                field.addEventListener("change", () => rememberChange(scope, button));
+            });
+            button?.addEventListener("click", () => {
+                const history = sectionHistory.get(scope) || [];
+                const snapshot = history.pop();
+                if (!snapshot) return;
+                restoreSnapshot(snapshot);
+                setUndoState(button, history);
+            });
+        }
+
+        function setRestoreImageState() {
+            if (restoreImageButton) restoreImageButton.disabled = removalHistory.length === 0;
+        }
+
+        function removeExistingImage(card) {
+            if (!card) return;
+            const input = card.querySelector("[data-remove-existing-image-input]");
+            if (!input || input.checked) return;
+            const restoreButton = card.querySelector("[data-restore-existing-image]");
+            input.checked = true;
+            card.classList.add("is-removed");
+            if (restoreButton) restoreButton.disabled = false;
+            removedImages.push(card);
+            removalHistory.push({ type: "existing", card });
+            setRestoreImageState();
+        }
+
+        function restoreExistingImage(card) {
+            if (!card) return;
+            const input = card.querySelector("[data-remove-existing-image-input]");
+            if (!input) return;
+            const restoreButton = card.querySelector("[data-restore-existing-image]");
+            input.checked = false;
+            card.classList.remove("is-removed");
+            if (restoreButton) restoreButton.disabled = true;
+        }
+
+        function setInputFiles() {
+            const transfer = new DataTransfer();
+            uploadItems.forEach((item) => transfer.items.add(item.file));
+            imageInput.files = transfer.files;
+        }
+
+        function revokeUploadUrl(item) {
+            if (item?.url) URL.revokeObjectURL(item.url);
+        }
+
+        function escapeHtml(value) {
+            return String(value)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;");
+        }
+
+        function renderSelectedImages() {
+            selectedImagesContainer.innerHTML = "";
+            uploadItems.forEach((item, index) => {
+                const card = document.createElement("div");
+                card.className = "image-card";
+                card.dataset.uploadImageCard = "";
+                card.innerHTML = `
+                    <button class="btn btn-undo" type="button" data-restore-upload-image ${item.previous ? "" : "disabled"} title="Restaurar recorte anterior" aria-label="Restaurar recorte anterior">↶</button>
+                    <button class="btn-image-remove" type="button" data-remove-upload-image aria-label="Quitar imagen">×</button>
+                    <img src="${item.url}" alt="${escapeHtml(item.file.name)}">
+                    <span class="hint">Imagen nueva. Haz clic en la foto para recortarla.</span>
+                `;
+                card.querySelector("img").addEventListener("click", () => openCrop(index));
+                card.querySelector("[data-remove-upload-image]").addEventListener("click", () => removeUpload(index));
+                card.querySelector("[data-restore-upload-image]").addEventListener("click", () => restoreUploadCrop(index));
+                selectedImagesContainer.append(card);
+            });
+        }
+
+        function addUploads(files) {
+            uploadItems.forEach(revokeUploadUrl);
+            uploadItems = files.map((file) => ({
+                file,
+                originalFile: file,
+                url: URL.createObjectURL(file),
+                previous: null,
+            }));
+            removedUploads.length = 0;
+            removalHistory.splice(0, removalHistory.length, ...removalHistory.filter((item) => item.type === "existing"));
+            renderSelectedImages();
+            setInputFiles();
+            setRestoreImageState();
+        }
+
+        function removeUpload(index) {
+            const item = uploadItems[index];
+            if (!item) return;
+            removedUploads.push({ item, index });
+            removalHistory.push({ type: "upload", item, index });
+            uploadItems.splice(index, 1);
+            renderSelectedImages();
+            setInputFiles();
+            setRestoreImageState();
+        }
+
+        function restoreUpload(item, index) {
+            const safeIndex = Math.min(index, uploadItems.length);
+            uploadItems.splice(safeIndex, 0, item);
+            renderSelectedImages();
+            setInputFiles();
+        }
+
+        function restoreUploadCrop(index) {
+            const item = uploadItems[index];
+            if (!item?.previous) return;
+            revokeUploadUrl(item);
+            uploadItems[index] = {
+                ...item.previous,
+                previous: null,
+            };
+            renderSelectedImages();
+            setInputFiles();
+        }
+
+        function updateCropPreview() {
+            const zoom = Number(cropZoom.value);
+            const x = Number(cropX.value);
+            const y = Number(cropY.value);
+            cropImage.style.transform = `translate(calc(-50% + ${x * 0.28}%), calc(-50% + ${y * 0.28}%)) scale(${zoom})`;
+        }
+
+        function openCrop(index) {
+            const item = uploadItems[index];
+            if (!item) return;
+            activeCropIndex = index;
+            cropImage.src = item.url;
+            cropZoom.value = "1";
+            cropX.value = "0";
+            cropY.value = "0";
+            updateCropPreview();
+            cropModal.classList.add("is-open");
+            cropModal.setAttribute("aria-hidden", "false");
+        }
+
+        function closeCrop() {
+            activeCropIndex = null;
+            cropModal.classList.remove("is-open");
+            cropModal.setAttribute("aria-hidden", "true");
+        }
+
+        function cropActiveImage() {
+            const item = uploadItems[activeCropIndex];
+            if (!item) return;
+            const image = new Image();
+            image.onload = () => {
+                const canvas = document.createElement("canvas");
+                const outputWidth = 1600;
+                const outputHeight = Math.round(outputWidth / cropAspect);
+                canvas.width = outputWidth;
+                canvas.height = outputHeight;
+                const zoom = Number(cropZoom.value);
+                let cropWidth = image.naturalWidth / zoom;
+                let cropHeight = cropWidth / cropAspect;
+
+                if (cropHeight > image.naturalHeight / zoom) {
+                    cropHeight = image.naturalHeight / zoom;
+                    cropWidth = cropHeight * cropAspect;
+                }
+
+                const maxX = Math.max(0, image.naturalWidth - cropWidth);
+                const maxY = Math.max(0, image.naturalHeight - cropHeight);
+                const offsetX = (Number(cropX.value) + 100) / 200;
+                const offsetY = (Number(cropY.value) + 100) / 200;
+                const sx = maxX * offsetX;
+                const sy = maxY * offsetY;
+                const context = canvas.getContext("2d");
+                context.drawImage(image, sx, sy, cropWidth, cropHeight, 0, 0, outputWidth, outputHeight);
+                canvas.toBlob((blob) => {
+                    if (!blob) return;
+                    const extension = item.file.type === "image/png" ? "png" : "jpg";
+                    const basename = item.file.name.replace(/\.[^.]+$/, "");
+                    const croppedFile = new File([blob], `${basename}-recortada.${extension}`, { type: item.file.type || "image/jpeg" });
+                    uploadItems[activeCropIndex] = {
+                        file: croppedFile,
+                        url: URL.createObjectURL(croppedFile),
+                        originalFile: item.originalFile,
+                        previous: {
+                            file: item.file,
+                            originalFile: item.originalFile,
+                            url: item.url,
+                        },
+                    };
+                    renderSelectedImages();
+                    setInputFiles();
+                    closeCrop();
+                }, item.file.type || "image/jpeg", 0.92);
+            };
+            image.src = item.url;
+        }
 
         function rememberSelection() {
             const selection = window.getSelection();
@@ -244,6 +559,8 @@
         document.querySelectorAll("[data-toolbar]").forEach((toolbar) => {
             const locale = toolbar.dataset.toolbar;
             const editor = document.querySelector(`[data-editor="${locale}"]`);
+            const scope = toolbar.closest("[data-undo-scope]");
+            const undoButton = scope?.querySelector("[data-undo-section]");
 
             prefillEditorialMarkers(editor);
 
@@ -255,6 +572,7 @@
                 button.addEventListener("mousedown", (event) => event.preventDefault());
                 button.addEventListener("click", () => {
                     restoreSelection(editor);
+                    rememberChange(scope, undoButton);
                     if (button.hasAttribute("data-dropcap")) {
                         toggleDropcap(editor);
                     } else if (button.dataset.block) {
@@ -322,7 +640,7 @@
                 .join("");
         }
 
-        document.querySelector("input[type='file']").addEventListener("change", (event) => {
+        imageInput.addEventListener("change", (event) => {
             const message = document.getElementById("image-error");
             const files = [...event.target.files];
             message.textContent = "";
@@ -331,16 +649,58 @@
                 if (!["image/jpeg", "image/png"].includes(file.type)) {
                     message.textContent = "Ese formato no está permitido. Usa JPG o PNG.";
                     event.target.value = "";
+                    setInputFiles();
                     return;
                 }
 
                 if (file.size > 10 * 1024 * 1024) {
                     message.textContent = "La imagen sobrepasa los 10MB.";
                     event.target.value = "";
+                    setInputFiles();
                     return;
                 }
             }
+
+            addUploads(files);
         });
+
+        document.querySelectorAll("[data-undo-scope]").forEach(bindUndoScope);
+        document.querySelectorAll("[data-remove-existing-image]").forEach((button) => {
+            button.addEventListener("click", () => removeExistingImage(button.closest("[data-existing-image-card]")));
+        });
+        document.querySelectorAll("[data-restore-existing-image]").forEach((button) => {
+            button.addEventListener("click", () => {
+                const card = button.closest("[data-existing-image-card]");
+                restoreExistingImage(card);
+                const index = removedImages.lastIndexOf(card);
+                if (index >= 0) removedImages.splice(index, 1);
+                const historyIndex = removalHistory.findLastIndex((item) => item.type === "existing" && item.card === card);
+                if (historyIndex >= 0) removalHistory.splice(historyIndex, 1);
+                setRestoreImageState();
+            });
+        });
+        restoreImageButton?.addEventListener("click", () => {
+            const latest = removalHistory.pop();
+            if (!latest) return;
+            if (latest.type === "existing") {
+                restoreExistingImage(latest.card);
+                const index = removedImages.lastIndexOf(latest.card);
+                if (index >= 0) removedImages.splice(index, 1);
+            }
+            if (latest.type === "upload") {
+                restoreUpload(latest.item, latest.index);
+                const index = removedUploads.findIndex((entry) => entry.item === latest.item);
+                if (index >= 0) removedUploads.splice(index, 1);
+            }
+            setRestoreImageState();
+        });
+        [cropZoom, cropX, cropY].forEach((control) => control.addEventListener("input", updateCropPreview));
+        cropCancel.addEventListener("click", closeCrop);
+        cropAccept.addEventListener("click", cropActiveImage);
+        cropModal.addEventListener("click", (event) => {
+            if (event.target === cropModal) closeCrop();
+        });
+        setRestoreImageState();
     </script>
 </body>
 </html>

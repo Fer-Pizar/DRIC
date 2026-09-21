@@ -29,6 +29,10 @@
         .btn-primary { background: var(--blue); color: #fff; }
         .btn-secondary { background: #e8edf5; color: var(--ink); }
         .btn-danger { background: #fff1f2; color: var(--red-dark); }
+        .btn-undo { align-items: center; background: #eef3fb; color: var(--blue); font-size: 20px; font-weight: 900; line-height: 1; min-width: 40px; padding: 9px 12px; text-shadow: 0 0 0 currentColor, .35px 0 0 currentColor, 0 .35px 0 currentColor; }
+        .btn-undo:disabled { cursor: not-allowed; opacity: .42; }
+        .undo-floating { position: absolute; right: 12px; top: 12px; z-index: 4; }
+        .document-row > .undo-floating { right: -10px; top: -10px; z-index: 6; }
         .alert { border-radius: 14px; margin-bottom: 18px; padding: 14px 16px; }
         .alert-success { background: #e8f8ee; border: 1px solid #bde8c9; color: #176534; }
         .alert-error { background: #fff1f2; border: 1px solid #b91c1c; color: var(--red-dark); font-weight: 800; }
@@ -36,7 +40,7 @@
         .panel { padding: 24px; }
         .panel-header { align-items: start; border-bottom: 1px solid var(--line); display: flex; gap: 16px; justify-content: space-between; margin-bottom: 20px; padding-bottom: 16px; }
         .language-grid { display: grid; gap: 18px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-        .language-card, .document-row { box-shadow: none; padding: 18px; }
+        .language-card, .document-row { box-shadow: none; padding: 18px; position: relative; }
         .document-row { display: grid; gap: 14px; }
         .row-header { align-items: center; display: flex; justify-content: space-between; }
         .document-fields { display: grid; gap: 14px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -153,7 +157,10 @@
                         <h2>Documentos de la convocatoria</h2>
                         <p class="muted">Agrega o quita los enlaces que aparecen en la tarjeta derecha de la página pública.</p>
                     </div>
-                    <button class="btn btn-primary" type="button" id="add-document">Agregar documento</button>
+                    <div class="actions">
+                        <button class="btn btn-undo" type="button" id="undo-documents" disabled title="Restaurar último cambio de documentos" aria-label="Restaurar último cambio de documentos">↶</button>
+                        <button class="btn btn-primary" type="button" id="add-document">Agregar documento</button>
+                    </div>
                 </div>
 
                 <div class="documents" id="documents">
@@ -162,10 +169,10 @@
                         $rows = is_array($oldDocuments) ? $oldDocuments : $documents;
                     @endphp
 
-                    @forelse ($rows as $index => $document)
+                    @foreach ($rows as $index => $document)
                         <div class="document-row">
                             <div class="row-header">
-                                <h3>Documento <span class="row-number">{{ $loop->iteration }}</span></h3>
+                                <h3>Documento <span class="row-number">{{ $index + 1 }}</span></h3>
                                 <button class="btn btn-danger" type="button" data-remove-row>Quitar</button>
                             </div>
                             <input type="hidden" data-name="id" name="documents[{{ $index }}][id]" value="{{ $document['id'] ?? '' }}">
@@ -188,9 +195,8 @@
                                 </label>
                             </div>
                         </div>
-                    @empty
-                        <div class="empty-state" id="empty-state">Todavía no hay documentos guardados. Agrega el primer documento para publicarlo.</div>
-                    @endforelse
+                    @endforeach
+                    <div class="empty-state" id="empty-state" @if (count($rows)) style="display:none;" @endif>Todavía no hay documentos guardados. Agrega el primer documento para publicarlo.</div>
                 </div>
             </section>
 
@@ -232,6 +238,119 @@
         const container = document.getElementById("documents");
         const template = document.getElementById("document-template");
         const emptyState = document.getElementById("empty-state");
+        const undoDocumentsButton = document.getElementById("undo-documents");
+        const cardHistory = new WeakMap();
+        const fieldStartSnapshots = new WeakMap();
+        const documentHistory = [];
+
+        function editableFields(scope) {
+            return Array.from(scope.querySelectorAll("input, textarea"));
+        }
+
+        function snapshotScope(scope) {
+            return editableFields(scope).map((field) => ({
+                name: field.name,
+                type: field.type,
+                value: field.value,
+                checked: field.checked,
+            }));
+        }
+
+        function restoreSnapshot(scope, snapshot) {
+            snapshot.forEach((item) => {
+                const field = editableFields(scope).find((candidate) => candidate.name === item.name);
+                if (!field) return;
+
+                if (field.type === "checkbox") {
+                    field.checked = item.checked;
+                    return;
+                }
+
+                field.value = item.value;
+                field.dispatchEvent(new Event("input", { bubbles: true }));
+            });
+        }
+
+        function historyFor(scope) {
+            if (!cardHistory.has(scope)) {
+                cardHistory.set(scope, []);
+            }
+
+            return cardHistory.get(scope);
+        }
+
+        function setUndoState(scope) {
+            const button = scope.querySelector(":scope > [data-undo-card]");
+            if (!button) return;
+
+            button.disabled = historyFor(scope).length === 0;
+        }
+
+        function pushSnapshot(scope, snapshot = snapshotScope(scope)) {
+            const history = historyFor(scope);
+            const serialized = JSON.stringify(snapshot);
+            const last = history.length ? JSON.stringify(history[history.length - 1]) : null;
+
+            if (serialized !== last) {
+                history.push(snapshot);
+            }
+
+            if (history.length > 20) {
+                history.shift();
+            }
+
+            setUndoState(scope);
+        }
+
+        function undoScope(scope) {
+            const snapshot = historyFor(scope).pop();
+            if (!snapshot) return;
+
+            restoreSnapshot(scope, snapshot);
+            editableFields(scope).forEach((field) => fieldStartSnapshots.delete(field));
+            setUndoState(scope);
+        }
+
+        function markFieldStart(field) {
+            const scope = field.closest("[data-undo-scope]");
+            if (!scope || fieldStartSnapshots.has(field)) return;
+
+            fieldStartSnapshots.set(field, snapshotScope(scope));
+        }
+
+        function rememberFieldChange(field) {
+            const scope = field.closest("[data-undo-scope]");
+            const snapshot = fieldStartSnapshots.get(field);
+            if (!scope || !snapshot) return;
+
+            pushSnapshot(scope, snapshot);
+            fieldStartSnapshots.delete(field);
+        }
+
+        function bindUndoScope(scope) {
+            if (scope.dataset.undoBound === "1") return;
+
+            scope.dataset.undoScope = "";
+            scope.dataset.undoBound = "1";
+
+            const button = document.createElement("button");
+            button.className = "btn btn-undo undo-floating";
+            button.type = "button";
+            button.dataset.undoCard = "";
+            button.disabled = true;
+            button.title = "Deshacer último cambio";
+            button.setAttribute("aria-label", "Deshacer último cambio");
+            button.textContent = "↶";
+            scope.appendChild(button);
+
+            button.addEventListener("click", () => undoScope(scope));
+
+            editableFields(scope).forEach((field) => {
+                field.addEventListener("focusin", () => markFieldStart(field));
+                field.addEventListener("input", () => rememberFieldChange(field));
+                field.addEventListener("change", () => rememberFieldChange(field));
+            });
+        }
 
         function ensureLiveError(field) {
             let message = field.parentElement.querySelector(".live-error");
@@ -282,6 +401,66 @@
             }
         }
 
+        function documentRowsState() {
+            return [...container.querySelectorAll(".document-row")].map((row) => ({
+                id: row.querySelector("[data-name='id']")?.value || "",
+                title_es: row.querySelector("[data-name='title_es']")?.value || "",
+                title_en: row.querySelector("[data-name='title_en']")?.value || "",
+                url: row.querySelector("[data-name='url']")?.value || "",
+            }));
+        }
+
+        function setDocumentUndoState() {
+            undoDocumentsButton.disabled = documentHistory.length === 0;
+        }
+
+        function pushDocumentSnapshot() {
+            const snapshot = documentRowsState();
+            const serialized = JSON.stringify(snapshot);
+            const last = documentHistory.length ? JSON.stringify(documentHistory[documentHistory.length - 1]) : null;
+
+            if (serialized !== last) {
+                documentHistory.push(snapshot);
+            }
+
+            if (documentHistory.length > 20) {
+                documentHistory.shift();
+            }
+
+            setDocumentUndoState();
+        }
+
+        function rowFromState(state) {
+            const row = template.content.firstElementChild.cloneNode(true);
+
+            row.querySelector("[data-name='id']").value = state.id || "";
+            row.querySelector("[data-name='title_es']").value = state.title_es || "";
+            row.querySelector("[data-name='title_en']").value = state.title_en || "";
+            row.querySelector("[data-name='url']").value = state.url || "";
+
+            return row;
+        }
+
+        function restoreDocumentRows(rows) {
+            container.querySelectorAll(".document-row").forEach((row) => row.remove());
+
+            rows.forEach((state) => {
+                const row = rowFromState(state);
+                container.append(row);
+                bindRow(row);
+            });
+
+            refreshRows();
+        }
+
+        function undoDocuments() {
+            const snapshot = documentHistory.pop();
+            if (!snapshot) return;
+
+            restoreDocumentRows(snapshot);
+            setDocumentUndoState();
+        }
+
         function refreshRows() {
             const rows = [...container.querySelectorAll(".document-row")];
 
@@ -296,7 +475,10 @@
         }
 
         function bindRow(row) {
+            bindUndoScope(row);
+
             row.querySelector("[data-remove-row]").addEventListener("click", () => {
+                pushDocumentSnapshot();
                 row.remove();
                 refreshRows();
             });
@@ -315,6 +497,8 @@
             row.querySelector("input[type='text']").focus();
         });
 
+        undoDocumentsButton.addEventListener("click", undoDocuments);
+
         document.querySelectorAll("input[type='text']").forEach((field) => {
             const shouldValidate = cleanFieldNames.some((name) => field.name.includes(`[${name}]`));
 
@@ -330,6 +514,8 @@
         });
 
         container.querySelectorAll(".document-row").forEach(bindRow);
+        document.querySelectorAll(".language-card").forEach(bindUndoScope);
+        setDocumentUndoState();
         refreshRows();
     </script>
 </body>

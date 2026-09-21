@@ -22,6 +22,9 @@
         .btn-secondary { background: #e8edf5; color: var(--ink); }
         .btn-danger { background: #fff1f2; color: var(--red-dark); }
         .btn-detail { background: #eef4ff; color: var(--blue); }
+        .btn-undo { align-items: center; background: #eef3fb; color: var(--blue); font-size: 20px; font-weight: 900; line-height: 1; min-width: 40px; padding: 9px 12px; text-shadow: 0 0 0 currentColor, .35px 0 0 currentColor, 0 .35px 0 currentColor; }
+        .btn-undo:disabled { cursor: not-allowed; opacity: .42; }
+        .undo-floating { position: absolute; right: 16px; top: 16px; z-index: 2; }
         .alert { border-radius: 14px; margin-bottom: 18px; padding: 14px 16px; }
         .alert-success { background: #e8f8ee; border: 1px solid #bde8c9; color: #176534; }
         .alert-error { background: #fff1f2; border: 1px solid #b91c1c; color: var(--red-dark); font-weight: 800; }
@@ -29,8 +32,10 @@
         .panel { padding: 24px; }
         .panel-header { align-items: start; border-bottom: 1px solid var(--line); display: flex; gap: 16px; justify-content: space-between; margin-bottom: 20px; padding-bottom: 16px; }
         .language-grid, .news-fields { display: grid; gap: 18px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-        .language-card, .news-row { box-shadow: none; padding: 18px; }
-        .news-row { display: grid; gap: 14px; }
+        .language-card, .news-row { box-shadow: none; padding: 18px; position: relative; }
+        .language-card { padding-top: 76px; }
+        .news-row { display: grid; gap: 14px; padding-top: 76px; }
+        .news-row > .undo-floating { right: 18px; top: 18px; }
         .row-header { align-items: center; display: flex; justify-content: space-between; }
         .full { grid-column: 1 / -1; }
         .toggle-field { align-items: center; background: #f8fafc; border: 1px solid var(--line); border-radius: 14px; display: flex; gap: 12px; justify-content: space-between; padding: 12px 14px; }
@@ -74,7 +79,8 @@
                 </div>
                 <div class="language-grid">
                     @foreach (['es' => 'Español', 'en' => 'Inglés'] as $locale => $label)
-                        <div class="language-card">
+                        <div class="language-card" data-undo-scope>
+                            <button class="btn btn-undo undo-floating" type="button" data-undo-section title="Restaurar esta sección" aria-label="Restaurar esta sección" disabled>↶</button>
                             <h3>{{ $label }}</h3>
                             <div class="field-grid">
                                 @foreach ([
@@ -107,7 +113,10 @@
                         <h2>Noticias</h2>
                         <p class="muted">Agrega, quita, publica u oculta tarjetas. Esta vista conserva el diseño original sin fotos.</p>
                     </div>
-                    <button class="btn btn-primary" type="button" id="add-news">Agregar noticia</button>
+                    <div class="actions">
+                        <button class="btn btn-undo" type="button" id="restore-news" title="Restaurar noticia quitada" aria-label="Restaurar noticia quitada" disabled>↶</button>
+                        <button class="btn btn-primary" type="button" id="add-news">Agregar noticia</button>
+                    </div>
                 </div>
 
                 <div class="news-list" id="news-list">
@@ -118,6 +127,7 @@
 
                     @forelse ($rows as $index => $item)
                         <div class="news-row">
+                            <button class="btn btn-undo undo-floating" type="button" data-undo-row title="Deshacer último cambio" aria-label="Deshacer último cambio" disabled>↶</button>
                             <div class="row-header">
                                 <h3>Noticia <span class="row-number">{{ $loop->iteration }}</span></h3>
                                 <div class="actions">
@@ -207,6 +217,7 @@
 
     <template id="news-template">
         <div class="news-row">
+            <button class="btn btn-undo undo-floating" type="button" data-undo-row title="Deshacer último cambio" aria-label="Deshacer último cambio" disabled>↶</button>
             <div class="row-header">
                 <h3>Noticia <span class="row-number"></span></h3>
                 <div class="actions">
@@ -237,6 +248,11 @@
         const container = document.getElementById("news-list");
         const template = document.getElementById("news-template");
         const emptyState = document.getElementById("empty-state");
+        const restoreNewsButton = document.getElementById("restore-news");
+        const removedRows = [];
+        const rowHistory = new WeakMap();
+        const sectionHistory = new WeakMap();
+        const pendingSnapshots = new WeakMap();
 
         function ensureLiveError(field) {
             let message = field.parentElement.querySelector(".live-error");
@@ -292,7 +308,82 @@
             if (emptyState) emptyState.style.display = rows.length ? "none" : "block";
         }
 
+        function editableFields(scope) {
+            return [...scope.querySelectorAll("input, textarea, select")];
+        }
+
+        function captureSnapshot(scope) {
+            return editableFields(scope).map((field) => ({
+                field,
+                checked: field.checked,
+                value: field.value,
+            }));
+        }
+
+        function restoreSnapshot(snapshot) {
+            snapshot.forEach(({ field, checked, value }) => {
+                if (!field.isConnected) return;
+                if (field.type === "checkbox" || field.type === "radio") {
+                    field.checked = checked;
+                } else {
+                    field.value = value;
+                }
+                field.classList.remove("is-invalid");
+                const message = field.parentElement?.querySelector(".live-error");
+                if (message) message.textContent = "";
+            });
+        }
+
+        function primeSnapshot(scope) {
+            if (!pendingSnapshots.has(scope)) {
+                pendingSnapshots.set(scope, captureSnapshot(scope));
+            }
+        }
+
+        function setUndoState(button, history) {
+            if (button) button.disabled = !history.length;
+        }
+
+        function rememberChange(scope, historyMap, button) {
+            const history = historyMap.get(scope) || [];
+            history.push(pendingSnapshots.get(scope) || captureSnapshot(scope));
+            if (history.length > 25) history.shift();
+            historyMap.set(scope, history);
+            pendingSnapshots.set(scope, captureSnapshot(scope));
+            setUndoState(button, history);
+        }
+
+        function bindUndoScope(scope, historyMap = sectionHistory) {
+            if (!scope || scope.dataset.undoBound) return;
+            scope.dataset.undoBound = "true";
+            const button = scope.querySelector("[data-undo-section], [data-undo-row]");
+            editableFields(scope).forEach((field) => {
+                field.addEventListener("focus", () => primeSnapshot(scope));
+                field.addEventListener("pointerdown", () => primeSnapshot(scope));
+                field.addEventListener("input", () => rememberChange(scope, historyMap, button));
+                field.addEventListener("change", () => rememberChange(scope, historyMap, button));
+            });
+            button?.addEventListener("click", () => {
+                const history = historyMap.get(scope) || [];
+                const snapshot = history.pop();
+                if (!snapshot) return;
+                restoreSnapshot(snapshot);
+                setUndoState(button, history);
+            });
+        }
+
+        function setRestoreNewsState() {
+            restoreNewsButton.disabled = removedRows.length === 0;
+        }
+
+        function cleanRestoredRow(row) {
+            row.querySelectorAll(".live-error").forEach((error) => error.remove());
+            row.querySelectorAll(".is-invalid").forEach((field) => field.classList.remove("is-invalid"));
+        }
+
         function bindField(field) {
+            if (field.dataset.fieldBound) return;
+            field.dataset.fieldBound = "true";
             if (field.dataset.name === "href") {
                 field.addEventListener("input", () => validateHref(field));
                 field.addEventListener("blur", () => validateHref(field));
@@ -307,12 +398,26 @@
         }
 
         function bindRow(row) {
+            bindUndoScope(row, rowHistory);
+            if (row.dataset.rowBound) return;
+            row.dataset.rowBound = "true";
             row.querySelector("[data-remove-row]").addEventListener("click", () => {
+                removedRows.push(row);
                 row.remove();
                 refreshRows();
+                setRestoreNewsState();
             });
             row.querySelectorAll("input, textarea").forEach(bindField);
         }
+
+        restoreNewsButton.addEventListener("click", () => {
+            const row = removedRows.pop();
+            if (!row) return;
+            cleanRestoredRow(row);
+            container.append(row);
+            refreshRows();
+            setRestoreNewsState();
+        });
 
         document.getElementById("add-news").addEventListener("click", () => {
             const row = template.content.firstElementChild.cloneNode(true);
@@ -323,8 +428,10 @@
         });
 
         document.querySelectorAll("input, textarea").forEach(bindField);
+        document.querySelectorAll("[data-undo-scope]").forEach((scope) => bindUndoScope(scope));
         container.querySelectorAll(".news-row").forEach(bindRow);
         refreshRows();
+        setRestoreNewsState();
     </script>
 </body>
 </html>

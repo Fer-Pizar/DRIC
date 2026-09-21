@@ -16,13 +16,18 @@
         h2 { color: var(--blue); font-size: 24px; }
         h3 { color: var(--blue); font-size: 18px; }
         .muted { color: var(--muted); line-height: 1.55; margin: 8px 0 0; }
-        .actions, .item-actions, .link-actions, .toolbar { align-items: center; display: flex; flex-wrap: wrap; gap: 10px; }
+        .actions, .item-actions, .link-actions, .links-heading, .section-heading, .toolbar { align-items: center; display: flex; flex-wrap: wrap; gap: 10px; }
         .item-actions, .link-actions { justify-content: flex-end; }
+        .links-heading { justify-content: space-between; margin-bottom: 12px; }
+        .panel-header { align-items: flex-start; display: flex; gap: 16px; justify-content: space-between; }
+        .section-heading { align-items: flex-start; justify-content: space-between; }
         .btn { border: 0; border-radius: 10px; cursor: pointer; display: inline-flex; font-weight: 800; justify-content: center; padding: 12px 16px; text-decoration: none; }
         .btn-primary { background: var(--blue); color: #fff; }
         .btn-secondary { background: #e8edf5; color: var(--ink); }
         .btn-add { background: #2563eb; color: #fff; margin-top: 14px; }
         .btn-remove { background: #fff1f2; color: var(--red-dark); }
+        .btn-undo { align-items: center; background: #eef3fb; color: var(--blue); font-size: 20px; font-weight: 900; line-height: 1; min-width: 40px; padding: 9px 12px; text-shadow: 0 0 0 currentColor, .35px 0 0 currentColor, 0 .35px 0 currentColor; }
+        .btn-undo:disabled { cursor: not-allowed; opacity: .42; }
         .tool-btn { background: #f8fafc; border: 1px solid #d7deea; border-radius: 9px; color: var(--ink); cursor: pointer; font: inherit; font-size: 12px; font-weight: 800; padding: 8px 10px; }
         .alert { border-radius: 14px; margin-bottom: 18px; padding: 14px 16px; }
         .alert-success { background: #e8f8ee; border: 1px solid #bde8c9; color: #176534; }
@@ -31,10 +36,11 @@
         .panel { padding: 24px; }
         .panel-header { border-bottom: 1px solid var(--line); margin-bottom: 20px; padding-bottom: 16px; }
         .language-grid, .two-grid { display: grid; gap: 18px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-        .language-card, .item-card, .link-card { box-shadow: none; padding: 18px; }
+        .language-card, .item-card, .link-card { box-shadow: none; padding: 18px; position: relative; }
         .item-card { display: grid; gap: 16px; }
         .link-card { background: #f8fafc; display: grid; gap: 12px; }
         .item-header { align-items: center; display: flex; gap: 12px; justify-content: space-between; }
+        .undo-floating { position: absolute; right: 12px; top: 12px; z-index: 4; }
         .subsection { display: grid; gap: 16px; }
         .subsection + .subsection { border-top: 1px solid var(--line); margin-top: 20px; padding-top: 20px; }
         label { display: grid; gap: 7px; font-size: 13px; font-weight: 800; }
@@ -45,7 +51,7 @@
         .hint { color: var(--muted); font-size: 12px; font-weight: 500; line-height: 1.45; }
         .field-error { color: var(--red-dark); font-size: 12px; font-weight: 800; line-height: 1.45; }
         .sticky-actions { align-items: center; background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 16px; bottom: 18px; box-shadow: 0 18px 45px rgba(15,23,42,.12); display: flex; justify-content: space-between; padding: 14px; position: sticky; }
-        @media (max-width: 900px) { .topbar, .sticky-actions, .item-header { align-items: stretch; flex-direction: column; } .language-grid, .two-grid { grid-template-columns: 1fr; } .item-actions, .link-actions { justify-content: flex-start; } }
+        @media (max-width: 900px) { .topbar, .sticky-actions, .panel-header, .item-header, .links-heading, .section-heading { align-items: stretch; flex-direction: column; } .language-grid, .two-grid { grid-template-columns: 1fr; } .item-actions, .link-actions { justify-content: flex-start; } }
     </style>
 </head>
 <body>
@@ -110,9 +116,12 @@
                 </div>
 
                 <div class="subsection">
-                    <div>
-                        <h3>Datos clave</h3>
-                        <p class="muted">Aparecen como información rápida del programa.</p>
+                    <div class="section-heading">
+                        <div>
+                            <h3>Datos clave</h3>
+                            <p class="muted">Aparecen como información rápida del programa.</p>
+                        </div>
+                        <button class="btn btn-undo" type="button" data-restore-item data-restore-target="highlights-list" disabled title="Restaurar último dato clave eliminado" aria-label="Restaurar último dato clave eliminado">↶</button>
                     </div>
                     <div class="item-list" id="highlights-list">
                         @foreach (old('highlights', $detail['highlights'] ?? []) as $index => $item)
@@ -130,10 +139,13 @@
                     <button class="btn btn-add" type="button" data-add-highlight>Agregar dato clave</button>
                 </div>
 
-                <div class="subsection">
-                    <div>
-                        <h3>Enlace oficial</h3>
-                        <p class="muted">Se muestra como tarjeta de enlace oficial. Puedes usar una URL o subir un PDF de hasta 20 MB.</p>
+                <div class="subsection" data-edit-undo-scope>
+                    <div class="section-heading">
+                        <div>
+                            <h3>Enlace oficial</h3>
+                            <p class="muted">Se muestra como tarjeta de enlace oficial. Puedes usar una URL o subir un PDF de hasta 20 MB.</p>
+                        </div>
+                        <button class="btn btn-undo" type="button" data-undo-card disabled title="Deshacer último cambio" aria-label="Deshacer último cambio">↶</button>
                     </div>
                     <div class="two-grid">
                         <label>Texto del enlace en español<input type="text" name="reference[label_es]" value="{{ old('reference.label_es', $detail['reference']['label_es'] ?? '') }}">@error('reference.label_es')<span class="field-error">{{ $message }}</span>@enderror</label>
@@ -148,8 +160,11 @@
 
             <section class="panel">
                 <div class="panel-header">
-                    <h2>Guía del programa</h2>
-                    <p class="muted">Cada sección se mostrará como tarjeta. En el contenido, una línea normal será texto y una línea con viñeta será lista.</p>
+                    <div>
+                        <h2>Guía del programa</h2>
+                        <p class="muted">Cada sección se mostrará como tarjeta. En el contenido, una línea normal será texto y una línea con viñeta será lista.</p>
+                    </div>
+                    <button class="btn btn-undo" type="button" data-restore-item data-restore-target="sections-list" disabled title="Restaurar última sección eliminada" aria-label="Restaurar última sección eliminada">↶</button>
                 </div>
                 <div class="item-list" id="sections-list">
                     @foreach (old('sections', $detail['sections'] ?? []) as $index => $item)
@@ -180,8 +195,11 @@
 
             <section class="panel">
                 <div class="panel-header">
-                    <h2>Convocatorias y documentos</h2>
-                    <p class="muted">Puedes agregar convocatorias, beneficios, documentos, fechas, notas y varios enlaces o PDFs.</p>
+                    <div>
+                        <h2>Convocatorias y documentos</h2>
+                        <p class="muted">Puedes agregar convocatorias, beneficios, documentos, fechas, notas y varios enlaces o PDFs.</p>
+                    </div>
+                    <button class="btn btn-undo" type="button" data-restore-item data-restore-target="calls-list" disabled title="Restaurar última convocatoria eliminada" aria-label="Restaurar última convocatoria eliminada">↶</button>
                 </div>
                 <div class="language-grid">
                     @foreach (['es' => 'Español', 'en' => 'Inglés'] as $locale => $label)
@@ -211,8 +229,11 @@
                                     </div>
                                 @endforeach
                             </div>
-                            <div>
-                                <h3>Enlaces y PDFs</h3>
+                            <div data-links-section>
+                                <div class="links-heading">
+                                    <h3>Enlaces y PDFs</h3>
+                                    <button class="btn btn-undo" type="button" data-restore-link disabled title="Restaurar último enlace eliminado" aria-label="Restaurar último enlace eliminado">↶</button>
+                                </div>
                                 <div class="links-list" data-links-list>
                                     @foreach (($call['links'] ?? []) as $linkIndex => $link)
                                         <article class="link-card" data-link-card data-link-index="{{ $linkIndex }}">
@@ -245,16 +266,337 @@
 
     <template id="highlight-template"><article class="item-card" data-highlight-card><div class="item-header"><h3>Nuevo dato</h3><button class="btn btn-remove" type="button" data-remove-item>Quitar</button></div><div class="two-grid"><label>Etiqueta en español<input type="text" name="highlights[__INDEX__][label_es]" value=""></label><label>Etiqueta en inglés<input type="text" name="highlights[__INDEX__][label_en]" value=""></label><label>Valor en español<input type="text" name="highlights[__INDEX__][value_es]" value=""></label><label>Valor en inglés<input type="text" name="highlights[__INDEX__][value_en]" value=""></label></div></article></template>
     <template id="section-template"><article class="item-card" data-section-card><div class="item-header"><h3>Nueva sección</h3><button class="btn btn-remove" type="button" data-remove-item>Quitar</button></div><div class="language-grid"><div class="language-card"><h3>Español</h3><label>Título<input type="text" name="sections[__INDEX__][title_es]" value=""></label><label>Contenido<div class="toolbar"><button class="tool-btn" type="button" data-editor-action="bullet">Viñeta</button><button class="tool-btn" type="button" data-editor-action="paragraph">Párrafo</button></div><textarea class="content-editor" name="sections[__INDEX__][content_es]" data-smart-editor></textarea></label></div><div class="language-card"><h3>Inglés</h3><label>Título<input type="text" name="sections[__INDEX__][title_en]" value=""></label><label>Contenido<div class="toolbar"><button class="tool-btn" type="button" data-editor-action="bullet">Viñeta</button><button class="tool-btn" type="button" data-editor-action="paragraph">Párrafo</button></div><textarea class="content-editor" name="sections[__INDEX__][content_en]" data-smart-editor></textarea></label></div></div></article></template>
-    <template id="call-template"><article class="item-card" data-call-card data-call-index="__CALL__"><div class="item-header"><h3>Nueva convocatoria</h3><button class="btn btn-remove" type="button" data-remove-item>Quitar</button></div><input type="hidden" name="calls[__CALL__][id]" value=""><div class="language-grid"><div class="language-card"><h3>Español</h3><div class="field-grid"><label>Título<input type="text" name="calls[__CALL__][title_es]" value=""></label><label>Descripción<textarea name="calls[__CALL__][description_es]"></textarea></label><label>Beneficios<textarea name="calls[__CALL__][benefits_es]"></textarea></label><label>Documentos<textarea name="calls[__CALL__][documents_es]"></textarea></label><label>Plazo<input type="text" name="calls[__CALL__][deadline_es]" value=""></label><label>Nota<textarea name="calls[__CALL__][note_es]"></textarea></label></div></div><div class="language-card"><h3>Inglés</h3><div class="field-grid"><label>Título<input type="text" name="calls[__CALL__][title_en]" value=""></label><label>Descripción<textarea name="calls[__CALL__][description_en]"></textarea></label><label>Beneficios<textarea name="calls[__CALL__][benefits_en]"></textarea></label><label>Documentos<textarea name="calls[__CALL__][documents_en]"></textarea></label><label>Plazo<input type="text" name="calls[__CALL__][deadline_en]" value=""></label><label>Nota<textarea name="calls[__CALL__][note_en]"></textarea></label></div></div></div><div><h3>Enlaces y PDFs</h3><div class="links-list" data-links-list></div><button class="btn btn-add" type="button" data-add-link>Agregar enlace o PDF</button></div></article></template>
+    <template id="call-template"><article class="item-card" data-call-card data-call-index="__CALL__"><div class="item-header"><h3>Nueva convocatoria</h3><button class="btn btn-remove" type="button" data-remove-item>Quitar</button></div><input type="hidden" name="calls[__CALL__][id]" value=""><div class="language-grid"><div class="language-card"><h3>Español</h3><div class="field-grid"><label>Título<input type="text" name="calls[__CALL__][title_es]" value=""></label><label>Descripción<textarea name="calls[__CALL__][description_es]"></textarea></label><label>Beneficios<textarea name="calls[__CALL__][benefits_es]"></textarea></label><label>Documentos<textarea name="calls[__CALL__][documents_es]"></textarea></label><label>Plazo<input type="text" name="calls[__CALL__][deadline_es]" value=""></label><label>Nota<textarea name="calls[__CALL__][note_es]"></textarea></label></div></div><div class="language-card"><h3>Inglés</h3><div class="field-grid"><label>Título<input type="text" name="calls[__CALL__][title_en]" value=""></label><label>Descripción<textarea name="calls[__CALL__][description_en]"></textarea></label><label>Beneficios<textarea name="calls[__CALL__][benefits_en]"></textarea></label><label>Documentos<textarea name="calls[__CALL__][documents_en]"></textarea></label><label>Plazo<input type="text" name="calls[__CALL__][deadline_en]" value=""></label><label>Nota<textarea name="calls[__CALL__][note_en]"></textarea></label></div></div></div><div data-links-section><div class="links-heading"><h3>Enlaces y PDFs</h3><button class="btn btn-undo" type="button" data-restore-link disabled title="Restaurar último enlace eliminado" aria-label="Restaurar último enlace eliminado">↶</button></div><div class="links-list" data-links-list></div><button class="btn btn-add" type="button" data-add-link>Agregar enlace o PDF</button></div></article></template>
     <template id="link-template"><article class="link-card" data-link-card data-link-index="__LINK__"><div class="link-actions"><button class="btn btn-remove" type="button" data-remove-link>Quitar enlace</button></div><div class="two-grid"><label>Texto en español<input type="text" name="calls[__CALL__][links][__LINK__][label_es]" value=""></label><label>Texto en inglés<input type="text" name="calls[__CALL__][links][__LINK__][label_en]" value=""></label></div><label>URL<input type="text" name="calls[__CALL__][links][__LINK__][href]" value=""></label><input type="hidden" name="calls[__CALL__][links][__LINK__][existing_href]" value=""><input type="hidden" name="calls[__CALL__][links][__LINK__][existing_media_asset_id]" value=""><label>Subir PDF opcional<input type="file" name="calls[__CALL__][links][__LINK__][pdf]" accept="application/pdf"></label></article></template>
 
     <script>
+        const cardHistory = new WeakMap();
+        const fieldStartSnapshots = new WeakMap();
+        const removedLinkHistory = new WeakMap();
+        const removedItemHistory = new WeakMap();
+
+        function editableFields(scope) {
+            return Array.from(scope.querySelectorAll('input:not([type="file"]), textarea'));
+        }
+
+        function snapshotScope(scope) {
+            return editableFields(scope).map((field) => ({
+                name: field.name,
+                type: field.type,
+                value: field.value,
+                checked: field.checked,
+            }));
+        }
+
+        function restoreSnapshot(scope, snapshot) {
+            snapshot.forEach((item) => {
+                const field = editableFields(scope).find((candidate) => candidate.name === item.name);
+                if (!field) return;
+
+                if (field.type === 'checkbox') {
+                    field.checked = item.checked;
+                    return;
+                }
+
+                field.value = item.value;
+                field.dispatchEvent(new Event('input', { bubbles: true }));
+            });
+        }
+
+        function historyFor(scope) {
+            if (!cardHistory.has(scope)) cardHistory.set(scope, []);
+            return cardHistory.get(scope);
+        }
+
+        function setUndoState(scope) {
+            const button = scope.querySelector(':scope > [data-undo-card], :scope > .section-heading [data-undo-card], :scope > .item-header [data-undo-card], :scope > .link-actions [data-undo-card]');
+            if (button) button.disabled = historyFor(scope).length === 0;
+        }
+
+        function pushSnapshot(scope, snapshot = snapshotScope(scope)) {
+            const history = historyFor(scope);
+            const serialized = JSON.stringify(snapshot);
+            const last = history.length ? JSON.stringify(history[history.length - 1]) : null;
+
+            if (serialized !== last) history.push(snapshot);
+            if (history.length > 20) history.shift();
+            setUndoState(scope);
+        }
+
+        function undoScope(scope) {
+            const snapshot = historyFor(scope).pop();
+            if (!snapshot) return;
+
+            restoreSnapshot(scope, snapshot);
+            editableFields(scope).forEach((field) => fieldStartSnapshots.delete(field));
+            setUndoState(scope);
+        }
+
+        function markFieldStart(field) {
+            const scope = field.closest('[data-undo-scope]');
+            if (!scope || fieldStartSnapshots.has(field)) return;
+            fieldStartSnapshots.set(field, snapshotScope(scope));
+        }
+
+        function rememberFieldChange(field) {
+            const scope = field.closest('[data-undo-scope]');
+            const snapshot = fieldStartSnapshots.get(field);
+            if (!scope || !snapshot) return;
+
+            pushSnapshot(scope, snapshot);
+            fieldStartSnapshots.delete(field);
+        }
+
+        function createUndoButton() {
+            const button = document.createElement('button');
+            button.className = 'btn btn-undo';
+            button.type = 'button';
+            button.dataset.undoCard = '';
+            button.disabled = true;
+            button.title = 'Deshacer último cambio';
+            button.setAttribute('aria-label', 'Deshacer último cambio');
+            button.textContent = '↶';
+            return button;
+        }
+
+        function placeUndoButton(scope, button) {
+            const removeButton = scope.querySelector(':scope > .item-header [data-remove-item], :scope > .link-actions [data-remove-link]');
+
+            if (removeButton) {
+                removeButton.insertAdjacentElement('beforebegin', button);
+                return;
+            }
+
+            button.classList.add('undo-floating');
+            scope.appendChild(button);
+        }
+
+        function bindUndoScope(scope) {
+            if (scope.dataset.undoBound === '1') return;
+            if (!editableFields(scope).length) return;
+
+            scope.dataset.undoScope = '';
+            scope.dataset.undoBound = '1';
+
+            const button = scope.querySelector(':scope > [data-undo-card], :scope > .section-heading [data-undo-card], :scope > .item-header [data-undo-card], :scope > .link-actions [data-undo-card]') || createUndoButton();
+            if (!button.parentElement || button.parentElement === scope && !button.classList.contains('undo-floating')) {
+                placeUndoButton(scope, button);
+            }
+            button.addEventListener('click', () => undoScope(scope));
+
+            editableFields(scope).forEach((field) => {
+                field.addEventListener('focusin', () => markFieldStart(field));
+                field.addEventListener('input', () => rememberFieldChange(field));
+                field.addEventListener('change', () => rememberFieldChange(field));
+            });
+
+            setUndoState(scope);
+        }
+
+        function bindUndoScopes(root = document) {
+            if (root.matches?.('.language-card, .item-card, .link-card, [data-edit-undo-scope]')) bindUndoScope(root);
+            root.querySelectorAll('.language-card, .item-card, .link-card, [data-edit-undo-scope]').forEach(bindUndoScope);
+        }
+
         function addFromTemplate(listId, templateId, selector) {
             const list = document.getElementById(listId);
             const index = list.querySelectorAll(selector).length;
             const wrapper = document.createElement('div');
             wrapper.innerHTML = document.getElementById(templateId).innerHTML.replaceAll('__INDEX__', index);
-            list.appendChild(wrapper.firstElementChild);
+            const item = wrapper.firstElementChild;
+            list.appendChild(item);
+            bindUndoScopes(item);
+            refreshItemList(list);
+            return item;
+        }
+
+        function linkRemovalHistoryFor(list) {
+            if (!removedLinkHistory.has(list)) removedLinkHistory.set(list, []);
+            return removedLinkHistory.get(list);
+        }
+
+        function setRestoreLinkState(list) {
+            const button = list.closest('[data-links-section]')?.querySelector('[data-restore-link]');
+            if (button) button.disabled = linkRemovalHistoryFor(list).length === 0;
+        }
+
+        function updateLinkIndexes(callCard) {
+            const callIndex = callCard.dataset.callIndex;
+            callCard.querySelectorAll('[data-link-card]').forEach((linkCard, index) => {
+                linkCard.dataset.linkIndex = index;
+                linkCard.querySelectorAll('input, textarea').forEach((field) => {
+                    field.name = field.name.replace(/calls\[[^\]]+\]\[links\]\[[^\]]+\]/u, `calls[${callIndex}][links][${index}]`);
+                });
+            });
+        }
+
+        function itemSelectorFor(list) {
+            if (list.id === 'highlights-list') return '[data-highlight-card]';
+            if (list.id === 'sections-list') return '[data-section-card]';
+            return '[data-call-card]';
+        }
+
+        function listNameFor(list) {
+            if (list.id === 'highlights-list') return 'highlights';
+            if (list.id === 'sections-list') return 'sections';
+            return 'calls';
+        }
+
+        function updateItemIndexes(list) {
+            const listName = listNameFor(list);
+            list.querySelectorAll(itemSelectorFor(list)).forEach((item, index) => {
+                if (list.id === 'calls-list') {
+                    item.dataset.callIndex = index;
+                    item.querySelector('input[name$="[id]"]')?.setAttribute('name', `calls[${index}][id]`);
+                    updateLinkIndexes(item);
+                }
+
+                item.querySelectorAll('input, textarea').forEach((field) => {
+                    field.name = field.name.replace(new RegExp(`${listName}\\[[^\\]]+\\]`, 'u'), `${listName}[${index}]`);
+                });
+            });
+        }
+
+        function updateItemTitles(list) {
+            const label = list.id === 'highlights-list'
+                ? 'Dato'
+                : (list.id === 'sections-list' ? 'Sección' : 'Convocatoria');
+
+            list.querySelectorAll(itemSelectorFor(list)).forEach((item, index) => {
+                const heading = item.querySelector(':scope > .item-header h3');
+                if (heading) heading.textContent = `${label} ${index + 1}`;
+            });
+        }
+
+        function restoreItemButtonFor(list) {
+            return document.querySelector(`[data-restore-item][data-restore-target="${list.id}"]`);
+        }
+
+        function itemRemovalHistoryFor(list) {
+            if (!removedItemHistory.has(list)) removedItemHistory.set(list, []);
+            return removedItemHistory.get(list);
+        }
+
+        function setRestoreItemState(list) {
+            const button = restoreItemButtonFor(list);
+            if (button) button.disabled = itemRemovalHistoryFor(list).length === 0;
+        }
+
+        function refreshItemList(list) {
+            updateItemIndexes(list);
+            updateItemTitles(list);
+            setRestoreItemState(list);
+        }
+
+        function cleanRemovedItemSnapshot(item) {
+            const clone = item.cloneNode(true);
+            clone.querySelectorAll('[data-undo-card]').forEach((button) => button.remove());
+            clone.querySelectorAll('.language-card, .item-card, .link-card').forEach((scope) => {
+                delete scope.dataset.undoBound;
+                delete scope.dataset.undoScope;
+            });
+            delete clone.dataset.undoBound;
+            delete clone.dataset.undoScope;
+            clone.querySelectorAll('[data-restore-link]').forEach((button) => {
+                button.disabled = true;
+            });
+            clone.querySelectorAll('[data-restore-link-bound]').forEach((section) => {
+                delete section.dataset.restoreLinkBound;
+            });
+            clone.querySelectorAll('[data-links-section]').forEach((section) => {
+                delete section.dataset.restoreLinkBound;
+            });
+            return clone.outerHTML;
+        }
+
+        function cleanRemovedLinkSnapshot(linkCard) {
+            const clone = linkCard.cloneNode(true);
+            clone.querySelectorAll('[data-undo-card]').forEach((button) => button.remove());
+            delete clone.dataset.undoBound;
+            delete clone.dataset.undoScope;
+            return clone.outerHTML;
+        }
+
+        function rememberRemovedItem(item) {
+            const list = item.closest('.item-list');
+            if (!list) return;
+
+            const items = [...list.querySelectorAll(itemSelectorFor(list))];
+            const history = itemRemovalHistoryFor(list);
+            history.push({
+                html: cleanRemovedItemSnapshot(item),
+                index: items.indexOf(item),
+            });
+
+            if (history.length > 20) history.shift();
+            setRestoreItemState(list);
+        }
+
+        function restoreRemovedItem(button) {
+            const list = document.getElementById(button.dataset.restoreTarget);
+            const snapshot = itemRemovalHistoryFor(list).pop();
+            if (!snapshot) return;
+
+            const wrapper = document.createElement('div');
+            wrapper.innerHTML = snapshot.html.trim();
+            const item = wrapper.firstElementChild;
+            const reference = list.querySelectorAll(itemSelectorFor(list))[snapshot.index] || null;
+
+            list.insertBefore(item, reference);
+            bindUndoScopes(item);
+            if (list.id === 'calls-list') bindRestoreLinkControls(item);
+            refreshItemList(list);
+            setRestoreItemState(list);
+        }
+
+        function bindRestoreItemControls() {
+            document.querySelectorAll('[data-restore-item]').forEach((button) => {
+                if (button.dataset.restoreItemBound === '1') return;
+                button.dataset.restoreItemBound = '1';
+                button.addEventListener('click', () => restoreRemovedItem(button));
+                setRestoreItemState(document.getElementById(button.dataset.restoreTarget));
+            });
+        }
+
+        function rememberRemovedLink(linkCard) {
+            const list = linkCard.closest('[data-links-list]');
+            const cards = [...list.querySelectorAll('[data-link-card]')];
+            const history = linkRemovalHistoryFor(list);
+            history.push({
+                html: cleanRemovedLinkSnapshot(linkCard),
+                index: cards.indexOf(linkCard),
+            });
+
+            if (history.length > 20) history.shift();
+            setRestoreLinkState(list);
+        }
+
+        function restoreRemovedLink(button) {
+            const section = button.closest('[data-links-section]');
+            const list = section.querySelector('[data-links-list]');
+            const snapshot = linkRemovalHistoryFor(list).pop();
+            if (!snapshot) return;
+
+            const wrapper = document.createElement('div');
+            wrapper.innerHTML = snapshot.html.trim();
+            const linkCard = wrapper.firstElementChild;
+            const reference = list.querySelectorAll('[data-link-card]')[snapshot.index] || null;
+            list.insertBefore(linkCard, reference);
+            bindUndoScopes(linkCard);
+            updateLinkIndexes(button.closest('[data-call-card]'));
+            setRestoreLinkState(list);
+        }
+
+        function bindRestoreLinkControls(root = document) {
+            root.querySelectorAll('[data-links-section]').forEach((section) => {
+                if (section.dataset.restoreLinkBound === '1') return;
+
+                section.dataset.restoreLinkBound = '1';
+                const button = section.querySelector('[data-restore-link]');
+                const list = section.querySelector('[data-links-list]');
+                button?.addEventListener('click', () => restoreRemovedLink(button));
+                if (list) setRestoreLinkState(list);
+            });
         }
 
         function addLink(card) {
@@ -263,7 +605,10 @@
             const linkIndex = list.querySelectorAll('[data-link-card]').length;
             const wrapper = document.createElement('div');
             wrapper.innerHTML = document.getElementById('link-template').innerHTML.replaceAll('__CALL__', callIndex).replaceAll('__LINK__', linkIndex);
-            list.appendChild(wrapper.firstElementChild);
+            const linkCard = wrapper.firstElementChild;
+            list.appendChild(linkCard);
+            bindUndoScopes(linkCard);
+            updateLinkIndexes(card);
         }
 
         function selectedLines(textarea) {
@@ -297,13 +642,29 @@
             const index = list.querySelectorAll('[data-call-card]').length;
             const wrapper = document.createElement('div');
             wrapper.innerHTML = document.getElementById('call-template').innerHTML.replaceAll('__CALL__', index);
-            list.appendChild(wrapper.firstElementChild);
+            const card = wrapper.firstElementChild;
+            list.appendChild(card);
+            bindUndoScopes(card);
+            bindRestoreLinkControls(card);
+            refreshItemList(list);
         });
 
         document.addEventListener('click', (event) => {
-            if (event.target.matches('[data-remove-item]')) event.target.closest('.item-card').remove();
+            if (event.target.matches('[data-remove-item]')) {
+                const item = event.target.closest('.item-card');
+                const list = item.closest('.item-list');
+                rememberRemovedItem(item);
+                item.remove();
+                refreshItemList(list);
+            }
             if (event.target.matches('[data-add-link]')) addLink(event.target.closest('[data-call-card]'));
-            if (event.target.matches('[data-remove-link]')) event.target.closest('[data-link-card]').remove();
+            if (event.target.matches('[data-remove-link]')) {
+                const linkCard = event.target.closest('[data-link-card]');
+                const callCard = event.target.closest('[data-call-card]');
+                rememberRemovedLink(linkCard);
+                linkCard.remove();
+                updateLinkIndexes(callCard);
+            }
             if (event.target.matches('[data-editor-action]')) applyEditorAction(event.target);
             if (event.target.matches('[data-prefix-line]')) {
                 const textarea = event.target.closest('label').querySelector('textarea');
@@ -317,6 +678,11 @@
                 textarea.focus();
             }
         });
+
+        document.querySelectorAll('.item-list').forEach(refreshItemList);
+        bindUndoScopes();
+        bindRestoreItemControls();
+        bindRestoreLinkControls();
     </script>
 </body>
 </html>

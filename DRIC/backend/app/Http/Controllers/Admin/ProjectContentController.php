@@ -21,7 +21,7 @@ use Illuminate\View\View;
 
 class ProjectContentController extends Controller
 {
-    private const MAX_IMAGE_KB = 5120;
+    private const MAX_IMAGE_KB = 10240;
     private const MAX_PDF_KB = 20480;
     private const CLEAN_LABEL_REGEX = '/\A[\p{L}\s.,]+\z/u';
 
@@ -111,6 +111,8 @@ class ProjectContentController extends Controller
                     $card->update([
                         'media_asset_id' => $this->storeMedia($request, "card_{$index}_image", "projects/card-{$index}", 'image')->id,
                     ]);
+                } elseif ($request->boolean("card_{$index}_image_remove")) {
+                    $card->update(['media_asset_id' => null]);
                 }
             }
 
@@ -149,6 +151,8 @@ class ProjectContentController extends Controller
             'card_2_href' => ['required', 'string', 'max:500'],
             'card_1_image' => ['nullable', 'file', 'mimes:jpg,jpeg,png', 'max:'.self::MAX_IMAGE_KB],
             'card_2_image' => ['nullable', 'file', 'mimes:jpg,jpeg,png', 'max:'.self::MAX_IMAGE_KB],
+            'card_1_image_remove' => ['nullable', 'boolean'],
+            'card_2_image_remove' => ['nullable', 'boolean'],
             'procedure_pdf' => ['nullable', 'file', 'mimes:pdf', 'max:'.self::MAX_PDF_KB],
         ]);
     }
@@ -166,8 +170,8 @@ class ProjectContentController extends Controller
             'card_1_image.mimes' => 'Ese formato no está permitido. Solo se aceptan imágenes JPG o PNG.',
             'card_2_image.mimes' => 'Ese formato no está permitido. Solo se aceptan imágenes JPG o PNG.',
             'procedure_pdf.mimes' => 'Ese formato no está permitido. Solo se aceptan archivos PDF.',
-            'card_1_image.max' => 'La imagen de la primera tarjeta es demasiado pesada. El tamaño máximo permitido es 5 MB.',
-            'card_2_image.max' => 'La imagen de la segunda tarjeta es demasiado pesada. El tamaño máximo permitido es 5 MB.',
+            'card_1_image.max' => 'La imagen de la primera tarjeta es demasiado pesada. El tamaño máximo permitido es 10 MB.',
+            'card_2_image.max' => 'La imagen de la segunda tarjeta es demasiado pesada. El tamaño máximo permitido es 10 MB.',
             'procedure_pdf.max' => 'El PDF es demasiado pesado. El tamaño máximo permitido es 20 MB.',
         ];
     }

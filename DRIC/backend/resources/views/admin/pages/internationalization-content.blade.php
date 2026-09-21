@@ -20,6 +20,9 @@
         .btn { border: 0; border-radius: 10px; cursor: pointer; display: inline-flex; font-weight: 800; justify-content: center; padding: 12px 16px; text-decoration: none; }
         .btn-primary { background: var(--blue); color: #fff; }
         .btn-secondary { background: #e8edf5; color: var(--ink); }
+        .btn-undo { align-items: center; background: #eef3fb; color: var(--blue); font-size: 20px; font-weight: 900; line-height: 1; min-width: 40px; padding: 9px 12px; text-shadow: 0 0 0 currentColor, .35px 0 0 currentColor, 0 .35px 0 currentColor; }
+        .btn-undo:disabled { cursor: not-allowed; opacity: .42; }
+        .undo-floating { position: absolute; right: 12px; top: 12px; z-index: 4; }
         .alert { border-radius: 14px; margin-bottom: 18px; padding: 14px 16px; }
         .alert-success { background: #e8f8ee; border: 1px solid #bde8c9; color: #176534; }
         .alert-error { background: #fff1f2; border: 1px solid #b91c1c; color: var(--red-dark); font-weight: 800; }
@@ -28,7 +31,7 @@
         .panel-header { border-bottom: 1px solid var(--line); margin-bottom: 20px; padding-bottom: 16px; }
         .language-grid, .three-grid { display: grid; gap: 18px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
         .three-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-        .language-card, .item-card { box-shadow: none; padding: 18px; }
+        .language-card, .item-card { box-shadow: none; padding: 18px; position: relative; }
         label { display: grid; gap: 7px; font-size: 13px; font-weight: 800; }
         input, textarea { border: 1px solid #cfd6e3; border-radius: 12px; color: var(--ink); font: inherit; font-weight: 500; padding: 12px 13px; width: 100%; }
         textarea { line-height: 1.55; min-height: 112px; resize: vertical; }
@@ -185,5 +188,109 @@
             </div>
         </form>
     </main>
+
+    <script>
+        const cardHistory = new WeakMap();
+        const fieldStartSnapshots = new WeakMap();
+
+        function editableFields(scope) {
+            return Array.from(scope.querySelectorAll('input, textarea'));
+        }
+
+        function snapshotScope(scope) {
+            return editableFields(scope).map((field) => ({
+                name: field.name,
+                type: field.type,
+                value: field.value,
+                checked: field.checked,
+            }));
+        }
+
+        function restoreSnapshot(scope, snapshot) {
+            snapshot.forEach((item) => {
+                const field = editableFields(scope).find((candidate) => candidate.name === item.name);
+                if (!field) return;
+
+                if (field.type === 'checkbox') {
+                    field.checked = item.checked;
+                    return;
+                }
+
+                field.value = item.value;
+                field.dispatchEvent(new Event('input', { bubbles: true }));
+            });
+        }
+
+        function historyFor(scope) {
+            if (!cardHistory.has(scope)) cardHistory.set(scope, []);
+            return cardHistory.get(scope);
+        }
+
+        function setUndoState(scope) {
+            const button = scope.querySelector(':scope > [data-undo-card]');
+            if (button) button.disabled = historyFor(scope).length === 0;
+        }
+
+        function pushSnapshot(scope, snapshot = snapshotScope(scope)) {
+            const history = historyFor(scope);
+            const serialized = JSON.stringify(snapshot);
+            const last = history.length ? JSON.stringify(history[history.length - 1]) : null;
+
+            if (serialized !== last) history.push(snapshot);
+            if (history.length > 20) history.shift();
+            setUndoState(scope);
+        }
+
+        function undoScope(scope) {
+            const snapshot = historyFor(scope).pop();
+            if (!snapshot) return;
+
+            restoreSnapshot(scope, snapshot);
+            editableFields(scope).forEach((field) => fieldStartSnapshots.delete(field));
+            setUndoState(scope);
+        }
+
+        function markFieldStart(field) {
+            const scope = field.closest('[data-undo-scope]');
+            if (!scope || fieldStartSnapshots.has(field)) return;
+            fieldStartSnapshots.set(field, snapshotScope(scope));
+        }
+
+        function rememberFieldChange(field) {
+            const scope = field.closest('[data-undo-scope]');
+            const snapshot = fieldStartSnapshots.get(field);
+            if (!scope || !snapshot) return;
+
+            pushSnapshot(scope, snapshot);
+            fieldStartSnapshots.delete(field);
+        }
+
+        function bindUndoScope(scope) {
+            if (scope.dataset.undoBound === '1') return;
+            scope.dataset.undoScope = '';
+            scope.dataset.undoBound = '1';
+
+            const button = document.createElement('button');
+            button.className = 'btn btn-undo undo-floating';
+            button.type = 'button';
+            button.dataset.undoCard = '';
+            button.disabled = true;
+            button.title = 'Deshacer último cambio';
+            button.setAttribute('aria-label', 'Deshacer último cambio');
+            button.textContent = '↶';
+            scope.appendChild(button);
+            button.addEventListener('click', () => undoScope(scope));
+
+            editableFields(scope).forEach((field) => {
+                field.addEventListener('focusin', () => markFieldStart(field));
+                field.addEventListener('input', () => rememberFieldChange(field));
+                field.addEventListener('change', () => rememberFieldChange(field));
+            });
+
+            setUndoState(scope);
+        }
+
+        document.querySelectorAll('.language-card, .item-card').forEach(bindUndoScope);
+    </script>
 </body>
 </html>
