@@ -60,7 +60,8 @@
         .hero-main,
         .user-panel,
         .card,
-        .permission-note {
+        .permission-note,
+        .logo-settings {
             border: 1px solid rgba(22, 65, 148, 0.10);
             border-radius: 26px;
             background: rgba(255, 255, 255, 0.90);
@@ -322,6 +323,312 @@
             padding: 18px;
         }
 
+        .logo-settings,
+        .footer-settings {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 320px;
+            gap: 22px;
+            align-items: start;
+            margin-top: 16px;
+            padding: 24px;
+        }
+
+        .footer-settings {
+            grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr);
+        }
+
+        .logo-settings h3,
+        .footer-settings h3 {
+            margin: 0;
+            color: var(--ink);
+            font-size: 22px;
+            letter-spacing: -0.02em;
+        }
+
+        .logo-settings p,
+        .footer-settings p {
+            margin: 8px 0 0;
+            color: var(--muted);
+            line-height: 1.55;
+        }
+
+        .logo-form {
+            display: grid;
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        .logo-form label {
+            color: var(--blue-dark);
+            font-size: 13px;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+
+        .logo-form input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            background: #fff;
+            color: var(--ink);
+        }
+
+        .image-card {
+            background: var(--soft);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            padding: 16px;
+            position: relative;
+        }
+
+        .preview {
+            align-items: center;
+            background: #111827;
+            border: 1px solid #d6deeb;
+            border-radius: 18px;
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .08);
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 14px;
+            min-height: 170px;
+            overflow: hidden;
+            position: relative;
+            width: 100%;
+        }
+
+        .preview-logo {
+            aspect-ratio: 3 / 2;
+            max-height: 260px;
+        }
+
+        .preview img {
+            height: 100%;
+            object-fit: contain;
+            padding: 28px;
+            width: 100%;
+        }
+
+        .preview-ruler {
+            align-items: center;
+            background: rgba(2, 6, 23, .76);
+            border: 1px solid rgba(255, 255, 255, .16);
+            border-radius: 999px;
+            color: #fff;
+            display: inline-flex;
+            font-size: 11px;
+            font-weight: 900;
+            gap: 6px;
+            left: 12px;
+            line-height: 1;
+            padding: 7px 10px;
+            position: absolute;
+            top: 12px;
+        }
+
+        .preview-ruler::before {
+            content: "";
+            background: repeating-linear-gradient(90deg, #fff 0 1px, transparent 1px 7px);
+            display: block;
+            height: 10px;
+            opacity: .82;
+            width: 38px;
+        }
+
+        .btn-image-remove {
+            align-items: center;
+            background: rgba(127, 0, 16, .92);
+            border: 2px solid rgba(255, 255, 255, .88);
+            border-radius: 999px;
+            color: #fff;
+            display: inline-flex;
+            font-size: 22px;
+            font-weight: 900;
+            height: 34px;
+            justify-content: center;
+            line-height: 1;
+            min-height: 34px;
+            padding: 0;
+            position: absolute;
+            right: 12px;
+            top: 12px;
+            width: 34px;
+            z-index: 2;
+        }
+
+        .preview-empty {
+            color: rgba(255, 255, 255, .72);
+            padding: 18px;
+            text-align: center;
+        }
+
+        .hint {
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 500;
+            line-height: 1.45;
+        }
+
+        .field-error,
+        .live-error {
+            color: #7f0010;
+            font-size: 12px;
+            font-weight: 800;
+            line-height: 1.45;
+        }
+
+        .live-error:empty {
+            display: none;
+        }
+
+        .is-invalid {
+            border-color: #7f0010 !important;
+            box-shadow: 0 0 0 3px rgba(127, 0, 16, 0.10);
+        }
+
+        .settings-form {
+            display: grid;
+            gap: 18px;
+        }
+
+        .settings-group {
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            background: var(--soft);
+            padding: 18px;
+        }
+
+        .settings-group-title {
+            margin: 0 0 14px;
+            color: var(--blue-dark);
+            font-size: 13px;
+            font-weight: 900;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+        }
+
+        .settings-grid {
+            display: grid;
+            gap: 14px;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .settings-grid .span-2 {
+            grid-column: 1 / -1;
+        }
+
+        .settings-form label {
+            display: grid;
+            gap: 7px;
+            color: var(--blue-dark);
+            font-size: 13px;
+            font-weight: 900;
+        }
+
+        .settings-form input[type="text"],
+        .settings-form input[type="url"] {
+            width: 100%;
+            border: 1px solid #cfd6e3;
+            border-radius: 12px;
+            color: var(--ink);
+            font: inherit;
+            font-weight: 500;
+            padding: 12px 13px;
+        }
+
+        .footer-preview {
+            border: 1px solid rgba(22, 65, 148, .14);
+            border-radius: 18px;
+            background: #001935;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        .footer-preview-top {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 18px;
+            border-bottom: 1px solid rgba(255, 255, 255, .22);
+        }
+
+        .footer-preview-socials {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .footer-preview-socials span {
+            border: 1px solid rgba(255, 255, 255, .18);
+            border-radius: 999px;
+            color: rgba(255, 255, 255, .76);
+            font-size: 11px;
+            font-weight: 900;
+            padding: 7px 9px;
+        }
+
+        .footer-preview-body {
+            display: grid;
+            gap: 16px;
+            grid-template-columns: 82px 1fr;
+            padding: 18px;
+        }
+
+        .footer-preview-logo {
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, .12);
+            border-radius: 14px;
+            display: flex;
+            justify-content: center;
+            min-height: 82px;
+        }
+
+        .footer-preview-logo img {
+            max-width: 58px;
+            opacity: .5;
+        }
+
+        .footer-preview h4 {
+            margin: 0;
+            font-size: 13px;
+            font-weight: 800;
+            line-height: 1.45;
+            text-transform: uppercase;
+        }
+
+        .footer-preview address {
+            margin-top: 8px;
+            color: rgba(255, 255, 255, .72);
+            font-style: normal;
+            line-height: 1.6;
+        }
+
+        .notice,
+        .error-list {
+            margin: 0 0 16px;
+            padding: 14px 16px;
+            border-radius: 16px;
+            font-weight: 800;
+        }
+
+        .notice {
+            border: 1px solid #bbf7d0;
+            background: #f0fdf4;
+            color: #166534;
+        }
+
+        .error-list {
+            border: 1px solid #fecdd3;
+            background: #fff1f2;
+            color: #9f1239;
+        }
+
+        .error-list ul {
+            margin: 8px 0 0;
+            padding-left: 20px;
+        }
+
         svg {
             width: 22px;
             height: 22px;
@@ -338,7 +645,11 @@
             }
 
             .hero,
-            .grid {
+            .grid,
+            .logo-settings,
+            .footer-settings,
+            .settings-grid,
+            .footer-preview-body {
                 grid-template-columns: 1fr;
             }
 
@@ -368,6 +679,21 @@
 </head>
 <body>
     <main class="shell">
+        @if (session('success'))
+            <div class="notice">{{ session('success') }}</div>
+        @endif
+
+        @if ($errors->any())
+            <div class="error-list">
+                No se pudo guardar el cambio.
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <section class="hero">
             <div class="hero-main">
                 <p class="eyebrow">Panel DRIC</p>
@@ -471,6 +797,140 @@
             @endif
         </section>
 
+        @if ($isAdmin)
+            <div class="section-title">
+                <div>
+                    <h2>Configuracion del sitio</h2>
+                    <p>Herramientas disponibles solo para administradores.</p>
+                </div>
+            </div>
+
+            <section class="logo-settings" aria-labelledby="topbar-logo-title">
+                <div>
+                    <h3 id="topbar-logo-title">Logo del topbar</h3>
+                    <p>Actualiza solo la imagen del logo que aparece en la barra superior del sitio publico. El diseno, color y posicion del topbar no cambian.</p>
+
+                    <form class="logo-form" method="POST" action="{{ route('admin.settings.topbar-logo.update') }}" enctype="multipart/form-data">
+                        @csrf
+                        @method('PUT')
+
+                        <input type="hidden" name="topbar_logo_remove" value="0" data-remove-image-input>
+                        <label for="topbar_logo">
+                            Nuevo logo
+                            <input id="topbar_logo" name="topbar_logo" type="file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" data-image-file>
+                            <span class="hint">JPG, PNG o WebP. Maximo 2 MB. Tambien puedes hacer clic en la vista previa para elegir una imagen.</span>
+                            @error('topbar_logo')<span class="field-error">{{ $message }}</span>@enderror
+                        </label>
+                        <button type="submit">Guardar logo</button>
+                    </form>
+                </div>
+
+                <div class="image-card" data-image-card>
+                    <div class="preview preview-logo" data-image-preview aria-label="Logo actual del topbar">
+                        <img src="{{ $topbarLogoUrl }}" alt="{{ $hasCustomTopbarLogo ? 'Logo personalizado actual del topbar' : 'Logo predeterminado actual del topbar' }}" data-preview-image>
+                        <span class="preview-ruler">Logo topbar</span>
+                        <button class="btn-image-remove" type="button" data-remove-image aria-label="Quitar logo actual">×</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="footer-settings" aria-labelledby="footer-settings-title">
+                <div>
+                    <h3 id="footer-settings-title">Footer</h3>
+                    <p>Edita solo el texto institucional, la URL del logo UMSS y los enlaces oficiales de redes sociales.</p>
+
+                    <div class="footer-preview" aria-label="Vista previa del footer">
+                        <div class="footer-preview-top">
+                            <span>Todos los derechos reservados © 2026</span>
+                            <div class="footer-preview-socials">
+                                <span>LinkedIn</span>
+                                <span>Facebook</span>
+                                <span>X</span>
+                                <span>Instagram</span>
+                                <span>YouTube</span>
+                            </div>
+                        </div>
+                        <div class="footer-preview-body">
+                            <div class="footer-preview-logo">
+                                <img src="{{ $frontendUrl ?? 'http://127.0.0.1:3000' }}/images/brand/umss-triangle.png" alt="UMSS">
+                            </div>
+                            <div>
+                                <h4>{{ $footerSettings['footer_title'] }}</h4>
+                                <address>
+                                    <div>{{ $footerSettings['footer_address_line_1'] }}</div>
+                                    <div>{{ $footerSettings['footer_address_line_2'] }}</div>
+                                </address>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <form class="settings-form" method="POST" action="{{ route('admin.settings.footer.update') }}">
+                    @csrf
+                    @method('PUT')
+
+                    <div class="settings-group">
+                        <p class="settings-group-title">Texto institucional</p>
+                        <div class="settings-grid">
+                            <label class="span-2">
+                                Nombre institucional
+                                <input type="text" name="footer_title" value="{{ old('footer_title', $footerSettings['footer_title']) }}" maxlength="180" required>
+                                @error('footer_title')<span class="field-error">{{ $message }}</span>@enderror
+                            </label>
+                            <label class="span-2">
+                                Direccion
+                                <input type="text" name="footer_address_line_1" value="{{ old('footer_address_line_1', $footerSettings['footer_address_line_1']) }}" maxlength="180" required>
+                                @error('footer_address_line_1')<span class="field-error">{{ $message }}</span>@enderror
+                            </label>
+                            <label class="span-2">
+                                Edificio
+                                <input type="text" name="footer_address_line_2" value="{{ old('footer_address_line_2', $footerSettings['footer_address_line_2']) }}" maxlength="180" required>
+                                @error('footer_address_line_2')<span class="field-error">{{ $message }}</span>@enderror
+                            </label>
+                            <label class="span-2">
+                                URL del logo UMSS
+                                <input type="url" name="footer_umss_url" value="{{ old('footer_umss_url', $footerSettings['footer_umss_url']) }}" maxlength="500" required>
+                                @error('footer_umss_url')<span class="field-error">{{ $message }}</span>@enderror
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="settings-group">
+                        <p class="settings-group-title">Redes sociales</p>
+                        <div class="settings-grid">
+                            <label>
+                                LinkedIn
+                                <input type="url" name="footer_social_linkedin_url" value="{{ old('footer_social_linkedin_url', $footerSettings['footer_social_linkedin_url']) }}" maxlength="500" required>
+                                @error('footer_social_linkedin_url')<span class="field-error">{{ $message }}</span>@enderror
+                            </label>
+                            <label>
+                                Facebook
+                                <input type="url" name="footer_social_facebook_url" value="{{ old('footer_social_facebook_url', $footerSettings['footer_social_facebook_url']) }}" maxlength="500" required>
+                                @error('footer_social_facebook_url')<span class="field-error">{{ $message }}</span>@enderror
+                            </label>
+                            <label>
+                                X
+                                <input type="url" name="footer_social_x_url" value="{{ old('footer_social_x_url', $footerSettings['footer_social_x_url']) }}" maxlength="500" required>
+                                @error('footer_social_x_url')<span class="field-error">{{ $message }}</span>@enderror
+                            </label>
+                            <label>
+                                Instagram
+                                <input type="url" name="footer_social_instagram_url" value="{{ old('footer_social_instagram_url', $footerSettings['footer_social_instagram_url']) }}" maxlength="500" required>
+                                @error('footer_social_instagram_url')<span class="field-error">{{ $message }}</span>@enderror
+                            </label>
+                            <label class="span-2">
+                                YouTube
+                                <input type="url" name="footer_social_youtube_url" value="{{ old('footer_social_youtube_url', $footerSettings['footer_social_youtube_url']) }}" maxlength="500" required>
+                                @error('footer_social_youtube_url')<span class="field-error">{{ $message }}</span>@enderror
+                            </label>
+                        </div>
+                    </div>
+
+                    <button type="submit">Guardar footer</button>
+                </form>
+            </section>
+        @endif
+
         <section class="permission-note">
             <span class="icon lock" aria-hidden="true">
                 <svg viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
@@ -481,5 +941,153 @@
             </div>
         </section>
     </main>
+    <script>
+        const maxLogoBytes = 2 * 1024 * 1024;
+        const allowedLogoTypes = ["image/jpeg", "image/png", "image/webp"];
+
+        function imageErrorFor(input) {
+            let error = input.parentElement.querySelector(".client-file-error");
+
+            if (!error) {
+                error = document.createElement("span");
+                error.className = "field-error client-file-error";
+                input.parentElement.appendChild(error);
+            }
+
+            return error;
+        }
+
+        function validateImageInput(input) {
+            const file = input.files?.[0];
+            const error = imageErrorFor(input);
+
+            input.classList.remove("is-invalid");
+            error.textContent = "";
+
+            if (!file) {
+                return false;
+            }
+
+            if (!allowedLogoTypes.includes(file.type)) {
+                input.classList.add("is-invalid");
+                error.textContent = "Ese formato no esta permitido. Solo se aceptan imagenes JPG, PNG o WebP.";
+                return false;
+            }
+
+            if (file.size > maxLogoBytes) {
+                input.classList.add("is-invalid");
+                error.textContent = "La imagen es demasiado pesada. El tamano maximo permitido es 2 MB.";
+                return false;
+            }
+
+            return true;
+        }
+
+        function previewEmpty(preview) {
+            let empty = preview.querySelector("[data-preview-empty]");
+
+            if (!empty) {
+                empty = document.createElement("span");
+                empty.className = "preview-empty";
+                empty.dataset.previewEmpty = "";
+                empty.textContent = "Sin logo seleccionado. Puedes subir uno nuevo antes de guardar.";
+                preview.appendChild(empty);
+            }
+
+            empty.hidden = false;
+        }
+
+        function previewImageElement(preview) {
+            let image = preview.querySelector("[data-preview-image]");
+
+            if (!image) {
+                image = document.createElement("img");
+                image.alt = "Vista previa del logo seleccionado";
+                image.dataset.previewImage = "";
+                preview.prepend(image);
+            }
+
+            image.hidden = false;
+            return image;
+        }
+
+        function clearImagePreview(card) {
+            const preview = card.querySelector("[data-image-preview]");
+            const image = preview.querySelector("[data-preview-image]");
+            const fileInput = document.querySelector("[data-image-file]");
+            const removeInput = document.querySelector("[data-remove-image-input]");
+
+            if (fileInput) {
+                fileInput.value = "";
+                imageErrorFor(fileInput).textContent = "";
+                fileInput.classList.remove("is-invalid");
+            }
+
+            if (image) {
+                if (image.dataset.objectUrl) {
+                    URL.revokeObjectURL(image.dataset.objectUrl);
+                    delete image.dataset.objectUrl;
+                }
+
+                image.removeAttribute("src");
+                image.hidden = true;
+            }
+
+            previewEmpty(preview);
+
+            if (removeInput) {
+                removeInput.value = "1";
+            }
+        }
+
+        function showSelectedImage(card, file) {
+            const preview = card.querySelector("[data-image-preview]");
+            const image = previewImageElement(preview);
+            const empty = preview.querySelector("[data-preview-empty]");
+            const removeInput = document.querySelector("[data-remove-image-input]");
+
+            if (image.dataset.objectUrl) {
+                URL.revokeObjectURL(image.dataset.objectUrl);
+            }
+
+            image.dataset.objectUrl = URL.createObjectURL(file);
+            image.src = image.dataset.objectUrl;
+
+            if (empty) {
+                empty.hidden = true;
+            }
+
+            if (removeInput) {
+                removeInput.value = "0";
+            }
+        }
+
+        document.querySelectorAll("[data-image-card]").forEach((card) => {
+            const fileInput = document.querySelector("[data-image-file]");
+            const preview = card.querySelector("[data-image-preview]");
+            const removeButton = card.querySelector("[data-remove-image]");
+
+            preview?.addEventListener("click", (event) => {
+                if (event.target.closest("[data-remove-image]")) {
+                    return;
+                }
+
+                fileInput?.click();
+            });
+
+            removeButton?.addEventListener("click", (event) => {
+                event.stopPropagation();
+                clearImagePreview(card);
+            });
+
+            fileInput?.addEventListener("change", () => {
+                if (!validateImageInput(fileInput)) {
+                    return;
+                }
+
+                showSelectedImage(card, fileInput.files[0]);
+            });
+        });
+    </script>
 </body>
 </html>

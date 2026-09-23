@@ -1,32 +1,68 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { fetchSiteSettings, type FooterSettings } from "@/lib/api/siteSettings";
+
+const defaultFooterSettings: FooterSettings = {
+  title: "Dirección de Relaciones Internacionales y Convenios",
+  address_line_1: "Av. Ballivián N. 591 esq. Reza, Cochabamba, Bolivia",
+  address_line_2: "Edif. Mariscal Andrés de Santa Cruz",
+  umss_url: "https://www.umss.edu.bo/",
+  social_links: {
+    linkedin: "https://bo.linkedin.com/school/umssboloficial/?trk=public_post_feed-actor-image",
+    facebook: "https://www.facebook.com/UMSS.DRIC",
+    x: "https://x.com/UmssBolOficial",
+    instagram: "https://www.instagram.com/umss.dric/",
+    youtube: "https://www.youtube.com/c/UniversidadMayordeSanSimonOficial",
+  },
+};
+
 export default function Footer() {
+  const [footerSettings, setFooterSettings] = useState(defaultFooterSettings);
+
+  useEffect(() => {
+    let mounted = true;
+
+    fetchSiteSettings().then((settings) => {
+      if (!mounted) {
+        return;
+      }
+
+      setFooterSettings(settings.footer);
+    });
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
   const socialLinks = [
     {
       name: "LinkedIn",
-      href: "https://bo.linkedin.com/school/umssboloficial/?trk=public_post_feed-actor-image",
+      href: footerSettings.social_links.linkedin,
       icon: "/images/social/linkedin.png",
     },
     {
       name: "Facebook",
-      href: "https://www.facebook.com/UMSS.DRIC",
+      href: footerSettings.social_links.facebook,
       icon: "/images/social/facebook.png",
     },
     {
       name: "X",
-      href: "https://x.com/UmssBolOficial",
+      href: footerSettings.social_links.x,
       icon: "/images/social/x.png",
     },
     {
       name: "Instagram",
-      href: "https://www.instagram.com/umss.dric/",
+      href: footerSettings.social_links.instagram,
       icon: "/images/social/instagram.png",
     },
     {
       name: "YouTube",
-      href: "https://www.youtube.com/c/UniversidadMayordeSanSimonOficial",
+      href: footerSettings.social_links.youtube,
       icon: "/images/social/youtube.png",
     },
   ];
-  const umssUrl = "https://www.umss.edu.bo/";
 
   return (
     <footer
@@ -63,7 +99,7 @@ export default function Footer() {
 
         <div className="grid items-start gap-10 sm:gap-8 md:grid-cols-[150px_1fr] lg:grid-cols-[170px_1fr]">
           <div className="flex justify-center md:-ml-4 md:justify-start lg:-ml-6">
-            <a href={umssUrl} target="_blank" rel="noopener noreferrer" aria-label="Universidad Mayor de San Simón">
+            <a href={footerSettings.umss_url} target="_blank" rel="noopener noreferrer" aria-label="Universidad Mayor de San Simón">
               <img
                 src="/images/brand/umss-triangle.png"
                 alt="UMSS"
@@ -74,11 +110,11 @@ export default function Footer() {
 
           <div className="text-center md:text-left">
             <h2 className="text-base font-normal uppercase leading-relaxed tracking-[0.01em] text-white sm:text-lg">
-              Dirección de Relaciones Internacionales y Convenios
+              {footerSettings.title}
             </h2>
             <address className="dric-site-footer-address mt-2 not-italic text-sm leading-7 text-white sm:text-base">
-              <p>Av. Ballivián N. 591 esq. Reza, Cochabamba, Bolivia</p>
-              <p>Edif. Mariscal Andrés de Santa Cruz</p>
+              <p>{footerSettings.address_line_1}</p>
+              <p>{footerSettings.address_line_2}</p>
             </address>
           </div>
         </div>
