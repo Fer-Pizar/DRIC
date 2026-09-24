@@ -176,7 +176,7 @@
             <svg viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
         </div>
         <h1>Recuperar contraseña</h1>
-        <p>Escribe tu Gmail del panel y te enviaremos una nueva contraseña temporal.</p>
+        <p>Escribe tu correo registrado y te enviaremos una nueva contraseña temporal.</p>
         <div class="note">Usa la contraseña temporal para entrar. Después podrás cambiarla desde tu perfil.</div>
 
         @if (session('success'))
