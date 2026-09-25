@@ -83,6 +83,75 @@
             line-height: 1.6;
         }
 
+        .page-copy {
+            margin-bottom: 24px;
+        }
+
+        .security-panel {
+            display: grid;
+            gap: 14px;
+            margin: 0 0 24px;
+            padding: 18px;
+            border: 1px solid rgba(22, 65, 148, 0.18);
+            border-radius: 18px;
+            background:
+                linear-gradient(135deg, rgba(239, 246, 255, 0.96), rgba(255, 255, 255, 0.92)),
+                #eff6ff;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72);
+        }
+
+        .security-panel__top {
+            display: flex;
+            gap: 14px;
+            align-items: center;
+        }
+
+        .security-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 16px;
+            display: grid;
+            place-items: center;
+            flex: 0 0 auto;
+            background: #164194;
+            color: #fff;
+            box-shadow: 0 14px 26px rgba(22, 65, 148, 0.18);
+        }
+
+        .security-icon svg {
+            width: 25px;
+            height: 25px;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            fill: none;
+        }
+
+        .security-panel h2 {
+            margin: 0 0 4px;
+            color: #0f172a;
+            font-size: 18px;
+            line-height: 1.2;
+        }
+
+        .security-panel p {
+            margin: 0;
+            color: #4b5563;
+            font-size: 14px;
+            line-height: 1.55;
+        }
+
+        .security-panel__note {
+            padding: 12px 14px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.72);
+            color: #1d4ed8;
+            font-size: 14px;
+            font-weight: 700;
+            line-height: 1.45;
+        }
+
         label {
             display: block;
             margin-bottom: 8px;
@@ -216,12 +285,6 @@
             color: #047857;
         }
 
-        .alert-security {
-            background: #eff6ff;
-            border-color: #bfdbfe;
-            color: #1d4ed8;
-        }
-
         .alert svg {
             width: 20px;
             height: 20px;
@@ -274,10 +337,18 @@
                 align-items: flex-start;
                 flex-direction: column;
             }
+
+            .security-panel__top {
+                align-items: flex-start;
+            }
         }
     </style>
 </head>
 <body>
+    @php
+        $securityNotice = session('security_notice');
+    @endphp
+
     <main class="card">
         <div class="brand">
             <div class="logo-slot" aria-label="Espacio para el logo DRIC">
@@ -285,24 +356,32 @@
             </div>
             <div>
                 <p class="eyebrow">Panel DRIC</p>
-                <h1>Centro administrativo</h1>
+                <h1>{{ $securityNotice ? 'Sesión protegida' : 'Centro administrativo' }}</h1>
             </div>
         </div>
 
-        <p>Ingresa con tu correo institucional y contraseña para gestionar el contenido autorizado.</p>
-
-        @if (session('security_notice'))
-            <div class="alert alert-security" role="status">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                    <path d="M12 8v4"/>
-                    <path d="M12 16h.01"/>
-                </svg>
-                <span>{{ session('security_notice') }}</span>
-            </div>
+        @if ($securityNotice)
+            <section class="security-panel" role="status" aria-live="polite">
+                <div class="security-panel__top">
+                    <div class="security-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                            <path d="M12 8v4"/>
+                            <path d="M12 16h.01"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2>Tu sesión se cerró automáticamente</h2>
+                        <p>Para proteger el panel administrativo, cerramos el acceso después de un periodo sin actividad.</p>
+                    </div>
+                </div>
+                <div class="security-panel__note">{{ $securityNotice }}</div>
+            </section>
+        @else
+            <p class="page-copy">Ingresa con tu correo institucional y contraseña para gestionar el contenido autorizado.</p>
         @endif
 
-        @if (session('success'))
+        @if (! $securityNotice && session('success'))
             <div class="alert alert-success" role="status">
                 <svg viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M20 6 9 17l-5-5"/>
