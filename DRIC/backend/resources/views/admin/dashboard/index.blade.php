@@ -725,12 +725,17 @@
                 </div>
 
                 <div class="panel-actions">
-                    @unless ($isAdmin)
+                    @if ($isAdmin)
+                        <a class="profile-link" href="{{ route('admin.users.edit', $user) }}">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+                            Editar
+                        </a>
+                    @else
                         <a class="profile-link" href="{{ route('admin.profile.edit') }}">
                             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 21a8 8 0 0 0-16 0"/><circle cx="12" cy="7" r="4"/></svg>
                             Perfil
                         </a>
-                    @endunless
+                    @endif
 
                     <form class="logout" method="POST" action="{{ route('admin.logout') }}">
                         @csrf

@@ -198,14 +198,40 @@
         }
 
         .alert {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
             margin: 0 0 18px;
-            padding: 12px 14px;
-            border-radius: 10px;
-            background: #ecfdf5;
-            color: #047857;
+            padding: 13px 14px;
+            border: 1px solid transparent;
+            border-radius: 14px;
             font-size: 14px;
             font-weight: 700;
             line-height: 1.45;
+        }
+
+        .alert-success {
+            background: #ecfdf5;
+            border-color: #bbf7d0;
+            color: #047857;
+        }
+
+        .alert-security {
+            background: #eff6ff;
+            border-color: #bfdbfe;
+            color: #1d4ed8;
+        }
+
+        .alert svg {
+            width: 20px;
+            height: 20px;
+            flex: 0 0 auto;
+            margin-top: 1px;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            fill: none;
         }
 
         button {
@@ -265,8 +291,24 @@
 
         <p>Ingresa con tu correo institucional y contraseña para gestionar el contenido autorizado.</p>
 
+        @if (session('security_notice'))
+            <div class="alert alert-security" role="status">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    <path d="M12 8v4"/>
+                    <path d="M12 16h.01"/>
+                </svg>
+                <span>{{ session('security_notice') }}</span>
+            </div>
+        @endif
+
         @if (session('success'))
-            <div class="alert">{{ session('success') }}</div>
+            <div class="alert alert-success" role="status">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M20 6 9 17l-5-5"/>
+                </svg>
+                <span>{{ session('success') }}</span>
+            </div>
         @endif
 
         <form method="POST" action="{{ route('admin.login.store') }}">
