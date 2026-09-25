@@ -86,28 +86,32 @@
         }
 
         .actions {
-            display: flex;
-            gap: 12px;
-            align-items: center;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+            align-items: stretch;
         }
 
         .btn {
-            flex: 1;
-            min-height: 46px;
-            padding: 13px 16px;
+            width: 100%;
+            min-height: 54px;
+            box-sizing: border-box;
+            padding: 14px 18px;
             border: 0;
             border-radius: 12px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 10px;
             color: inherit;
             text-decoration: none;
-            font-size: 15px;
+            font-family: inherit;
+            font-size: 16px;
             font-weight: 700;
             line-height: 1.2;
             cursor: pointer;
             transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+            appearance: none;
         }
 
         .btn:hover {
@@ -165,7 +169,8 @@
             }
 
             .actions {
-                display: grid;
+                grid-template-columns: 1fr;
+                gap: 10px;
             }
         }
     </style>

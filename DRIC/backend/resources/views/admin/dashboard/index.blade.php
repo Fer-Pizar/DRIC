@@ -1,13 +1,11 @@
 @php
-    use Illuminate\Support\Facades\Storage;
-
     $user = auth()->user();
     $displayName = $user->name ?? $user->email;
     $roleLabel = $isAdmin ? 'Administrador' : 'Editor';
     $roleDescription = $isAdmin
         ? 'Acceso completo a paginas, usuarios, roles y permisos.'
         : 'Acceso limitado a las secciones asignadas por Direccion.';
-    $photoUrl = ! $isAdmin && $user->profile_photo_path ? Storage::disk('public')->url($user->profile_photo_path) : null;
+    $photoUrl = ! $isAdmin && $user->profile_photo_path ? asset('storage/'.$user->profile_photo_path) : null;
 @endphp
 
 <!DOCTYPE html>
