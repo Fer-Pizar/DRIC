@@ -22,7 +22,7 @@ const content = {
     message: "Describe tu consulta",
     consent:
       "Acepto que mis datos sean usados únicamente para gestionar esta solicitud de cita.",
-    button: "Preparar solicitud",
+    button: "Enviar solicitud",
     sending: "Enviando solicitud...",
     success: "Tu solicitud fue enviada correctamente. La DRIC recibirá el mensaje por correo electrónico.",
     error: "No se pudo enviar la solicitud. Inténtalo nuevamente en unos minutos.",
@@ -47,7 +47,7 @@ const content = {
     message: "Describe your request",
     consent:
       "I agree that my data will be used only to manage this appointment request.",
-    button: "Prepare request",
+    button: "Send request",
     sending: "Sending request...",
     success: "Your request was sent successfully. DRIC will receive the message by email.",
     error: "The request could not be sent. Please try again in a few minutes.",
@@ -132,8 +132,8 @@ export default function AgendarCitaPage({ params }: Props) {
       <section className="dric-appointment-section relative isolate px-4 pb-20 pt-36 sm:px-6 sm:pb-24 sm:pt-40 md:pb-28 md:pt-44">
         <div className="dric-appointment-glow absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_left,rgba(0,55,112,0.18),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(227,6,19,0.14),transparent_36%)]" />
 
-        <div className="mx-auto grid max-w-7xl gap-8 sm:gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-12">
-          <div className="min-w-0">
+        <div className="mx-auto grid max-w-7xl items-start gap-8 sm:gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:gap-12">
+          <div className="min-w-0 lg:pt-8">
             <p className="text-xs uppercase tracking-[0.22em] text-[#E30613] sm:text-sm sm:tracking-[0.35em]">
               {t.eyebrow}
             </p>
