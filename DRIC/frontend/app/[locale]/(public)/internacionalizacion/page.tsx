@@ -118,6 +118,7 @@ function pageContent(page: CmsPage | null, locale: "es" | "en") {
     sectionEyebrow: workAreas?.subtitle || fallback.sectionEyebrow,
     sectionTitle: workAreas?.title || fallback.sectionTitle,
     sectionText: workAreas?.summary || fallback.sectionText,
+    showWorkAreas: page ? Boolean(workAreas) : true,
     cards: fallback.cards.map((card, index) => {
       const block = blockByKey(workAreas, `internationalization.card.${index + 1}`);
 
@@ -171,53 +172,55 @@ export default async function InternacionalizacionPage({ params }: Props) {
         </div>
       </section>
 
-      <section className="dric-internationalization-section relative isolate overflow-hidden px-4 py-16 text-white sm:px-5 md:px-10 md:py-20 lg:px-12">
-        <div className="mx-auto max-w-7xl">
-          <div className="mb-12 max-w-3xl text-center md:text-left">
-            <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#E30613] sm:text-sm sm:tracking-[0.25em]">
-              {t.sectionEyebrow}
-            </p>
+      {t.showWorkAreas ? (
+        <section className="dric-internationalization-section relative isolate overflow-hidden px-4 py-16 text-white sm:px-5 md:px-10 md:py-20 lg:px-12">
+          <div className="mx-auto max-w-7xl">
+            <div className="mb-12 max-w-3xl text-center md:text-left">
+              <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#E30613] sm:text-sm sm:tracking-[0.25em]">
+                {t.sectionEyebrow}
+              </p>
 
-            <h2 className="mt-4 text-3xl font-semibold leading-tight tracking-[-0.025em] sm:text-4xl md:text-5xl md:tracking-[-0.04em]">
-              {t.sectionTitle}
-            </h2>
+              <h2 className="mt-4 text-3xl font-semibold leading-tight tracking-[-0.025em] sm:text-4xl md:text-5xl md:tracking-[-0.04em]">
+                {t.sectionTitle}
+              </h2>
 
-            <p className="mt-5 text-sm leading-7 text-white/68 md:text-base">
-              {t.sectionText}
-            </p>
-          </div>
+              <p className="mt-5 text-sm leading-7 text-white/68 md:text-base">
+                {t.sectionText}
+              </p>
+            </div>
 
-          <div className="grid gap-6 md:grid-cols-3">
-            {t.cards.map((card, index) => (
-              <Card
-                key={card.title}
-                sx={{
-                  borderRadius: "30px",
-                  background: "rgba(255,255,255,0.06)",
-                  border: "1px solid rgba(255,255,255,0.10)",
-                  boxShadow: "0 24px 70px rgba(0,0,0,0.24)",
-                  color: "white",
-                  overflow: "hidden",
-                }}
-              >
-                <div className="min-h-[260px] p-6 md:p-8">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#003770] text-white shadow-xl shadow-black/20">
-                    {icons[index]}
+            <div className="grid gap-6 md:grid-cols-3">
+              {t.cards.map((card, index) => (
+                <Card
+                  key={card.title}
+                  sx={{
+                    borderRadius: "30px",
+                    background: "rgba(255,255,255,0.06)",
+                    border: "1px solid rgba(255,255,255,0.10)",
+                    boxShadow: "0 24px 70px rgba(0,0,0,0.24)",
+                    color: "white",
+                    overflow: "hidden",
+                  }}
+                >
+                  <div className="min-h-[260px] p-6 md:p-8">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#003770] text-white shadow-xl shadow-black/20">
+                      {icons[index]}
+                    </div>
+
+                    <h3 className="mt-7 text-2xl font-semibold leading-tight tracking-[-0.03em]">
+                      {card.title}
+                    </h3>
+
+                    <p className="mt-4 text-sm leading-7 text-white/65">
+                      {card.text}
+                    </p>
                   </div>
-
-                  <h3 className="mt-7 text-2xl font-semibold leading-tight tracking-[-0.03em]">
-                    {card.title}
-                  </h3>
-
-                  <p className="mt-4 text-sm leading-7 text-white/65">
-                    {card.text}
-                  </p>
-                </div>
-              </Card>
-            ))}
+                </Card>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      ) : null}
 
       <Footer />
     </main>

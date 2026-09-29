@@ -679,6 +679,17 @@
                                     <textarea name="{{ $locale }}[projects_team_people]">{{ old($locale.'.projects_team_people', $content[$locale]['projects_team_people']) }}</textarea>
                                     @error($locale.'.projects_team_people')<span class="field-error">{{ $message }}</span>@enderror
                                 </label>
+                                <label>
+                                    Título del equipo profesional
+                                    <input type="text" name="{{ $locale }}[professional_staff_title]" value="{{ old($locale.'.professional_staff_title', $content[$locale]['professional_staff_title']) }}">
+                                    @error($locale.'.professional_staff_title')<span class="field-error">{{ $message }}</span>@enderror
+                                </label>
+                                <label>
+                                    Personal de apoyo
+                                    <textarea name="{{ $locale }}[professional_staff_people]">{{ old($locale.'.professional_staff_people', $content[$locale]['professional_staff_people']) }}</textarea>
+                                    <span class="hint">Escribe un elemento por línea para mostrarlo como viñetas.</span>
+                                    @error($locale.'.professional_staff_people')<span class="field-error">{{ $message }}</span>@enderror
+                                </label>
                             </div>
                         </div>
                     @endforeach
@@ -792,6 +803,7 @@
             "director_name",
             "agreements_team_title",
             "projects_team_title",
+            "professional_staff_title",
         ];
         const cardHistory = new WeakMap();
         const fieldStartSnapshots = new WeakMap();

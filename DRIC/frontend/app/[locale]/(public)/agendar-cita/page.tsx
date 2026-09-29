@@ -24,7 +24,7 @@ const content = {
       "Acepto que mis datos sean usados únicamente para gestionar esta solicitud de cita.",
     button: "Enviar solicitud",
     sending: "Enviando solicitud...",
-    success: "Tu solicitud fue enviada correctamente. La DRIC recibirá el mensaje por correo electrónico.",
+    success: "Tu solicitud fue enviada exitosamente. La DRIC recibirá el mensaje por correo electrónico.",
     error: "No se pudo enviar la solicitud. Inténtalo nuevamente en unos minutos.",
     topics: [
       "Convenios",

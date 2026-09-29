@@ -150,12 +150,20 @@ class PresentationContentController extends Controller
                 'people_en' => $this->lines($validated['en']['projects_team_people']),
             ]);
 
+            $this->upsertBlock($structure, 'presentation.professional-staff', 'staff_group', 5, $languages, [
+                'es' => ['title' => $validated['es']['professional_staff_title'], 'summary' => null],
+                'en' => ['title' => $validated['en']['professional_staff_title'], 'summary' => null],
+            ], [
+                'people_es' => $this->lines($validated['es']['professional_staff_people']),
+                'people_en' => $this->lines($validated['en']['professional_staff_people']),
+            ]);
+
             $historyImage = $this->upsertBlock($history, 'presentation.history-image', 'image', 1, $languages, [
                 'es' => ['title' => 'Imagen del equipo DRIC', 'summary' => null],
                 'en' => ['title' => 'DRIC team image', 'summary' => null],
             ]);
 
-            $directorImage = $this->upsertBlock($structure, 'presentation.director-image', 'image', 5, $languages, [
+            $directorImage = $this->upsertBlock($structure, 'presentation.director-image', 'image', 6, $languages, [
                 'es' => ['title' => 'Imagen del director', 'summary' => null],
                 'en' => ['title' => 'Director image', 'summary' => null],
             ]);
@@ -205,6 +213,8 @@ class PresentationContentController extends Controller
             $localized["{$locale}.agreements_team_people"] = ['required', 'string', 'max:1000'];
             $localized["{$locale}.projects_team_title"] = ['required', 'string', 'max:160', 'regex:'.self::CLEAN_LABEL_REGEX];
             $localized["{$locale}.projects_team_people"] = ['required', 'string', 'max:1000'];
+            $localized["{$locale}.professional_staff_title"] = ['required', 'string', 'max:160', 'regex:'.self::CLEAN_LABEL_REGEX];
+            $localized["{$locale}.professional_staff_people"] = ['required', 'string', 'max:1200'];
         }
 
         return array_merge($localized, [
@@ -260,6 +270,8 @@ class PresentationContentController extends Controller
                 'agreements_team_people' => $this->blockLines($page, 'presentation.agreements-team', 'people_es', ['Jefe del departamento: Mgr. Giovanna Maldonado Moscoso', 'Mgr. Silvia del Pilar Arze']),
                 'projects_team_title' => $this->blockValue($page, 'presentation.projects-team', 'es', 'title', 'Internacionalización y Proyectos'),
                 'projects_team_people' => $this->blockLines($page, 'presentation.projects-team', 'people_es', ['Jefe del Departamento: Mgr. Daniel Vasquez Torrez', 'Ing. John Medina']),
+                'professional_staff_title' => $this->blockValue($page, 'presentation.professional-staff', 'es', 'title', 'Equipo profesional'),
+                'professional_staff_people' => $this->blockLines($page, 'presentation.professional-staff', 'people_es', ['Responsable de atención y seguimiento administrativo', 'Apoyo técnico para convenios, movilidad y proyectos', 'Coordinación de información institucional y archivos']),
             ],
             'en' => [
                 'hero_title' => $this->pageValue($page, 'en', 'title', 'About DRIC'),
@@ -280,6 +292,8 @@ class PresentationContentController extends Controller
                 'agreements_team_people' => $this->blockLines($page, 'presentation.agreements-team', 'people_en', ['Head of Department: Mgr. Giovanna Maldonado Moscoso', 'Mgr. Silvia del Pilar Arze']),
                 'projects_team_title' => $this->blockValue($page, 'presentation.projects-team', 'en', 'title', 'Internationalization and Projects'),
                 'projects_team_people' => $this->blockLines($page, 'presentation.projects-team', 'people_en', ['Head of Department: Mgr. Daniel Vasquez Torrez', 'Eng. John Medina']),
+                'professional_staff_title' => $this->blockValue($page, 'presentation.professional-staff', 'en', 'title', 'Professional Staff'),
+                'professional_staff_people' => $this->blockLines($page, 'presentation.professional-staff', 'people_en', ['Administrative service and follow-up support', 'Technical support for agreements, mobility and projects', 'Institutional information and records coordination']),
             ],
             'director_emails' => $this->blockLines($page, 'presentation.director', 'emails', ['director-dric@umss.edu.bo', 'rrii@umss.edu.bo']),
             'team_image_url' => $this->blockImageUrl($page, 'presentation.history-image', '/images/presentation/dric-team.JPG'),

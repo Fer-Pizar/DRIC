@@ -29,6 +29,7 @@
         form, .field-grid, .section-grid { display: grid; gap: 16px; }
         .panel { padding: 24px; }
         .panel-header { border-bottom: 1px solid var(--line); margin-bottom: 20px; padding-bottom: 16px; }
+        .panel-header.with-toggle { align-items: start; display: flex; gap: 18px; justify-content: space-between; }
         .language-grid, .three-grid { display: grid; gap: 18px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
         .three-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
         .language-card, .item-card { box-shadow: none; padding: 18px; position: relative; }
@@ -38,8 +39,17 @@
         textarea.large { min-height: 260px; }
         .hint { color: var(--muted); font-size: 12px; font-weight: 500; line-height: 1.45; }
         .field-error { color: var(--red-dark); font-size: 12px; font-weight: 800; line-height: 1.45; }
+        .visibility-toggle { align-items: center; background: var(--soft); border: 1px solid var(--line); border-radius: 16px; cursor: pointer; display: flex; flex: 0 0 auto; gap: 12px; padding: 12px 14px; }
+        .visibility-toggle input { height: 1px; opacity: 0; position: absolute; width: 1px; }
+        .toggle-track { background: #cbd5e1; border-radius: 999px; display: inline-flex; height: 28px; padding: 3px; transition: background .18s ease; width: 52px; }
+        .toggle-knob { background: #fff; border-radius: 999px; box-shadow: 0 4px 12px rgba(15, 23, 42, .22); height: 22px; transition: transform .18s ease; width: 22px; }
+        .visibility-toggle input:checked + .toggle-track { background: var(--blue); }
+        .visibility-toggle input:checked + .toggle-track .toggle-knob { transform: translateX(24px); }
+        .toggle-copy { display: grid; gap: 2px; min-width: 138px; }
+        .toggle-copy strong { color: var(--ink); font-size: 13px; line-height: 1.2; }
+        .toggle-copy span { color: var(--muted); font-size: 12px; font-weight: 600; line-height: 1.3; }
         .sticky-actions { align-items: center; background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 16px; bottom: 18px; box-shadow: 0 18px 45px rgba(15,23,42,.12); display: flex; justify-content: space-between; padding: 14px; position: sticky; }
-        @media (max-width: 900px) { .topbar, .sticky-actions { align-items: stretch; flex-direction: column; } .language-grid, .three-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 900px) { .topbar, .sticky-actions, .panel-header.with-toggle { align-items: stretch; flex-direction: column; } .language-grid, .three-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -123,9 +133,27 @@
             </section>
 
             <section class="panel">
-                <div class="panel-header">
-                    <h2>Ejes de trabajo</h2>
-                    <p class="muted">Edita el texto introductorio y las tres tarjetas. Los íconos se conservan como parte del diseño.</p>
+                <div class="panel-header with-toggle">
+                    <div>
+                        <h2>Ejes de trabajo</h2>
+                        <p class="muted">Edita el texto introductorio y las tres tarjetas. Los íconos se conservan como parte del diseño.</p>
+                    </div>
+
+                    <label class="visibility-toggle" for="work_areas_visible">
+                        <input type="hidden" name="work_areas_visible" value="0">
+                        <input
+                            id="work_areas_visible"
+                            type="checkbox"
+                            name="work_areas_visible"
+                            value="1"
+                            @checked((bool) old('work_areas_visible', $content['work_areas_visible']))
+                        >
+                        <span class="toggle-track" aria-hidden="true"><span class="toggle-knob"></span></span>
+                        <span class="toggle-copy">
+                            <strong>Mostrar sección</strong>
+                            <span>Deshabilitar sección.</span>
+                        </span>
+                    </label>
                 </div>
 
                 <div class="language-grid">

@@ -25,11 +25,14 @@ type Props = {
   sections: GovernmentAgreementSection[];
 };
 
+const ceubSectionTitle = "Convenios suscritos por el CEUB con otras instituciones";
+const unclassifiedSectionTitle = "Otras instituciones";
+
 const countryNames: Record<string, string> = {
   Alemania: "Germany",
   Argentina: "Argentina",
   Austria: "Austria",
-  Bélgica: "Belgium",
+  Belgica: "Belgium",
   Brasil: "Brazil",
   Chile: "Chile",
   China: "China",
@@ -43,17 +46,17 @@ const countryNames: Record<string, string> = {
   España: "Spain",
   Francia: "France",
   Holanda: "Netherlands",
-  Hungría: "Hungary",
+  Hungria: "Hungary",
   India: "India",
   Inglaterra: "United Kingdom",
   Israel: "Israel",
   Italia: "Italy",
   Japón: "Japan",
-  México: "Mexico",
+  Mexico: "Mexico",
   OEA: "OAS",
-  Panamá: "Panama",
+  Panama: "Panama",
   Paraguay: "Paraguay",
-  Perú: "Peru",
+  Peru: "Peru",
   Rusia: "Russia",
   Suecia: "Sweden",
   Suiza: "Switzerland",
@@ -231,6 +234,48 @@ function translateGovernmentText(text: string, locale: Locale) {
   );
 }
 
+function sectionId(sectionTitle: string) {
+  return `agreement-section-${sectionTitle
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")}`;
+}
+
+function sectionKind(sectionTitle: string, locale: Locale) {
+  const isCeub = sectionTitle === ceubSectionTitle;
+  const isUnclassified = sectionTitle === unclassifiedSectionTitle;
+
+  if (locale === "en") {
+    if (isUnclassified) {
+      return "Other institutional agreements";
+    }
+
+    return isCeub ? "CEUB agreements" : "Country";
+  }
+
+  if (isUnclassified) {
+    return "Otros convenios institucionales";
+  }
+
+  return isCeub ? "Convenios CEUB" : "País";
+}
+
+function agreementLabel(count: number, locale: Locale) {
+  if (locale === "en") {
+    return count === 1 ? "document" : "documents";
+  }
+
+  return count === 1 ? "documento" : "documentos";
+}
+
+function bilateralGroupTitle(locale: Locale) {
+  return locale === "en"
+    ? "Bilateral agreements signed by the Government of Bolivia"
+    : "Convenios bilaterales suscritos por el Gobierno de Bolivia";
+}
+
 export default function GovernmentAgreementsList({
   locale,
   noResults,
@@ -240,6 +285,11 @@ export default function GovernmentAgreementsList({
 }: Props) {
   const [query, setQuery] = useState("");
   const normalizedQuery = query.trim().toLocaleLowerCase();
+
+  const countrySections = useMemo(
+    () => sections.filter((section) => section.title !== ceubSectionTitle && section.title !== unclassifiedSectionTitle),
+    [sections],
+  );
 
   const filteredSections = useMemo(() => {
     if (!normalizedQuery) {
@@ -260,6 +310,42 @@ export default function GovernmentAgreementsList({
 
   return (
     <>
+      <div className="dric-government-country-index mt-10 rounded-[30px] px-5 py-5 backdrop-blur-2xl sm:px-7 md:mt-14 md:px-8">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="dric-government-index-kicker text-xs font-black uppercase tracking-[0.22em]">
+              {locale === "es" ? "Clasificación por país" : "Country classification"}
+            </p>
+            <h2 className="dric-government-index-title mt-2 text-2xl font-light uppercase leading-tight tracking-wide">
+              {locale === "es" ? "Países con convenios bilaterales" : "Countries with bilateral agreements"}
+            </h2>
+          </div>
+
+          <span className="dric-other-agreements-count inline-flex w-fit rounded-full px-4 py-1.5 text-xs font-bold">
+            {countrySections.length} {locale === "es" ? "países" : "countries"}
+          </span>
+        </div>
+
+        <div className="mt-5 flex flex-wrap gap-2">
+          {countrySections.map((section) => {
+            const sectionTitle = translateGovernmentText(section.title, locale);
+
+            return (
+              <a
+                key={section.title}
+                href={`#${sectionId(section.title)}`}
+                className="dric-government-country-chip inline-flex items-center gap-2 rounded-full px-3 py-2 text-xs font-bold transition md:text-sm"
+              >
+                <span>{sectionTitle}</span>
+                <span className="dric-government-country-chip-count inline-flex min-w-6 justify-center rounded-full px-2 py-0.5 text-[0.7rem]">
+                  {section.agreements.length}
+                </span>
+              </a>
+            );
+          })}
+        </div>
+      </div>
+
       <div className="dric-other-agreements-search mt-12 flex items-center gap-4 rounded-[28px] px-5 py-4 backdrop-blur-2xl md:mt-16 md:px-6">
         <Search className="h-5 w-5 shrink-0" aria-hidden="true" />
         <label className="sr-only" htmlFor="government-agreement-search">
@@ -287,51 +373,79 @@ export default function GovernmentAgreementsList({
 
       <div className="mt-8 grid gap-8">
         {filteredSections.length ? (
-          filteredSections.map((section) => {
+          filteredSections.map((section, sectionIndex) => {
             const sectionTitle = translateGovernmentText(section.title, locale);
+            const kind = sectionKind(section.title, locale);
+            const isCountrySection = section.title !== ceubSectionTitle && section.title !== unclassifiedSectionTitle;
+            const showBilateralHeading =
+              isCountrySection &&
+              filteredSections.findIndex(
+                (candidate) => candidate.title !== ceubSectionTitle && candidate.title !== unclassifiedSectionTitle,
+              ) === sectionIndex;
 
             return (
-              <section key={section.title} className="dric-government-agreement-section overflow-hidden rounded-[30px] backdrop-blur-2xl">
-                <div className="dric-government-agreement-heading px-5 py-5 sm:px-7 md:px-8">
-                  <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-                    <h2 className="dric-government-agreement-section-title text-2xl font-light uppercase leading-tight tracking-wide">
-                      {sectionTitle}
+              <div key={section.title} className="grid gap-8">
+                {showBilateralHeading ? (
+                  <div className="dric-government-group-heading rounded-[30px] px-5 py-6 backdrop-blur-2xl sm:px-7 md:px-8">
+                    <p className="dric-government-index-kicker text-xs font-black uppercase tracking-[0.22em]">
+                      {locale === "es" ? "Clasificación principal" : "Main classification"}
+                    </p>
+                    <h2 className="dric-government-index-title mt-2 text-2xl font-light uppercase leading-tight tracking-wide md:text-3xl">
+                      {bilateralGroupTitle(locale)}
                     </h2>
-                    <span className="dric-other-agreements-count inline-flex w-fit rounded-full px-4 py-1.5 text-xs font-bold">
-                      {section.agreements.length}
-                    </span>
                   </div>
-                </div>
+                ) : null}
 
-                <div>
-                  {section.agreements.map((agreement, index) => (
-                    <Link
-                      key={`${section.title}-${agreement.href}-${index}`}
-                      href={agreement.href}
-                      className="dric-other-agreement-row group relative block px-5 py-5 transition duration-300 sm:px-7 md:px-8"
-                    >
-                      <div className="flex items-start gap-4 md:gap-6">
-                        <div className="dric-other-agreement-icon mt-1 flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl transition duration-300">
-                          <DescriptionRoundedIcon sx={{ fontSize: 23 }} />
-                        </div>
+                <section
+                  id={sectionId(section.title)}
+                  className="dric-government-agreement-section scroll-mt-28 overflow-hidden rounded-[30px] backdrop-blur-2xl"
+                >
+                  <div className="dric-government-agreement-heading px-5 py-5 sm:px-7 md:px-8">
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+                      <div>
+                        <p className="dric-government-section-kind text-xs font-black uppercase tracking-[0.2em]">
+                          {kind}
+                        </p>
+                        <h2 className="dric-government-agreement-section-title mt-2 text-2xl font-light uppercase leading-tight tracking-wide">
+                          {sectionTitle}
+                        </h2>
+                      </div>
+                      <span className="dric-other-agreements-count inline-flex w-fit rounded-full px-4 py-1.5 text-xs font-bold">
+                        {section.agreements.length} {agreementLabel(section.agreements.length, locale)}
+                      </span>
+                    </div>
+                  </div>
 
-                        <div className="min-w-0 flex-1">
-                          <div className="flex items-center gap-3">
-                            <span className="dric-other-agreement-number text-xs font-black uppercase tracking-[0.18em] transition duration-300">
-                              {String(index + 1).padStart(2, "0")}
-                            </span>
-                            <span className="dric-other-agreement-rule h-px flex-1 transition duration-300" />
+                  <div>
+                    {section.agreements.map((agreement, index) => (
+                      <Link
+                        key={`${section.title}-${agreement.href}-${index}`}
+                        href={agreement.href}
+                        className="dric-other-agreement-row group relative block px-5 py-5 transition duration-300 sm:px-7 md:px-8"
+                      >
+                        <div className="flex items-start gap-4 md:gap-6">
+                          <div className="dric-other-agreement-icon mt-1 flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl transition duration-300">
+                            <DescriptionRoundedIcon sx={{ fontSize: 23 }} />
                           </div>
 
-                          <h3 className="dric-other-agreement-title mt-3 text-base font-semibold leading-7 transition duration-300 md:text-lg md:leading-8">
-                            {translateGovernmentText(agreement.title, locale)}
-                          </h3>
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center gap-3">
+                              <span className="dric-other-agreement-number text-xs font-black uppercase tracking-[0.18em] transition duration-300">
+                                {String(index + 1).padStart(2, "0")}
+                              </span>
+                              <span className="dric-other-agreement-rule h-px flex-1 transition duration-300" />
+                            </div>
+
+                            <h3 className="dric-other-agreement-title mt-3 text-base font-semibold leading-7 transition duration-300 md:text-lg md:leading-8">
+                              {translateGovernmentText(agreement.title, locale)}
+                            </h3>
+                          </div>
                         </div>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              </section>
+                      </Link>
+                    ))}
+                  </div>
+                </section>
+              </div>
             );
           })
         ) : (
