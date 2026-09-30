@@ -618,6 +618,10 @@ function inferGovernmentSection(title: string, data: Record<string, unknown>): s
     return explicitCountry.title;
   }
 
+  if (explicitGroup && explicitGroup !== "__custom") {
+    return explicitGroup;
+  }
+
   const inferredCountry = bilateralSections.find((section) =>
     [section.title, ...(countryAliases[section.title] ?? [])].some((alias) =>
       haystack.includes(normalizedSearchText(alias)),
@@ -637,6 +641,12 @@ function groupGovernmentDocuments(documents: Array<GovernmentAgreement & { secti
   return [
     governmentCeubTitle,
     ...bilateralSections.map((section) => section.title),
+    ...Array.from(grouped.keys()).filter(
+      (title) =>
+        title !== governmentCeubTitle &&
+        title !== unclassifiedGovernmentTitle &&
+        !bilateralSections.some((section) => section.title === title),
+    ),
     unclassifiedGovernmentTitle,
   ]
     .map((title) => ({
@@ -678,7 +688,11 @@ export default async function AgreementDetailPage({ params }: Props) {
   const t = labels[activeLocale];
 
   if (slug === "ceub-gobierno") {
-    const sections = governmentAgreementSections;
+    const cmsPage = await getOptionalPageBySlug("convenios-ceub-gobierno", activeLocale);
+    const managedGovernmentSections = cmsGovernmentSections(cmsPage);
+    const sections = hasCmsSection(cmsPage, "agreements.government.documents")
+      ? managedGovernmentSections
+      : governmentAgreementSections;
     const totalGovernmentAgreements = sections.reduce(
       (total, section) => total + section.agreements.length,
       0,

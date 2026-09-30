@@ -286,11 +286,6 @@ export default function GovernmentAgreementsList({
   const [query, setQuery] = useState("");
   const normalizedQuery = query.trim().toLocaleLowerCase();
 
-  const countrySections = useMemo(
-    () => sections.filter((section) => section.title !== ceubSectionTitle && section.title !== unclassifiedSectionTitle),
-    [sections],
-  );
-
   const filteredSections = useMemo(() => {
     if (!normalizedQuery) {
       return sections;
@@ -310,42 +305,6 @@ export default function GovernmentAgreementsList({
 
   return (
     <>
-      <div className="dric-government-country-index mt-10 rounded-[30px] px-5 py-5 backdrop-blur-2xl sm:px-7 md:mt-14 md:px-8">
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <p className="dric-government-index-kicker text-xs font-black uppercase tracking-[0.22em]">
-              {locale === "es" ? "Clasificación por país" : "Country classification"}
-            </p>
-            <h2 className="dric-government-index-title mt-2 text-2xl font-light uppercase leading-tight tracking-wide">
-              {locale === "es" ? "Países con convenios bilaterales" : "Countries with bilateral agreements"}
-            </h2>
-          </div>
-
-          <span className="dric-other-agreements-count inline-flex w-fit rounded-full px-4 py-1.5 text-xs font-bold">
-            {countrySections.length} {locale === "es" ? "países" : "countries"}
-          </span>
-        </div>
-
-        <div className="mt-5 flex flex-wrap gap-2">
-          {countrySections.map((section) => {
-            const sectionTitle = translateGovernmentText(section.title, locale);
-
-            return (
-              <a
-                key={section.title}
-                href={`#${sectionId(section.title)}`}
-                className="dric-government-country-chip inline-flex items-center gap-2 rounded-full px-3 py-2 text-xs font-bold transition md:text-sm"
-              >
-                <span>{sectionTitle}</span>
-                <span className="dric-government-country-chip-count inline-flex min-w-6 justify-center rounded-full px-2 py-0.5 text-[0.7rem]">
-                  {section.agreements.length}
-                </span>
-              </a>
-            );
-          })}
-        </div>
-      </div>
-
       <div className="dric-other-agreements-search mt-12 flex items-center gap-4 rounded-[28px] px-5 py-4 backdrop-blur-2xl md:mt-16 md:px-6">
         <Search className="h-5 w-5 shrink-0" aria-hidden="true" />
         <label className="sr-only" htmlFor="government-agreement-search">
