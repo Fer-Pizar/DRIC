@@ -5,12 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel DRIC - Detalle de movilidad</title>
     <style>
-        :root { --blue: #164194; --red-dark: #7f0010; --ink: #172033; --muted: #647084; --line: #e5e9f0; }
+        :root { --blue: #164194; --cyan: #0f91c8; --red-dark: #7f0010; --ink: #172033; --muted: #647084; --line: #e5e9f0; }
         * { box-sizing: border-box; }
         body { margin: 0; background: #f4f6f9; color: var(--ink); font-family: Arial, sans-serif; }
         .shell { margin: 0 auto; max-width: 1240px; padding: 36px 20px 56px; }
         .topbar, .panel, .language-card, .item-card, .link-card { background: #fff; border: 1px solid var(--line); border-radius: 18px; box-shadow: 0 18px 50px rgba(15, 23, 42, 0.08); }
-        .topbar { align-items: center; display: flex; gap: 18px; justify-content: space-between; margin-bottom: 22px; padding: 24px; }
+        .topbar { align-items: center; background: linear-gradient(135deg, #ffffff 0%, #f7fbff 100%); display: flex; gap: 18px; justify-content: space-between; margin-bottom: 22px; padding: 24px; }
         h1, h2, h3 { margin: 0; }
         h1 { font-size: 34px; line-height: 1.1; }
         h2 { color: var(--blue); font-size: 24px; }
@@ -19,6 +19,7 @@
         .actions, .item-actions, .link-actions, .links-heading, .section-heading, .toolbar { align-items: center; display: flex; flex-wrap: wrap; gap: 10px; }
         .item-actions, .link-actions { justify-content: flex-end; }
         .links-heading { justify-content: space-between; margin-bottom: 12px; }
+        .links-footer { align-items: center; display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
         .panel-header { align-items: flex-start; display: flex; gap: 16px; justify-content: space-between; }
         .section-heading { align-items: flex-start; justify-content: space-between; }
         .btn { border: 0; border-radius: 10px; cursor: pointer; display: inline-flex; font-weight: 800; justify-content: center; padding: 12px 16px; text-decoration: none; }
@@ -35,9 +36,31 @@
         form, .field-grid, .item-list, .links-list { display: grid; gap: 16px; }
         .panel { padding: 24px; }
         .panel-header { border-bottom: 1px solid var(--line); margin-bottom: 20px; padding-bottom: 16px; }
+        .panel-title { display: grid; gap: 8px; max-width: none; width: 100%; }
+        .panel-title .muted { text-align: justify; text-wrap: pretty; }
+        .flow-kicker { color: var(--cyan); font-size: 12px; font-weight: 900; letter-spacing: .14em; text-transform: uppercase; }
+        .admin-flow-grid { align-items: start; display: grid; gap: 20px; grid-template-columns: minmax(0, 1.35fr) minmax(320px, .72fr); }
+        .editor-column, .side-column { display: grid; gap: 18px; min-width: 0; }
+        .flow-card {
+            background: linear-gradient(180deg, #fff 0%, #fbfdff 100%);
+            border: 1px solid rgba(22, 65, 148, .12);
+            border-radius: 18px;
+            box-shadow: 0 16px 38px rgba(15, 23, 42, .07);
+            padding: 18px;
+        }
+        .flow-card-header { align-items: flex-start; display: flex; gap: 12px; justify-content: space-between; margin-bottom: 16px; }
+        .flow-card-title { align-items: center; display: flex; gap: 12px; min-width: 0; }
+        .icon-badge { align-items: center; background: #eef7ff; border: 1px solid #d7ebff; border-radius: 14px; color: var(--blue); display: inline-flex; flex: 0 0 auto; font-size: 20px; font-weight: 900; height: 44px; justify-content: center; width: 44px; }
+        .side-column .flow-card { border-left: 5px solid var(--blue); }
         .language-grid, .two-grid { display: grid; gap: 18px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
         .language-card, .item-card, .link-card { box-shadow: none; padding: 18px; position: relative; }
         .item-card { display: grid; gap: 16px; }
+        .item-card[data-call-card] {
+            border: 2px solid rgba(22, 65, 148, .72);
+            border-left: 7px solid var(--blue);
+            box-shadow: 0 18px 42px rgba(22, 65, 148, .10);
+        }
+        .item-card[data-call-card] > .item-header > .btn-undo { margin-left: auto; }
         .link-card { background: #f8fafc; display: grid; gap: 12px; }
         .item-header { align-items: center; display: flex; gap: 12px; justify-content: space-between; }
         .undo-floating { position: absolute; right: 12px; top: 12px; z-index: 4; }
@@ -51,7 +74,8 @@
         .hint { color: var(--muted); font-size: 12px; font-weight: 500; line-height: 1.45; }
         .field-error { color: var(--red-dark); font-size: 12px; font-weight: 800; line-height: 1.45; }
         .sticky-actions { align-items: center; background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 16px; bottom: 18px; box-shadow: 0 18px 45px rgba(15,23,42,.12); display: flex; justify-content: space-between; padding: 14px; position: sticky; }
-        @media (max-width: 900px) { .topbar, .sticky-actions, .panel-header, .item-header, .links-heading, .section-heading { align-items: stretch; flex-direction: column; } .language-grid, .two-grid { grid-template-columns: 1fr; } .item-actions, .link-actions { justify-content: flex-start; } }
+        @media (max-width: 1000px) { .admin-flow-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 900px) { .topbar, .sticky-actions, .panel-header, .item-header, .links-heading, .links-footer, .section-heading, .flow-card-header { align-items: stretch; flex-direction: column; } .language-grid, .two-grid { grid-template-columns: 1fr; } .item-actions, .link-actions { justify-content: flex-start; } }
     </style>
 </head>
 <body>
@@ -80,81 +104,119 @@
 
             <section class="panel">
                 <div class="panel-header">
-                    <h2>Portada y resumen</h2>
-                    <p class="muted">Edita el título del bloque de resumen, la descripción y las condiciones públicas. El título principal y la etiqueta se editan desde la lista principal de Movilidad.</p>
+                    <div class="panel-title">                        <h2>Resumen, condiciones y panel lateral</h2>
+                        <p class="muted">Esta parte contiene bloque de resumen a la izquierda y datos rápidos, condiciones y enlace oficial a la derecha.</p>
+                    </div>
                 </div>
 
-                <div class="language-grid">
-                    @foreach (['es' => 'Español', 'en' => 'Inglés'] as $locale => $label)
-                        <div class="language-card">
-                            <h3>{{ $label }}</h3>
-                            <div class="field-grid">
-                                <input type="hidden" name="main[{{ $locale }}][title]" value="{{ old('main.'.$locale.'.title', $main['title_'.$locale]) }}">
-                                <input type="hidden" name="main[{{ $locale }}][tag]" value="{{ old('main.'.$locale.'.tag', $main['tag_'.$locale]) }}">
-                                <label>Título del bloque de resumen<input type="text" name="main[{{ $locale }}][overview_title]" value="{{ old('main.'.$locale.'.overview_title', $main['overview_title_'.$locale]) }}">@error('main.'.$locale.'.overview_title')<span class="field-error">{{ $message }}</span>@enderror</label>
-                                <label>Descripción principal<textarea name="main[{{ $locale }}][summary]">{{ old('main.'.$locale.'.summary', $main['summary_'.$locale]) }}</textarea>@error('main.'.$locale.'.summary')<span class="field-error">{{ $message }}</span>@enderror</label>
-                                <label>
-                                    Condiciones
-                                    <div class="toolbar" aria-label="Herramientas de condiciones">
-                                        <button class="tool-btn" type="button" data-prefix-line="• ">Viñeta</button>
-                                        <button class="tool-btn" type="button" data-clear-prefixes>Limpiar viñetas</button>
+                <div class="admin-flow-grid">
+                    <div class="editor-column">
+                        <div class="flow-card">
+                            <div class="flow-card-header">
+                                <div class="flow-card-title">
+                                    <span class="icon-badge">◌</span>
+                                    <div>
+                                        <h3>Bloque de resumen</h3>
+                                        <p class="muted">El título principal y la etiqueta se editan desde la lista principal de Movilidad.</p>
                                     </div>
-                                    <textarea name="main[{{ $locale }}][conditions]">{{ old('main.'.$locale.'.conditions', $main['conditions_'.$locale]) }}</textarea>
-                                    <span class="hint">Escribe una condición por línea.</span>
-                                    @error('main.'.$locale.'.conditions')<span class="field-error">{{ $message }}</span>@enderror
-                                </label>
+                                </div>
+                            </div>
+
+                            <div class="language-grid">
+                                @foreach (['es' => 'Español', 'en' => 'Inglés'] as $locale => $label)
+                                    <div class="language-card">
+                                        <h3>{{ $label }}</h3>
+                                        <div class="field-grid">
+                                            <input type="hidden" name="main[{{ $locale }}][title]" value="{{ old('main.'.$locale.'.title', $main['title_'.$locale]) }}">
+                                            <input type="hidden" name="main[{{ $locale }}][tag]" value="{{ old('main.'.$locale.'.tag', $main['tag_'.$locale]) }}">
+                                            <label>Título del bloque de resumen<input type="text" name="main[{{ $locale }}][overview_title]" value="{{ old('main.'.$locale.'.overview_title', $main['overview_title_'.$locale]) }}">@error('main.'.$locale.'.overview_title')<span class="field-error">{{ $message }}</span>@enderror</label>
+                                            <label>Descripción principal<textarea name="main[{{ $locale }}][summary]">{{ old('main.'.$locale.'.summary', $main['summary_'.$locale]) }}</textarea>@error('main.'.$locale.'.summary')<span class="field-error">{{ $message }}</span>@enderror</label>
+                                        </div>
+                                    </div>
+                                @endforeach
                             </div>
                         </div>
-                    @endforeach
-                </div>
-            </section>
 
-            <section class="panel">
-                <div class="panel-header">
-                    <h2>Panel lateral</h2>
-                    <p class="muted">En la página pública, estos bloques aparecen al lado del resumen: datos clave y enlace oficial.</p>
-                </div>
-
-                <div class="subsection">
-                    <div class="section-heading">
-                        <div>
-                            <h3>Datos clave</h3>
-                            <p class="muted">Aparecen como información rápida del programa.</p>
-                        </div>
-                        <button class="btn btn-undo" type="button" data-restore-item data-restore-target="highlights-list" disabled title="Restaurar último dato clave eliminado" aria-label="Restaurar último dato clave eliminado">↶</button>
-                    </div>
-                    <div class="item-list" id="highlights-list">
-                        @foreach (old('highlights', $detail['highlights'] ?? []) as $index => $item)
-                            <article class="item-card" data-highlight-card>
-                                <div class="item-header"><h3>Dato {{ $index + 1 }}</h3><button class="btn btn-remove" type="button" data-remove-item>Quitar</button></div>
-                                <div class="two-grid">
-                                    <label>Etiqueta en español<input type="text" name="highlights[{{ $index }}][label_es]" value="{{ $item['label_es'] ?? '' }}">@error('highlights.'.$index.'.label_es')<span class="field-error">{{ $message }}</span>@enderror</label>
-                                    <label>Etiqueta en inglés<input type="text" name="highlights[{{ $index }}][label_en]" value="{{ $item['label_en'] ?? '' }}">@error('highlights.'.$index.'.label_en')<span class="field-error">{{ $message }}</span>@enderror</label>
-                                    <label>Valor en español<input type="text" name="highlights[{{ $index }}][value_es]" value="{{ $item['value_es'] ?? '' }}">@error('highlights.'.$index.'.value_es')<span class="field-error">{{ $message }}</span>@enderror</label>
-                                    <label>Valor en inglés<input type="text" name="highlights[{{ $index }}][value_en]" value="{{ $item['value_en'] ?? '' }}">@error('highlights.'.$index.'.value_en')<span class="field-error">{{ $message }}</span>@enderror</label>
+                        <div class="flow-card">
+                            <div class="flow-card-header">
+                                <div class="flow-card-title">
+                                    <span class="icon-badge">✓</span>
+                                    <div>
+                                        <h3>Condiciones</h3>
+                                        <p class="muted">En la página pública aparece como tarjeta lateral debajo de datos clave.</p>
+                                    </div>
                                 </div>
-                            </article>
-                        @endforeach
-                    </div>
-                    <button class="btn btn-add" type="button" data-add-highlight>Agregar dato clave</button>
-                </div>
+                            </div>
 
-                <div class="subsection" data-edit-undo-scope>
-                    <div class="section-heading">
-                        <div>
-                            <h3>Enlace oficial</h3>
-                            <p class="muted">Se muestra como tarjeta de enlace oficial. Puedes usar una URL o subir un PDF de hasta 20 MB.</p>
+                            <div class="language-grid">
+                                @foreach (['es' => 'Español', 'en' => 'Inglés'] as $locale => $label)
+                                    <div class="language-card">
+                                        <h3>{{ $label }}</h3>
+                                        <label>
+                                            Condiciones
+                                            <div class="toolbar" aria-label="Herramientas de condiciones">
+                                                <button class="tool-btn" type="button" data-prefix-line="• ">Viñeta</button>
+                                                <button class="tool-btn" type="button" data-clear-prefixes>Limpiar viñetas</button>
+                                            </div>
+                                            <textarea name="main[{{ $locale }}][conditions]">{{ old('main.'.$locale.'.conditions', $main['conditions_'.$locale]) }}</textarea>
+                                            <span class="hint">Escribe una condición por línea.</span>
+                                            @error('main.'.$locale.'.conditions')<span class="field-error">{{ $message }}</span>@enderror
+                                        </label>
+                                    </div>
+                                @endforeach
+                            </div>
                         </div>
-                        <button class="btn btn-undo" type="button" data-undo-card disabled title="Deshacer último cambio" aria-label="Deshacer último cambio">↶</button>
                     </div>
-                    <div class="two-grid">
-                        <label>Texto del enlace en español<input type="text" name="reference[label_es]" value="{{ old('reference.label_es', $detail['reference']['label_es'] ?? '') }}">@error('reference.label_es')<span class="field-error">{{ $message }}</span>@enderror</label>
-                        <label>Texto del enlace en inglés<input type="text" name="reference[label_en]" value="{{ old('reference.label_en', $detail['reference']['label_en'] ?? '') }}">@error('reference.label_en')<span class="field-error">{{ $message }}</span>@enderror</label>
-                    </div>
-                    <label>URL actual o nueva<input type="text" name="reference[href]" value="{{ old('reference.href', $detail['reference']['href'] ?? '') }}">@error('reference.href')<span class="field-error">{{ $message }}</span>@enderror</label>
-                    <input type="hidden" name="reference[existing_href]" value="{{ $detail['reference']['existing_href'] ?? '' }}">
-                    <input type="hidden" name="reference[existing_media_asset_id]" value="{{ $detail['reference']['existing_media_asset_id'] ?? '' }}">
-                    <label>Subir PDF opcional<input type="file" name="reference[pdf]" accept="application/pdf">@error('reference.pdf')<span class="field-error">{{ $message }}</span>@enderror</label>
+
+                    <aside class="side-column">
+                        <div class="flow-card">
+                            <div class="flow-card-header">
+                                <div class="flow-card-title">
+                                    <span class="icon-badge">i</span>
+                                    <div>
+                                        <h3>Datos clave</h3>
+                                        <p class="muted">Información rápida del programa.</p>
+                                    </div>
+                                </div>
+                                <button class="btn btn-undo" type="button" data-restore-item data-restore-target="highlights-list" disabled title="Restaurar último dato clave eliminado" aria-label="Restaurar último dato clave eliminado">↶</button>
+                            </div>
+                            <div class="item-list" id="highlights-list">
+                                @foreach (old('highlights', $detail['highlights'] ?? []) as $index => $item)
+                                    <article class="item-card" data-highlight-card>
+                                        <div class="item-header"><h3>Dato {{ $index + 1 }}</h3><button class="btn btn-remove" type="button" data-remove-item>Quitar</button></div>
+                                        <div class="two-grid">
+                                            <label>Etiqueta en español<input type="text" name="highlights[{{ $index }}][label_es]" value="{{ $item['label_es'] ?? '' }}">@error('highlights.'.$index.'.label_es')<span class="field-error">{{ $message }}</span>@enderror</label>
+                                            <label>Etiqueta en inglés<input type="text" name="highlights[{{ $index }}][label_en]" value="{{ $item['label_en'] ?? '' }}">@error('highlights.'.$index.'.label_en')<span class="field-error">{{ $message }}</span>@enderror</label>
+                                            <label>Valor en español<input type="text" name="highlights[{{ $index }}][value_es]" value="{{ $item['value_es'] ?? '' }}">@error('highlights.'.$index.'.value_es')<span class="field-error">{{ $message }}</span>@enderror</label>
+                                            <label>Valor en inglés<input type="text" name="highlights[{{ $index }}][value_en]" value="{{ $item['value_en'] ?? '' }}">@error('highlights.'.$index.'.value_en')<span class="field-error">{{ $message }}</span>@enderror</label>
+                                        </div>
+                                    </article>
+                                @endforeach
+                            </div>
+                            <button class="btn btn-add" type="button" data-add-highlight>Agregar dato clave</button>
+                        </div>
+
+                        <div class="flow-card" data-edit-undo-scope>
+                            <div class="flow-card-header">
+                                <div class="flow-card-title">
+                                    <span class="icon-badge">↗</span>
+                                    <div>
+                                        <h3>Enlace oficial</h3>
+                                        <p class="muted">Puedes usar una URL o subir un PDF de hasta 20 MB.</p>
+                                    </div>
+                                </div>
+                                <button class="btn btn-undo" type="button" data-undo-card disabled title="Deshacer último cambio" aria-label="Deshacer último cambio">↶</button>
+                            </div>
+                            <div class="two-grid">
+                                <label>Texto del enlace en español<input type="text" name="reference[label_es]" value="{{ old('reference.label_es', $detail['reference']['label_es'] ?? '') }}">@error('reference.label_es')<span class="field-error">{{ $message }}</span>@enderror</label>
+                                <label>Texto del enlace en inglés<input type="text" name="reference[label_en]" value="{{ old('reference.label_en', $detail['reference']['label_en'] ?? '') }}">@error('reference.label_en')<span class="field-error">{{ $message }}</span>@enderror</label>
+                            </div>
+                            <label>URL actual o nueva<input type="text" name="reference[href]" value="{{ old('reference.href', $detail['reference']['href'] ?? '') }}">@error('reference.href')<span class="field-error">{{ $message }}</span>@enderror</label>
+                            <input type="hidden" name="reference[existing_href]" value="{{ $detail['reference']['existing_href'] ?? '' }}">
+                            <input type="hidden" name="reference[existing_media_asset_id]" value="{{ $detail['reference']['existing_media_asset_id'] ?? '' }}">
+                            <label>Subir PDF opcional<input type="file" name="reference[pdf]" accept="application/pdf">@error('reference.pdf')<span class="field-error">{{ $message }}</span>@enderror</label>
+                        </div>
+                    </aside>
                 </div>
             </section>
 
@@ -232,7 +294,6 @@
                             <div data-links-section>
                                 <div class="links-heading">
                                     <h3>Enlaces y PDFs</h3>
-                                    <button class="btn btn-undo" type="button" data-restore-link disabled title="Restaurar último enlace eliminado" aria-label="Restaurar último enlace eliminado">↶</button>
                                 </div>
                                 <div class="links-list" data-links-list>
                                     @foreach (($call['links'] ?? []) as $linkIndex => $link)
@@ -249,7 +310,10 @@
                                         </article>
                                     @endforeach
                                 </div>
-                                <button class="btn btn-add" type="button" data-add-link>Agregar enlace o PDF</button>
+                                <div class="links-footer">
+                                    <button class="btn btn-add" type="button" data-add-link>Agregar enlace o PDF</button>
+                                    <button class="btn btn-undo" type="button" data-restore-link disabled title="Restaurar último enlace eliminado" aria-label="Restaurar último enlace eliminado">↶</button>
+                                </div>
                             </div>
                         </article>
                     @endforeach
@@ -266,7 +330,7 @@
 
     <template id="highlight-template"><article class="item-card" data-highlight-card><div class="item-header"><h3>Nuevo dato</h3><button class="btn btn-remove" type="button" data-remove-item>Quitar</button></div><div class="two-grid"><label>Etiqueta en español<input type="text" name="highlights[__INDEX__][label_es]" value=""></label><label>Etiqueta en inglés<input type="text" name="highlights[__INDEX__][label_en]" value=""></label><label>Valor en español<input type="text" name="highlights[__INDEX__][value_es]" value=""></label><label>Valor en inglés<input type="text" name="highlights[__INDEX__][value_en]" value=""></label></div></article></template>
     <template id="section-template"><article class="item-card" data-section-card><div class="item-header"><h3>Nueva sección</h3><button class="btn btn-remove" type="button" data-remove-item>Quitar</button></div><div class="language-grid"><div class="language-card"><h3>Español</h3><label>Título<input type="text" name="sections[__INDEX__][title_es]" value=""></label><label>Contenido<div class="toolbar"><button class="tool-btn" type="button" data-editor-action="bullet">Viñeta</button><button class="tool-btn" type="button" data-editor-action="paragraph">Párrafo</button></div><textarea class="content-editor" name="sections[__INDEX__][content_es]" data-smart-editor></textarea></label></div><div class="language-card"><h3>Inglés</h3><label>Título<input type="text" name="sections[__INDEX__][title_en]" value=""></label><label>Contenido<div class="toolbar"><button class="tool-btn" type="button" data-editor-action="bullet">Viñeta</button><button class="tool-btn" type="button" data-editor-action="paragraph">Párrafo</button></div><textarea class="content-editor" name="sections[__INDEX__][content_en]" data-smart-editor></textarea></label></div></div></article></template>
-    <template id="call-template"><article class="item-card" data-call-card data-call-index="__CALL__"><div class="item-header"><h3>Nueva convocatoria</h3><button class="btn btn-remove" type="button" data-remove-item>Quitar</button></div><input type="hidden" name="calls[__CALL__][id]" value=""><div class="language-grid"><div class="language-card"><h3>Español</h3><div class="field-grid"><label>Título<input type="text" name="calls[__CALL__][title_es]" value=""></label><label>Descripción<textarea name="calls[__CALL__][description_es]"></textarea></label><label>Beneficios<textarea name="calls[__CALL__][benefits_es]"></textarea></label><label>Documentos<textarea name="calls[__CALL__][documents_es]"></textarea></label><label>Plazo<input type="text" name="calls[__CALL__][deadline_es]" value=""></label><label>Nota<textarea name="calls[__CALL__][note_es]"></textarea></label></div></div><div class="language-card"><h3>Inglés</h3><div class="field-grid"><label>Título<input type="text" name="calls[__CALL__][title_en]" value=""></label><label>Descripción<textarea name="calls[__CALL__][description_en]"></textarea></label><label>Beneficios<textarea name="calls[__CALL__][benefits_en]"></textarea></label><label>Documentos<textarea name="calls[__CALL__][documents_en]"></textarea></label><label>Plazo<input type="text" name="calls[__CALL__][deadline_en]" value=""></label><label>Nota<textarea name="calls[__CALL__][note_en]"></textarea></label></div></div></div><div data-links-section><div class="links-heading"><h3>Enlaces y PDFs</h3><button class="btn btn-undo" type="button" data-restore-link disabled title="Restaurar último enlace eliminado" aria-label="Restaurar último enlace eliminado">↶</button></div><div class="links-list" data-links-list></div><button class="btn btn-add" type="button" data-add-link>Agregar enlace o PDF</button></div></article></template>
+    <template id="call-template"><article class="item-card" data-call-card data-call-index="__CALL__"><div class="item-header"><h3>Nueva convocatoria</h3><button class="btn btn-remove" type="button" data-remove-item>Quitar</button></div><input type="hidden" name="calls[__CALL__][id]" value=""><div class="language-grid"><div class="language-card"><h3>Español</h3><div class="field-grid"><label>Título<input type="text" name="calls[__CALL__][title_es]" value=""></label><label>Descripción<textarea name="calls[__CALL__][description_es]"></textarea></label><label>Beneficios<textarea name="calls[__CALL__][benefits_es]"></textarea></label><label>Documentos<textarea name="calls[__CALL__][documents_es]"></textarea></label><label>Plazo<input type="text" name="calls[__CALL__][deadline_es]" value=""></label><label>Nota<textarea name="calls[__CALL__][note_es]"></textarea></label></div></div><div class="language-card"><h3>Inglés</h3><div class="field-grid"><label>Título<input type="text" name="calls[__CALL__][title_en]" value=""></label><label>Descripción<textarea name="calls[__CALL__][description_en]"></textarea></label><label>Beneficios<textarea name="calls[__CALL__][benefits_en]"></textarea></label><label>Documentos<textarea name="calls[__CALL__][documents_en]"></textarea></label><label>Plazo<input type="text" name="calls[__CALL__][deadline_en]" value=""></label><label>Nota<textarea name="calls[__CALL__][note_en]"></textarea></label></div></div></div><div data-links-section><div class="links-heading"><h3>Enlaces y PDFs</h3></div><div class="links-list" data-links-list></div><div class="links-footer"><button class="btn btn-add" type="button" data-add-link>Agregar enlace o PDF</button><button class="btn btn-undo" type="button" data-restore-link disabled title="Restaurar último enlace eliminado" aria-label="Restaurar último enlace eliminado">↶</button></div></div></article></template>
     <template id="link-template"><article class="link-card" data-link-card data-link-index="__LINK__"><div class="link-actions"><button class="btn btn-remove" type="button" data-remove-link>Quitar enlace</button></div><div class="two-grid"><label>Texto en español<input type="text" name="calls[__CALL__][links][__LINK__][label_es]" value=""></label><label>Texto en inglés<input type="text" name="calls[__CALL__][links][__LINK__][label_en]" value=""></label></div><label>URL<input type="text" name="calls[__CALL__][links][__LINK__][href]" value=""></label><input type="hidden" name="calls[__CALL__][links][__LINK__][existing_href]" value=""><input type="hidden" name="calls[__CALL__][links][__LINK__][existing_media_asset_id]" value=""><label>Subir PDF opcional<input type="file" name="calls[__CALL__][links][__LINK__][pdf]" accept="application/pdf"></label></article></template>
 
     <script>
@@ -309,7 +373,7 @@
         }
 
         function setUndoState(scope) {
-            const button = scope.querySelector(':scope > [data-undo-card], :scope > .section-heading [data-undo-card], :scope > .item-header [data-undo-card], :scope > .link-actions [data-undo-card]');
+            const button = scope.querySelector(':scope > [data-undo-card], :scope > .flow-card-header [data-undo-card], :scope > .section-heading [data-undo-card], :scope > .item-header [data-undo-card], :scope > .link-actions [data-undo-card]');
             if (button) button.disabled = historyFor(scope).length === 0;
         }
 
@@ -378,7 +442,7 @@
             scope.dataset.undoScope = '';
             scope.dataset.undoBound = '1';
 
-            const button = scope.querySelector(':scope > [data-undo-card], :scope > .section-heading [data-undo-card], :scope > .item-header [data-undo-card], :scope > .link-actions [data-undo-card]') || createUndoButton();
+            const button = scope.querySelector(':scope > [data-undo-card], :scope > .flow-card-header [data-undo-card], :scope > .section-heading [data-undo-card], :scope > .item-header [data-undo-card], :scope > .link-actions [data-undo-card]') || createUndoButton();
             if (!button.parentElement || button.parentElement === scope && !button.classList.contains('undo-floating')) {
                 placeUndoButton(scope, button);
             }
