@@ -26,6 +26,7 @@
         .btn-tool { background: #f8fafc; border: 1px solid var(--line); color: var(--ink); padding: 9px 11px; }
         .btn-undo { align-items: center; background: #eef3fb; color: var(--blue); font-size: 20px; font-weight: 900; line-height: 1; min-width: 40px; padding: 9px 12px; text-shadow: 0 0 0 currentColor, .35px 0 0 currentColor, 0 .35px 0 currentColor; }
         .btn-undo:disabled { cursor: not-allowed; opacity: .42; }
+        .btn-undo-inline { min-height: 46px; }
         .undo-floating { position: absolute; right: 12px; top: 12px; z-index: 4; }
         .program-card > .undo-floating { right: -10px; top: -10px; z-index: 6; }
         .alert { border-radius: 14px; margin-bottom: 18px; padding: 14px 16px; }
@@ -37,7 +38,13 @@
         .language-grid, .two-grid { display: grid; gap: 18px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
         .language-card, .program-card { box-shadow: none; padding: 18px; position: relative; }
         .panel > .language-grid + .program-list { margin-top: 18px; }
-        .program-card { display: grid; gap: 16px; }
+        .program-card {
+            border: 2px solid rgba(22, 65, 148, .72);
+            border-left: 7px solid var(--blue);
+            box-shadow: 0 18px 42px rgba(22, 65, 148, .10);
+            display: grid;
+            gap: 16px;
+        }
         .program-header { align-items: center; display: flex; gap: 12px; justify-content: space-between; }
         label { display: grid; gap: 7px; font-size: 13px; font-weight: 800; }
         input, textarea { border: 1px solid #cfd6e3; border-radius: 12px; color: var(--ink); font: inherit; font-weight: 500; padding: 12px 13px; width: 100%; }
@@ -45,8 +52,36 @@
         textarea.conditions { min-height: 150px; }
         .hint { color: var(--muted); font-size: 12px; font-weight: 500; line-height: 1.45; }
         .field-error { color: var(--red-dark); font-size: 12px; font-weight: 800; line-height: 1.45; }
+        .search-panel {
+            align-items: center;
+            background:
+                linear-gradient(135deg, rgba(22, 65, 148, .08), rgba(37, 99, 235, .05)),
+                #fff;
+            border: 1px solid rgba(22, 65, 148, .14);
+            border-radius: 16px;
+            display: grid;
+            gap: 12px;
+            grid-template-columns: minmax(0, 1fr) auto;
+            margin: 18px 0;
+            padding: 14px;
+        }
+        .search-field {
+            align-items: center;
+            background: rgba(255, 255, 255, .88);
+            border: 1px solid #cfd6e3;
+            border-radius: 13px;
+            display: flex;
+            gap: 10px;
+            padding: 0 13px;
+        }
+        .search-icon { color: var(--blue); flex: 0 0 auto; font-size: 18px; font-weight: 900; }
+        .search-field input { background: transparent; border: 0; box-shadow: none; flex: 1; min-height: 46px; padding: 0; }
+        .search-field input:focus { outline: none; }
+        .btn-clear { background: #eef3fb; color: var(--blue); white-space: nowrap; }
+        .list-status { color: var(--muted); font-size: 13px; font-weight: 700; margin: -4px 0 14px; }
+        .search-empty { background: #fff7ed; border: 1px solid #fed7aa; border-radius: 14px; color: #9a3412; display: none; font-size: 13px; font-weight: 800; line-height: 1.5; margin: -4px 0 14px; padding: 14px 16px; }
         .sticky-actions { align-items: center; background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 16px; bottom: 18px; box-shadow: 0 18px 45px rgba(15,23,42,.12); display: flex; justify-content: space-between; padding: 14px; position: sticky; }
-        @media (max-width: 900px) { .topbar, .sticky-actions, .program-header { align-items: stretch; flex-direction: column; } .language-grid, .two-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 900px) { .topbar, .sticky-actions, .program-header { align-items: stretch; flex-direction: column; } .language-grid, .two-grid, .search-panel { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -115,6 +150,16 @@
                             </div>
                         @endforeach
                     </div>
+
+                    <div class="search-panel" role="search">
+                        <label class="search-field" for="{{ $groupKey }}-search">
+                            <span class="search-icon" aria-hidden="true">⌕</span>
+                            <input id="{{ $groupKey }}-search" type="search" data-program-search="{{ $groupKey }}" placeholder="Buscar en {{ strtolower($track['title']) }} por título, etiqueta, descripción, condiciones o URL">
+                        </label>
+                        <button class="btn btn-clear" type="button" data-clear-program-search="{{ $groupKey }}">Limpiar búsqueda</button>
+                    </div>
+                    <p class="search-empty" id="{{ $groupKey }}-empty">No se encontraron programas con esa búsqueda.</p>
+                    <p class="list-status" id="{{ $groupKey }}-status"></p>
 
                     <div class="program-list" id="{{ $groupKey }}-list">
                         @foreach (old($groupKey, $programs[$groupKey]) as $index => $program)
@@ -248,8 +293,16 @@
             return cardHistory.get(scope);
         }
 
+        function undoButtonFor(scope) {
+            if (scope.matches('.program-card')) {
+                return scope.querySelector(':scope > .program-header [data-undo-card]');
+            }
+
+            return scope.querySelector(':scope > [data-undo-card]');
+        }
+
         function setUndoState(scope) {
-            const button = scope.querySelector(':scope > [data-undo-card]');
+            const button = undoButtonFor(scope);
             if (button) button.disabled = historyFor(scope).length === 0;
         }
 
@@ -290,26 +343,96 @@
             scope.dataset.undoBound = '1';
 
             const button = document.createElement('button');
-            button.className = 'btn btn-undo undo-floating';
+            button.className = scope.matches('.program-card')
+                ? 'btn btn-undo btn-undo-inline'
+                : 'btn btn-undo undo-floating';
             button.type = 'button';
             button.dataset.undoCard = '';
             button.disabled = true;
             button.title = 'Deshacer último cambio';
             button.setAttribute('aria-label', 'Deshacer último cambio');
             button.textContent = '↶';
-            scope.appendChild(button);
+            const actions = scope.matches('.program-card')
+                ? scope.querySelector(':scope > .program-header .program-actions')
+                : null;
+            const removeButton = actions?.querySelector('[data-remove-program]');
+
+            if (actions) {
+                actions.insertBefore(button, removeButton || null);
+            } else {
+                scope.appendChild(button);
+            }
 
             button.addEventListener('click', () => undoScope(scope));
             editableFields(scope).forEach((field) => {
                 field.addEventListener('focusin', () => markFieldStart(field));
-                field.addEventListener('input', () => rememberFieldChange(field));
-                field.addEventListener('change', () => rememberFieldChange(field));
+                field.addEventListener('input', () => {
+                    rememberFieldChange(field);
+                    refreshContainingList(field);
+                });
+                field.addEventListener('change', () => {
+                    rememberFieldChange(field);
+                    refreshContainingList(field);
+                });
             });
         }
 
         function bindUndoScopes(root = document) {
             if (root.matches?.('.language-card, .program-card')) bindUndoScope(root);
             root.querySelectorAll('.language-card, .program-card').forEach(bindUndoScope);
+        }
+
+        function normalizeSearchText(value) {
+            return value
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .toLocaleLowerCase();
+        }
+
+        function programSearchText(card) {
+            return editableFields(card).map((field) => field.value).join(' ');
+        }
+
+        function filteredPrograms(group) {
+            const list = document.getElementById(`${group}-list`);
+            const query = normalizeSearchText(document.querySelector(`[data-program-search="${group}"]`)?.value.trim() || '');
+            const cards = [...list.querySelectorAll('[data-program-card]')];
+
+            if (!query) return cards;
+
+            return cards.filter((card) => normalizeSearchText(programSearchText(card)).includes(query));
+        }
+
+        function refreshProgramFilter(group) {
+            const list = document.getElementById(`${group}-list`);
+            if (!list) return;
+
+            const cards = [...list.querySelectorAll('[data-program-card]')];
+            const matches = new Set(filteredPrograms(group));
+            const status = document.getElementById(`${group}-status`);
+            const empty = document.getElementById(`${group}-empty`);
+            const hasQuery = Boolean(document.querySelector(`[data-program-search="${group}"]`)?.value.trim());
+
+            cards.forEach((card) => {
+                card.style.display = matches.has(card) ? '' : 'none';
+            });
+
+            if (status) {
+                status.textContent = cards.length
+                    ? `${matches.size} coincidencias de ${cards.length} programas. Los programas ocultos siguen guardándose al enviar el formulario.`
+                    : '';
+            }
+
+            if (empty) {
+                empty.style.display = hasQuery && cards.length && matches.size === 0 ? 'block' : 'none';
+            }
+        }
+
+        function refreshContainingList(field) {
+            const list = field.closest('.program-list');
+            if (!list?.id) return;
+
+            refreshProgramFilter(list.id.replace(/-list$/, ''));
         }
 
         document.querySelectorAll('[data-add-program]').forEach((button) => {
@@ -322,12 +445,18 @@
                 const card = wrapper.firstElementChild;
                 list.appendChild(card);
                 bindUndoScopes(card);
+                const search = document.querySelector(`[data-program-search="${group}"]`);
+                if (search) search.value = '';
+                refreshProgramFilter(group);
             });
         });
 
         document.addEventListener('click', (event) => {
             if (event.target.matches('[data-remove-program]')) {
-                event.target.closest('[data-program-card]').remove();
+                const card = event.target.closest('[data-program-card]');
+                const list = card.closest('.program-list');
+                card.remove();
+                if (list?.id) refreshProgramFilter(list.id.replace(/-list$/, ''));
             }
 
             if (event.target.matches('[data-prefix-line]')) {
@@ -335,16 +464,35 @@
                 const lines = textarea.value.split('\n').filter((line) => line.trim().length > 0);
                 textarea.value = lines.length ? lines.map((line) => line.trim().match(/^[•*-]/) ? line.trim() : `${event.target.dataset.prefixLine}${line.trim()}`).join('\n') : event.target.dataset.prefixLine;
                 textarea.focus();
+                refreshContainingList(textarea);
             }
 
             if (event.target.matches('[data-clear-prefixes]')) {
                 const textarea = event.target.closest('label').querySelector('textarea');
                 textarea.value = textarea.value.split('\n').map((line) => line.replace(/^[\s•*-]+/, '')).join('\n');
                 textarea.focus();
+                refreshContainingList(textarea);
             }
         });
 
+        document.querySelectorAll('[data-program-search]').forEach((field) => {
+            field.addEventListener('input', () => refreshProgramFilter(field.dataset.programSearch));
+        });
+
+        document.querySelectorAll('[data-clear-program-search]').forEach((button) => {
+            button.addEventListener('click', () => {
+                const group = button.dataset.clearProgramSearch;
+                const search = document.querySelector(`[data-program-search="${group}"]`);
+                if (!search) return;
+
+                search.value = '';
+                refreshProgramFilter(group);
+                search.focus();
+            });
+        });
+
         bindUndoScopes();
+        document.querySelectorAll('[data-program-search]').forEach((field) => refreshProgramFilter(field.dataset.programSearch));
     </script>
 </body>
 </html>

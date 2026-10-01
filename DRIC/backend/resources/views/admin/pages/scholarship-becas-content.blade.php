@@ -25,6 +25,7 @@
         .btn-remove { background: #fff1f2; color: var(--red-dark); }
         .btn-undo { align-items: center; background: #eef3fb; color: var(--blue); font-size: 20px; font-weight: 900; line-height: 1; min-width: 40px; padding: 9px 12px; text-shadow: 0 0 0 currentColor, .35px 0 0 currentColor, 0 .35px 0 currentColor; }
         .btn-undo:disabled { cursor: not-allowed; opacity: .42; }
+        .btn-undo-inline { min-height: 46px; }
         .undo-floating { position: absolute; right: 12px; top: 12px; z-index: 4; }
         .item-card > .undo-floating { right: -10px; top: -10px; z-index: 6; }
         .alert { border-radius: 14px; margin-bottom: 18px; padding: 14px 16px; }
@@ -36,15 +37,49 @@
         .language-grid, .two-grid { display: grid; gap: 18px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
         .language-card, .item-card { box-shadow: none; padding: 18px; position: relative; }
         .panel > .language-grid + .item-list { margin-top: 18px; }
-        .item-card { display: grid; gap: 16px; }
+            .item-card {
+            border: 2px solid rgba(22, 65, 148, .72);
+            border-left: 7px solid var(--blue);
+            box-shadow: 0 18px 42px rgba(22, 65, 148, .10);
+            display: grid;
+            gap: 16px;
+        }
         .item-header { align-items: center; display: flex; gap: 12px; justify-content: space-between; }
         label { display: grid; gap: 7px; font-size: 13px; font-weight: 800; }
         input, textarea { border: 1px solid #cfd6e3; border-radius: 12px; color: var(--ink); font: inherit; font-weight: 500; padding: 12px 13px; width: 100%; }
         textarea { line-height: 1.55; min-height: 104px; resize: vertical; }
         .hint { color: var(--muted); font-size: 12px; font-weight: 500; line-height: 1.45; }
         .field-error { color: var(--red-dark); font-size: 12px; font-weight: 800; line-height: 1.45; }
+        .search-panel {
+            align-items: center;
+            background:
+                linear-gradient(135deg, rgba(22, 65, 148, .08), rgba(37, 99, 235, .05)),
+                #fff;
+            border: 1px solid rgba(22, 65, 148, .14);
+            border-radius: 16px;
+            display: grid;
+            gap: 12px;
+            grid-template-columns: minmax(0, 1fr) auto;
+            margin: 18px 0;
+            padding: 14px;
+        }
+        .search-field {
+            align-items: center;
+            background: rgba(255, 255, 255, .88);
+            border: 1px solid #cfd6e3;
+            border-radius: 13px;
+            display: flex;
+            gap: 10px;
+            padding: 0 13px;
+        }
+        .search-icon { color: var(--blue); flex: 0 0 auto; font-size: 18px; font-weight: 900; }
+        .search-field input { background: transparent; border: 0; box-shadow: none; flex: 1; min-height: 46px; padding: 0; }
+        .search-field input:focus { outline: none; }
+        .btn-clear { background: #eef3fb; color: var(--blue); white-space: nowrap; }
+        .list-status { color: var(--muted); font-size: 13px; font-weight: 700; margin: -4px 0 14px; }
+        .search-empty { background: #fff7ed; border: 1px solid #fed7aa; border-radius: 14px; color: #9a3412; display: none; font-size: 13px; font-weight: 800; line-height: 1.5; margin: -4px 0 14px; padding: 14px 16px; }
         .sticky-actions { align-items: center; background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 16px; bottom: 18px; box-shadow: 0 18px 45px rgba(15,23,42,.12); display: flex; justify-content: space-between; padding: 14px; position: sticky; }
-        @media (max-width: 900px) { .topbar, .sticky-actions, .item-header { align-items: stretch; flex-direction: column; } .language-grid, .two-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 900px) { .topbar, .sticky-actions, .item-header { align-items: stretch; flex-direction: column; } .language-grid, .two-grid, .search-panel { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -127,6 +162,16 @@
                             </div>
                         @endforeach
                     </div>
+
+                    <div class="search-panel" role="search">
+                        <label class="search-field" for="{{ $groupKey }}-search">
+                            <span class="search-icon" aria-hidden="true">⌕</span>
+                            <input id="{{ $groupKey }}-search" type="search" data-list-search="{{ $groupKey }}" placeholder="Buscar en {{ strtolower($group['title']) }} por nombre, categoría, descripción o URL">
+                        </label>
+                        <button class="btn btn-clear" type="button" data-clear-search="{{ $groupKey }}">Limpiar búsqueda</button>
+                    </div>
+                    <p class="search-empty" id="{{ $groupKey }}-empty">No se encontraron tarjetas con esa búsqueda.</p>
+                    <p class="list-status" id="{{ $groupKey }}-status"></p>
 
                     <div class="item-list" id="{{ $groupKey }}-list">
                         @foreach ($group['items'] as $index => $item)
@@ -244,8 +289,16 @@
             return cardHistory.get(scope);
         }
 
+        function undoButtonFor(scope) {
+            if (scope.matches('.item-card')) {
+                return scope.querySelector(':scope > .item-header [data-undo-card]');
+            }
+
+            return scope.querySelector(':scope > [data-undo-card]');
+        }
+
         function setUndoState(scope) {
-            const button = scope.querySelector(':scope > [data-undo-card]');
+            const button = undoButtonFor(scope);
             if (button) button.disabled = historyFor(scope).length === 0;
         }
 
@@ -289,26 +342,96 @@
             scope.dataset.undoBound = '1';
 
             const button = document.createElement('button');
-            button.className = 'btn btn-undo undo-floating';
+            button.className = scope.matches('.item-card')
+                ? 'btn btn-undo btn-undo-inline'
+                : 'btn btn-undo undo-floating';
             button.type = 'button';
             button.dataset.undoCard = '';
             button.disabled = true;
             button.title = 'Deshacer último cambio';
             button.setAttribute('aria-label', 'Deshacer último cambio');
             button.textContent = '↶';
-            scope.appendChild(button);
+            const actions = scope.matches('.item-card')
+                ? scope.querySelector(':scope > .item-header .item-actions')
+                : null;
+            const removeButton = actions?.querySelector('[data-remove-item]');
+
+            if (actions) {
+                actions.insertBefore(button, removeButton || null);
+            } else {
+                scope.appendChild(button);
+            }
 
             button.addEventListener('click', () => undoScope(scope));
             editableFields(scope).forEach((field) => {
                 field.addEventListener('focusin', () => markFieldStart(field));
-                field.addEventListener('input', () => rememberFieldChange(field));
-                field.addEventListener('change', () => rememberFieldChange(field));
+                field.addEventListener('input', () => {
+                    rememberFieldChange(field);
+                    refreshContainingList(field);
+                });
+                field.addEventListener('change', () => {
+                    rememberFieldChange(field);
+                    refreshContainingList(field);
+                });
             });
         }
 
         function bindUndoScopes(root = document) {
             if (root.matches?.('.language-card, .item-card')) bindUndoScope(root);
             root.querySelectorAll('.language-card, .item-card').forEach(bindUndoScope);
+        }
+
+        function normalizeSearchText(value) {
+            return value
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .toLocaleLowerCase();
+        }
+
+        function cardSearchText(card) {
+            return editableFields(card).map((field) => field.value).join(' ');
+        }
+
+        function filteredCards(group) {
+            const list = document.getElementById(`${group}-list`);
+            const query = normalizeSearchText(document.querySelector(`[data-list-search="${group}"]`)?.value.trim() || '');
+            const cards = [...list.querySelectorAll('[data-item-card]')];
+
+            if (!query) return cards;
+
+            return cards.filter((card) => normalizeSearchText(cardSearchText(card)).includes(query));
+        }
+
+        function refreshListFilter(group) {
+            const list = document.getElementById(`${group}-list`);
+            if (!list) return;
+
+            const cards = [...list.querySelectorAll('[data-item-card]')];
+            const matches = new Set(filteredCards(group));
+            const status = document.getElementById(`${group}-status`);
+            const empty = document.getElementById(`${group}-empty`);
+            const hasQuery = Boolean(document.querySelector(`[data-list-search="${group}"]`)?.value.trim());
+
+            cards.forEach((card) => {
+                card.style.display = matches.has(card) ? '' : 'none';
+            });
+
+            if (status) {
+                status.textContent = cards.length
+                    ? `${matches.size} coincidencias de ${cards.length} tarjetas. Las tarjetas ocultas siguen guardándose al enviar el formulario.`
+                    : '';
+            }
+
+            if (empty) {
+                empty.style.display = hasQuery && cards.length && matches.size === 0 ? 'block' : 'none';
+            }
+        }
+
+        function refreshContainingList(field) {
+            const list = field.closest('.item-list');
+            if (!list?.id) return;
+
+            refreshListFilter(list.id.replace(/-list$/, ''));
         }
 
         document.querySelectorAll('[data-add-item]').forEach((button) => {
@@ -321,16 +444,39 @@
                 const card = wrapper.firstElementChild;
                 list.appendChild(card);
                 bindUndoScopes(card);
+                const search = document.querySelector(`[data-list-search="${group}"]`);
+                if (search) search.value = '';
+                refreshListFilter(group);
             });
         });
 
         document.addEventListener('click', (event) => {
             if (event.target.matches('[data-remove-item]')) {
-                event.target.closest('[data-item-card]').remove();
+                const card = event.target.closest('[data-item-card]');
+                const list = card.closest('.item-list');
+                card.remove();
+                if (list?.id) refreshListFilter(list.id.replace(/-list$/, ''));
             }
         });
 
+        document.querySelectorAll('[data-list-search]').forEach((field) => {
+            field.addEventListener('input', () => refreshListFilter(field.dataset.listSearch));
+        });
+
+        document.querySelectorAll('[data-clear-search]').forEach((button) => {
+            button.addEventListener('click', () => {
+                const group = button.dataset.clearSearch;
+                const search = document.querySelector(`[data-list-search="${group}"]`);
+                if (!search) return;
+
+                search.value = '';
+                refreshListFilter(group);
+                search.focus();
+            });
+        });
+
         bindUndoScopes();
+        document.querySelectorAll('[data-list-search]').forEach((field) => refreshListFilter(field.dataset.listSearch));
     </script>
 </body>
 </html>
