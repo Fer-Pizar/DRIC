@@ -435,7 +435,7 @@
             display: flex;
             justify-content: space-between;
             padding: 14px;
-            position: sticky;
+            position: sticky; z-index: 30;
         }
 
         @media (max-width: 820px) {
@@ -1110,5 +1110,6 @@
         setRestoreDocumentState();
         refreshRows();
     </script>
+    @include('admin.partials.persistent-undo')
 </body>
 </html>

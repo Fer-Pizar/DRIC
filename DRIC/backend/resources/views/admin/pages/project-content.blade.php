@@ -290,7 +290,7 @@
             display: flex;
             justify-content: space-between;
             padding: 14px;
-            position: sticky;
+            position: sticky; z-index: 30;
         }
 
         .subpage-card {
@@ -1167,5 +1167,6 @@
         document.querySelectorAll(".language-card, .media-card").forEach(bindUndoScope);
         document.querySelectorAll("[data-image-card]").forEach(bindImageCard);
     </script>
+    @include('admin.partials.persistent-undo')
 </body>
 </html>

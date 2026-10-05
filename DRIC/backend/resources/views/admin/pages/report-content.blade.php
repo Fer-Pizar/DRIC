@@ -43,7 +43,7 @@
         .hint { color: var(--muted); font-size: 12px; font-weight: 500; line-height: 1.45; }
         .field-error { color: var(--red-dark); font-size: 12px; font-weight: 800; line-height: 1.45; }
         .current-file { background: var(--soft); border: 1px solid var(--line); border-radius: 12px; color: var(--muted); padding: 10px 12px; }
-        .sticky-actions { align-items: center; background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 16px; bottom: 18px; box-shadow: 0 18px 45px rgba(15,23,42,.12); display: flex; justify-content: space-between; padding: 14px; position: sticky; }
+        .sticky-actions { align-items: center; background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 16px; bottom: 18px; box-shadow: 0 18px 45px rgba(15,23,42,.12); display: flex; justify-content: space-between; padding: 14px; position: sticky; z-index: 30; }
         @media (max-width: 820px) { .topbar, .sticky-actions, .report-header { align-items: stretch; flex-direction: column; } .language-grid, .report-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
@@ -460,5 +460,6 @@
             refreshReports();
         });
     </script>
+    @include('admin.partials.persistent-undo')
 </body>
 </html>

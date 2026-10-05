@@ -65,7 +65,7 @@
         .btn-image-remove { align-items: center; background: rgba(127,0,16,.96); border: 2px solid rgba(255,255,255,.92); border-radius: 999px; box-shadow: 0 8px 20px rgba(15,23,42,.22); color: #fff; display: inline-flex; font-size: 20px; font-weight: 900; height: 32px; justify-content: center; line-height: 1; padding: 0; position: absolute; right: -8px; top: -8px; width: 32px; z-index: 5; }
         .meta-grid input, .meta-grid select { min-height: 48px; }
         .stars { color: #d7a526; font-size: 20px; letter-spacing: 2px; }
-        .sticky-actions { align-items: center; background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 16px; bottom: 18px; box-shadow: 0 18px 45px rgba(15,23,42,.12); display: flex; justify-content: space-between; padding: 14px; position: sticky; z-index: 5; }
+        .sticky-actions { align-items: center; background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 16px; bottom: 18px; box-shadow: 0 18px 45px rgba(15,23,42,.12); display: flex; justify-content: space-between; padding: 14px; position: sticky; z-index: 30; }
         .crop-modal { align-items: center; background: rgba(2,6,23,.78); display: none; inset: 0; justify-content: center; padding: 18px; position: fixed; z-index: 50; }
         .crop-modal.is-open { display: flex; }
         .crop-dialog { background: #fff; border: 1px solid var(--line); border-radius: 18px; box-shadow: 0 30px 90px rgba(0,0,0,.34); display: grid; gap: 16px; max-height: calc(100vh - 36px); max-width: 920px; overflow: auto; padding: 18px; width: min(100%, 920px); }
@@ -814,5 +814,6 @@
         document.querySelectorAll(".testimonial-row").forEach(bindUndoCard);
         document.querySelectorAll("[data-image-card]").forEach(bindImageCard);
     </script>
+    @include('admin.partials.persistent-undo')
 </body>
 </html>

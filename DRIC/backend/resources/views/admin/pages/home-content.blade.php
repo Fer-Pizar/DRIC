@@ -66,7 +66,7 @@
         .preview-ruler { align-items: center; background: rgba(2,6,23,.76); border: 1px solid rgba(255,255,255,.16); border-radius: 999px; color: #fff; display: inline-flex; font-size: 11px; font-weight: 900; gap: 6px; left: 10px; line-height: 1; padding: 7px 10px; position: absolute; top: 10px; }
         .preview-ruler::before { content: ""; background: repeating-linear-gradient(90deg, #fff 0 1px, transparent 1px 7px); display: block; height: 10px; opacity: .82; width: 34px; }
         .btn-image-remove { align-items: center; background: rgba(127,0,16,.92); border: 2px solid rgba(255,255,255,.88); border-radius: 999px; color: #fff; display: inline-flex; font-size: 20px; font-weight: 900; height: 32px; justify-content: center; line-height: 1; padding: 0; position: absolute; right: 10px; top: 10px; width: 32px; z-index: 3; }
-        .sticky-actions { align-items: center; background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 16px; bottom: 18px; box-shadow: 0 18px 45px rgba(15,23,42,.12); display: flex; justify-content: space-between; padding: 14px; position: sticky; z-index: 5; }
+        .sticky-actions { align-items: center; background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 16px; bottom: 18px; box-shadow: 0 18px 45px rgba(15,23,42,.12); display: flex; justify-content: space-between; padding: 14px; position: sticky; z-index: 30; }
         .remove-row { align-items: center; display: flex; justify-content: space-between; gap: 12px; }
         .toggle-row { align-items: center; background: var(--soft); border: 1px solid var(--line); border-radius: 16px; display: flex; justify-content: space-between; gap: 18px; margin-bottom: 18px; padding: 16px; }
         .switch { align-items: center; cursor: pointer; display: inline-flex; flex: 0 0 auto; gap: 12px; user-select: none; }
@@ -1040,5 +1040,6 @@
         bindUndoScopes();
         document.querySelectorAll("[data-image-card]").forEach(bindImageCard);
     </script>
+    @include('admin.partials.persistent-undo')
 </body>
 </html>

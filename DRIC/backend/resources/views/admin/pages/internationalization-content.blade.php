@@ -48,7 +48,7 @@
         .toggle-copy { display: grid; gap: 2px; min-width: 138px; }
         .toggle-copy strong { color: var(--ink); font-size: 13px; line-height: 1.2; }
         .toggle-copy span { color: var(--muted); font-size: 12px; font-weight: 600; line-height: 1.3; }
-        .sticky-actions { align-items: center; background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 16px; bottom: 18px; box-shadow: 0 18px 45px rgba(15,23,42,.12); display: flex; justify-content: space-between; padding: 14px; position: sticky; }
+        .sticky-actions { align-items: center; background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 16px; bottom: 18px; box-shadow: 0 18px 45px rgba(15,23,42,.12); display: flex; justify-content: space-between; padding: 14px; position: sticky; z-index: 30; }
         @media (max-width: 900px) { .topbar, .sticky-actions, .panel-header.with-toggle { align-items: stretch; flex-direction: column; } .language-grid, .three-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
@@ -320,5 +320,6 @@
 
         document.querySelectorAll('.language-card, .item-card').forEach(bindUndoScope);
     </script>
+    @include('admin.partials.persistent-undo')
 </body>
 </html>

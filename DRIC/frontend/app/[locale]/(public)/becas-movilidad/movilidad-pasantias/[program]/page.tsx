@@ -156,7 +156,7 @@ export default async function MobilityProgramDetailPage({ params }: Props) {
               {match.program.overviewTitle || copy.overview}
             </h2>
 
-            <p className="mt-6 text-base leading-8 text-white/68 md:text-lg">
+            <p className="mt-6 whitespace-pre-line text-base leading-8 text-white/68 md:text-lg">
               {match.program.summary}
             </p>
           </article>
@@ -182,7 +182,7 @@ export default async function MobilityProgramDetailPage({ params }: Props) {
                       <dt className="text-xs font-bold uppercase tracking-[0.18em] text-cyan-200">
                         {item.label}
                       </dt>
-                      <dd className="mt-2 text-sm leading-6 text-white/72">{item.value}</dd>
+                      <dd className="mt-2 whitespace-pre-line text-sm leading-6 text-white/72">{item.value}</dd>
                     </div>
                   ))}
                 </dl>
@@ -202,7 +202,7 @@ export default async function MobilityProgramDetailPage({ params }: Props) {
                   {match.program.conditions.map((condition) => (
                     <li key={condition} className="flex gap-3 text-sm leading-7 text-white/66">
                       <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#E30613]" />
-                      <span>{condition}</span>
+                      <span className="whitespace-pre-line">{condition}</span>
                     </li>
                   ))}
                 </ul>
@@ -253,7 +253,7 @@ export default async function MobilityProgramDetailPage({ params }: Props) {
                   <h3 className="text-2xl font-semibold tracking-[-0.04em]">{section.title}</h3>
 
                   {section.body ? (
-                    <p className="mt-5 text-sm leading-7 text-white/66">{section.body}</p>
+                    <p className="mt-5 whitespace-pre-line text-sm leading-7 text-white/66">{section.body}</p>
                   ) : null}
 
                   {section.items?.length ? (
@@ -261,7 +261,7 @@ export default async function MobilityProgramDetailPage({ params }: Props) {
                       {section.items.map((item) => (
                         <li key={item} className="flex gap-3 text-sm leading-7 text-white/66">
                           <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-200" />
-                          <span>{item}</span>
+                          <span className="whitespace-pre-line">{item}</span>
                         </li>
                       ))}
                     </ul>
@@ -294,7 +294,7 @@ export default async function MobilityProgramDetailPage({ params }: Props) {
                     {call.title}
                   </h3>
 
-                  <p className="mt-4 text-sm leading-7 text-white/66">{call.description}</p>
+                  <p className="mt-4 whitespace-pre-line text-sm leading-7 text-white/66">{call.description}</p>
 
                   <div className="mt-7 grid gap-4">
                     {call.benefits?.length ? (
@@ -315,12 +315,12 @@ export default async function MobilityProgramDetailPage({ params }: Props) {
                           <CalendarMonthRoundedIcon sx={{ color: "#67e8f9", fontSize: 20 }} />
                           {copy.deadline}
                         </div>
-                        <p className="text-sm leading-7 text-white/66">{call.deadline}</p>
+                        <p className="whitespace-pre-line text-sm leading-7 text-white/66">{call.deadline}</p>
                       </div>
                     ) : null}
 
                     {call.note ? (
-                      <div className="dric-mobility-cyan-note rounded-3xl border border-cyan-200/20 bg-cyan-200/10 p-5 text-sm leading-7 text-cyan-50">
+                      <div className="dric-mobility-cyan-note whitespace-pre-line rounded-3xl border border-cyan-200/20 bg-cyan-200/10 p-5 text-sm leading-7 text-cyan-50">
                         {call.note}
                       </div>
                     ) : null}
@@ -415,7 +415,7 @@ function InfoBlock({
         {items.map((item) => (
           <li key={item} className="flex gap-3 text-sm leading-7 text-white/66">
             <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-200" />
-            <span>{item}</span>
+            <span className="whitespace-pre-line">{item}</span>
           </li>
         ))}
       </ul>

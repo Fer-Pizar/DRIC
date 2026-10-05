@@ -67,7 +67,7 @@
         .live-error:empty { display: none; }
         .is-invalid { border-color: var(--red-dark) !important; box-shadow: 0 0 0 3px rgba(127, 0, 16, 0.10); }
         .empty-state { background: var(--soft); border: 1px dashed #cfd6e3; border-radius: 16px; color: var(--muted); padding: 22px; text-align: center; }
-        .sticky-actions { align-items: center; background: rgba(255, 255, 255, 0.94); border: 1px solid var(--line); border-radius: 16px; bottom: 18px; box-shadow: 0 18px 45px rgba(15, 23, 42, 0.12); display: flex; justify-content: space-between; padding: 14px; position: sticky; }
+        .sticky-actions { align-items: center; background: rgba(255, 255, 255, 0.94); border: 1px solid var(--line); border-radius: 16px; bottom: 18px; box-shadow: 0 18px 45px rgba(15, 23, 42, 0.12); display: flex; justify-content: space-between; padding: 14px; position: sticky; z-index: 30; }
 
         @media (max-width: 820px) {
             .topbar, .panel-header, .sticky-actions { align-items: stretch; flex-direction: column; }
@@ -707,5 +707,6 @@
         setDocumentUndoState();
         refreshRows();
     </script>
+    @include('admin.partials.persistent-undo')
 </body>
 </html>

@@ -63,7 +63,7 @@
         .crop-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; }
         .hint { color: var(--muted); font-size: 12px; font-weight: 500; line-height: 1.45; }
         .field-error { color: var(--red-dark); font-size: 12px; font-weight: 800; line-height: 1.45; }
-        .sticky-actions { align-items: center; background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 16px; bottom: 18px; box-shadow: 0 18px 45px rgba(15,23,42,.12); display: flex; justify-content: space-between; padding: 14px; position: sticky; }
+        .sticky-actions { align-items: center; background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 16px; bottom: 18px; box-shadow: 0 18px 45px rgba(15,23,42,.12); display: flex; justify-content: space-between; padding: 14px; position: sticky; z-index: 30; }
         @media (max-width: 900px) { .topbar, .sticky-actions, .item-header { align-items: stretch; flex-direction: column; } .language-grid, .two-grid { grid-template-columns: 1fr; } .item-actions, .link-actions { justify-content: flex-start; } }
     </style>
 </head>
@@ -203,13 +203,19 @@
                                         </article>
                                     @endforeach
                                 </div>
-                                <button class="btn btn-add" type="button" data-add-link>Agregar recurso</button>
+                                <div class="item-actions">
+                                    <button class="btn btn-add" type="button" data-add-link>Agregar recurso</button>
+                                    <button class="btn btn-undo" type="button" data-restore-link disabled title="Restaurar último recurso quitado" aria-label="Restaurar último recurso quitado">↶</button>
+                                </div>
                             </div>
                         </article>
                     @endforeach
                 </div>
 
-                <button class="btn btn-add" type="button" data-add-section>Agregar tarjeta</button>
+                <div class="item-actions">
+                    <button class="btn btn-add" type="button" data-add-section>Agregar tarjeta</button>
+                    <button class="btn btn-undo" type="button" data-restore-section disabled title="Restaurar última tarjeta quitada" aria-label="Restaurar última tarjeta quitada">↶</button>
+                </div>
             </section>
 
             <div class="sticky-actions">
@@ -246,7 +252,7 @@
                     <label>Viñetas<textarea class="list-field" name="sections[__INDEX__][points_en]" data-list-field></textarea><span class="hint">Una línea por viñeta.</span></label>
                 </div></div>
             </div>
-            <div><h3>Recursos, enlaces y PDFs</h3><div class="links-list" data-links-list></div><button class="btn btn-add" type="button" data-add-link>Agregar recurso</button></div>
+            <div><h3>Recursos, enlaces y PDFs</h3><div class="links-list" data-links-list></div><div class="item-actions"><button class="btn btn-add" type="button" data-add-link>Agregar recurso</button><button class="btn btn-undo" type="button" data-restore-link disabled title="Restaurar último recurso quitado" aria-label="Restaurar último recurso quitado">↶</button></div></div>
         </article>
     </template>
 
@@ -707,6 +713,167 @@
             });
         }
 
+        const removedSectionHistory = [];
+        const removedLinkHistory = new WeakMap();
+        const removedSectionStorageKey = `national-foreign-info-removed-sections:${window.location.pathname}`;
+        const removedLinkStorageKey = `national-foreign-info-removed-links:${window.location.pathname}`;
+
+        function readStoredSnapshots(key) {
+            try {
+                const stored = sessionStorage.getItem(key);
+                const parsed = stored ? JSON.parse(stored) : {};
+                return parsed && typeof parsed === 'object' ? parsed : {};
+            } catch (error) {
+                sessionStorage.removeItem(key);
+                return {};
+            }
+        }
+
+        function writeStoredSnapshots(key, value) {
+            const keys = Object.keys(value).filter((itemKey) => Array.isArray(value[itemKey]) && value[itemKey].length);
+
+            if (!keys.length) {
+                sessionStorage.removeItem(key);
+                return;
+            }
+
+            sessionStorage.setItem(key, JSON.stringify(value));
+        }
+
+        function popStoredSnapshot(storageKey, itemKey) {
+            const stored = readStoredSnapshots(storageKey);
+            const snapshots = Array.isArray(stored[itemKey]) ? stored[itemKey] : [];
+            const snapshot = snapshots.pop() || null;
+
+            if (!snapshots.length) {
+                delete stored[itemKey];
+            } else {
+                stored[itemKey] = snapshots;
+            }
+
+            writeStoredSnapshots(storageKey, stored);
+            return snapshot;
+        }
+
+        function cleanRemovedSnapshot(card) {
+            const clone = card.cloneNode(true);
+            clone.querySelectorAll('[data-undo-card]').forEach((button) => button.remove());
+            clone.querySelectorAll('.language-card, .item-card, .link-card').forEach((scope) => {
+                delete scope.dataset.undoBound;
+                delete scope.dataset.undoScope;
+            });
+            delete clone.dataset.undoBound;
+            delete clone.dataset.undoScope;
+            return clone.outerHTML;
+        }
+
+        function sectionKey(card) {
+            const id = card.querySelector('input[name$="[id]"]')?.value.trim();
+            const key = card.querySelector('input[name$="[key]"]')?.value.trim();
+            const title = card.querySelector('input[name$="[title_es]"]')?.value.trim();
+            return id ? `id:${id}` : (key ? `key:${key}` : (title ? `title:${title}` : `index:${Array.from(sectionsList.querySelectorAll('[data-section-card]')).indexOf(card)}`));
+        }
+
+        function linkHistoryFor(card) {
+            if (!removedLinkHistory.has(card)) removedLinkHistory.set(card, []);
+            return removedLinkHistory.get(card);
+        }
+
+        function setRestoreSectionState() {
+            const button = document.querySelector('[data-restore-section]');
+            const stored = readStoredSnapshots(removedSectionStorageKey);
+            const hasStored = Array.isArray(stored.sections) && stored.sections.length > 0;
+
+            if (button) button.disabled = removedSectionHistory.length === 0 && !hasStored;
+        }
+
+        function setRestoreLinkState(card) {
+            const button = card.querySelector('[data-restore-link]');
+            const stored = readStoredSnapshots(removedLinkStorageKey);
+            const key = sectionKey(card);
+            const hasStored = Array.isArray(stored[key]) && stored[key].length > 0;
+
+            if (button) button.disabled = linkHistoryFor(card).length === 0 && !hasStored;
+        }
+
+        function setAllRestoreStates() {
+            setRestoreSectionState();
+            sectionsList.querySelectorAll('[data-section-card]').forEach(setRestoreLinkState);
+        }
+
+        function rememberRemovedSection(card) {
+            const cards = Array.from(sectionsList.querySelectorAll('[data-section-card]'));
+            const snapshot = {
+                html: cleanRemovedSnapshot(card),
+                index: cards.indexOf(card),
+            };
+            const stored = readStoredSnapshots(removedSectionStorageKey);
+
+            removedSectionHistory.push(snapshot);
+            if (removedSectionHistory.length > 20) removedSectionHistory.shift();
+            if (!Array.isArray(stored.sections)) stored.sections = [];
+            stored.sections.push(snapshot);
+            if (stored.sections.length > 20) stored.sections.shift();
+            writeStoredSnapshots(removedSectionStorageKey, stored);
+            setRestoreSectionState();
+        }
+
+        function restoreSection() {
+            const memorySnapshot = removedSectionHistory.pop();
+            const snapshot = memorySnapshot || popStoredSnapshot(removedSectionStorageKey, 'sections');
+            if (!snapshot) return;
+            if (memorySnapshot) popStoredSnapshot(removedSectionStorageKey, 'sections');
+
+            const wrapper = document.createElement('div');
+            wrapper.innerHTML = snapshot.html.trim();
+            const card = wrapper.firstElementChild;
+            const reference = sectionsList.querySelectorAll('[data-section-card]')[snapshot.index] || null;
+            sectionsList.insertBefore(card, reference);
+            bindUndoScopes(card);
+            bindImageCards(card);
+            reindexAll();
+            setAllRestoreStates();
+        }
+
+        function rememberRemovedLink(linkCard) {
+            const card = linkCard.closest('[data-section-card]');
+            const list = card.querySelector('[data-links-list]');
+            const links = Array.from(list.querySelectorAll('[data-link-card]'));
+            const key = sectionKey(card);
+            const snapshot = {
+                html: cleanRemovedSnapshot(linkCard),
+                index: links.indexOf(linkCard),
+            };
+            const history = linkHistoryFor(card);
+            const stored = readStoredSnapshots(removedLinkStorageKey);
+
+            history.push(snapshot);
+            if (history.length > 20) history.shift();
+            if (!Array.isArray(stored[key])) stored[key] = [];
+            stored[key].push(snapshot);
+            if (stored[key].length > 20) stored[key].shift();
+            writeStoredSnapshots(removedLinkStorageKey, stored);
+            setRestoreLinkState(card);
+        }
+
+        function restoreLink(card) {
+            const key = sectionKey(card);
+            const memorySnapshot = linkHistoryFor(card).pop();
+            const snapshot = memorySnapshot || popStoredSnapshot(removedLinkStorageKey, key);
+            if (!snapshot) return;
+            if (memorySnapshot) popStoredSnapshot(removedLinkStorageKey, key);
+
+            const list = card.querySelector('[data-links-list]');
+            const wrapper = document.createElement('div');
+            wrapper.innerHTML = snapshot.html.trim();
+            const linkCard = wrapper.firstElementChild;
+            const reference = list.querySelectorAll('[data-link-card]')[snapshot.index] || null;
+            list.insertBefore(linkCard, reference);
+            bindUndoScopes(linkCard);
+            reindexLinks(card);
+            setRestoreLinkState(card);
+        }
+
         function addSection() {
             const index = sectionsList.querySelectorAll('[data-section-card]').length;
             const wrapper = document.createElement('div');
@@ -715,6 +882,8 @@
             sectionsList.appendChild(card);
             bindUndoScopes(card);
             bindImageCards(card);
+            reindexAll();
+            setAllRestoreStates();
         }
 
         function addLink(card) {
@@ -727,23 +896,38 @@
             const linkCard = wrapper.firstElementChild;
             list.appendChild(linkCard);
             bindUndoScopes(linkCard);
+            setRestoreLinkState(card);
         }
 
         bindUndoScopes();
         bindImageCards();
+        setAllRestoreStates();
         document.querySelector('[data-add-section]').addEventListener('click', addSection);
         document.addEventListener('click', (event) => {
             if (event.target.matches('[data-remove-section]')) {
-                event.target.closest('[data-section-card]').remove();
+                const card = event.target.closest('[data-section-card]');
+                rememberRemovedSection(card);
+                card.remove();
                 reindexAll();
+                setAllRestoreStates();
             }
             if (event.target.matches('[data-add-link]')) addLink(event.target.closest('[data-section-card]'));
             if (event.target.matches('[data-remove-link]')) {
                 const card = event.target.closest('[data-section-card]');
-                event.target.closest('[data-link-card]').remove();
+                const linkCard = event.target.closest('[data-link-card]');
+                rememberRemovedLink(linkCard);
+                linkCard.remove();
                 reindexLinks(card);
+                setRestoreLinkState(card);
+            }
+            if (event.target.matches('[data-restore-section]')) {
+                restoreSection();
+            }
+            if (event.target.matches('[data-restore-link]')) {
+                restoreLink(event.target.closest('[data-section-card]'));
             }
         });
     </script>
+    @include('admin.partials.persistent-undo')
 </body>
 </html>

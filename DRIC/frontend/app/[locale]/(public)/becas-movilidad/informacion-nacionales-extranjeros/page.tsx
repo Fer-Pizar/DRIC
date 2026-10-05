@@ -326,7 +326,11 @@ export default async function InformacionNacionalesExtranjerosPage({
             >
               <div className="dric-info-card-inner relative grid gap-8 rounded-[calc(2rem-1px)] p-6 md:p-8 lg:grid-cols-[0.86fr_1.14fr] lg:gap-10">
                 <div className={`${index % 2 === 1 ? "lg:order-2" : ""}`}>
-                  <div className="dric-info-image relative flex min-h-[280px] overflow-hidden rounded-[1.6rem] border border-white/10 bg-white/[0.045]">
+                  <div
+                    className={`dric-info-image relative flex overflow-hidden rounded-[1.6rem] border border-white/10 bg-white/[0.045] ${
+                      section.id === "entrante" ? "min-h-[420px] lg:min-h-[500px]" : "min-h-[280px]"
+                    }`}
+                  >
                     <div className="dric-info-image-placeholder absolute inset-0 flex items-center justify-center px-6 text-center">
                       <span className="rounded-full border border-white/12 bg-[#020617]/45 px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] text-white/62 backdrop-blur">
                         {t.photoSlot}: {section.id}.png

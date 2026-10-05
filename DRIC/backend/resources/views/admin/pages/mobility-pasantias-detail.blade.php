@@ -60,6 +60,7 @@
             border-left: 7px solid var(--blue);
             box-shadow: 0 18px 42px rgba(22, 65, 148, .10);
         }
+        .item-card[data-section-card] > .item-header > .btn-undo,
         .item-card[data-call-card] > .item-header > .btn-undo { margin-left: auto; }
         .link-card { background: #f8fafc; display: grid; gap: 12px; }
         .item-header { align-items: center; display: flex; gap: 12px; justify-content: space-between; }
@@ -73,7 +74,7 @@
         .content-editor { min-height: 230px; white-space: pre-wrap; }
         .hint { color: var(--muted); font-size: 12px; font-weight: 500; line-height: 1.45; }
         .field-error { color: var(--red-dark); font-size: 12px; font-weight: 800; line-height: 1.45; }
-        .sticky-actions { align-items: center; background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 16px; bottom: 18px; box-shadow: 0 18px 45px rgba(15,23,42,.12); display: flex; justify-content: space-between; padding: 14px; position: sticky; }
+        .sticky-actions { align-items: center; background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 16px; bottom: 18px; box-shadow: 0 18px 45px rgba(15,23,42,.12); display: flex; justify-content: space-between; padding: 14px; position: sticky; z-index: 30; }
         @media (max-width: 1000px) { .admin-flow-grid { grid-template-columns: 1fr; } }
         @media (max-width: 900px) { .topbar, .sticky-actions, .panel-header, .item-header, .links-heading, .links-footer, .section-heading, .flow-card-header { align-items: stretch; flex-direction: column; } .language-grid, .two-grid { grid-template-columns: 1fr; } .item-actions, .link-actions { justify-content: flex-start; } }
     </style>
@@ -338,6 +339,11 @@
         const fieldStartSnapshots = new WeakMap();
         const removedLinkHistory = new WeakMap();
         const removedItemHistory = new WeakMap();
+        const undoScopes = new Set();
+        const editorSelections = new WeakMap();
+        const undoStorageKey = `mobility-detail-undo:${window.location.pathname}`;
+        const undoFieldStorageKey = `mobility-detail-undo-fields:${window.location.pathname}`;
+        const removedItemStorageKey = `mobility-detail-removed-items:${window.location.pathname}`;
 
         function editableFields(scope) {
             return Array.from(scope.querySelectorAll('input:not([type="file"]), textarea'));
@@ -372,6 +378,130 @@
             return cardHistory.get(scope);
         }
 
+        function undoScopeKey(scope) {
+            return editableFields(scope).map((field) => field.name).join('|');
+        }
+
+        function persistUndoHistories() {
+            const payload = [];
+
+            undoScopes.forEach((scope) => {
+                const history = historyFor(scope);
+                if (!history.length) return;
+
+                payload.push({
+                    key: undoScopeKey(scope),
+                    history,
+                });
+            });
+
+            if (payload.length) {
+                sessionStorage.setItem(undoStorageKey, JSON.stringify(payload));
+            } else {
+                sessionStorage.removeItem(undoStorageKey);
+            }
+        }
+
+        function loadPersistedFieldHistory() {
+            try {
+                const stored = sessionStorage.getItem(undoFieldStorageKey);
+                const parsed = stored ? JSON.parse(stored) : {};
+                return parsed && typeof parsed === 'object' ? parsed : {};
+            } catch (error) {
+                sessionStorage.removeItem(undoFieldStorageKey);
+                return {};
+            }
+        }
+
+        function savePersistedFieldHistory(fields) {
+            const names = Object.keys(fields).filter((name) => Array.isArray(fields[name]) && fields[name].length);
+
+            if (!names.length) {
+                sessionStorage.removeItem(undoFieldStorageKey);
+                return;
+            }
+
+            sessionStorage.setItem(undoFieldStorageKey, JSON.stringify(fields));
+        }
+
+        function rememberPersistedFields(snapshot) {
+            const fields = loadPersistedFieldHistory();
+
+            snapshot.forEach((item) => {
+                if (!item.name) return;
+                if (!Array.isArray(fields[item.name])) fields[item.name] = [];
+
+                const serialized = JSON.stringify(item);
+                const last = fields[item.name].length ? JSON.stringify(fields[item.name][fields[item.name].length - 1]) : null;
+
+                if (serialized !== last) fields[item.name].push(item);
+                if (fields[item.name].length > 20) fields[item.name].shift();
+            });
+
+            savePersistedFieldHistory(fields);
+        }
+
+        function consumePersistedFieldSnapshot(scope) {
+            const fields = loadPersistedFieldHistory();
+            let hasSnapshot = false;
+            const snapshot = editableFields(scope).map((field) => {
+                const history = fields[field.name];
+                const previous = Array.isArray(history) ? history[history.length - 1] : null;
+
+                if (previous) {
+                    hasSnapshot = true;
+                    return previous;
+                }
+
+                return {
+                    name: field.name,
+                    type: field.type,
+                    value: field.value,
+                    checked: field.checked,
+                };
+            });
+
+            return hasSnapshot ? snapshot : null;
+        }
+
+        function popPersistedFields(snapshot) {
+            const fields = loadPersistedFieldHistory();
+
+            snapshot.forEach((item) => {
+                if (!item.name || !Array.isArray(fields[item.name])) return;
+                fields[item.name].pop();
+                if (!fields[item.name].length) delete fields[item.name];
+            });
+
+            savePersistedFieldHistory(fields);
+        }
+
+        function restoreUndoHistories() {
+            const stored = sessionStorage.getItem(undoStorageKey);
+
+            try {
+                const payload = stored ? JSON.parse(stored) : [];
+                if (!Array.isArray(payload)) return;
+
+                const historiesByKey = new Map(payload.map((item) => [item.key, item.history]));
+
+                undoScopes.forEach((scope) => {
+                    const history = historiesByKey.get(undoScopeKey(scope));
+                    const fieldSnapshot = consumePersistedFieldSnapshot(scope);
+                    const restoredHistory = Array.isArray(history) && history.length
+                        ? history.slice(-20)
+                        : (fieldSnapshot ? [fieldSnapshot] : []);
+
+                    if (!restoredHistory.length) return;
+
+                    cardHistory.set(scope, restoredHistory);
+                    setUndoState(scope);
+                });
+            } catch (error) {
+                sessionStorage.removeItem(undoStorageKey);
+            }
+        }
+
         function setUndoState(scope) {
             const button = scope.querySelector(':scope > [data-undo-card], :scope > .flow-card-header [data-undo-card], :scope > .section-heading [data-undo-card], :scope > .item-header [data-undo-card], :scope > .link-actions [data-undo-card]');
             if (button) button.disabled = historyFor(scope).length === 0;
@@ -384,6 +514,8 @@
 
             if (serialized !== last) history.push(snapshot);
             if (history.length > 20) history.shift();
+            rememberPersistedFields(snapshot);
+            persistUndoHistories();
             setUndoState(scope);
         }
 
@@ -392,7 +524,9 @@
             if (!snapshot) return;
 
             restoreSnapshot(scope, snapshot);
+            popPersistedFields(snapshot);
             editableFields(scope).forEach((field) => fieldStartSnapshots.delete(field));
+            persistUndoHistories();
             setUndoState(scope);
         }
 
@@ -441,6 +575,7 @@
 
             scope.dataset.undoScope = '';
             scope.dataset.undoBound = '1';
+            undoScopes.add(scope);
 
             const button = scope.querySelector(':scope > [data-undo-card], :scope > .flow-card-header [data-undo-card], :scope > .section-heading [data-undo-card], :scope > .item-header [data-undo-card], :scope > .link-actions [data-undo-card]') || createUndoButton();
             if (!button.parentElement || button.parentElement === scope && !button.classList.contains('undo-floating')) {
@@ -541,9 +676,61 @@
             return removedItemHistory.get(list);
         }
 
+        function loadPersistedRemovedItems() {
+            try {
+                const stored = sessionStorage.getItem(removedItemStorageKey);
+                const parsed = stored ? JSON.parse(stored) : {};
+                return parsed && typeof parsed === 'object' ? parsed : {};
+            } catch (error) {
+                sessionStorage.removeItem(removedItemStorageKey);
+                return {};
+            }
+        }
+
+        function savePersistedRemovedItems(items) {
+            const listIds = Object.keys(items).filter((listId) => Array.isArray(items[listId]) && items[listId].length);
+
+            if (!listIds.length) {
+                sessionStorage.removeItem(removedItemStorageKey);
+                return;
+            }
+
+            sessionStorage.setItem(removedItemStorageKey, JSON.stringify(items));
+        }
+
+        function persistRemovedItem(list, snapshot) {
+            const items = loadPersistedRemovedItems();
+            if (!Array.isArray(items[list.id])) items[list.id] = [];
+
+            items[list.id].push(snapshot);
+            if (items[list.id].length > 20) items[list.id].shift();
+
+            savePersistedRemovedItems(items);
+        }
+
+        function persistedRemovedItemCount(list) {
+            const items = loadPersistedRemovedItems();
+            return Array.isArray(items[list.id]) ? items[list.id].length : 0;
+        }
+
+        function popPersistedRemovedItem(list) {
+            const items = loadPersistedRemovedItems();
+            const snapshots = Array.isArray(items[list.id]) ? items[list.id] : [];
+            const snapshot = snapshots.pop();
+
+            if (!snapshots.length) {
+                delete items[list.id];
+            } else {
+                items[list.id] = snapshots;
+            }
+
+            savePersistedRemovedItems(items);
+            return snapshot || null;
+        }
+
         function setRestoreItemState(list) {
             const button = restoreItemButtonFor(list);
-            if (button) button.disabled = itemRemovalHistoryFor(list).length === 0;
+            if (button) button.disabled = itemRemovalHistoryFor(list).length === 0 && persistedRemovedItemCount(list) === 0;
         }
 
         function refreshItemList(list) {
@@ -587,19 +774,25 @@
 
             const items = [...list.querySelectorAll(itemSelectorFor(list))];
             const history = itemRemovalHistoryFor(list);
-            history.push({
+            const snapshot = {
                 html: cleanRemovedItemSnapshot(item),
                 index: items.indexOf(item),
-            });
+            };
+
+            history.push(snapshot);
 
             if (history.length > 20) history.shift();
+            persistRemovedItem(list, snapshot);
             setRestoreItemState(list);
         }
 
         function restoreRemovedItem(button) {
             const list = document.getElementById(button.dataset.restoreTarget);
-            const snapshot = itemRemovalHistoryFor(list).pop();
+            const memorySnapshot = itemRemovalHistoryFor(list).pop();
+            const snapshot = memorySnapshot || popPersistedRemovedItem(list);
             if (!snapshot) return;
+
+            if (memorySnapshot) popPersistedRemovedItem(list);
 
             const wrapper = document.createElement('div');
             wrapper.innerHTML = snapshot.html.trim();
@@ -676,27 +869,63 @@
         }
 
         function selectedLines(textarea) {
-            const start = textarea.selectionStart;
-            const end = textarea.selectionEnd;
+            const savedSelection = editorSelections.get(textarea);
+            const start = savedSelection?.start ?? textarea.selectionStart;
+            const end = savedSelection?.end ?? textarea.selectionEnd;
             const value = textarea.value;
             const lineStart = value.lastIndexOf('\n', Math.max(0, start - 1)) + 1;
             const lineEndSearch = value.indexOf('\n', end);
             const lineEnd = lineEndSearch === -1 ? value.length : lineEndSearch;
-            return { start: lineStart, end: lineEnd, text: value.slice(lineStart, lineEnd) };
+            return { cursorStart: start, cursorEnd: end, start: lineStart, end: lineEnd, text: value.slice(lineStart, lineEnd) };
+        }
+
+        function rememberEditorSelection(editor) {
+            editorSelections.set(editor, {
+                start: editor.selectionStart,
+                end: editor.selectionEnd,
+            });
+        }
+
+        function insertAtCursor(editor, text, start, end) {
+            const before = editor.value.slice(0, start);
+            const after = editor.value.slice(end);
+            const prefix = before && !before.endsWith('\n') ? '\n' : '';
+            const suffix = after && !after.startsWith('\n') ? '\n' : '';
+            const insertion = `${prefix}${text}${suffix}`;
+            const nextCursor = before.length + insertion.length;
+
+            editor.value = `${before}${insertion}${after}`;
+            editor.focus();
+            editor.setSelectionRange(nextCursor, nextCursor);
+            rememberEditorSelection(editor);
         }
 
         function applyEditorAction(button) {
             const editor = button.closest('label').querySelector('[data-smart-editor]');
+            const scope = editor.closest('[data-undo-scope]');
+            if (scope) pushSnapshot(scope);
             const selection = selectedLines(editor);
-            const original = selection.text || '';
+
+            if (selection.cursorStart === selection.cursorEnd) {
+                insertAtCursor(
+                    editor,
+                    button.dataset.editorAction === 'bullet' ? '- Nueva viñeta' : 'Nuevo párrafo',
+                    selection.cursorStart,
+                    selection.cursorEnd
+                );
+                return;
+            }
+
             const replacement = button.dataset.editorAction === 'bullet'
-                ? original.split('\n').map((line) => {
+                ? selection.text.split('\n').map((line) => {
                     const clean = line.replace(/^\s*[-*•]\s+/u, '').trim();
                     return clean ? `- ${clean}` : '- Nueva viñeta';
                 }).join('\n')
-                : (original.split('\n').map((line) => line.replace(/^\s*[-*•]\s+/u, '').trim()).filter(Boolean).join('\n\n') || 'Nuevo párrafo');
+                : (selection.text.split('\n').map((line) => line.replace(/^\s*[-*•]\s+/u, '').trim()).filter(Boolean).join('\n\n') || 'Nuevo párrafo');
             editor.value = `${editor.value.slice(0, selection.start)}${replacement}${editor.value.slice(selection.end)}`;
             editor.focus();
+            editor.setSelectionRange(selection.start + replacement.length, selection.start + replacement.length);
+            rememberEditorSelection(editor);
         }
 
         document.querySelector('[data-add-highlight]').addEventListener('click', () => addFromTemplate('highlights-list', 'highlight-template', '[data-highlight-card]'));
@@ -732,21 +961,52 @@
             if (event.target.matches('[data-editor-action]')) applyEditorAction(event.target);
             if (event.target.matches('[data-prefix-line]')) {
                 const textarea = event.target.closest('label').querySelector('textarea');
+                const scope = textarea.closest('[data-undo-scope]');
+                if (scope) pushSnapshot(scope);
                 const lines = textarea.value.split('\n').filter((line) => line.trim().length > 0);
                 textarea.value = lines.length ? lines.map((line) => line.trim().match(/^[•*-]/) ? line.trim() : `${event.target.dataset.prefixLine}${line.trim()}`).join('\n') : event.target.dataset.prefixLine;
                 textarea.focus();
             }
             if (event.target.matches('[data-clear-prefixes]')) {
                 const textarea = event.target.closest('label').querySelector('textarea');
+                const scope = textarea.closest('[data-undo-scope]');
+                if (scope) pushSnapshot(scope);
                 textarea.value = textarea.value.split('\n').map((line) => line.replace(/^[\s•*-]+/, '')).join('\n');
                 textarea.focus();
             }
         });
 
+        document.addEventListener('mousedown', (event) => {
+            if (event.target.matches('[data-editor-action]')) event.preventDefault();
+        });
+
+        document.addEventListener('keyup', (event) => {
+            if (event.target.matches('[data-smart-editor]')) rememberEditorSelection(event.target);
+        });
+
+        document.addEventListener('input', (event) => {
+            if (event.target.matches('[data-smart-editor]')) rememberEditorSelection(event.target);
+        });
+
+        document.addEventListener('focusin', (event) => {
+            if (event.target.matches('[data-smart-editor]')) rememberEditorSelection(event.target);
+        });
+
+        document.addEventListener('mouseup', (event) => {
+            if (event.target.matches('[data-smart-editor]')) rememberEditorSelection(event.target);
+        });
+
+        document.addEventListener('select', (event) => {
+            if (event.target.matches('[data-smart-editor]')) rememberEditorSelection(event.target);
+        });
+
         document.querySelectorAll('.item-list').forEach(refreshItemList);
         bindUndoScopes();
+        restoreUndoHistories();
         bindRestoreItemControls();
         bindRestoreLinkControls();
+        document.querySelector('form')?.addEventListener('submit', persistUndoHistories);
     </script>
+    @include('admin.partials.persistent-undo')
 </body>
 </html>

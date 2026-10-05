@@ -56,7 +56,7 @@
         .crop-controls { display: grid; gap: 12px; }
         .crop-controls input[type="range"] { width: 100%; }
         .crop-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; }
-        .sticky-actions { align-items: center; background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 16px; bottom: 18px; box-shadow: 0 18px 45px rgba(15,23,42,.12); display: flex; justify-content: space-between; padding: 14px; position: sticky; }
+        .sticky-actions { align-items: center; background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 16px; bottom: 18px; box-shadow: 0 18px 45px rgba(15,23,42,.12); display: flex; justify-content: space-between; padding: 14px; position: sticky; z-index: 30; }
         @media (max-width: 900px) { .topbar, .sticky-actions { align-items: stretch; flex-direction: column; } .language-grid, .two-grid, .three-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
@@ -659,5 +659,6 @@
             if (event.target === cropModal) closeCrop();
         });
     </script>
+    @include('admin.partials.persistent-undo')
 </body>
 </html>

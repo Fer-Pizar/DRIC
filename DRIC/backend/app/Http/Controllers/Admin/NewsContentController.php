@@ -132,6 +132,8 @@ class NewsContentController extends Controller
             'images.*' => ['image', 'mimes:jpg,jpeg,png', 'max:'.self::MAX_IMAGE_KB],
             'remove_images' => ['nullable', 'array'],
             'remove_images.*' => ['integer'],
+            'restore_images' => ['nullable', 'array'],
+            'restore_images.*' => ['integer'],
         ], [
             'images.*.image' => 'Solo puedes subir imágenes válidas.',
             'images.*.mimes' => 'Ese formato no está permitido. Usa JPG o PNG.',
@@ -149,22 +151,32 @@ class NewsContentController extends Controller
 
             $languages = Language::query()->whereIn('code', ['es', 'en'])->get()->keyBy('code');
             $removeIds = collect($validated['remove_images'] ?? [])->map(fn ($id) => (int) $id)->all();
+            $restoreIds = collect($validated['restore_images'] ?? [])->map(fn ($id) => (int) $id)->unique()->values()->all();
             $gallery = collect($this->galleryImages($news))
                 ->reject(function (array $image) use ($removeIds): bool {
-                    if (! in_array((int) $image['media_asset_id'], $removeIds, true)) {
-                        return false;
-                    }
-
-                    $media = MediaAsset::find($image['media_asset_id']);
-                    if ($media) {
-                        Storage::disk($media->disk ?? 'public')->delete($media->file_path);
-                        $media->delete();
-                    }
-
-                    return true;
+                    return in_array((int) $image['media_asset_id'], $removeIds, true);
                 })
                 ->values()
                 ->all();
+
+            $galleryIds = collect($gallery)->map(fn (array $image) => (int) ($image['media_asset_id'] ?? 0))->filter()->all();
+            foreach ($restoreIds as $restoreId) {
+                if (in_array($restoreId, $galleryIds, true)) {
+                    continue;
+                }
+
+                $media = MediaAsset::find($restoreId);
+                if (! $media || ! Str::startsWith((string) $media->mime_type, 'image/')) {
+                    continue;
+                }
+
+                $gallery[] = [
+                    'media_asset_id' => $media->id,
+                    'url' => $this->mediaUrl($media),
+                    'file_name' => $media->file_name,
+                ];
+                $galleryIds[] = $media->id;
+            }
 
             foreach ($request->file('images', []) as $file) {
                 $media = $this->storeMediaFile($file, $request->user()->id);

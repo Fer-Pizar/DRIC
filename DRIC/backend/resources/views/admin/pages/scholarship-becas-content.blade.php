@@ -78,7 +78,7 @@
         .btn-clear { background: #eef3fb; color: var(--blue); white-space: nowrap; }
         .list-status { color: var(--muted); font-size: 13px; font-weight: 700; margin: -4px 0 14px; }
         .search-empty { background: #fff7ed; border: 1px solid #fed7aa; border-radius: 14px; color: #9a3412; display: none; font-size: 13px; font-weight: 800; line-height: 1.5; margin: -4px 0 14px; padding: 14px 16px; }
-        .sticky-actions { align-items: center; background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 16px; bottom: 18px; box-shadow: 0 18px 45px rgba(15,23,42,.12); display: flex; justify-content: space-between; padding: 14px; position: sticky; }
+        .sticky-actions { align-items: center; background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 16px; bottom: 18px; box-shadow: 0 18px 45px rgba(15,23,42,.12); display: flex; justify-content: space-between; padding: 14px; position: sticky; z-index: 30; }
         @media (max-width: 900px) { .topbar, .sticky-actions, .item-header { align-items: stretch; flex-direction: column; } .language-grid, .two-grid, .search-panel { grid-template-columns: 1fr; } }
     </style>
 </head>
@@ -478,5 +478,6 @@
         bindUndoScopes();
         document.querySelectorAll('[data-list-search]').forEach((field) => refreshListFilter(field.dataset.listSearch));
     </script>
+    @include('admin.partials.persistent-undo')
 </body>
 </html>

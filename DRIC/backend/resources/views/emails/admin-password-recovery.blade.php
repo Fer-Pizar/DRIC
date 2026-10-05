@@ -38,11 +38,6 @@
                                 Ingresa al panel con esta contraseña temporal. Luego puedes cambiarla desde tu perfil.
                             </p>
 
-                            <p style="margin:0;">
-                                <a href="{{ $loginUrl }}" style="display:inline-block; padding:13px 18px; border-radius:14px; background:#164194; color:#ffffff; font-size:14px; font-weight:700; text-decoration:none;">
-                                    Ingresar al panel
-                                </a>
-                            </p>
                         </td>
                     </tr>
 

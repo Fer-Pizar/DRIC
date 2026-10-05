@@ -48,7 +48,7 @@
         .live-error:empty { display: none; }
         .is-invalid { border-color: var(--red-dark) !important; box-shadow: 0 0 0 3px rgba(127, 0, 16, 0.10); }
         .empty-state { background: var(--soft); border: 1px dashed #cfd6e3; border-radius: 16px; color: var(--muted); padding: 22px; text-align: center; }
-        .sticky-actions { align-items: center; background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 16px; bottom: 18px; box-shadow: 0 18px 45px rgba(15,23,42,.12); display: flex; justify-content: space-between; padding: 14px; position: sticky; }
+        .sticky-actions { align-items: center; background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 16px; bottom: 18px; box-shadow: 0 18px 45px rgba(15,23,42,.12); display: flex; justify-content: space-between; padding: 14px; position: sticky; z-index: 30; }
         @media (max-width: 820px) { .topbar, .panel-header, .sticky-actions { align-items: stretch; flex-direction: column; } .language-grid, .news-fields { grid-template-columns: 1fr; } h1 { font-size: 28px; } }
     </style>
 </head>
@@ -250,6 +250,7 @@
         const emptyState = document.getElementById("empty-state");
         const restoreNewsButton = document.getElementById("restore-news");
         const removedRows = [];
+        const removedRowsStorageKey = `news-removed-rows:${window.location.pathname}`;
         const rowHistory = new WeakMap();
         const sectionHistory = new WeakMap();
         const pendingSnapshots = new WeakMap();
@@ -373,12 +374,84 @@
         }
 
         function setRestoreNewsState() {
-            restoreNewsButton.disabled = removedRows.length === 0;
+            restoreNewsButton.disabled = removedRows.length === 0 && storedRemovedRows().length === 0;
         }
 
         function cleanRestoredRow(row) {
+            delete row.dataset.rowBound;
+            delete row.dataset.undoBound;
+            row.querySelectorAll("[data-field-bound]").forEach((field) => {
+                delete field.dataset.fieldBound;
+            });
             row.querySelectorAll(".live-error").forEach((error) => error.remove());
             row.querySelectorAll(".is-invalid").forEach((field) => field.classList.remove("is-invalid"));
+        }
+
+        function cleanRemovedRowSnapshot(row) {
+            const clone = row.cloneNode(true);
+            cleanRestoredRow(clone);
+            return clone.outerHTML;
+        }
+
+        function storedRemovedRows() {
+            try {
+                const stored = sessionStorage.getItem(removedRowsStorageKey);
+                const parsed = stored ? JSON.parse(stored) : [];
+                return Array.isArray(parsed) ? parsed : [];
+            } catch (error) {
+                sessionStorage.removeItem(removedRowsStorageKey);
+                return [];
+            }
+        }
+
+        function saveStoredRemovedRows(rows) {
+            if (!rows.length) {
+                sessionStorage.removeItem(removedRowsStorageKey);
+                return;
+            }
+
+            sessionStorage.setItem(removedRowsStorageKey, JSON.stringify(rows));
+        }
+
+        function rememberRemovedRow(row) {
+            const rows = [...container.querySelectorAll(".news-row")];
+            const snapshot = {
+                html: cleanRemovedRowSnapshot(row),
+                index: rows.indexOf(row),
+            };
+            const stored = storedRemovedRows();
+
+            removedRows.push(snapshot);
+            if (removedRows.length > 20) removedRows.shift();
+            stored.push(snapshot);
+            if (stored.length > 20) stored.shift();
+            saveStoredRemovedRows(stored);
+            setRestoreNewsState();
+        }
+
+        function popStoredRemovedRow() {
+            const stored = storedRemovedRows();
+            const snapshot = stored.pop() || null;
+            saveStoredRemovedRows(stored);
+            return snapshot;
+        }
+
+        function restoreRemovedRow() {
+            const memorySnapshot = removedRows.pop();
+            const snapshot = memorySnapshot || popStoredRemovedRow();
+            if (!snapshot) return;
+            if (memorySnapshot) popStoredRemovedRow();
+
+            const wrapper = document.createElement("div");
+            wrapper.innerHTML = snapshot.html.trim();
+            const row = wrapper.firstElementChild;
+            cleanRestoredRow(row);
+            const reference = container.querySelectorAll(".news-row")[snapshot.index] || null;
+
+            container.insertBefore(row, reference);
+            bindRow(row);
+            refreshRows();
+            setRestoreNewsState();
         }
 
         function bindField(field) {
@@ -402,22 +475,14 @@
             if (row.dataset.rowBound) return;
             row.dataset.rowBound = "true";
             row.querySelector("[data-remove-row]").addEventListener("click", () => {
-                removedRows.push(row);
+                rememberRemovedRow(row);
                 row.remove();
                 refreshRows();
-                setRestoreNewsState();
             });
             row.querySelectorAll("input, textarea").forEach(bindField);
         }
 
-        restoreNewsButton.addEventListener("click", () => {
-            const row = removedRows.pop();
-            if (!row) return;
-            cleanRestoredRow(row);
-            container.append(row);
-            refreshRows();
-            setRestoreNewsState();
-        });
+        restoreNewsButton.addEventListener("click", restoreRemovedRow);
 
         document.getElementById("add-news").addEventListener("click", () => {
             const row = template.content.firstElementChild.cloneNode(true);
@@ -433,5 +498,6 @@
         refreshRows();
         setRestoreNewsState();
     </script>
+    @include('admin.partials.persistent-undo')
 </body>
 </html>

@@ -43,7 +43,7 @@
         .field-error { color: var(--red-dark); font-size: 12px; font-weight: 800; line-height: 1.45; }
         .notice { background: #f8fafc; }
         .notice strong { color: var(--blue); }
-        .sticky-actions { align-items: center; background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 16px; bottom: 18px; box-shadow: 0 18px 45px rgba(15,23,42,.12); display: flex; justify-content: space-between; padding: 14px; position: sticky; }
+        .sticky-actions { align-items: center; background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 16px; bottom: 18px; box-shadow: 0 18px 45px rgba(15,23,42,.12); display: flex; justify-content: space-between; padding: 14px; position: sticky; z-index: 30; }
         @media (max-width: 820px) { .topbar, .sticky-actions, .social-header { align-items: stretch; flex-direction: column; } .language-grid, .two-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
@@ -395,5 +395,6 @@
             refreshSocialCards();
         });
     </script>
+    @include('admin.partials.persistent-undo')
 </body>
 </html>

@@ -67,7 +67,7 @@
         .preview-empty { color: var(--muted); font-size: 12px; font-weight: 800; padding: 14px; text-align: center; }
         .btn-image-remove { align-items: center; background: rgba(127,0,16,.96); border: 2px solid rgba(255,255,255,.92); border-radius: 999px; box-shadow: 0 8px 20px rgba(15,23,42,.22); color: #fff; display: inline-flex; font-size: 20px; font-weight: 900; height: 32px; justify-content: center; line-height: 1; padding: 0; position: absolute; right: -8px; top: -8px; width: 32px; z-index: 5; }
         .empty-state { background: var(--soft); border: 1px dashed #cfd6e3; border-radius: 16px; color: var(--muted); padding: 22px; text-align: center; }
-        .sticky-actions { align-items: center; background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 16px; bottom: 18px; box-shadow: 0 18px 45px rgba(15,23,42,.12); display: flex; justify-content: space-between; padding: 14px; position: sticky; }
+        .sticky-actions { align-items: center; background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 16px; bottom: 18px; box-shadow: 0 18px 45px rgba(15,23,42,.12); display: flex; justify-content: space-between; padding: 14px; position: sticky; z-index: 30; }
         @media (max-width: 820px) { .topbar, .panel-header, .sticky-actions { align-items: stretch; flex-direction: column; } .language-grid, .membership-fields { grid-template-columns: 1fr; } h1 { font-size: 28px; } }
     </style>
 </head>
@@ -328,6 +328,8 @@
         const rowHistory = new WeakMap();
         const fieldStartSnapshots = new WeakMap();
         const removedRows = [];
+        const removedRowsStorageKey = `membership-removed-rows:${window.location.pathname}`;
+        const rowUndoStorageKey = `membership-row-undo:${window.location.pathname}`;
 
         function ensureLiveError(field) {
             let message = field.parentElement.querySelector(".live-error");
@@ -427,12 +429,91 @@
             return {
                 fields: editableFields(row).map((field) => ({
                     name: field.name,
+                    dataName: field.dataset.name || "",
                     type: field.type,
                     value: field.value,
                     checked: field.checked,
                 })),
                 image: imageState(row),
             };
+        }
+
+        function serializableSnapshot(snapshot) {
+            return {
+                fields: snapshot.fields,
+                image: {
+                    src: snapshot.image?.src || "",
+                    imageHidden: Boolean(snapshot.image?.imageHidden),
+                    emptyHidden: Boolean(snapshot.image?.emptyHidden),
+                    file: null,
+                    removeValue: snapshot.image?.removeValue || "0",
+                },
+            };
+        }
+
+        function readRowUndoStore() {
+            try {
+                const stored = sessionStorage.getItem(rowUndoStorageKey);
+                const parsed = stored ? JSON.parse(stored) : {};
+                return parsed && typeof parsed === "object" ? parsed : {};
+            } catch (error) {
+                sessionStorage.removeItem(rowUndoStorageKey);
+                return {};
+            }
+        }
+
+        function writeRowUndoStore(store) {
+            const keys = Object.keys(store).filter((key) => Array.isArray(store[key]) && store[key].length);
+
+            if (!keys.length) {
+                sessionStorage.removeItem(rowUndoStorageKey);
+                return;
+            }
+
+            sessionStorage.setItem(rowUndoStorageKey, JSON.stringify(store));
+        }
+
+        function rowStorageKey(row) {
+            const id = row.querySelector("[data-name='id']")?.value.trim();
+            const title = row.querySelector("[data-name='title_es']")?.value.trim();
+            return id ? `id:${id}` : (title ? `title:${title}` : `index:${Array.from(container.querySelectorAll(".membership-row")).indexOf(row)}`);
+        }
+
+        function storedRowHistory(row) {
+            const store = readRowUndoStore();
+            const history = store[rowStorageKey(row)];
+            return Array.isArray(history) ? history : [];
+        }
+
+        function popStoredRowSnapshot(row) {
+            const key = rowStorageKey(row);
+            const store = readRowUndoStore();
+            const history = Array.isArray(store[key]) ? store[key] : [];
+            const snapshot = history.pop() || null;
+
+            if (!history.length) {
+                delete store[key];
+            } else {
+                store[key] = history;
+            }
+
+            writeRowUndoStore(store);
+            return snapshot;
+        }
+
+        function rememberStoredRowSnapshot(row, snapshot) {
+            const key = rowStorageKey(row);
+            const store = readRowUndoStore();
+            if (!Array.isArray(store[key])) store[key] = [];
+
+            const serializable = serializableSnapshot(snapshot);
+            const serialized = JSON.stringify(serializable);
+            const last = store[key].length ? JSON.stringify(store[key][store[key].length - 1]) : null;
+
+            if (serialized !== last) store[key].push(serializable);
+            if (store[key].length > 20) store[key].shift();
+
+            writeRowUndoStore(store);
         }
 
         function previewImageElement(preview) {
@@ -505,7 +586,7 @@
 
         function restoreSnapshot(row, snapshot) {
             snapshot.fields.forEach((item) => {
-                const field = editableFields(row).find((candidate) => candidate.name === item.name);
+                const field = editableFields(row).find((candidate) => candidate.name === item.name || (item.dataName && candidate.dataset.name === item.dataName));
                 if (!field) return;
 
                 if (field.type === "checkbox") {
@@ -527,7 +608,7 @@
 
         function setUndoState(row) {
             const button = row.querySelector(":scope > [data-undo-row], :scope > [data-undo-card], :scope > .row-header [data-undo-row]");
-            if (button) button.disabled = historyFor(row).length === 0;
+            if (button) button.disabled = historyFor(row).length === 0 && storedRowHistory(row).length === 0;
         }
 
         function pushSnapshot(row, snapshot = snapshotRow(row)) {
@@ -537,12 +618,15 @@
 
             if (serialized !== last) history.push(snapshot);
             if (history.length > 20) history.shift();
+            rememberStoredRowSnapshot(row, snapshot);
             setUndoState(row);
         }
 
         function undoRow(row) {
-            const snapshot = historyFor(row).pop();
+            const memorySnapshot = historyFor(row).pop();
+            const snapshot = memorySnapshot || popStoredRowSnapshot(row);
             if (!snapshot) return;
+            if (memorySnapshot) popStoredRowSnapshot(row);
 
             restoreSnapshot(row, snapshot);
             editableFields(row).forEach((field) => fieldStartSnapshots.delete(field));
@@ -605,7 +689,7 @@
         }
 
         function setRestoreMembershipState() {
-            restoreMembershipButton.disabled = removedRows.length === 0;
+            restoreMembershipButton.disabled = removedRows.length === 0 && storedRemovedRows().length === 0;
         }
 
         function cleanRemovedRowSnapshot(row) {
@@ -620,20 +704,55 @@
             return clone.outerHTML;
         }
 
+        function storedRemovedRows() {
+            try {
+                const stored = sessionStorage.getItem(removedRowsStorageKey);
+                const parsed = stored ? JSON.parse(stored) : [];
+                return Array.isArray(parsed) ? parsed : [];
+            } catch (error) {
+                sessionStorage.removeItem(removedRowsStorageKey);
+                return [];
+            }
+        }
+
+        function saveStoredRemovedRows(rows) {
+            if (!rows.length) {
+                sessionStorage.removeItem(removedRowsStorageKey);
+                return;
+            }
+
+            sessionStorage.setItem(removedRowsStorageKey, JSON.stringify(rows));
+        }
+
+        function popStoredRemovedRow() {
+            const rows = storedRemovedRows();
+            const snapshot = rows.pop() || null;
+            saveStoredRemovedRows(rows);
+            return snapshot;
+        }
+
         function rememberRemovedRow(row) {
             const rows = [...container.querySelectorAll(".membership-row")];
-            removedRows.push({
+            const snapshot = {
                 html: cleanRemovedRowSnapshot(row),
                 index: rows.indexOf(row),
-            });
+            };
+            const stored = storedRemovedRows();
+
+            removedRows.push(snapshot);
 
             if (removedRows.length > 20) removedRows.shift();
+            stored.push(snapshot);
+            if (stored.length > 20) stored.shift();
+            saveStoredRemovedRows(stored);
             setRestoreMembershipState();
         }
 
         function restoreRemovedRow() {
-            const snapshot = removedRows.pop();
+            const memorySnapshot = removedRows.pop();
+            const snapshot = memorySnapshot || popStoredRemovedRow();
             if (!snapshot) return;
+            if (memorySnapshot) popStoredRemovedRow();
 
             const wrapper = document.createElement("div");
             wrapper.innerHTML = snapshot.html.trim();
@@ -761,5 +880,6 @@
         setRestoreMembershipState();
         refreshRows();
     </script>
+    @include('admin.partials.persistent-undo')
 </body>
 </html>

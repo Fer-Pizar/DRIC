@@ -37,7 +37,7 @@
         textarea { line-height: 1.55; min-height: 112px; resize: vertical; }
         .hint { color: var(--muted); font-size: 12px; font-weight: 500; line-height: 1.45; }
         .field-error { color: var(--red-dark); font-size: 12px; font-weight: 800; line-height: 1.45; }
-        .sticky-actions { align-items: center; background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 16px; bottom: 18px; box-shadow: 0 18px 45px rgba(15,23,42,.12); display: flex; justify-content: space-between; padding: 14px; position: sticky; }
+        .sticky-actions { align-items: center; background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 16px; bottom: 18px; box-shadow: 0 18px 45px rgba(15,23,42,.12); display: flex; justify-content: space-between; padding: 14px; position: sticky; z-index: 30; }
         .card-heading { align-items: flex-start; display: flex; gap: 16px; justify-content: space-between; margin-bottom: 16px; }
         .card-heading .muted { font-size: 13px; font-weight: 800; margin-top: 4px; }
         .card-heading .btn { flex-shrink: 0; }
@@ -270,5 +270,6 @@
 
         document.querySelectorAll(".language-card, .item-card").forEach(bindUndoScope);
     </script>
+    @include('admin.partials.persistent-undo')
 </body>
 </html>
