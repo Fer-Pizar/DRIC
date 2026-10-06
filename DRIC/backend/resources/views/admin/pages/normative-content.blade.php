@@ -22,6 +22,9 @@
         .btn-secondary { background: #e8edf5; color: var(--ink); }
         .btn-add { background: #2563eb; color: #fff; }
         .btn-remove { background: #fff1f2; color: var(--red-dark); }
+        .btn-undo { align-items: center; background: #eef3fb; color: var(--blue); font-size: 20px; font-weight: 900; line-height: 1; min-width: 40px; padding: 9px 12px; text-shadow: 0 0 0 currentColor, .35px 0 0 currentColor, 0 .35px 0 currentColor; }
+        .btn-undo:disabled { cursor: not-allowed; opacity: .42; }
+        .undo-floating { position: absolute; right: 18px; top: 18px; z-index: 2; }
         .alert { border-radius: 14px; margin-bottom: 18px; padding: 14px 16px; }
         .alert-success { background: #e8f8ee; border: 1px solid #bde8c9; color: #176534; }
         .alert-error { background: #fff1f2; border: 1px solid #b91c1c; color: var(--red-dark); font-weight: 800; }
@@ -29,8 +32,10 @@
         .panel { padding: 24px; }
         .panel-header { border-bottom: 1px solid var(--line); margin-bottom: 20px; padding-bottom: 16px; }
         .language-grid { display: grid; gap: 18px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-        .language-card, .document-card { box-shadow: none; padding: 18px; }
-        .document-card { display: grid; gap: 16px; }
+        .language-card, .document-card { box-shadow: none; padding: 18px; position: relative; }
+        .language-card { padding-top: 76px; }
+        .document-card { border: 2px solid var(--blue); box-shadow: 0 16px 42px rgba(22, 65, 148, 0.10); display: grid; gap: 16px; }
+        .document-card::before { background: var(--blue); border-radius: 18px 0 0 18px; content: ""; inset: -2px auto -2px -2px; position: absolute; width: 7px; }
         .document-header { align-items: center; display: flex; gap: 12px; justify-content: space-between; }
         .document-grid { display: grid; gap: 14px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
         label { display: grid; gap: 7px; font-size: 13px; font-weight: 800; }
@@ -42,7 +47,7 @@
         .hint { color: var(--muted); font-size: 12px; font-weight: 500; line-height: 1.45; }
         .field-error { color: var(--red-dark); font-size: 12px; font-weight: 800; line-height: 1.45; }
         .current-file { background: var(--soft); border: 1px solid var(--line); border-radius: 12px; color: var(--muted); padding: 10px 12px; }
-        .sticky-actions { align-items: center; background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 16px; bottom: 18px; box-shadow: 0 18px 45px rgba(15,23,42,.12); display: flex; justify-content: space-between; padding: 14px; position: sticky; }
+        .sticky-actions { align-items: center; background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 16px; bottom: 18px; box-shadow: 0 18px 45px rgba(15,23,42,.12); display: flex; justify-content: space-between; padding: 14px; position: sticky; z-index: 30; }
         @media (max-width: 820px) { .topbar, .sticky-actions, .document-header { align-items: stretch; flex-direction: column; } .language-grid, .document-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
@@ -74,7 +79,8 @@
 
                 <div class="language-grid">
                     @foreach (['es' => 'Español', 'en' => 'Inglés'] as $locale => $label)
-                        <div class="language-card">
+                        <div class="language-card" data-undo-scope>
+                            <button class="btn btn-undo undo-floating" type="button" data-undo-section disabled title="Deshacer último cambio" aria-label="Deshacer último cambio">↶</button>
                             <h3>{{ $label }}</h3>
                             <div class="field-grid">
                                 <label>
@@ -115,6 +121,7 @@
                                     <p class="muted">Orden actual del documento en la página pública.</p>
                                 </div>
                                 <div class="row-actions">
+                                    <button class="btn btn-undo" type="button" data-undo-card disabled title="Deshacer último cambio" aria-label="Deshacer último cambio">↶</button>
                                     <label class="checkline">
                                         <input type="checkbox" name="documents[{{ $index }}][is_active]" value="1" @checked((bool) ($document['is_active'] ?? true))>
                                         Publicar
@@ -182,7 +189,10 @@
                     @endforelse
                 </div>
 
-                <button class="btn btn-add" type="button" id="add-document">Agregar normativa</button>
+                <div class="row-actions">
+                    <button class="btn btn-undo" type="button" id="restore-document" disabled title="Restaurar última normativa quitada" aria-label="Restaurar última normativa quitada">↶</button>
+                    <button class="btn btn-add" type="button" id="add-document">Agregar normativa</button>
+                </div>
             </section>
 
             <div class="sticky-actions">
@@ -199,6 +209,7 @@
                         <p class="muted">Se agregará al listado público después de guardar.</p>
                     </div>
                     <div class="row-actions">
+                        <button class="btn btn-undo" type="button" data-undo-card disabled title="Deshacer último cambio" aria-label="Deshacer último cambio">↶</button>
                         <label class="checkline">
                             <input type="checkbox" name="__NAME__[is_active]" value="1" checked>
                             Publicar
@@ -252,10 +263,186 @@
         const list = document.getElementById("documents-list");
         const template = document.getElementById("document-template");
         const addButton = document.getElementById("add-document");
+        const restoreButton = document.getElementById("restore-document");
+        const removedDocumentsStorageKey = `normative-removed-documents:${window.location.pathname}`;
+        const removedDocuments = [];
+        const undoHistory = new WeakMap();
+        const pendingSnapshots = new WeakMap();
         let nextIndex = {{ count(old('documents', $documents)) }};
 
+        function editableFields(scope) {
+            return [...scope.querySelectorAll("input:not([type='file']), textarea, select")];
+        }
+
+        function captureSnapshot(scope) {
+            return editableFields(scope).map((field) => ({
+                field,
+                checked: field.checked,
+                value: field.value,
+            }));
+        }
+
+        function restoreSnapshot(snapshot) {
+            snapshot.forEach(({ field, checked, value }) => {
+                if (!field.isConnected) return;
+                if (field.type === "checkbox" || field.type === "radio") {
+                    field.checked = checked;
+                } else {
+                    field.value = value;
+                }
+            });
+        }
+
+        function primeSnapshot(scope) {
+            if (!pendingSnapshots.has(scope)) {
+                pendingSnapshots.set(scope, captureSnapshot(scope));
+            }
+        }
+
+        function setUndoState(button, history) {
+            if (button) button.disabled = !history.length;
+        }
+
+        function rememberChange(scope, button) {
+            const history = undoHistory.get(scope) || [];
+            history.push(pendingSnapshots.get(scope) || captureSnapshot(scope));
+            if (history.length > 25) history.shift();
+            undoHistory.set(scope, history);
+            pendingSnapshots.set(scope, captureSnapshot(scope));
+            setUndoState(button, history);
+        }
+
+        function bindUndoScope(scope, buttonSelector) {
+            if (!scope || scope.dataset.undoBound) return;
+            scope.dataset.undoBound = "true";
+            const button = scope.querySelector(buttonSelector);
+            editableFields(scope).forEach((field) => {
+                field.addEventListener("focus", () => primeSnapshot(scope));
+                field.addEventListener("pointerdown", () => primeSnapshot(scope));
+                field.addEventListener("input", () => rememberChange(scope, button));
+                field.addEventListener("change", () => rememberChange(scope, button));
+            });
+            button?.addEventListener("click", () => {
+                const history = undoHistory.get(scope) || [];
+                const snapshot = history.pop();
+                if (!snapshot) return;
+                restoreSnapshot(snapshot);
+                setUndoState(button, history);
+            });
+        }
+
+        function setRestoreState() {
+            restoreButton.disabled = removedDocuments.length === 0 && storedRemovedDocuments().length === 0;
+        }
+
+        function storedRemovedDocuments() {
+            try {
+                const stored = sessionStorage.getItem(removedDocumentsStorageKey);
+                const records = stored ? JSON.parse(stored) : [];
+                return Array.isArray(records) ? records.filter((record) => record?.html) : [];
+            } catch (error) {
+                sessionStorage.removeItem(removedDocumentsStorageKey);
+                return [];
+            }
+        }
+
+        function writeStoredRemovedDocuments(records) {
+            const cleanRecords = records.filter((record) => record?.html);
+            if (!cleanRecords.length) {
+                sessionStorage.removeItem(removedDocumentsStorageKey);
+                return;
+            }
+
+            sessionStorage.setItem(removedDocumentsStorageKey, JSON.stringify(cleanRecords));
+        }
+
+        function snapshotCardHtml(card) {
+            const clone = card.cloneNode(true);
+            card.querySelectorAll("input, textarea, select").forEach((field, index) => {
+                const clonedField = clone.querySelectorAll("input, textarea, select")[index];
+                if (!clonedField) return;
+
+                if (field.type === "file") {
+                    clonedField.value = "";
+                    return;
+                }
+
+                if (field.type === "checkbox" || field.type === "radio") {
+                    clonedField.checked = field.checked;
+                    if (field.checked) {
+                        clonedField.setAttribute("checked", "checked");
+                    } else {
+                        clonedField.removeAttribute("checked");
+                    }
+                    return;
+                }
+
+                if (field.tagName === "TEXTAREA") {
+                    clonedField.value = field.value;
+                    clonedField.textContent = field.value;
+                    return;
+                }
+
+                if (field.tagName === "SELECT") {
+                    [...clonedField.options].forEach((option) => {
+                        option.selected = option.value === field.value;
+                        if (option.selected) {
+                            option.setAttribute("selected", "selected");
+                        } else {
+                            option.removeAttribute("selected");
+                        }
+                    });
+                    return;
+                }
+
+                clonedField.value = field.value;
+                clonedField.setAttribute("value", field.value);
+            });
+
+            return clone.outerHTML;
+        }
+
+        function rememberRemovedDocument(card) {
+            const records = storedRemovedDocuments();
+            const index = [...list.querySelectorAll("[data-document-card]")].indexOf(card);
+            records.push({ html: snapshotCardHtml(card), index });
+            writeStoredRemovedDocuments(records);
+        }
+
+        function restoreRemovedRecord(record) {
+            const wrapper = document.createElement("div");
+            wrapper.innerHTML = record.html.trim();
+            const card = wrapper.firstElementChild;
+            if (!card) return;
+
+            const cards = list.querySelectorAll("[data-document-card]");
+            const reference = cards[Math.min(record.index ?? cards.length, cards.length)] || null;
+            list.insertBefore(card, reference);
+            bindCard(card);
+            refreshDocuments();
+        }
+
+        function refreshDocuments() {
+            list.querySelectorAll("[data-document-card]").forEach((card, index) => {
+                card.querySelector("h3").textContent = card.dataset.newDocument === "true" ? "Nueva normativa" : `Normativa ${index + 1}`;
+                card.querySelectorAll("[name^='documents[']").forEach((field) => {
+                    field.name = field.name.replace(/documents\[\d+\]/, `documents[${index}]`);
+                });
+            });
+            nextIndex = list.querySelectorAll("[data-document-card]").length;
+        }
+
         function bindCard(card) {
-            card.querySelector("[data-remove-document]").addEventListener("click", () => card.remove());
+            bindUndoScope(card, "[data-undo-card]");
+            if (card.dataset.cardBound) return;
+            card.dataset.cardBound = "true";
+            card.querySelector("[data-remove-document]").addEventListener("click", () => {
+                rememberRemovedDocument(card);
+                removedDocuments.push(card);
+                card.remove();
+                refreshDocuments();
+                setRestoreState();
+            });
             card.querySelectorAll("[data-pdf-input]").forEach((input) => {
                 input.addEventListener("change", (event) => {
                     const message = input.closest("label").querySelector("[data-pdf-error]");
@@ -278,17 +465,41 @@
             });
         }
 
+        document.querySelectorAll("[data-undo-scope]").forEach((scope) => bindUndoScope(scope, "[data-undo-section]"));
         document.querySelectorAll("[data-document-card]").forEach(bindCard);
+        refreshDocuments();
+        setRestoreState();
+
+        restoreButton.addEventListener("click", () => {
+            const card = removedDocuments.pop();
+            if (card) {
+                const records = storedRemovedDocuments();
+                records.pop();
+                writeStoredRemovedDocuments(records);
+                list.appendChild(card);
+                refreshDocuments();
+                setRestoreState();
+                return;
+            }
+
+            const records = storedRemovedDocuments();
+            const record = records.pop();
+            writeStoredRemovedDocuments(records);
+            if (record) restoreRemovedRecord(record);
+            setRestoreState();
+        });
 
         addButton.addEventListener("click", () => {
             const html = template.innerHTML.replaceAll("__NAME__", `documents[${nextIndex}]`);
             const wrapper = document.createElement("div");
             wrapper.innerHTML = html.trim();
             const card = wrapper.firstElementChild;
+            card.dataset.newDocument = "true";
             list.appendChild(card);
             bindCard(card);
-            nextIndex += 1;
+            refreshDocuments();
         });
     </script>
+    @include('admin.partials.persistent-undo')
 </body>
 </html>

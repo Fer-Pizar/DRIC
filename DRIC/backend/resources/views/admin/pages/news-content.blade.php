@@ -22,6 +22,9 @@
         .btn-secondary { background: #e8edf5; color: var(--ink); }
         .btn-danger { background: #fff1f2; color: var(--red-dark); }
         .btn-detail { background: #eef4ff; color: var(--blue); }
+        .btn-undo { align-items: center; background: #eef3fb; color: var(--blue); font-size: 20px; font-weight: 900; line-height: 1; min-width: 40px; padding: 9px 12px; text-shadow: 0 0 0 currentColor, .35px 0 0 currentColor, 0 .35px 0 currentColor; }
+        .btn-undo:disabled { cursor: not-allowed; opacity: .42; }
+        .undo-floating { position: absolute; right: 16px; top: 16px; z-index: 2; }
         .alert { border-radius: 14px; margin-bottom: 18px; padding: 14px 16px; }
         .alert-success { background: #e8f8ee; border: 1px solid #bde8c9; color: #176534; }
         .alert-error { background: #fff1f2; border: 1px solid #b91c1c; color: var(--red-dark); font-weight: 800; }
@@ -29,8 +32,10 @@
         .panel { padding: 24px; }
         .panel-header { align-items: start; border-bottom: 1px solid var(--line); display: flex; gap: 16px; justify-content: space-between; margin-bottom: 20px; padding-bottom: 16px; }
         .language-grid, .news-fields { display: grid; gap: 18px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-        .language-card, .news-row { box-shadow: none; padding: 18px; }
-        .news-row { display: grid; gap: 14px; }
+        .language-card, .news-row { box-shadow: none; padding: 18px; position: relative; }
+        .language-card { padding-top: 76px; }
+        .news-row { border: 2px solid var(--blue); box-shadow: 0 16px 42px rgba(22, 65, 148, 0.10); display: grid; gap: 14px; padding-top: 18px; }
+        .news-row::before { background: var(--blue); border-radius: 18px 0 0 18px; content: ""; inset: -2px auto -2px -2px; position: absolute; width: 7px; }
         .row-header { align-items: center; display: flex; justify-content: space-between; }
         .full { grid-column: 1 / -1; }
         .toggle-field { align-items: center; background: #f8fafc; border: 1px solid var(--line); border-radius: 14px; display: flex; gap: 12px; justify-content: space-between; padding: 12px 14px; }
@@ -43,7 +48,7 @@
         .live-error:empty { display: none; }
         .is-invalid { border-color: var(--red-dark) !important; box-shadow: 0 0 0 3px rgba(127, 0, 16, 0.10); }
         .empty-state { background: var(--soft); border: 1px dashed #cfd6e3; border-radius: 16px; color: var(--muted); padding: 22px; text-align: center; }
-        .sticky-actions { align-items: center; background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 16px; bottom: 18px; box-shadow: 0 18px 45px rgba(15,23,42,.12); display: flex; justify-content: space-between; padding: 14px; position: sticky; }
+        .sticky-actions { align-items: center; background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 16px; bottom: 18px; box-shadow: 0 18px 45px rgba(15,23,42,.12); display: flex; justify-content: space-between; padding: 14px; position: sticky; z-index: 30; }
         @media (max-width: 820px) { .topbar, .panel-header, .sticky-actions { align-items: stretch; flex-direction: column; } .language-grid, .news-fields { grid-template-columns: 1fr; } h1 { font-size: 28px; } }
     </style>
 </head>
@@ -74,7 +79,8 @@
                 </div>
                 <div class="language-grid">
                     @foreach (['es' => 'Español', 'en' => 'Inglés'] as $locale => $label)
-                        <div class="language-card">
+                        <div class="language-card" data-undo-scope>
+                            <button class="btn btn-undo undo-floating" type="button" data-undo-section title="Restaurar esta sección" aria-label="Restaurar esta sección" disabled>↶</button>
                             <h3>{{ $label }}</h3>
                             <div class="field-grid">
                                 @foreach ([
@@ -107,7 +113,10 @@
                         <h2>Noticias</h2>
                         <p class="muted">Agrega, quita, publica u oculta tarjetas. Esta vista conserva el diseño original sin fotos.</p>
                     </div>
-                    <button class="btn btn-primary" type="button" id="add-news">Agregar noticia</button>
+                    <div class="actions">
+                        <button class="btn btn-undo" type="button" id="restore-news" title="Restaurar noticia quitada" aria-label="Restaurar noticia quitada" disabled>↶</button>
+                        <button class="btn btn-primary" type="button" id="add-news">Agregar noticia</button>
+                    </div>
                 </div>
 
                 <div class="news-list" id="news-list">
@@ -121,6 +130,7 @@
                             <div class="row-header">
                                 <h3>Noticia <span class="row-number">{{ $loop->iteration }}</span></h3>
                                 <div class="actions">
+                                    <button class="btn btn-undo" type="button" data-undo-row title="Deshacer último cambio" aria-label="Deshacer último cambio" disabled>↶</button>
                                     @if (! empty($item['id']))
                                         <a class="btn btn-detail" href="{{ route('admin.news.detail.edit', $item['id']) }}">Detalle de la noticia</a>
                                     @else
@@ -210,6 +220,7 @@
             <div class="row-header">
                 <h3>Noticia <span class="row-number"></span></h3>
                 <div class="actions">
+                    <button class="btn btn-undo" type="button" data-undo-row title="Deshacer último cambio" aria-label="Deshacer último cambio" disabled>↶</button>
                     <span class="hint">Guarda primero para editar el detalle.</span>
                     <button class="btn btn-danger" type="button" data-remove-row>Quitar</button>
                 </div>
@@ -237,6 +248,12 @@
         const container = document.getElementById("news-list");
         const template = document.getElementById("news-template");
         const emptyState = document.getElementById("empty-state");
+        const restoreNewsButton = document.getElementById("restore-news");
+        const removedRows = [];
+        const removedRowsStorageKey = `news-removed-rows:${window.location.pathname}`;
+        const rowHistory = new WeakMap();
+        const sectionHistory = new WeakMap();
+        const pendingSnapshots = new WeakMap();
 
         function ensureLiveError(field) {
             let message = field.parentElement.querySelector(".live-error");
@@ -292,7 +309,154 @@
             if (emptyState) emptyState.style.display = rows.length ? "none" : "block";
         }
 
+        function editableFields(scope) {
+            return [...scope.querySelectorAll("input, textarea, select")];
+        }
+
+        function captureSnapshot(scope) {
+            return editableFields(scope).map((field) => ({
+                field,
+                checked: field.checked,
+                value: field.value,
+            }));
+        }
+
+        function restoreSnapshot(snapshot) {
+            snapshot.forEach(({ field, checked, value }) => {
+                if (!field.isConnected) return;
+                if (field.type === "checkbox" || field.type === "radio") {
+                    field.checked = checked;
+                } else {
+                    field.value = value;
+                }
+                field.classList.remove("is-invalid");
+                const message = field.parentElement?.querySelector(".live-error");
+                if (message) message.textContent = "";
+            });
+        }
+
+        function primeSnapshot(scope) {
+            if (!pendingSnapshots.has(scope)) {
+                pendingSnapshots.set(scope, captureSnapshot(scope));
+            }
+        }
+
+        function setUndoState(button, history) {
+            if (button) button.disabled = !history.length;
+        }
+
+        function rememberChange(scope, historyMap, button) {
+            const history = historyMap.get(scope) || [];
+            history.push(pendingSnapshots.get(scope) || captureSnapshot(scope));
+            if (history.length > 25) history.shift();
+            historyMap.set(scope, history);
+            pendingSnapshots.set(scope, captureSnapshot(scope));
+            setUndoState(button, history);
+        }
+
+        function bindUndoScope(scope, historyMap = sectionHistory) {
+            if (!scope || scope.dataset.undoBound) return;
+            scope.dataset.undoBound = "true";
+            const button = scope.querySelector("[data-undo-section], [data-undo-row]");
+            editableFields(scope).forEach((field) => {
+                field.addEventListener("focus", () => primeSnapshot(scope));
+                field.addEventListener("pointerdown", () => primeSnapshot(scope));
+                field.addEventListener("input", () => rememberChange(scope, historyMap, button));
+                field.addEventListener("change", () => rememberChange(scope, historyMap, button));
+            });
+            button?.addEventListener("click", () => {
+                const history = historyMap.get(scope) || [];
+                const snapshot = history.pop();
+                if (!snapshot) return;
+                restoreSnapshot(snapshot);
+                setUndoState(button, history);
+            });
+        }
+
+        function setRestoreNewsState() {
+            restoreNewsButton.disabled = removedRows.length === 0 && storedRemovedRows().length === 0;
+        }
+
+        function cleanRestoredRow(row) {
+            delete row.dataset.rowBound;
+            delete row.dataset.undoBound;
+            row.querySelectorAll("[data-field-bound]").forEach((field) => {
+                delete field.dataset.fieldBound;
+            });
+            row.querySelectorAll(".live-error").forEach((error) => error.remove());
+            row.querySelectorAll(".is-invalid").forEach((field) => field.classList.remove("is-invalid"));
+        }
+
+        function cleanRemovedRowSnapshot(row) {
+            const clone = row.cloneNode(true);
+            cleanRestoredRow(clone);
+            return clone.outerHTML;
+        }
+
+        function storedRemovedRows() {
+            try {
+                const stored = sessionStorage.getItem(removedRowsStorageKey);
+                const parsed = stored ? JSON.parse(stored) : [];
+                return Array.isArray(parsed) ? parsed : [];
+            } catch (error) {
+                sessionStorage.removeItem(removedRowsStorageKey);
+                return [];
+            }
+        }
+
+        function saveStoredRemovedRows(rows) {
+            if (!rows.length) {
+                sessionStorage.removeItem(removedRowsStorageKey);
+                return;
+            }
+
+            sessionStorage.setItem(removedRowsStorageKey, JSON.stringify(rows));
+        }
+
+        function rememberRemovedRow(row) {
+            const rows = [...container.querySelectorAll(".news-row")];
+            const snapshot = {
+                html: cleanRemovedRowSnapshot(row),
+                index: rows.indexOf(row),
+            };
+            const stored = storedRemovedRows();
+
+            removedRows.push(snapshot);
+            if (removedRows.length > 20) removedRows.shift();
+            stored.push(snapshot);
+            if (stored.length > 20) stored.shift();
+            saveStoredRemovedRows(stored);
+            setRestoreNewsState();
+        }
+
+        function popStoredRemovedRow() {
+            const stored = storedRemovedRows();
+            const snapshot = stored.pop() || null;
+            saveStoredRemovedRows(stored);
+            return snapshot;
+        }
+
+        function restoreRemovedRow() {
+            const memorySnapshot = removedRows.pop();
+            const snapshot = memorySnapshot || popStoredRemovedRow();
+            if (!snapshot) return;
+            if (memorySnapshot) popStoredRemovedRow();
+
+            const wrapper = document.createElement("div");
+            wrapper.innerHTML = snapshot.html.trim();
+            const row = wrapper.firstElementChild;
+            cleanRestoredRow(row);
+            const reference = container.querySelectorAll(".news-row")[snapshot.index] || null;
+
+            container.insertBefore(row, reference);
+            bindRow(row);
+            refreshRows();
+            setRestoreNewsState();
+        }
+
         function bindField(field) {
+            if (field.dataset.fieldBound) return;
+            field.dataset.fieldBound = "true";
             if (field.dataset.name === "href") {
                 field.addEventListener("input", () => validateHref(field));
                 field.addEventListener("blur", () => validateHref(field));
@@ -307,12 +471,18 @@
         }
 
         function bindRow(row) {
+            bindUndoScope(row, rowHistory);
+            if (row.dataset.rowBound) return;
+            row.dataset.rowBound = "true";
             row.querySelector("[data-remove-row]").addEventListener("click", () => {
+                rememberRemovedRow(row);
                 row.remove();
                 refreshRows();
             });
             row.querySelectorAll("input, textarea").forEach(bindField);
         }
+
+        restoreNewsButton.addEventListener("click", restoreRemovedRow);
 
         document.getElementById("add-news").addEventListener("click", () => {
             const row = template.content.firstElementChild.cloneNode(true);
@@ -323,8 +493,11 @@
         });
 
         document.querySelectorAll("input, textarea").forEach(bindField);
+        document.querySelectorAll("[data-undo-scope]").forEach((scope) => bindUndoScope(scope));
         container.querySelectorAll(".news-row").forEach(bindRow);
         refreshRows();
+        setRestoreNewsState();
     </script>
+    @include('admin.partials.persistent-undo')
 </body>
 </html>

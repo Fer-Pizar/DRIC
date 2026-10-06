@@ -23,7 +23,7 @@ use Illuminate\View\View;
 
 class MembershipContentController extends Controller
 {
-    private const MAX_IMAGE_KB = 5120;
+    private const MAX_IMAGE_KB = 10240;
     private const CLEAN_LABEL_REGEX = '/\A[\p{L}\s.,]+\z/u';
 
     public function edit(Page $page): View
@@ -143,7 +143,7 @@ class MembershipContentController extends Controller
             'regex' => 'Este campo solo puede contener letras, espacios, puntos y comas. No uses números ni símbolos especiales.',
             'file' => 'Debes subir un archivo válido.',
             'mimes' => 'Ese formato no está permitido. Solo se aceptan imágenes JPG o PNG.',
-            'memberships.*.image.max' => 'La imagen es demasiado pesada. El tamaño máximo permitido es 5 MB.',
+            'memberships.*.image.max' => 'La imagen es demasiado pesada. El tamaño máximo permitido es 10 MB.',
         ];
     }
 
@@ -169,6 +169,7 @@ class MembershipContentController extends Controller
                 'memberships.*.extra_info_email' => ['nullable', 'email', 'max:180'],
                 'memberships.*.url' => ['nullable', 'url', 'max:900'],
                 'memberships.*.existing_image' => ['nullable', 'string', 'max:900'],
+                'memberships.*.image_remove' => ['nullable', 'boolean'],
             ],
             [
                 'memberships.*.title_es.required' => 'Escribe el título de la membresía.',
@@ -216,6 +217,7 @@ class MembershipContentController extends Controller
                     'extra_info_email' => $extraInfoEnabled ? trim($row['extra_info_email'] ?? '') : '',
                     'url' => trim($row['url'] ?? ''),
                     'existing_image' => trim($row['existing_image'] ?? ''),
+                    'image_remove' => (bool) ($row['image_remove'] ?? false),
                 ];
             })
             ->all();
@@ -287,7 +289,7 @@ class MembershipContentController extends Controller
 
             $data = [
                 'url' => $membership['url'],
-                'logo' => $membership['existing_image'],
+                'logo' => $membership['image_remove'] ? '' : $membership['existing_image'],
                 'extra_info_enabled' => $membership['extra_info_enabled'],
                 'extra_info_email' => $membership['extra_info_email'],
             ];
@@ -301,6 +303,12 @@ class MembershipContentController extends Controller
 
             if ($request->hasFile("memberships.{$index}.image")) {
                 $block->media_asset_id = $this->storeMedia($request, "memberships.{$index}.image", 'memberships')->id;
+            } elseif ($membership['image_remove']) {
+                if ($block->mediaAsset) {
+                    Storage::disk($block->mediaAsset->disk ?? 'public')->delete($block->mediaAsset->file_path);
+                    $block->mediaAsset->delete();
+                }
+                $block->media_asset_id = null;
             }
 
             $block->save();

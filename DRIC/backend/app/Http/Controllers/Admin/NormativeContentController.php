@@ -306,11 +306,6 @@ class NormativeContentController extends Controller
             ->when($keptIds !== [], fn ($query) => $query->whereNotIn('id', $keptIds))
             ->get()
             ->each(function (ContentBlock $block): void {
-                if ($block->mediaAsset) {
-                    Storage::disk($block->mediaAsset->disk ?? 'public')->delete($block->mediaAsset->file_path);
-                    $block->mediaAsset->delete();
-                }
-
                 $block->delete();
             });
     }

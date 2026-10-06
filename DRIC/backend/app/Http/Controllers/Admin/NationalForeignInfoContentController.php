@@ -24,7 +24,7 @@ use Illuminate\View\View;
 
 class NationalForeignInfoContentController extends Controller
 {
-    private const MAX_IMAGE_KB = 7168;
+    private const MAX_IMAGE_KB = 10240;
     private const MAX_PDF_KB = 20480;
 
     public function edit(Page $page): View
@@ -110,6 +110,7 @@ class NationalForeignInfoContentController extends Controller
     {
         $rules = [
             'sections.*.image' => ['nullable', 'file', 'image', 'mimes:jpg,jpeg,png', 'max:'.self::MAX_IMAGE_KB],
+            'sections.*.image_remove' => ['nullable', 'boolean'],
             'sections.*.links.*.pdf' => ['nullable', 'file', 'mimes:pdf', 'max:'.self::MAX_PDF_KB],
         ];
 
@@ -136,7 +137,7 @@ class NationalForeignInfoContentController extends Controller
             'sections.*.image.file' => 'Debes subir un archivo válido.',
             'sections.*.image.image' => 'El archivo debe ser una imagen.',
             'sections.*.image.mimes' => 'Ese formato no está permitido. Sube una imagen JPG o PNG.',
-            'sections.*.image.max' => 'La imagen sobrepasa los 7MB.',
+            'sections.*.image.max' => 'La imagen sobrepasa los 10MB.',
             'sections.*.links.*.pdf.file' => 'Debes subir un PDF válido.',
             'sections.*.links.*.pdf.mimes' => 'Ese formato no está permitido. Sube un documento PDF.',
             'sections.*.links.*.pdf.max' => 'El PDF sobrepasa los 20MB.',
@@ -165,6 +166,7 @@ class NationalForeignInfoContentController extends Controller
                 'sections.*.image_alt_es' => ['nullable', 'string', 'max:220'],
                 'sections.*.image_alt_en' => ['nullable', 'string', 'max:220'],
                 'sections.*.existing_image' => ['nullable', 'string', 'max:900'],
+                'sections.*.image_remove' => ['nullable', 'boolean'],
                 'sections.*.points_es' => ['required', 'string', 'max:8000'],
                 'sections.*.points_en' => ['nullable', 'string', 'max:8000'],
                 'sections.*.links' => ['nullable', 'array'],
@@ -219,6 +221,7 @@ class NationalForeignInfoContentController extends Controller
                     trim($row['image_alt_en'] ?? '') ?: trim($row['title_en'] ?? '')
                 ),
                 'existing_image' => trim($row['existing_image'] ?? ''),
+                'image_remove' => filter_var($row['image_remove'] ?? false, FILTER_VALIDATE_BOOLEAN),
                 'points' => $this->localizedLines($row['points_es'] ?? '', $row['points_en'] ?? ''),
                 'links' => $this->validatedLinks($row['links'] ?? []),
             ])
@@ -264,7 +267,7 @@ class NationalForeignInfoContentController extends Controller
             ->values();
 
         if ($blocks && $blocks->isNotEmpty()) {
-            return $blocks->map(fn (ContentBlock $block) => $this->blockForForm($block))->all();
+            return $blocks->map(fn (ContentBlock $block, int $index) => $this->blockForForm($block, $index))->all();
         }
 
         return collect(NationalForeignInfoStaticContent::all()['sections'] ?? [])
@@ -272,10 +275,14 @@ class NationalForeignInfoContentController extends Controller
             ->all();
     }
 
-    private function blockForForm(ContentBlock $block): array
+    private function blockForForm(ContentBlock $block, int $index): array
     {
         $data = $block->data ?? [];
-        $image = $block->mediaAsset?->file_path ? '/storage/'.ltrim($block->mediaAsset->file_path, '/') : data_get($data, 'image', '');
+        $fallbackSection = (NationalForeignInfoStaticContent::all()['sections'] ?? [])[$index] ?? [];
+        $fallbackImage = data_get($fallbackSection, 'image', '');
+        $image = $block->mediaAsset?->file_path
+            ? '/storage/'.ltrim($block->mediaAsset->file_path, '/')
+            : (data_get($data, 'image') ?: $fallbackImage);
 
         return [
             'id' => $block->id,
@@ -357,7 +364,7 @@ class NationalForeignInfoContentController extends Controller
             $data = [
                 'id' => $card['key'] ?: Str::slug($card['title']['es']),
                 'eyebrow' => $card['eyebrow'],
-                'image' => $card['existing_image'],
+                'image' => $card['image_remove'] ? '' : $card['existing_image'],
                 'image_alt' => $card['image_alt'],
                 'points' => $card['points'],
                 'links' => $links,
@@ -373,6 +380,8 @@ class NationalForeignInfoContentController extends Controller
 
             if ($request->hasFile("sections.{$index}.image")) {
                 $block->media_asset_id = $this->storeMedia($request, "sections.{$index}.image", 'national-foreign-info/images')->id;
+            } elseif ($card['image_remove']) {
+                $block->media_asset_id = null;
             }
 
             $block->save();

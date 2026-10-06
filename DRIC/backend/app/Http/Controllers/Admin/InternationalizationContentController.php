@@ -54,7 +54,13 @@ class InternationalizationContentController extends Controller
 
             $hero = $this->upsertSection($page, 'internationalization.hero', 'internationalization_hero', 1);
             $detail = $this->upsertSection($page, 'internationalization.detail', 'internationalization_detail', 2);
-            $workAreas = $this->upsertSection($page, 'internationalization.work_areas', 'internationalization_work_areas', 3);
+            $workAreas = $this->upsertSection(
+                $page,
+                'internationalization.work_areas',
+                'internationalization_work_areas',
+                3,
+                (bool) $validated['work_areas_visible']
+            );
 
             foreach (['es', 'en'] as $locale) {
                 PageTranslation::updateOrCreate(
@@ -141,6 +147,8 @@ class InternationalizationContentController extends Controller
             $rules["{$locale}.section_text"] = ['required', 'string', 'max:1200'];
         }
 
+        $rules['work_areas_visible'] = ['required', 'boolean'];
+
         foreach (self::CARDS as $index) {
             $rules["cards.{$index}.title_es"] = ['required', 'string', 'max:180'];
             $rules["cards.{$index}.title_en"] = ['required', 'string', 'max:180'];
@@ -184,6 +192,7 @@ class InternationalizationContentController extends Controller
                 'section_text' => $this->sectionValue($page, 'internationalization.work_areas', 'en', 'summary', 'This space brings together the lines of action that expand UMSS international presence and create new opportunities for students, faculty, researchers and academic units.'),
             ],
             'cards' => $this->cards($page),
+            'work_areas_visible' => $this->sectionIsActive($page, 'internationalization.work_areas', true),
         ];
     }
 
@@ -205,12 +214,19 @@ class InternationalizationContentController extends Controller
         return $fallbacks;
     }
 
-    private function upsertSection(Page $page, string $key, string $type, int $sortOrder): Section
+    private function upsertSection(Page $page, string $key, string $type, int $sortOrder, bool $isActive = true): Section
     {
         return Section::updateOrCreate(
             ['page_id' => $page->id, 'section_key' => $key],
-            ['section_type' => $type, 'sort_order' => $sortOrder, 'is_active' => true, 'settings' => ['editable' => true]]
+            ['section_type' => $type, 'sort_order' => $sortOrder, 'is_active' => $isActive, 'settings' => ['editable' => true]]
         );
+    }
+
+    private function sectionIsActive(Page $page, string $key, bool $fallback): bool
+    {
+        $section = $page->sections->firstWhere('section_key', $key);
+
+        return $section ? (bool) $section->is_active : $fallback;
     }
 
     private function upsertBlock(Section $section, string $key, string $type, int $sortOrder, $languages, array $translations, array $data = []): ContentBlock

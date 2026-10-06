@@ -3,7 +3,10 @@ import Footer from "@/components/layout/Footer";
 import { publicAssetHref } from "@/lib/api/assets";
 import { getOptionalPageBySlug } from "@/lib/api/pages";
 import type { CmsBlock, CmsPage } from "@/types/cms";
-import GovernmentAgreementsList, { type GovernmentAgreementSection } from "./GovernmentAgreementsList";
+import GovernmentAgreementsList, {
+  type GovernmentAgreement,
+  type GovernmentAgreementSection,
+} from "./GovernmentAgreementsList";
 import OtherAgreementsList from "./OtherAgreementsList";
 
 type Props = {
@@ -273,7 +276,7 @@ const bilateralSections: GovernmentAgreementSection[] = [
     ],
   },
   {
-    title: "Bélgica",
+    title: "Belgica",
     agreements: [
       { title: "Acuerdo de Cooperación Cultural y Educativa entre el Gobierno de la República de Bolivia y el Gobierno de la Comunidad Francesa de Bélgica. 11/10/1995", href: "https://miumssedu-my.sharepoint.com/:b:/g/personal/dric_mi_umss_edu/EaTy_r5sNH9Go7aJz-VAgGEBagcFvC_Eoy4cfu9QTJ-_vQ?e=jVSFiI" },
       { title: "Acuerdo entre el Gobierno de Bolivia y APEFE. 09/12/2002", href: "https://miumssedu-my.sharepoint.com/:b:/g/personal/dric_mi_umss_edu/EccdOuOczydBvPRBgW_-zS0BIUxrZ2nC3rSnbt0O6PJIVQ?e=fyuYzg" },
@@ -391,7 +394,7 @@ const bilateralSections: GovernmentAgreementSection[] = [
     ],
   },
   {
-    title: "Hungría",
+    title: "Hungria",
     agreements: [
       { title: "Convenio de Cooperación Económica, Técnica y Científica entre el Gobierno de la República de Bolivia y la República Popular de Hungría. 15/05/1970", href: "https://miumssedu-my.sharepoint.com/:b:/g/personal/dric_mi_umss_edu/EUwAqZ3ggpVOrl1ND2GzOJoBun-appA0zzYd-WzR8RfYow?e=0UDb3s" },
       { title: "Convenio de Cooperación Cultural y Científica entre la República de Bolivia y la República Popular de Hungría. 15/05/1970", href: "https://miumssedu-my.sharepoint.com/:b:/g/personal/dric_mi_umss_edu/EYUxoGyUWKlCoSAhQ_bk0o8BylNv0nMX3lMAaLXUwSTlEQ?e=1vM4Oo" },
@@ -427,7 +430,7 @@ const bilateralSections: GovernmentAgreementSection[] = [
   },
   { title: "Japón", agreements: [{ title: "Entendimiento para promover la cooperación técnica entre los dos países. 19/12/1977", href: "https://miumssedu-my.sharepoint.com/:b:/g/personal/dric_mi_umss_edu/EZGriklvoQRGp71bNZYUsoUBkjRI4SLwq5blaiMR_lj0xQ?e=ez2C62" }] },
   {
-    title: "México",
+    title: "Mexico",
     agreements: [
       { title: "Convenio entre el Gobierno dela República de Bolivia y el Gobierno de los Estados Unidos Mexicanos. 12/04/1962", href: "https://miumssedu-my.sharepoint.com/:b:/g/personal/dric_mi_umss_edu/Ebyo9q2mukdPn42XZGRUZAQB7oHZYpKdzWnQYBx9NJQuLQ?e=9LOnW3" },
       { title: "Convenio básico de cooperación técnica y científica entre Bolivia y México. 06/10/1990. Ratificado 21/06/1992", href: "https://miumssedu-my.sharepoint.com/:b:/g/personal/dric_mi_umss_edu/EQ2rmnpxY39Chd54nII2N8cBtSxN0qdO5W-HdV5gomd1xA?e=tjSSAz" },
@@ -436,7 +439,7 @@ const bilateralSections: GovernmentAgreementSection[] = [
     ],
   },
   { title: "OEA", agreements: [{ title: "Acuerdo de Asistencia Técnica que celebran el Ministerio de Educación y Cultura de Bolivia y la Secretaría General de la Organización de los Estados Americanos. 30/10/1978", href: "https://miumssedu-my.sharepoint.com/:b:/g/personal/dric_mi_umss_edu/ES5OvjM0hkZDvRu_n1AhjiwBy8mBRWCvRcIgTEQhhOSxcA?e=me8oo4" }] },
-  { title: "Panamá", agreements: [{ title: "Acuerdo de cooperación en materia de turismo entre Bolivia y Panamá. 11/04/2005. Ratificado 07/12/2005", href: "https://miumssedu-my.sharepoint.com/:b:/g/personal/dric_mi_umss_edu/EbZs63ro_stNv5CPPqz7nWQBXFeswfTGEkFCd4DiJCDwbw?e=F4wyYD" }] },
+  { title: "Panama", agreements: [{ title: "Acuerdo de cooperación en materia de turismo entre Bolivia y Panamá. 11/04/2005. Ratificado 07/12/2005", href: "https://miumssedu-my.sharepoint.com/:b:/g/personal/dric_mi_umss_edu/EbZs63ro_stNv5CPPqz7nWQBXFeswfTGEkFCd4DiJCDwbw?e=F4wyYD" }] },
   {
     title: "Paraguay",
     agreements: [
@@ -447,7 +450,7 @@ const bilateralSections: GovernmentAgreementSection[] = [
     ],
   },
   {
-    title: "Perú",
+    title: "Peru",
     agreements: [
       { title: "Convenio básico de cooperación técnica y científica entre Bolivia y Perú. 27/07/1996", href: "https://miumssedu-my.sharepoint.com/:b:/g/personal/dric_mi_umss_edu/EcsRzRSOsMpMr9gTqBCjOFgBn5Vvo8qBq34L-SsaGMDPUA?e=XA6nwG" },
       { title: "Convenio entre Bolivia y Perú para la recuperación de bienes culturales y otros robados, importados o exportados ilícitamente. 14/12/1998. Acta de canje 23/10/2001", href: "https://miumssedu-my.sharepoint.com/:b:/g/personal/dric_mi_umss_edu/EXcR7fv4JTFHoIBUtK_7eK4BGEgH4JRRp9mT3gPRwtovuQ?e=e2fT8u" },
@@ -487,6 +490,44 @@ const bilateralSections: GovernmentAgreementSection[] = [
 ];
 
 const governmentAgreementSections = [...ceubSections, ...bilateralSections];
+const governmentCeubTitle = "Convenios suscritos por el CEUB con otras instituciones";
+const unclassifiedGovernmentTitle = "Otras instituciones";
+
+const countryAliases: Record<string, string[]> = {
+  Alemania: ["alemania", "alemana", "aleman", "germany", "deutschland"],
+  Argentina: ["argentina", "comahue"],
+  Austria: ["austria", "graz"],
+  Belgica: ["belgica", "bélgica", "belgium", "apefe"],
+  Brasil: ["brasil", "brazil", "acre", "ufac", "ifac"],
+  Chile: ["chile"],
+  China: ["china", "popular china"],
+  Colombia: ["colombia"],
+  Corea: ["corea", "korea"],
+  Cuba: ["cuba", "habana"],
+  Dinamarca: ["dinamarca", "denmark"],
+  Ecuador: ["ecuador"],
+  EEUU: ["eeuu", "estados unidos", "united states", "usa"],
+  Egipto: ["egipto", "egypt"],
+  España: ["espana", "españa", "spain", "espanola", "española", "crue", "alicante"],
+  Francia: ["francia", "france", "frances", "francesas"],
+  Holanda: ["holanda", "paises bajos", "países bajos", "netherlands"],
+  Hungria: ["hungria", "hungría", "hungary"],
+  India: ["india"],
+  Inglaterra: ["inglaterra", "reino unido", "united kingdom", "britanico", "británico", "british"],
+  Israel: ["israel"],
+  Italia: ["italia", "italy", "italiana"],
+  Japón: ["japon", "japón", "japan"],
+  Mexico: ["mexico", "méxico", "mexicanos"],
+  OEA: ["oea", "organizacion de los estados americanos", "organización de los estados americanos", "oas"],
+  Panama: ["panama", "panamá"],
+  Paraguay: ["paraguay"],
+  Peru: ["peru", "perú"],
+  Rusia: ["rusia", "russian", "federacion de rusia", "federación de rusia"],
+  Suecia: ["suecia", "sweden"],
+  Suiza: ["suiza", "switzerland", "confederacion suiza", "confederación suiza"],
+  Uruguay: ["uruguay"],
+  Venezuela: ["venezuela"],
+};
 
 const labels = {
   es: {
@@ -545,28 +586,96 @@ function cmsOtherAgreements(page: CmsPage | null): OtherAgreement[] {
     .filter((agreement) => agreement.es && agreement.href);
 }
 
+function normalizedSearchText(value: string): string {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLocaleLowerCase();
+}
+
+function dataString(data: Record<string, unknown>, keys: string[]): string {
+  const value = keys.map((key) => data[key]).find((candidate) => typeof candidate === "string");
+
+  return typeof value === "string" ? value : "";
+}
+
+function inferGovernmentSection(title: string, data: Record<string, unknown>): string {
+  const explicitGroup = dataString(data, ["country", "country_name", "section", "category", "group"]);
+  const haystack = normalizedSearchText(`${explicitGroup} ${title}`);
+
+  if (/\bceub\b|comite ejecutivo|universidad boliviana/.test(haystack)) {
+    return governmentCeubTitle;
+  }
+
+  const explicitSection = normalizedSearchText(explicitGroup);
+  const explicitCountry = bilateralSections.find((section) =>
+    [section.title, ...(countryAliases[section.title] ?? [])].some(
+      (alias) => explicitSection && explicitSection === normalizedSearchText(alias),
+    ),
+  );
+
+  if (explicitCountry) {
+    return explicitCountry.title;
+  }
+
+  if (explicitGroup && explicitGroup !== "__custom") {
+    return explicitGroup;
+  }
+
+  const inferredCountry = bilateralSections.find((section) =>
+    [section.title, ...(countryAliases[section.title] ?? [])].some((alias) =>
+      haystack.includes(normalizedSearchText(alias)),
+    ),
+  );
+
+  return inferredCountry?.title ?? unclassifiedGovernmentTitle;
+}
+
+function groupGovernmentDocuments(documents: Array<GovernmentAgreement & { sectionTitle: string }>): GovernmentAgreementSection[] {
+  const grouped = new Map<string, GovernmentAgreement[]>();
+
+  documents.forEach(({ sectionTitle, ...agreement }) => {
+    grouped.set(sectionTitle, [...(grouped.get(sectionTitle) ?? []), agreement]);
+  });
+
+  return [
+    governmentCeubTitle,
+    ...bilateralSections.map((section) => section.title),
+    ...Array.from(grouped.keys()).filter(
+      (title) =>
+        title !== governmentCeubTitle &&
+        title !== unclassifiedGovernmentTitle &&
+        !bilateralSections.some((section) => section.title === title),
+    ),
+    unclassifiedGovernmentTitle,
+  ]
+    .map((title) => ({
+      title,
+      agreements: grouped.get(title) ?? [],
+    }))
+    .filter((section) => section.agreements.length > 0);
+}
+
 function cmsGovernmentSections(
   page: CmsPage | null,
-  fallbackTitle: string,
 ): GovernmentAgreementSection[] {
   const documents = getDocumentBlocks(page, "agreements.government.documents")
-    .map((block) => ({
-      title: block.title?.trim() ?? "",
-      href: publicAssetHref(typeof block.data?.href === "string" ? block.data.href : "", ""),
-    }))
+    .map((block) => {
+      const title = block.title?.trim() ?? "";
+
+      return {
+        title,
+        href: publicAssetHref(typeof block.data?.href === "string" ? block.data.href : "", ""),
+        sectionTitle: inferGovernmentSection(title, block.data),
+      };
+    })
     .filter((agreement) => agreement.title && agreement.href);
 
   if (!documents.length) {
     return [];
   }
 
-  return [
-    {
-      title: page?.sections.find((section) => section.section_key === "agreements.government.documents")?.title
-        ?? fallbackTitle,
-      agreements: documents,
-    },
-  ];
+  return groupGovernmentDocuments(documents);
 }
 
 function hasCmsSection(page: CmsPage | null, key: string): boolean {
@@ -580,12 +689,17 @@ export default async function AgreementDetailPage({ params }: Props) {
 
   if (slug === "ceub-gobierno") {
     const cmsPage = await getOptionalPageBySlug("convenios-ceub-gobierno", activeLocale);
-    const managedSections = cmsGovernmentSections(cmsPage, t.governmentTitle);
-    const sections = hasCmsSection(cmsPage, "agreements.government.documents") ? managedSections : governmentAgreementSections;
+    const managedGovernmentSections = cmsGovernmentSections(cmsPage);
+    const sections = hasCmsSection(cmsPage, "agreements.government.documents")
+      ? managedGovernmentSections
+      : governmentAgreementSections;
     const totalGovernmentAgreements = sections.reduce(
       (total, section) => total + section.agreements.length,
       0,
     );
+    const totalGovernmentCountries = sections.filter(
+      (section) => section.title !== governmentCeubTitle,
+    ).length;
 
     return (
       <main className="dric-other-agreements-page min-h-screen overflow-x-hidden">
@@ -608,7 +722,8 @@ export default async function AgreementDetailPage({ params }: Props) {
                   {t.governmentIntro}
                 </p>
                 <div className="dric-other-agreements-count mt-6 inline-flex rounded-full px-5 py-2 text-sm font-bold">
-                  {totalGovernmentAgreements} {t.governmentCount}
+                  {totalGovernmentAgreements} {t.governmentCount} · {totalGovernmentCountries}{" "}
+                  {activeLocale === "es" ? "países" : "countries"}
                 </div>
               </div>
             </div>

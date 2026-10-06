@@ -31,7 +31,7 @@ class PasswordRecoveryController extends Controller
 
         if (! $user) {
             return back()
-                ->with('success', 'Te enviamos una nueva contraseña temporal.')
+                ->with('success', 'Te enviamos una nueva contraseña temporal. Revisa spam o correo no deseado si no aparece en tu bandeja de entrada.')
                 ->onlyInput('email');
         }
 
@@ -65,7 +65,7 @@ class PasswordRecoveryController extends Controller
         }
 
         return back()
-            ->with('success', 'Te enviamos una nueva contraseña temporal.')
+            ->with('success', 'Te enviamos una nueva contraseña temporal. Revisa spam o correo no deseado si no aparece en tu bandeja de entrada.')
             ->onlyInput('email');
     }
 }

@@ -24,6 +24,10 @@
         .btn-add { background: #2563eb; color: #fff; margin-top: 14px; }
         .btn-remove { background: #fff1f2; color: var(--red-dark); }
         .btn-tool { background: #f8fafc; border: 1px solid #d7deea; color: var(--ink); font-size: 12px; padding: 8px 10px; }
+        .btn-undo { align-items: center; background: #eef3fb; color: var(--blue); font-size: 20px; font-weight: 900; line-height: 1; min-width: 40px; padding: 9px 12px; text-shadow: 0 0 0 currentColor, .35px 0 0 currentColor, 0 .35px 0 currentColor; }
+        .btn-undo:disabled { cursor: not-allowed; opacity: .42; }
+        .undo-floating { position: absolute; right: 12px; top: 12px; z-index: 4; }
+        .item-card > .undo-floating, .link-card > .undo-floating { right: -10px; top: -10px; z-index: 6; }
         .alert { border-radius: 14px; margin-bottom: 18px; padding: 14px 16px; }
         .alert-success { background: #e8f8ee; border: 1px solid #bde8c9; color: #176534; }
         .alert-error { background: #fff1f2; border: 1px solid #b91c1c; color: var(--red-dark); font-weight: 800; }
@@ -31,7 +35,7 @@
         .panel { padding: 24px; }
         .panel-header { border-bottom: 1px solid var(--line); margin-bottom: 20px; padding-bottom: 16px; }
         .language-grid, .two-grid { display: grid; gap: 18px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-        .language-card, .item-card, .link-card { box-shadow: none; padding: 18px; }
+        .language-card, .item-card, .link-card { box-shadow: none; padding: 18px; position: relative; }
         .item-card { display: grid; gap: 16px; }
         .link-card { background: var(--soft); display: grid; gap: 12px; }
         .item-header { align-items: center; display: flex; gap: 12px; justify-content: space-between; }
@@ -41,7 +45,7 @@
         .list-field { min-height: 150px; }
         .hint { color: var(--muted); font-size: 12px; font-weight: 500; line-height: 1.45; }
         .field-error { color: var(--red-dark); font-size: 12px; font-weight: 800; line-height: 1.45; }
-        .sticky-actions { align-items: center; background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 16px; bottom: 18px; box-shadow: 0 18px 45px rgba(15,23,42,.12); display: flex; justify-content: space-between; padding: 14px; position: sticky; }
+        .sticky-actions { align-items: center; background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 16px; bottom: 18px; box-shadow: 0 18px 45px rgba(15,23,42,.12); display: flex; justify-content: space-between; padding: 14px; position: sticky; z-index: 30; }
         @media (max-width: 900px) { .topbar, .sticky-actions, .item-header { align-items: stretch; flex-direction: column; } .language-grid, .two-grid { grid-template-columns: 1fr; } .item-actions, .link-actions { justify-content: flex-start; } }
     </style>
 </head>
@@ -159,12 +163,18 @@
                                         </article>
                                     @endforeach
                                 </div>
-                                <button class="btn btn-add" type="button" data-add-link>Agregar enlace</button>
+                                <div class="item-actions">
+                                    <button class="btn btn-add" type="button" data-add-link>Agregar enlace</button>
+                                    <button class="btn btn-undo" type="button" data-restore-link disabled title="Restaurar último enlace quitado" aria-label="Restaurar último enlace quitado">↶</button>
+                                </div>
                             </div>
                         </article>
                     @endforeach
                     </div>
-                    <button class="btn btn-add" type="button" data-add-opportunity="{{ $groupKey }}">{{ $group['button'] }}</button>
+                    <div class="item-actions">
+                        <button class="btn btn-add" type="button" data-add-opportunity="{{ $groupKey }}">{{ $group['button'] }}</button>
+                        <button class="btn btn-undo" type="button" data-restore-opportunity="{{ $groupKey }}" disabled title="Restaurar última oportunidad quitada" aria-label="Restaurar última oportunidad quitada">↶</button>
+                    </div>
                 </section>
             @endforeach
 
@@ -210,7 +220,7 @@
                 </div></div>
             </div>
             <label>Contacto<input type="text" name="opportunities[__INDEX__][contact]" value=""></label>
-            <div><h3>Enlaces</h3><div class="links-list" data-links-list></div><button class="btn btn-add" type="button" data-add-link>Agregar enlace</button></div>
+            <div><h3>Enlaces</h3><div class="links-list" data-links-list></div><div class="item-actions"><button class="btn btn-add" type="button" data-add-link>Agregar enlace</button><button class="btn btn-undo" type="button" data-restore-link disabled title="Restaurar último enlace quitado" aria-label="Restaurar último enlace quitado">↶</button></div></div>
         </article>
     </template>
 
@@ -226,6 +236,201 @@
     </template>
 
     <script>
+        const cardHistory = new WeakMap();
+        const fieldStartSnapshots = new WeakMap();
+        const removedOpportunityHistory = new WeakMap();
+        const removedLinkHistory = new WeakMap();
+        const removedOpportunityStorageKey = `awards-opportunities-removed-opportunities:${window.location.pathname}`;
+        const removedLinkStorageKey = `awards-opportunities-removed-links:${window.location.pathname}`;
+
+        function editableFields(scope) {
+            return Array.from(scope.querySelectorAll('input, textarea'));
+        }
+
+        function snapshotScope(scope) {
+            return editableFields(scope).map((field) => ({
+                name: field.name,
+                type: field.type,
+                value: field.value,
+                checked: field.checked,
+            }));
+        }
+
+        function restoreSnapshot(scope, snapshot) {
+            snapshot.forEach((item) => {
+                const field = editableFields(scope).find((candidate) => candidate.name === item.name);
+                if (!field) return;
+                if (field.type === 'checkbox') {
+                    field.checked = item.checked;
+                    return;
+                }
+                field.value = item.value;
+            });
+        }
+
+        function historyFor(scope) {
+            if (!cardHistory.has(scope)) cardHistory.set(scope, []);
+            return cardHistory.get(scope);
+        }
+
+        function setUndoState(scope) {
+            const button = scope.querySelector(':scope > [data-undo-card]');
+            if (button) button.disabled = historyFor(scope).length === 0;
+        }
+
+        function pushSnapshot(scope, snapshot = snapshotScope(scope)) {
+            const history = historyFor(scope);
+            const serialized = JSON.stringify(snapshot);
+            const last = history.length ? JSON.stringify(history[history.length - 1]) : null;
+            if (serialized !== last) history.push(snapshot);
+            if (history.length > 20) history.shift();
+            setUndoState(scope);
+        }
+
+        function undoScope(scope) {
+            const snapshot = historyFor(scope).pop();
+            if (!snapshot) return;
+            restoreSnapshot(scope, snapshot);
+            editableFields(scope).forEach((field) => fieldStartSnapshots.delete(field));
+            setUndoState(scope);
+        }
+
+        function markFieldStart(field) {
+            const scope = field.closest('[data-undo-scope]');
+            if (!scope || fieldStartSnapshots.has(field)) return;
+            fieldStartSnapshots.set(field, snapshotScope(scope));
+        }
+
+        function rememberFieldChange(field) {
+            const scope = field.closest('[data-undo-scope]');
+            const snapshot = fieldStartSnapshots.get(field);
+            if (!scope || !snapshot) return;
+            pushSnapshot(scope, snapshot);
+            fieldStartSnapshots.delete(field);
+        }
+
+        function bindUndoScope(scope) {
+            if (scope.dataset.undoBound === '1') return;
+            scope.dataset.undoScope = '';
+            scope.dataset.undoBound = '1';
+
+            const button = document.createElement('button');
+            button.className = 'btn btn-undo undo-floating';
+            button.type = 'button';
+            button.dataset.undoCard = '';
+            button.disabled = true;
+            button.title = 'Deshacer último cambio';
+            button.setAttribute('aria-label', 'Deshacer último cambio');
+            button.textContent = '↶';
+            scope.appendChild(button);
+
+            button.addEventListener('click', () => undoScope(scope));
+            editableFields(scope).forEach((field) => {
+                field.addEventListener('focusin', () => markFieldStart(field));
+                field.addEventListener('input', () => rememberFieldChange(field));
+                field.addEventListener('change', () => rememberFieldChange(field));
+            });
+        }
+
+        function bindUndoScopes(root = document) {
+            if (root.matches?.('.language-card, .item-card, .link-card')) bindUndoScope(root);
+            root.querySelectorAll('.language-card, .item-card, .link-card').forEach(bindUndoScope);
+        }
+
+        function readStoredSnapshots(key) {
+            try {
+                const stored = sessionStorage.getItem(key);
+                const parsed = stored ? JSON.parse(stored) : {};
+                return parsed && typeof parsed === 'object' ? parsed : {};
+            } catch (error) {
+                sessionStorage.removeItem(key);
+                return {};
+            }
+        }
+
+        function writeStoredSnapshots(key, value) {
+            const keys = Object.keys(value).filter((itemKey) => Array.isArray(value[itemKey]) && value[itemKey].length);
+
+            if (!keys.length) {
+                sessionStorage.removeItem(key);
+                return;
+            }
+
+            sessionStorage.setItem(key, JSON.stringify(value));
+        }
+
+        function popStoredSnapshot(storageKey, itemKey) {
+            const stored = readStoredSnapshots(storageKey);
+            const snapshots = Array.isArray(stored[itemKey]) ? stored[itemKey] : [];
+            const snapshot = snapshots.pop() || null;
+
+            if (!snapshots.length) {
+                delete stored[itemKey];
+            } else {
+                stored[itemKey] = snapshots;
+            }
+
+            writeStoredSnapshots(storageKey, stored);
+            return snapshot;
+        }
+
+        function cleanRemovedSnapshot(card) {
+            const clone = card.cloneNode(true);
+            clone.querySelectorAll('[data-undo-card]').forEach((button) => button.remove());
+            clone.querySelectorAll('.language-card, .item-card, .link-card').forEach((scope) => {
+                delete scope.dataset.undoBound;
+                delete scope.dataset.undoScope;
+            });
+            delete clone.dataset.undoBound;
+            delete clone.dataset.undoScope;
+            return clone.outerHTML;
+        }
+
+        function opportunityGroupForList(list) {
+            return list?.dataset.opportunitiesList || 'archive';
+        }
+
+        function opportunityKey(card) {
+            const id = card.querySelector('input[name$="[id]"]')?.value.trim();
+            const title = card.querySelector('input[name$="[title_es]"]')?.value.trim();
+            return id ? `id:${id}` : (title ? `title:${title}` : `index:${Array.from(document.querySelectorAll('[data-opportunity-card]')).indexOf(card)}`);
+        }
+
+        function opportunityHistoryFor(list) {
+            if (!removedOpportunityHistory.has(list)) removedOpportunityHistory.set(list, []);
+            return removedOpportunityHistory.get(list);
+        }
+
+        function linkHistoryFor(card) {
+            if (!removedLinkHistory.has(card)) removedLinkHistory.set(card, []);
+            return removedLinkHistory.get(card);
+        }
+
+        function setRestoreOpportunityState(group) {
+            const list = document.querySelector(`[data-opportunities-list="${group}"]`);
+            const button = document.querySelector(`[data-restore-opportunity="${group}"]`);
+            const stored = readStoredSnapshots(removedOpportunityStorageKey);
+            const hasStored = Array.isArray(stored[group]) && stored[group].length > 0;
+
+            if (button) button.disabled = !list || (opportunityHistoryFor(list).length === 0 && !hasStored);
+        }
+
+        function setRestoreLinkState(card) {
+            const button = card.querySelector('[data-restore-link]');
+            const stored = readStoredSnapshots(removedLinkStorageKey);
+            const key = opportunityKey(card);
+            const hasStored = Array.isArray(stored[key]) && stored[key].length > 0;
+
+            if (button) button.disabled = linkHistoryFor(card).length === 0 && !hasStored;
+        }
+
+        function setAllRestoreStates() {
+            document.querySelectorAll('[data-opportunities-list]').forEach((list) => {
+                setRestoreOpportunityState(opportunityGroupForList(list));
+            });
+            document.querySelectorAll('[data-opportunity-card]').forEach(setRestoreLinkState);
+        }
+
         function reindexOpportunity(card, index) {
             card.querySelectorAll('[name]').forEach((field) => {
                 field.name = field.name.replace(/opportunities\[\d+\]/, `opportunities[${index}]`);
@@ -242,13 +447,96 @@
             });
         }
 
+        function rememberRemovedOpportunity(card) {
+            const list = card.closest('[data-opportunities-list]');
+            if (!list) return;
+
+            const group = opportunityGroupForList(list);
+            const cards = Array.from(list.querySelectorAll('[data-opportunity-card]'));
+            const snapshot = {
+                html: cleanRemovedSnapshot(card),
+                index: cards.indexOf(card),
+            };
+            const history = opportunityHistoryFor(list);
+            const stored = readStoredSnapshots(removedOpportunityStorageKey);
+
+            history.push(snapshot);
+            if (history.length > 20) history.shift();
+            if (!Array.isArray(stored[group])) stored[group] = [];
+            stored[group].push(snapshot);
+            if (stored[group].length > 20) stored[group].shift();
+            writeStoredSnapshots(removedOpportunityStorageKey, stored);
+            setRestoreOpportunityState(group);
+        }
+
+        function restoreOpportunity(group) {
+            const list = document.querySelector(`[data-opportunities-list="${group}"]`);
+            if (!list) return;
+
+            const memorySnapshot = opportunityHistoryFor(list).pop();
+            const snapshot = memorySnapshot || popStoredSnapshot(removedOpportunityStorageKey, group);
+            if (!snapshot) return;
+            if (memorySnapshot) popStoredSnapshot(removedOpportunityStorageKey, group);
+
+            const wrapper = document.createElement('div');
+            wrapper.innerHTML = snapshot.html.trim();
+            const card = wrapper.firstElementChild;
+            const reference = list.querySelectorAll('[data-opportunity-card]')[snapshot.index] || null;
+            list.insertBefore(card, reference);
+            bindUndoScopes(card);
+            reindexAll();
+            setAllRestoreStates();
+        }
+
+        function rememberRemovedLink(linkCard) {
+            const card = linkCard.closest('[data-opportunity-card]');
+            const list = card.querySelector('[data-links-list]');
+            const links = Array.from(list.querySelectorAll('[data-link-card]'));
+            const key = opportunityKey(card);
+            const snapshot = {
+                html: cleanRemovedSnapshot(linkCard),
+                index: links.indexOf(linkCard),
+            };
+            const history = linkHistoryFor(card);
+            const stored = readStoredSnapshots(removedLinkStorageKey);
+
+            history.push(snapshot);
+            if (history.length > 20) history.shift();
+            if (!Array.isArray(stored[key])) stored[key] = [];
+            stored[key].push(snapshot);
+            if (stored[key].length > 20) stored[key].shift();
+            writeStoredSnapshots(removedLinkStorageKey, stored);
+            setRestoreLinkState(card);
+        }
+
+        function restoreLink(card) {
+            const key = opportunityKey(card);
+            const memorySnapshot = linkHistoryFor(card).pop();
+            const snapshot = memorySnapshot || popStoredSnapshot(removedLinkStorageKey, key);
+            if (!snapshot) return;
+            if (memorySnapshot) popStoredSnapshot(removedLinkStorageKey, key);
+
+            const list = card.querySelector('[data-links-list]');
+            const wrapper = document.createElement('div');
+            wrapper.innerHTML = snapshot.html.trim();
+            const linkCard = wrapper.firstElementChild;
+            const reference = list.querySelectorAll('[data-link-card]')[snapshot.index] || null;
+            list.insertBefore(linkCard, reference);
+            bindUndoScopes(linkCard);
+            reindexLinks(card);
+            setRestoreLinkState(card);
+        }
+
         function addOpportunity(group) {
             const list = document.querySelector(`[data-opportunities-list="${group}"]`);
             const index = document.querySelectorAll('[data-opportunity-card]').length;
             const wrapper = document.createElement('div');
             wrapper.innerHTML = document.getElementById('opportunity-template').innerHTML.replaceAll('__INDEX__', index);
-            list.appendChild(wrapper.firstElementChild);
+            const card = wrapper.firstElementChild;
+            list.appendChild(card);
+            bindUndoScopes(card);
             reindexAll();
+            setAllRestoreStates();
         }
 
         function addLink(card) {
@@ -258,7 +546,10 @@
             const linkIndex = list.querySelectorAll('[data-link-card]').length;
             const wrapper = document.createElement('div');
             wrapper.innerHTML = document.getElementById('link-template').innerHTML.replaceAll('__OPPORTUNITY__', opportunityIndex).replaceAll('__LINK__', linkIndex);
-            list.appendChild(wrapper.firstElementChild);
+            const linkCard = wrapper.firstElementChild;
+            list.appendChild(linkCard);
+            bindUndoScopes(linkCard);
+            setRestoreLinkState(card);
         }
 
         function reindexLinks(card) {
@@ -271,21 +562,36 @@
         }
 
         reindexAll();
+        bindUndoScopes();
+        setAllRestoreStates();
         document.querySelectorAll('[data-add-opportunity]').forEach((button) => {
             button.addEventListener('click', () => addOpportunity(button.dataset.addOpportunity));
         });
         document.addEventListener('click', (event) => {
             if (event.target.matches('[data-remove-item]')) {
-                event.target.closest('[data-opportunity-card]').remove();
+                const card = event.target.closest('[data-opportunity-card]');
+                rememberRemovedOpportunity(card);
+                card.remove();
                 reindexAll();
+                setAllRestoreStates();
             }
             if (event.target.matches('[data-add-link]')) addLink(event.target.closest('[data-opportunity-card]'));
             if (event.target.matches('[data-remove-link]')) {
                 const card = event.target.closest('[data-opportunity-card]');
-                event.target.closest('[data-link-card]').remove();
+                const linkCard = event.target.closest('[data-link-card]');
+                rememberRemovedLink(linkCard);
+                linkCard.remove();
                 reindexLinks(card);
+                setRestoreLinkState(card);
+            }
+            if (event.target.matches('[data-restore-opportunity]')) {
+                restoreOpportunity(event.target.dataset.restoreOpportunity);
+            }
+            if (event.target.matches('[data-restore-link]')) {
+                restoreLink(event.target.closest('[data-opportunity-card]'));
             }
         });
     </script>
+    @include('admin.partials.persistent-undo')
 </body>
 </html>

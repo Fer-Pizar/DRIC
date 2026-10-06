@@ -121,6 +121,8 @@ class AgreementContentController extends Controller
                     $card->update([
                         'media_asset_id' => $this->storeMedia($request, "card_{$index}_image", "agreements/card-{$index}", 'image')->id,
                     ]);
+                } elseif ($request->boolean("card_{$index}_image_remove")) {
+                    $card->update(['media_asset_id' => null]);
                 }
             }
 
@@ -128,6 +130,8 @@ class AgreementContentController extends Controller
                 $heroImage->update([
                     'media_asset_id' => $this->storeMedia($request, 'hero_image', 'agreements/hero', 'image')->id,
                 ]);
+            } elseif ($request->boolean('hero_image_remove')) {
+                $heroImage->update(['media_asset_id' => null]);
             }
 
             if ($request->hasFile('procedure_pdf')) {
@@ -167,9 +171,13 @@ class AgreementContentController extends Controller
             'card_2_href' => ['required', 'string', 'max:500'],
             'card_3_href' => ['required', 'string', 'max:500'],
             'hero_image' => ['nullable', 'file', 'mimes:jpg,jpeg,png', 'max:'.self::MAX_IMAGE_KB],
+            'hero_image_remove' => ['nullable', 'boolean'],
             'card_1_image' => ['nullable', 'file', 'mimes:jpg,jpeg,png', 'max:'.self::MAX_IMAGE_KB],
+            'card_1_image_remove' => ['nullable', 'boolean'],
             'card_2_image' => ['nullable', 'file', 'mimes:jpg,jpeg,png', 'max:'.self::MAX_IMAGE_KB],
+            'card_2_image_remove' => ['nullable', 'boolean'],
             'card_3_image' => ['nullable', 'file', 'mimes:jpg,jpeg,png', 'max:'.self::MAX_IMAGE_KB],
+            'card_3_image_remove' => ['nullable', 'boolean'],
             'procedure_pdf' => ['nullable', 'file', 'mimes:pdf', 'max:'.self::MAX_PDF_KB],
         ]);
     }

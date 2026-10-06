@@ -86,28 +86,32 @@
         }
 
         .actions {
-            display: flex;
-            gap: 12px;
-            align-items: center;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+            align-items: stretch;
         }
 
         .btn {
-            flex: 1;
-            min-height: 46px;
-            padding: 13px 16px;
+            width: 100%;
+            min-height: 54px;
+            box-sizing: border-box;
+            padding: 14px 18px;
             border: 0;
             border-radius: 12px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 10px;
             color: inherit;
             text-decoration: none;
-            font-size: 15px;
+            font-family: inherit;
+            font-size: 16px;
             font-weight: 700;
             line-height: 1.2;
             cursor: pointer;
             transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+            appearance: none;
         }
 
         .btn:hover {
@@ -165,7 +169,8 @@
             }
 
             .actions {
-                display: grid;
+                grid-template-columns: 1fr;
+                gap: 10px;
             }
         }
     </style>
@@ -176,7 +181,7 @@
             <svg viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
         </div>
         <h1>Recuperar contraseña</h1>
-        <p>Escribe tu Gmail del panel y te enviaremos una nueva contraseña temporal.</p>
+        <p>Escribe tu correo registrado y te enviaremos una nueva contraseña temporal.</p>
         <div class="note">Usa la contraseña temporal para entrar. Después podrás cambiarla desde tu perfil.</div>
 
         @if (session('success'))

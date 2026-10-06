@@ -52,6 +52,7 @@ class HomeTestimonialContentController extends Controller
         foreach ($rows as $index => $row) {
             $rules["testimonials.{$index}.id"] = ['nullable', 'integer'];
             $rules["testimonials.{$index}.existing_image"] = ['nullable', 'string', 'max:900'];
+            $rules["testimonials.{$index}.image_remove"] = ['nullable', 'boolean'];
             $rules["testimonials.{$index}.name_es"] = ['required', 'string', 'max:120', 'regex:'.self::CLEAN_LABEL_REGEX];
             $rules["testimonials.{$index}.name_en"] = ['nullable', 'string', 'max:120', 'regex:'.self::CLEAN_LABEL_REGEX];
             $rules["testimonials.{$index}.country_es"] = ['required', 'string', 'max:100', 'regex:'.self::CLEAN_LABEL_REGEX];
@@ -100,6 +101,7 @@ class HomeTestimonialContentController extends Controller
                 ]);
 
                 $existingImage = trim((string) ($testimonial['existing_image'] ?? ''));
+                $removeImage = (bool) ($testimonial['image_remove'] ?? false);
 
                 $block->fill([
                     'sort_order' => $index + 10,
@@ -112,8 +114,9 @@ class HomeTestimonialContentController extends Controller
                         'mobility_type_es' => trim($testimonial['mobility_type_es']),
                         'mobility_type_en' => trim($testimonial['mobility_type_en'] ?? '') ?: trim($testimonial['mobility_type_es']),
                         'rating' => (int) $testimonial['rating'],
-                        'image' => $existingImage !== '' ? $existingImage : ($block->data['image'] ?? null),
-                        'existing_image' => $existingImage !== '' ? $existingImage : ($block->data['existing_image'] ?? null),
+                        'image' => $removeImage ? null : ($existingImage !== '' ? $existingImage : ($block->data['image'] ?? null)),
+                        'existing_image' => $removeImage ? null : ($existingImage !== '' ? $existingImage : ($block->data['existing_image'] ?? null)),
+                        'image_removed' => $removeImage,
                     ],
                 ]);
 
@@ -126,6 +129,13 @@ class HomeTestimonialContentController extends Controller
                     }
 
                     $block->media_asset_id = $this->storeMedia($uploadedImage, $request, 'home/testimonials', 'Selfie de estudiante')->id;
+                    $data = $block->data ?? [];
+                    $data['image_removed'] = false;
+                    $block->data = $data;
+                } elseif ($removeImage && $block->exists && $block->mediaAsset) {
+                    Storage::disk($block->mediaAsset->disk ?? 'public')->delete($block->mediaAsset->file_path);
+                    $block->mediaAsset->delete();
+                    $block->media_asset_id = null;
                 }
 
                 $block->save();
@@ -199,6 +209,10 @@ class HomeTestimonialContentController extends Controller
 
     private function testimonialImage(ContentBlock $block): string
     {
+        if ($block->data['image_removed'] ?? false) {
+            return '';
+        }
+
         if ($block->mediaAsset?->file_path) {
             return '/storage/'.ltrim($block->mediaAsset->file_path, '/');
         }

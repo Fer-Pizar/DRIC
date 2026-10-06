@@ -3780,6 +3780,8 @@ html[data-theme="light"] .dric-news-article-page .dric-site-header .dric-site-he
 
 .dric-other-agreements-intro,
 .dric-other-agreements-list,
+.dric-government-country-index,
+.dric-government-group-heading,
 .dric-government-agreement-section {
   border: 1px solid rgba(255, 255, 255, 0.12);
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.095), rgba(255, 255, 255, 0.035));
@@ -3797,6 +3799,34 @@ html[data-theme="light"] .dric-news-article-page .dric-site-header .dric-site-he
 
 .dric-government-agreement-section-title {
   color: #ffffff;
+}
+
+.dric-government-index-kicker,
+.dric-government-section-kind {
+  color: #ff4d5a;
+}
+
+.dric-government-index-title {
+  color: #ffffff;
+}
+
+.dric-government-country-chip {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.055);
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.dric-government-country-chip:hover,
+.dric-government-country-chip:focus-visible {
+  border-color: rgba(125, 211, 252, 0.4);
+  background: rgba(125, 211, 252, 0.1);
+  color: #ffffff;
+  outline: none;
+}
+
+.dric-government-country-chip-count {
+  background: rgba(125, 211, 252, 0.13);
+  color: #a5f3fc;
 }
 
 .dric-other-agreements-count {
@@ -3959,6 +3989,8 @@ html[data-theme="light"] .dric-other-agreements-muted {
 
 html[data-theme="light"] .dric-other-agreements-intro,
 html[data-theme="light"] .dric-other-agreements-list,
+html[data-theme="light"] .dric-government-country-index,
+html[data-theme="light"] .dric-government-group-heading,
 html[data-theme="light"] .dric-government-agreement-section {
   border-color: rgba(255, 255, 255, 0.76);
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.38));
@@ -3976,6 +4008,28 @@ html[data-theme="light"] .dric-government-agreement-heading {
 
 html[data-theme="light"] .dric-government-agreement-section-title {
   color: #101827;
+}
+
+html[data-theme="light"] .dric-government-index-title {
+  color: #101827;
+}
+
+html[data-theme="light"] .dric-government-country-chip {
+  border-color: rgba(15, 23, 42, 0.08);
+  background: rgba(255, 255, 255, 0.52);
+  color: #334155;
+}
+
+html[data-theme="light"] .dric-government-country-chip:hover,
+html[data-theme="light"] .dric-government-country-chip:focus-visible {
+  border-color: rgba(0, 55, 112, 0.18);
+  background: rgba(0, 55, 112, 0.07);
+  color: #0f172a;
+}
+
+html[data-theme="light"] .dric-government-country-chip-count {
+  background: rgba(0, 55, 112, 0.08);
+  color: #003770;
 }
 
 html[data-theme="light"] .dric-other-agreements-count {

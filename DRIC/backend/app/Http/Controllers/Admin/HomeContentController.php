@@ -158,13 +158,15 @@ class HomeContentController extends Controller
                     'es' => ['title' => $country['title_es'], 'summary' => null],
                     'en' => ['title' => $country['title_en'], 'summary' => null],
                 ], [
-                    'image' => $country['existing_image'] ?: $this->countryFallbacks()[$index]['image'],
+                    'image' => ($country['image_remove'] ?? false) ? $this->countryFallbacks()[$index]['image'] : ($country['existing_image'] ?: $this->countryFallbacks()[$index]['image']),
                     'slug' => Str::slug($country['slug'] ?: $country['title_es']),
                 ]);
                 $block->link_url = $country['href'];
 
                 if ($request->hasFile("countries.{$index}.image")) {
                     $block->media_asset_id = $this->storeMedia($request, "countries.{$index}.image", 'home/scholarships', 'Imagen de beca')->id;
+                } elseif ($country['image_remove'] ?? false) {
+                    $block->media_asset_id = null;
                 }
 
                 $block->save();
@@ -174,6 +176,10 @@ class HomeContentController extends Controller
                 $settings = $about->settings ?? [];
                 $settings['image'] = '/storage/'.ltrim($this->storeMedia($request, 'about_image', 'home/about', 'Imagen de Conócenos')->file_path, '/');
                 $about->update(['settings' => $settings]);
+            } elseif ($request->boolean('about_image_remove')) {
+                $settings = $about->settings ?? [];
+                $settings['image'] = '/images/administration/dric-team.jpg';
+                $about->update(['settings' => $settings]);
             }
 
             foreach (self::AGREEMENTS as $index) {
@@ -182,13 +188,15 @@ class HomeContentController extends Controller
                     'es' => ['title' => $agreement['title_es'], 'summary' => null],
                     'en' => ['title' => $agreement['title_en'], 'summary' => null],
                 ], [
-                    'image' => $agreement['existing_image'] ?: $this->agreementFallbacks()[$index]['image'],
+                    'image' => ($agreement['image_remove'] ?? false) ? $this->agreementFallbacks()[$index]['image'] : ($agreement['existing_image'] ?: $this->agreementFallbacks()[$index]['image']),
                     'slug' => Str::slug($agreement['title_es']),
                 ]);
                 $block->link_url = $agreement['href'];
 
                 if ($request->hasFile("agreements.{$index}.image")) {
                     $block->media_asset_id = $this->storeMedia($request, "agreements.{$index}.image", 'home/agreements', 'Imagen de acuerdo')->id;
+                } elseif ($agreement['image_remove'] ?? false) {
+                    $block->media_asset_id = null;
                 }
 
                 $block->save();
@@ -238,6 +246,7 @@ class HomeContentController extends Controller
             'final_button_link' => ['required', 'string', 'max:500'],
             'final_cta_enabled' => ['nullable', 'boolean'],
             'about_image' => ['nullable', 'file', 'mimes:jpg,jpeg,png', 'max:'.self::MAX_IMAGE_KB],
+            'about_image_remove' => ['nullable', 'boolean'],
         ];
 
         foreach (['es', 'en'] as $locale) {
@@ -256,6 +265,7 @@ class HomeContentController extends Controller
             $rules["countries.{$index}.slug"] = ['required', 'string', 'max:120'];
             $rules["countries.{$index}.href"] = ['required', 'string', 'max:500'];
             $rules["countries.{$index}.existing_image"] = ['nullable', 'string', 'max:900'];
+            $rules["countries.{$index}.image_remove"] = ['nullable', 'boolean'];
             $rules["countries.{$index}.image"] = ['nullable', 'file', 'mimes:jpg,jpeg,png', 'max:'.self::MAX_IMAGE_KB];
         }
 
@@ -264,6 +274,7 @@ class HomeContentController extends Controller
             $rules["agreements.{$index}.title_en"] = ['required', 'string', 'max:160'];
             $rules["agreements.{$index}.href"] = ['required', 'string', 'max:500'];
             $rules["agreements.{$index}.existing_image"] = ['nullable', 'string', 'max:900'];
+            $rules["agreements.{$index}.image_remove"] = ['nullable', 'boolean'];
             $rules["agreements.{$index}.image"] = ['nullable', 'file', 'mimes:jpg,jpeg,png', 'max:'.self::MAX_IMAGE_KB];
         }
 

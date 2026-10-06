@@ -9,6 +9,7 @@ import { useEffect } from "react";
 type MobileMenuProps = {
   open: boolean;
   onClose: () => void;
+  logoSrc: string;
 };
 
 const menuItems = [
@@ -26,7 +27,7 @@ const menuItems = [
   { label: { es: "Contacto", en: "Contact" }, href: "contacto", description: { es: "Ubicación y canales", en: "Location and channels" } },
 ];
 
-export default function MobileMenu({ open, onClose }: MobileMenuProps) {
+export default function MobileMenu({ open, onClose, logoSrc }: MobileMenuProps) {
   const locale = useLocale() as "es" | "en";
 
   useEffect(() => {
@@ -51,7 +52,7 @@ export default function MobileMenu({ open, onClose }: MobileMenuProps) {
         <div className="dric-mobile-menu-header flex items-center justify-between gap-4 pb-5">
           <Link href={`/${locale}/inicio`} onClick={onClose} className="flex min-w-0 items-center gap-3 no-underline sm:gap-4">
             <div className="dric-mobile-menu-logo relative h-12 w-12 shrink-0 overflow-hidden rounded-full bg-gray p-0.5 shadow-2xl shadow-cyan-400/10 sm:h-14 sm:w-14">
-              <Image src="/images/brand/DRIC_logo.png" alt="DRIC" fill className="object-contain p-1" />
+              <Image src={logoSrc} alt="DRIC" fill className="object-contain p-1" />
             </div>
 
             <div className="min-w-0">

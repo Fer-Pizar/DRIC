@@ -21,7 +21,7 @@ use Illuminate\View\View;
 
 class PresentationContentController extends Controller
 {
-    private const MAX_IMAGE_KB = 3072;
+    private const MAX_IMAGE_KB = 10240;
     private const CLEAN_LABEL_REGEX = '/\A[\p{L}\s.,]+\z/u';
 
     public function edit(Page $page): View
@@ -150,12 +150,20 @@ class PresentationContentController extends Controller
                 'people_en' => $this->lines($validated['en']['projects_team_people']),
             ]);
 
+            $this->upsertBlock($structure, 'presentation.professional-staff', 'staff_group', 5, $languages, [
+                'es' => ['title' => $validated['es']['professional_staff_title'], 'summary' => null],
+                'en' => ['title' => $validated['en']['professional_staff_title'], 'summary' => null],
+            ], [
+                'people_es' => $this->lines($validated['es']['professional_staff_people']),
+                'people_en' => $this->lines($validated['en']['professional_staff_people']),
+            ]);
+
             $historyImage = $this->upsertBlock($history, 'presentation.history-image', 'image', 1, $languages, [
                 'es' => ['title' => 'Imagen del equipo DRIC', 'summary' => null],
                 'en' => ['title' => 'DRIC team image', 'summary' => null],
             ]);
 
-            $directorImage = $this->upsertBlock($structure, 'presentation.director-image', 'image', 5, $languages, [
+            $directorImage = $this->upsertBlock($structure, 'presentation.director-image', 'image', 6, $languages, [
                 'es' => ['title' => 'Imagen del director', 'summary' => null],
                 'en' => ['title' => 'Director image', 'summary' => null],
             ]);
@@ -164,12 +172,16 @@ class PresentationContentController extends Controller
                 $historyImage->update([
                     'media_asset_id' => $this->storeImage($request, 'team_image', 'presentation/equipo')->id,
                 ]);
+            } elseif ($request->boolean('team_image_remove')) {
+                $historyImage->update(['media_asset_id' => null]);
             }
 
             if ($request->hasFile('director_image')) {
                 $directorImage->update([
                     'media_asset_id' => $this->storeImage($request, 'director_image', 'presentation/director')->id,
                 ]);
+            } elseif ($request->boolean('director_image_remove')) {
+                $directorImage->update(['media_asset_id' => null]);
             }
         });
 
@@ -201,12 +213,16 @@ class PresentationContentController extends Controller
             $localized["{$locale}.agreements_team_people"] = ['required', 'string', 'max:1000'];
             $localized["{$locale}.projects_team_title"] = ['required', 'string', 'max:160', 'regex:'.self::CLEAN_LABEL_REGEX];
             $localized["{$locale}.projects_team_people"] = ['required', 'string', 'max:1000'];
+            $localized["{$locale}.professional_staff_title"] = ['required', 'string', 'max:160', 'regex:'.self::CLEAN_LABEL_REGEX];
+            $localized["{$locale}.professional_staff_people"] = ['required', 'string', 'max:1200'];
         }
 
         return array_merge($localized, [
             'director_emails' => ['required', 'string', 'max:500'],
             'team_image' => ['nullable', 'file', 'mimes:jpg,jpeg,png', 'max:'.self::MAX_IMAGE_KB],
             'director_image' => ['nullable', 'file', 'mimes:jpg,jpeg,png', 'max:'.self::MAX_IMAGE_KB],
+            'team_image_remove' => ['nullable', 'boolean'],
+            'director_image_remove' => ['nullable', 'boolean'],
         ]);
     }
 
@@ -219,8 +235,8 @@ class PresentationContentController extends Controller
             'regex' => 'Este campo solo puede contener letras, espacios, puntos y comas. No uses números ni símbolos especiales.',
             'file' => 'Debes subir un archivo válido.',
             'mimes' => 'Ese formato no está permitido. Solo se aceptan imágenes JPG o PNG.',
-            'team_image.max' => 'La imagen del equipo es demasiado pesada. El tamaño máximo permitido es 3 MB.',
-            'director_image.max' => 'La imagen del director es demasiado pesada. El tamaño máximo permitido es 3 MB.',
+            'team_image.max' => 'La imagen del equipo es demasiado pesada. El tamaño máximo permitido es 10 MB.',
+            'director_image.max' => 'La imagen del director es demasiado pesada. El tamaño máximo permitido es 10 MB.',
         ];
     }
 
@@ -254,6 +270,8 @@ class PresentationContentController extends Controller
                 'agreements_team_people' => $this->blockLines($page, 'presentation.agreements-team', 'people_es', ['Jefe del departamento: Mgr. Giovanna Maldonado Moscoso', 'Mgr. Silvia del Pilar Arze']),
                 'projects_team_title' => $this->blockValue($page, 'presentation.projects-team', 'es', 'title', 'Internacionalización y Proyectos'),
                 'projects_team_people' => $this->blockLines($page, 'presentation.projects-team', 'people_es', ['Jefe del Departamento: Mgr. Daniel Vasquez Torrez', 'Ing. John Medina']),
+                'professional_staff_title' => $this->blockValue($page, 'presentation.professional-staff', 'es', 'title', 'Equipo profesional'),
+                'professional_staff_people' => $this->blockLines($page, 'presentation.professional-staff', 'people_es', ['Responsable de atención y seguimiento administrativo', 'Apoyo técnico para convenios, movilidad y proyectos', 'Coordinación de información institucional y archivos']),
             ],
             'en' => [
                 'hero_title' => $this->pageValue($page, 'en', 'title', 'About DRIC'),
@@ -274,10 +292,12 @@ class PresentationContentController extends Controller
                 'agreements_team_people' => $this->blockLines($page, 'presentation.agreements-team', 'people_en', ['Head of Department: Mgr. Giovanna Maldonado Moscoso', 'Mgr. Silvia del Pilar Arze']),
                 'projects_team_title' => $this->blockValue($page, 'presentation.projects-team', 'en', 'title', 'Internationalization and Projects'),
                 'projects_team_people' => $this->blockLines($page, 'presentation.projects-team', 'people_en', ['Head of Department: Mgr. Daniel Vasquez Torrez', 'Eng. John Medina']),
+                'professional_staff_title' => $this->blockValue($page, 'presentation.professional-staff', 'en', 'title', 'Professional Staff'),
+                'professional_staff_people' => $this->blockLines($page, 'presentation.professional-staff', 'people_en', ['Administrative service and follow-up support', 'Technical support for agreements, mobility and projects', 'Institutional information and records coordination']),
             ],
             'director_emails' => $this->blockLines($page, 'presentation.director', 'emails', ['director-dric@umss.edu.bo', 'rrii@umss.edu.bo']),
-            'team_image_url' => $this->blockImageUrl($page, 'presentation.history-image'),
-            'director_image_url' => $this->blockImageUrl($page, 'presentation.director-image'),
+            'team_image_url' => $this->blockImageUrl($page, 'presentation.history-image', '/images/presentation/dric-team.JPG'),
+            'director_image_url' => $this->blockImageUrl($page, 'presentation.director-image', '/images/presentation/director.JPG'),
         ];
     }
 
@@ -376,15 +396,15 @@ class PresentationContentController extends Controller
         return implode("\n", is_array($lines) ? $lines : $fallback);
     }
 
-    private function blockImageUrl(Page $page, string $key): ?string
+    private function blockImageUrl(Page $page, string $key, string $fallback): string
     {
         $media = $this->block($page, $key)?->mediaAsset;
 
-        if (! $media?->file_path) {
-            return null;
+        if ($media?->file_path) {
+            return '/storage/'.ltrim($media->file_path, '/');
         }
 
-        return '/storage/'.ltrim($media->file_path, '/');
+        return $fallback;
     }
 
     private function block(Page $page, string $key): ?ContentBlock

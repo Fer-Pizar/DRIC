@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { ReactNode } from "react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import Button from "@mui/material/Button";
@@ -185,9 +186,7 @@ export default async function ApoyoFinancieroPage({ params }: Props) {
             </h2>
 
             <div className="mt-8 space-y-6 text-base leading-8 text-white/70">
-              {text.paragraphs.map((paragraph) => (
-                <p key={paragraph}>{paragraph}</p>
-              ))}
+              {renderSmartContent(text.paragraphs)}
             </div>
 
             <Link
@@ -329,6 +328,69 @@ function block(page: CmsPage | null, key: string): CmsBlock | undefined {
 
 function lines(value: string | null | undefined): string[] {
   return value?.split(/\r?\n/).map((item) => item.trim()).filter(Boolean) ?? [];
+}
+
+function renderSmartContent(items: string[]): ReactNode[] {
+  const nodes: ReactNode[] = [];
+  let bulletGroup: string[] = [];
+
+  const flushBullets = () => {
+    if (!bulletGroup.length) {
+      return;
+    }
+
+    nodes.push(
+      <ul key={`bullets-${nodes.length}`} className="list-disc space-y-2 pl-6">
+        {bulletGroup.map((item, index) => (
+          <li key={`${item}-${index}`}>{renderInlineSmartText(item)}</li>
+        ))}
+      </ul>,
+    );
+    bulletGroup = [];
+  };
+
+  items.forEach((item) => {
+    const subtitle = item.match(/^#{2,3}\s+(.+)$/u);
+    const bullet = item.match(/^\s*[-*•]\s+(.+)$/u);
+
+    if (bullet) {
+      bulletGroup.push(bullet[1]);
+      return;
+    }
+
+    flushBullets();
+
+    if (subtitle) {
+      nodes.push(
+        <h3 key={`subtitle-${nodes.length}`} className="pt-2 text-xl font-semibold text-white">
+          {renderInlineSmartText(subtitle[1])}
+        </h3>,
+      );
+      return;
+    }
+
+    nodes.push(<p key={`paragraph-${nodes.length}`}>{renderInlineSmartText(item)}</p>);
+  });
+
+  flushBullets();
+
+  return nodes;
+}
+
+function renderInlineSmartText(text: string): ReactNode[] {
+  const parts = text.split(/(\*\*[^*]+\*\*|_[^_]+_)/g).filter(Boolean);
+
+  return parts.map((part, index) => {
+    if (part.startsWith("**") && part.endsWith("**")) {
+      return <strong key={`${part}-${index}`} className="font-semibold text-white">{part.slice(2, -2)}</strong>;
+    }
+
+    if (part.startsWith("_") && part.endsWith("_")) {
+      return <em key={`${part}-${index}`}>{part.slice(1, -1)}</em>;
+    }
+
+    return part;
+  });
 }
 
 function dataString(block: CmsBlock | undefined, key: string): string | null {

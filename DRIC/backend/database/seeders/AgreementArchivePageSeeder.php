@@ -65,9 +65,7 @@ class AgreementArchivePageSeeder extends Seeder
                 );
             }
 
-            if (! ($section->settings['seeded_default_documents'] ?? false)) {
-                $this->seedDefaultDocuments($section, $values, $languages);
-            }
+            $this->seedDefaultDocuments($section, $values, $languages);
         }
     }
 
@@ -140,7 +138,36 @@ class AgreementArchivePageSeeder extends Seeder
         }
 
         preg_match_all(
-            '/\{\s*title:\s*"((?:\\\\.|[^"\\\\])*)",\s*href:\s*"([^"]+)"\s*\}/s',
+            '/\{\s*title:\s*"((?:\\\\.|[^"\\\\])*)",\s*agreements:\s*\[(.*?)\]\s*,?\s*\}/s',
+            $matches[1],
+            $sections,
+            PREG_SET_ORDER
+        );
+
+        if ($sections !== []) {
+            return collect($sections)
+                ->flatMap(function (array $section): array {
+                    preg_match_all(
+                        '/\{\s*title:\s*"((?:\\\\.|[^"\\\\])*)",\s*href:\s*"([^"]+)"\s*,?\s*\}/s',
+                        $section[2],
+                        $rows,
+                        PREG_SET_ORDER
+                    );
+
+                    return collect($rows)
+                        ->map(fn (array $row): array => [
+                            'es' => stripcslashes($row[1]),
+                            'en' => stripcslashes($row[1]),
+                            'href' => $row[2],
+                            'country' => stripcslashes($section[1]),
+                        ])
+                        ->all();
+                })
+                ->all();
+        }
+
+        preg_match_all(
+            '/\{\s*title:\s*"((?:\\\\.|[^"\\\\])*)",\s*href:\s*"([^"]+)"\s*,?\s*\}/s',
             $matches[1],
             $rows,
             PREG_SET_ORDER
@@ -151,6 +178,7 @@ class AgreementArchivePageSeeder extends Seeder
                 'es' => stripcslashes($row[1]),
                 'en' => stripcslashes($row[1]),
                 'href' => $row[2],
+                'country' => null,
             ])
             ->all();
     }
@@ -163,41 +191,77 @@ class AgreementArchivePageSeeder extends Seeder
             ->orderBy('sort_order')
             ->get()
             ->values();
+        $usedBlockIds = [];
+        $nextSortOrder = ((int) ($existingBlocks->max('sort_order') ?? 0)) + 1;
 
         foreach ($documents as $index => $document) {
-            $block = $existingBlocks[$index] ?? new ContentBlock([
-                'section_id' => $section->id,
-                'link_url' => $values['section_key'].'.'.Str::uuid()->toString(),
-            ]);
+            $block = $this->matchingExistingBlock($existingBlocks, $document, $usedBlockIds);
+            $isNewBlock = ! $block;
+
+            if (! $block) {
+                $block = new ContentBlock([
+                    'section_id' => $section->id,
+                    'link_url' => $values['section_key'].'.'.Str::uuid()->toString(),
+                ]);
+            }
+
+            $existingData = is_array($block->data) ? $block->data : [];
+            $country = filled($existingData['country'] ?? null)
+                ? $existingData['country']
+                : ($document['country'] ?? null);
 
             $block->fill([
                 'block_type' => 'agreement_document',
-                'sort_order' => $index + 1,
+                'sort_order' => $isNewBlock ? $nextSortOrder++ : $block->sort_order,
                 'is_active' => true,
-                'data' => ['href' => $document['href']],
+                'data' => array_filter([
+                    'href' => $existingData['href'] ?? $document['href'],
+                    'country' => $country,
+                ], fn ($value) => filled($value)),
             ]);
             $block->save();
+            $usedBlockIds[] = $block->id;
 
             foreach (['es', 'en'] as $locale) {
-                ContentBlockTranslation::updateOrCreate(
-                    ['content_block_id' => $block->id, 'language_id' => $languages[$locale]->id],
-                    [
-                        'title' => $document[$locale] ?? $document['es'],
-                        'subtitle' => null,
-                        'summary' => null,
-                        'body' => null,
-                    ]
-                );
+                $translation = ContentBlockTranslation::firstOrNew([
+                    'content_block_id' => $block->id,
+                    'language_id' => $languages[$locale]->id,
+                ]);
+
+                if (! filled($translation->title)) {
+                    $translation->title = $document[$locale] ?? $document['es'];
+                }
+
+                $translation->subtitle ??= null;
+                $translation->summary ??= null;
+                $translation->body ??= null;
+                $translation->save();
             }
         }
-
-        ContentBlock::query()
-            ->where('section_id', $section->id)
-            ->where('sort_order', '>', count($documents))
-            ->update(['is_active' => false]);
 
         $section->update([
             'settings' => array_merge($section->settings ?? [], ['editable' => true, 'seeded_default_documents' => true]),
         ]);
+    }
+
+    private function matchingExistingBlock($existingBlocks, array $document, array $usedBlockIds): ?ContentBlock
+    {
+        $availableBlocks = $existingBlocks->reject(fn (ContentBlock $block): bool => in_array($block->id, $usedBlockIds, true));
+
+        $sameUrlBlocks = $availableBlocks->filter(
+            fn (ContentBlock $block): bool => ($block->data['href'] ?? null) === $document['href']
+        );
+
+        if ($sameUrlBlocks->count() === 1) {
+            return $sameUrlBlocks->first();
+        }
+
+        $sameTitleAndUrl = $sameUrlBlocks->first(function (ContentBlock $block) use ($document): bool {
+            $spanishTitle = $block->translations->firstWhere('language.code', 'es')?->title ?? '';
+
+            return $spanishTitle === $document['es'];
+        });
+
+        return $sameTitleAndUrl ?? null;
     }
 }

@@ -9,8 +9,10 @@ import { Menu, Moon, Sun, Languages } from "lucide-react";
 import { useLocale } from "next-intl";
 import MobileMenu from "./MobileMenu";
 import { mobilityData, slugifyProgramTitle, type Program } from "@/app/[locale]/(public)/becas-movilidad/movilidad-pasantias/data";
+import { fetchSiteSettings } from "@/lib/api/siteSettings";
 
 const LANGUAGE_SCROLL_KEY = "dric-language-scroll-y";
+const DEFAULT_TOPBAR_LOGO = "/images/brand/DRIC_logo.png";
 
 function getLocalizedPath(pathname: string, locale: string, nextLocale: "es" | "en") {
   const nextPath = pathname.startsWith(`/${locale}`)
@@ -79,6 +81,7 @@ function programSlugCandidates(program: { title: string; slug?: string; href?: s
 export default function Header() {
   const [open, setOpen] = useState(false);
   const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [topbarLogo, setTopbarLogo] = useState(DEFAULT_TOPBAR_LOGO);
 
   const locale = useLocale();
   const pathname = usePathname();
@@ -91,6 +94,22 @@ export default function Header() {
 
     queueMicrotask(() => setTheme(initialTheme));
     document.documentElement.dataset.theme = initialTheme;
+  }, []);
+
+  useEffect(() => {
+    let mounted = true;
+
+    fetchSiteSettings().then((settings) => {
+      if (!mounted || !settings.topbar_logo_url) {
+        return;
+      }
+
+      setTopbarLogo(settings.topbar_logo_url);
+    });
+
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   useEffect(() => {
@@ -137,7 +156,7 @@ export default function Header() {
         <div className="dric-site-header-shell mx-auto mt-4 flex w-full max-w-7xl items-center justify-between rounded-full border border-white/10 bg-[#001935]/75 px-4 py-2.5 shadow-2xl shadow-black/25 backdrop-blur-xl sm:px-5 sm:py-3 md:px-7">
           <Link href={homePath} onClick={handleLogoClick} className="flex items-center">
             <Image
-              src="/images/brand/DRIC_logo.png"
+              src={topbarLogo}
               alt="DRIC"
               width={70}
               height={70}
@@ -180,7 +199,7 @@ export default function Header() {
         </div>
       </header>
 
-      <MobileMenu open={open} onClose={() => setOpen(false)} />
+      <MobileMenu open={open} onClose={() => setOpen(false)} logoSrc={topbarLogo} />
     </>
   );
 }

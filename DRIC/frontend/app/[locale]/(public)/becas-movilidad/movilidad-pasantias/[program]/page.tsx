@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import Button from "@mui/material/Button";
-import AdminPanelSettingsRoundedIcon from "@mui/icons-material/AdminPanelSettingsRounded";
 import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 import CalendarMonthRoundedIcon from "@mui/icons-material/CalendarMonthRounded";
 import ChecklistRoundedIcon from "@mui/icons-material/ChecklistRounded";
@@ -11,7 +10,6 @@ import DescriptionRoundedIcon from "@mui/icons-material/DescriptionRounded";
 import LinkRoundedIcon from "@mui/icons-material/LinkRounded";
 import OpenInNewRoundedIcon from "@mui/icons-material/OpenInNewRounded";
 import PublicRoundedIcon from "@mui/icons-material/PublicRounded";
-import SchoolRoundedIcon from "@mui/icons-material/SchoolRounded";
 import TravelExploreRoundedIcon from "@mui/icons-material/TravelExploreRounded";
 import WorkRoundedIcon from "@mui/icons-material/WorkRounded";
 import { getOptionalPageBySlug } from "@/lib/api/pages";
@@ -133,7 +131,7 @@ export default async function MobilityProgramDetailPage({ params }: Props) {
             </Button>
           </Link>
 
-          <div className="mt-10 grid min-w-0 gap-8 sm:mt-14 lg:grid-cols-[0.95fr_1.05fr] lg:items-end lg:gap-10">
+          <div className="mt-10 min-w-0 sm:mt-14">
             <div className="min-w-0">
               <p className="mb-5 inline-flex rounded-full border border-white/15 bg-white/10 px-5 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-white/80 backdrop-blur">
                 DRIC · UMSS
@@ -143,26 +141,6 @@ export default async function MobilityProgramDetailPage({ params }: Props) {
                 {match.program.title}
               </h1>
             </div>
-
-            <aside className="dric-mobility-track-panel min-w-0 rounded-[2rem] border border-white/12 bg-white/[0.07] p-6 shadow-2xl shadow-black/25 backdrop-blur-xl sm:p-7">
-              <div className="flex min-w-0 items-center gap-4">
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-[#E30613] text-white shadow-xl shadow-[#E30613]/20">
-                  {match.track.icon === "student" ? (
-                    <SchoolRoundedIcon sx={{ fontSize: 30 }} />
-                  ) : (
-                    <AdminPanelSettingsRoundedIcon sx={{ fontSize: 30 }} />
-                  )}
-                </div>
-
-                <div className="min-w-0">
-                  <h2 className="break-words text-2xl font-semibold tracking-[-0.03em] [overflow-wrap:anywhere]">
-                    {match.track.title}
-                  </h2>
-                </div>
-              </div>
-
-              <p className="mt-5 text-sm leading-7 text-white/66">{match.track.intro}</p>
-            </aside>
           </div>
         </div>
       </section>
@@ -178,7 +156,7 @@ export default async function MobilityProgramDetailPage({ params }: Props) {
               {match.program.overviewTitle || copy.overview}
             </h2>
 
-            <p className="mt-6 text-base leading-8 text-white/68 md:text-lg">
+            <p className="mt-6 whitespace-pre-line text-base leading-8 text-white/68 md:text-lg">
               {match.program.summary}
             </p>
           </article>
@@ -204,7 +182,7 @@ export default async function MobilityProgramDetailPage({ params }: Props) {
                       <dt className="text-xs font-bold uppercase tracking-[0.18em] text-cyan-200">
                         {item.label}
                       </dt>
-                      <dd className="mt-2 text-sm leading-6 text-white/72">{item.value}</dd>
+                      <dd className="mt-2 whitespace-pre-line text-sm leading-6 text-white/72">{item.value}</dd>
                     </div>
                   ))}
                 </dl>
@@ -224,7 +202,7 @@ export default async function MobilityProgramDetailPage({ params }: Props) {
                   {match.program.conditions.map((condition) => (
                     <li key={condition} className="flex gap-3 text-sm leading-7 text-white/66">
                       <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#E30613]" />
-                      <span>{condition}</span>
+                      <span className="whitespace-pre-line">{condition}</span>
                     </li>
                   ))}
                 </ul>
@@ -275,7 +253,7 @@ export default async function MobilityProgramDetailPage({ params }: Props) {
                   <h3 className="text-2xl font-semibold tracking-[-0.04em]">{section.title}</h3>
 
                   {section.body ? (
-                    <p className="mt-5 text-sm leading-7 text-white/66">{section.body}</p>
+                    <p className="mt-5 whitespace-pre-line text-sm leading-7 text-white/66">{section.body}</p>
                   ) : null}
 
                   {section.items?.length ? (
@@ -283,7 +261,7 @@ export default async function MobilityProgramDetailPage({ params }: Props) {
                       {section.items.map((item) => (
                         <li key={item} className="flex gap-3 text-sm leading-7 text-white/66">
                           <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-200" />
-                          <span>{item}</span>
+                          <span className="whitespace-pre-line">{item}</span>
                         </li>
                       ))}
                     </ul>
@@ -316,7 +294,7 @@ export default async function MobilityProgramDetailPage({ params }: Props) {
                     {call.title}
                   </h3>
 
-                  <p className="mt-4 text-sm leading-7 text-white/66">{call.description}</p>
+                  <p className="mt-4 whitespace-pre-line text-sm leading-7 text-white/66">{call.description}</p>
 
                   <div className="mt-7 grid gap-4">
                     {call.benefits?.length ? (
@@ -337,12 +315,12 @@ export default async function MobilityProgramDetailPage({ params }: Props) {
                           <CalendarMonthRoundedIcon sx={{ color: "#67e8f9", fontSize: 20 }} />
                           {copy.deadline}
                         </div>
-                        <p className="text-sm leading-7 text-white/66">{call.deadline}</p>
+                        <p className="whitespace-pre-line text-sm leading-7 text-white/66">{call.deadline}</p>
                       </div>
                     ) : null}
 
                     {call.note ? (
-                      <div className="dric-mobility-cyan-note rounded-3xl border border-cyan-200/20 bg-cyan-200/10 p-5 text-sm leading-7 text-cyan-50">
+                      <div className="dric-mobility-cyan-note whitespace-pre-line rounded-3xl border border-cyan-200/20 bg-cyan-200/10 p-5 text-sm leading-7 text-cyan-50">
                         {call.note}
                       </div>
                     ) : null}
@@ -437,7 +415,7 @@ function InfoBlock({
         {items.map((item) => (
           <li key={item} className="flex gap-3 text-sm leading-7 text-white/66">
             <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-200" />
-            <span>{item}</span>
+            <span className="whitespace-pre-line">{item}</span>
           </li>
         ))}
       </ul>

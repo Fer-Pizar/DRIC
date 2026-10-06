@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\ContentBlock;
 use App\Models\ContentBlockTranslation;
 use App\Models\Language;
+use App\Models\MediaAsset;
+use App\Models\MediaTranslation;
 use App\Models\Page;
 use App\Models\PageTranslation;
 use App\Models\Section;
@@ -19,6 +21,7 @@ use Illuminate\View\View;
 
 class CampusLifeContentController extends Controller
 {
+    private const MAX_IMAGE_KB = 10240;
     private const CLEAN_LABEL_REGEX = '/\A[\p{L}\s.,]+\z/u';
 
     private const STATS = [1, 2, 3];
@@ -33,6 +36,7 @@ class CampusLifeContentController extends Controller
             'translations.language',
             'sections.translations.language',
             'sections.contentBlocks.translations.language',
+            'sections.contentBlocks.mediaAsset',
         ]);
 
         return view('admin.pages.campus-life-content', [
@@ -106,8 +110,9 @@ class CampusLifeContentController extends Controller
                 );
             }
 
-            $this->upsertBlock($hero, 'campus.hero.image', 'campus_hero_image', 1, $languages, [], ['image' => '/images/campus-life/uni-view.png', 'locked_image' => true]);
-            $this->upsertBlock($official, 'campus.official.logo', 'campus_logo', 1, $languages, [], ['image' => '/images/campus-life/umss-logo.png', 'url' => $validated['official_url'], 'locked_image' => true]);
+            $heroImage = $this->upsertImageBlock($request, $hero, 'campus.hero.image', 'campus_hero_image', 1, $languages, 'hero_image', 'hero_image_remove', 'hero_image_restore', ['image' => '/images/campus-life/uni-view.png']);
+            $officialLogo = $this->upsertImageBlock($request, $official, 'campus.official.logo', 'campus_logo', 1, $languages, 'official_logo', 'official_logo_remove', 'official_logo_restore', ['image' => '/images/campus-life/umss-logo.png', 'url' => $validated['official_url']]);
+            $officialLogo->update(['data' => array_merge($officialLogo->data ?? [], ['url' => $validated['official_url']])]);
 
             foreach (self::STATS as $index) {
                 $this->upsertBlock($stats, "campus.stat.{$index}", 'campus_stat', $index, $languages, [
@@ -126,7 +131,7 @@ class CampusLifeContentController extends Controller
             foreach (self::STORIES as $index) {
                 $fallback = $this->storyFallbacks()[$index];
 
-                $this->upsertBlock($stories, "campus.story.{$index}", 'campus_story', $index, $languages, [
+                $storyBlock = $this->upsertBlock($stories, "campus.story.{$index}", 'campus_story', $index, $languages, [
                     'es' => [
                         'title' => $validated['stories'][$index]['title_es'],
                         'subtitle' => $validated['stories'][$index]['eyebrow_es'],
@@ -141,7 +146,9 @@ class CampusLifeContentController extends Controller
                         'body' => null,
                         'cta_label' => $validated['stories'][$index]['button_en'] ?? null,
                     ],
-                ], ['url' => $validated['stories'][$index]['url'], 'image' => $fallback['image_url'], 'locked_image' => true]);
+                ], ['url' => $validated['stories'][$index]['url'], 'image' => $fallback['image_url']]);
+
+                $this->syncImageField($request, $storyBlock, "stories.{$index}.image", "stories.{$index}.image_remove", "stories.{$index}.image_restore", 'campus-life');
             }
         });
 
@@ -154,6 +161,12 @@ class CampusLifeContentController extends Controller
     {
         $rules = [
             'official_url' => ['required', 'url', 'max:500'],
+            'hero_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:'.self::MAX_IMAGE_KB],
+            'hero_image_remove' => ['nullable', 'boolean'],
+            'hero_image_restore' => ['nullable', 'integer', 'exists:media_assets,id'],
+            'official_logo' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:'.self::MAX_IMAGE_KB],
+            'official_logo_remove' => ['nullable', 'boolean'],
+            'official_logo_restore' => ['nullable', 'integer', 'exists:media_assets,id'],
         ];
 
         foreach (['es', 'en'] as $locale) {
@@ -190,6 +203,9 @@ class CampusLifeContentController extends Controller
             $rules["stories.{$index}.button_es"] = ['nullable', 'string', 'max:80', 'regex:'.self::CLEAN_LABEL_REGEX];
             $rules["stories.{$index}.button_en"] = ['nullable', 'string', 'max:80', 'regex:'.self::CLEAN_LABEL_REGEX];
             $rules["stories.{$index}.url"] = ['required', 'url', 'max:500'];
+            $rules["stories.{$index}.image"] = ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:'.self::MAX_IMAGE_KB];
+            $rules["stories.{$index}.image_remove"] = ['nullable', 'boolean'];
+            $rules["stories.{$index}.image_restore"] = ['nullable', 'integer', 'exists:media_assets,id'];
         }
 
         return $rules;
@@ -202,6 +218,8 @@ class CampusLifeContentController extends Controller
             'string' => 'Este campo debe contener texto.',
             'url' => 'Ingresa una URL completa y válida, por ejemplo: https://www.umss.edu.bo',
             'max' => 'Este campo supera el tamaño permitido.',
+            'image' => 'Solo puedes subir imágenes válidas.',
+            'mimes' => 'Ese formato no está permitido. Usa JPG o PNG.',
             'regex' => 'Este campo solo puede contener letras, espacios, puntos y comas. No uses números ni símbolos especiales.',
         ];
     }
@@ -230,6 +248,10 @@ class CampusLifeContentController extends Controller
                 'basic_text' => $this->sectionValue($page, 'campus.basic', 'en', 'summary', 'Universidad Mayor de San Simón was founded by law on November 5, 1832. Today it is a public autonomous university with academic, scientific, technological and social outreach functions.'),
             ],
             'official_url' => $this->blockData($page, 'campus.official.logo', 'url', 'https://www.umss.edu.bo/'),
+            'hero_image' => $this->blockUploadedImage($page, 'campus.hero.image'),
+            'hero_image_media_id' => $this->blockMediaId($page, 'campus.hero.image'),
+            'official_logo' => $this->blockHidden($page, 'campus.official.logo') ? null : ($this->blockUploadedImage($page, 'campus.official.logo') ?? '/images/campus-life/umss-logo.png'),
+            'official_logo_media_id' => $this->blockMediaId($page, 'campus.official.logo'),
             'stats' => $this->stats($page),
             'features' => $this->features($page),
             'stories' => $this->stories($page),
@@ -285,6 +307,8 @@ class CampusLifeContentController extends Controller
             $fallbacks[$index]['button_es'] = $this->blockValue($page, "campus.story.{$index}", 'es', 'cta_label', $fallbacks[$index]['button_es'] ?? '');
             $fallbacks[$index]['button_en'] = $this->blockValue($page, "campus.story.{$index}", 'en', 'cta_label', $fallbacks[$index]['button_en'] ?? '');
             $fallbacks[$index]['url'] = $this->blockData($page, "campus.story.{$index}", 'url', $fallbacks[$index]['url']);
+            $fallbacks[$index]['image'] = $this->blockHidden($page, "campus.story.{$index}") ? null : ($this->blockUploadedImage($page, "campus.story.{$index}") ?? $fallbacks[$index]['image_url']);
+            $fallbacks[$index]['image_media_id'] = $this->blockMediaId($page, "campus.story.{$index}");
         }
 
         return $fallbacks;
@@ -315,10 +339,26 @@ class CampusLifeContentController extends Controller
 
     private function upsertBlock(Section $section, string $key, string $type, int $sortOrder, $languages, array $translations, array $data = []): ContentBlock
     {
-        $block = ContentBlock::updateOrCreate(
-            ['section_id' => $section->id, 'link_url' => $key],
-            ['block_type' => $type, 'sort_order' => $sortOrder, 'is_active' => true, 'data' => $data, 'media_asset_id' => null]
-        );
+        $block = ContentBlock::query()
+            ->where('section_id', $section->id)
+            ->where('link_url', $key)
+            ->first();
+
+        $payload = [
+            'block_type' => $type,
+            'sort_order' => $sortOrder,
+            'is_active' => true,
+            'data' => array_merge($block?->data ?? [], $data),
+        ];
+
+        if ($block) {
+            $block->update($payload);
+        } else {
+            $block = ContentBlock::create(array_merge($payload, [
+                'section_id' => $section->id,
+                'link_url' => $key,
+            ]));
+        }
 
         foreach (['es', 'en'] as $locale) {
             ContentBlockTranslation::updateOrCreate(
@@ -363,6 +403,80 @@ class CampusLifeContentController extends Controller
         $value = $this->block($page, $key)?->data[$dataKey] ?? null;
 
         return is_string($value) && trim($value) !== '' ? $value : $fallback;
+    }
+
+    private function blockUploadedImage(Page $page, string $key): ?string
+    {
+        $block = $this->block($page, $key);
+
+        return $block?->mediaAsset ? '/storage/'.ltrim($block->mediaAsset->file_path, '/') : null;
+    }
+
+    private function blockHidden(Page $page, string $key): bool
+    {
+        return (bool) ($this->block($page, $key)?->data['image_hidden'] ?? false);
+    }
+
+    private function blockMediaId(Page $page, string $key): ?int
+    {
+        return $this->block($page, $key)?->mediaAsset?->id;
+    }
+
+    private function upsertImageBlock(Request $request, Section $section, string $key, string $type, int $sortOrder, $languages, string $fileKey, string $removeKey, string $restoreKey, array $data): ContentBlock
+    {
+        $block = $this->upsertBlock($section, $key, $type, $sortOrder, $languages, [], $data);
+        $this->syncImageField($request, $block, $fileKey, $removeKey, $restoreKey, 'campus-life');
+
+        return $block->fresh();
+    }
+
+    private function syncImageField(Request $request, ContentBlock $block, string $fileKey, string $removeKey, string $restoreKey, string $directory): void
+    {
+        if ($request->hasFile($fileKey)) {
+            $block->update([
+                'media_asset_id' => $this->storeMediaFile($request->file($fileKey), $request->user()?->id, $directory)->id,
+                'data' => array_merge($block->data ?? [], ['image_hidden' => false]),
+            ]);
+            return;
+        }
+
+        $restoreId = $request->input($restoreKey);
+        if ($restoreId && MediaAsset::query()->whereKey($restoreId)->exists()) {
+            $block->update([
+                'media_asset_id' => $restoreId,
+                'data' => array_merge($block->data ?? [], ['image_hidden' => false]),
+            ]);
+            return;
+        }
+
+        if ($request->boolean($removeKey)) {
+            $block->update([
+                'media_asset_id' => null,
+                'data' => array_merge($block->data ?? [], ['image_hidden' => true]),
+            ]);
+        }
+    }
+
+    private function storeMediaFile($file, ?int $userId, string $directory): MediaAsset
+    {
+        $path = $file->store($directory, 'public');
+        $media = MediaAsset::create([
+            'file_name' => $file->getClientOriginalName(),
+            'file_path' => $path,
+            'mime_type' => $file->getMimeType(),
+            'file_size' => $file->getSize(),
+            'disk' => 'public',
+            'uploaded_by' => $userId,
+        ]);
+
+        foreach (Language::query()->whereIn('code', ['es', 'en'])->get() as $language) {
+            MediaTranslation::updateOrCreate(
+                ['media_asset_id' => $media->id, 'language_id' => $language->id],
+                ['alt_text' => $media->file_name, 'caption' => null]
+            );
+        }
+
+        return $media;
     }
 
     private function featureIcon(int $index): string

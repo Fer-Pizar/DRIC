@@ -56,6 +56,12 @@ export default async function PresentacionPage({ params }: Props) {
         ],
         projectsTeamTitle: "Internationalization and Projects",
         projectsTeamPeople: ["Head of Department: Mgr. Daniel Vasquez Torrez", "Eng. John Medina"],
+        professionalStaffTitle: "Professional Staff",
+        professionalStaffPeople: [
+          "Administrative service and follow-up support",
+          "Technical support for agreements, mobility and projects",
+          "Institutional information and records coordination",
+        ],
         teamImage: "/images/presentation/dric-team.JPG",
         directorImage: "/images/presentation/director.JPG",
       }
@@ -96,6 +102,12 @@ export default async function PresentacionPage({ params }: Props) {
         ],
         projectsTeamTitle: "Internacionalización y Proyectos",
         projectsTeamPeople: ["Jefe del Departamento: Mgr. Daniel Vasquez Torrez", "Ing. John Medina"],
+        professionalStaffTitle: "Equipo profesional",
+        professionalStaffPeople: [
+          "Responsable de atención y seguimiento administrativo",
+          "Apoyo técnico para convenios, movilidad y proyectos",
+          "Coordinación de información institucional y archivos",
+        ],
         teamImage: "/images/presentation/dric-team.JPG",
         directorImage: "/images/presentation/director.JPG",
       };
@@ -185,7 +197,7 @@ export default async function PresentacionPage({ params }: Props) {
             />
           </div>
 
-          <div className="mt-14 grid gap-8 md:mt-24 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
+          <div className="mt-14 grid gap-8 md:mt-24 lg:grid-cols-[0.9fr_1.1fr] lg:items-stretch">
             <Card
               sx={{
                 borderRadius: "36px",
@@ -193,9 +205,10 @@ export default async function PresentacionPage({ params }: Props) {
                 background: "rgba(255,255,255,0.06)",
                 border: "1px solid rgba(255,255,255,0.12)",
                 boxShadow: "0 30px 90px rgba(0,0,0,0.34)",
+                height: "100%",
               }}
             >
-              <div className="relative h-[360px] bg-slate-200 sm:h-[560px] lg:h-[821px]">
+              <div className="relative h-[360px] bg-slate-200 sm:h-[560px] lg:h-full lg:min-h-[560px]">
                 <Image
                   src={copy.directorImage}
                   alt={copy.imageAltDirector}
@@ -213,6 +226,7 @@ export default async function PresentacionPage({ params }: Props) {
                 border: "1px solid rgba(255,255,255,0.12)",
                 boxShadow: "0 30px 90px rgba(0,0,0,0.34)",
                 overflow: "hidden",
+                height: "100%",
               }}
             >
               <div className="p-5 sm:p-8 md:p-12">
@@ -259,6 +273,13 @@ export default async function PresentacionPage({ params }: Props) {
                     people={copy.projectsTeamPeople}
                   />
                 </div>
+
+                <div className="mt-5">
+                  <StaffBlock
+                    title={copy.professionalStaffTitle}
+                    people={copy.professionalStaffPeople}
+                  />
+                </div>
               </div>
             </Card>
           </div>
@@ -295,6 +316,8 @@ type PresentationCopy = {
   agreementsTeamPeople: string[];
   projectsTeamTitle: string;
   projectsTeamPeople: string[];
+  professionalStaffTitle: string;
+  professionalStaffPeople: string[];
   teamImage: string;
   directorImage: string;
 };
@@ -312,6 +335,7 @@ function mergePresentationContent(fallback: PresentationCopy, page: CmsPage | nu
   const director = findBlock(page, "presentation.director");
   const agreementsTeam = findBlock(page, "presentation.agreements-team");
   const projectsTeam = findBlock(page, "presentation.projects-team");
+  const professionalStaff = findBlock(page, "presentation.professional-staff");
   const historyImage = findBlock(page, "presentation.history-image");
   const directorImage = findBlock(page, "presentation.director-image");
   const suffix = locale === "en" ? "en" : "es";
@@ -337,6 +361,8 @@ function mergePresentationContent(fallback: PresentationCopy, page: CmsPage | nu
     agreementsTeamPeople: arrayData(agreementsTeam, `people_${suffix}`, fallback.agreementsTeamPeople),
     projectsTeamTitle: projectsTeam?.title || fallback.projectsTeamTitle,
     projectsTeamPeople: arrayData(projectsTeam, `people_${suffix}`, fallback.projectsTeamPeople),
+    professionalStaffTitle: professionalStaff?.title || fallback.professionalStaffTitle,
+    professionalStaffPeople: arrayData(professionalStaff, `people_${suffix}`, fallback.professionalStaffPeople),
     teamImage: publicAssetHref(historyImage?.media?.url, fallback.teamImage),
     directorImage: publicAssetHref(directorImage?.media?.url, fallback.directorImage),
   };

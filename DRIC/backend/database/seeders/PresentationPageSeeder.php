@@ -123,7 +123,23 @@ class PresentationPageSeeder extends Seeder
             'people_en' => ['Head of Department: Mgr. Daniel Vasquez Torrez', 'Eng. John Medina'],
         ]);
 
-        $this->upsertBlock($structure, 'presentation.director-image', 'image', 5, $languages, [
+        $this->upsertBlock($structure, 'presentation.professional-staff', 'staff_group', 5, $languages, [
+            'es' => ['title' => 'Equipo profesional', 'summary' => null],
+            'en' => ['title' => 'Professional Staff', 'summary' => null],
+        ], [
+            'people_es' => [
+                'Responsable de atención y seguimiento administrativo',
+                'Apoyo técnico para convenios, movilidad y proyectos',
+                'Coordinación de información institucional y archivos',
+            ],
+            'people_en' => [
+                'Administrative service and follow-up support',
+                'Technical support for agreements, mobility and projects',
+                'Institutional information and records coordination',
+            ],
+        ]);
+
+        $this->upsertBlock($structure, 'presentation.director-image', 'image', 6, $languages, [
             'es' => ['title' => 'Imagen del director', 'summary' => null],
             'en' => ['title' => 'Director image', 'summary' => null],
         ]);

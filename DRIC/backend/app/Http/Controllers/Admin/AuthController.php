@@ -33,6 +33,7 @@ class AuthController extends Controller
         }
 
         $request->session()->regenerate();
+        $request->session()->put('admin_last_activity_at', now()->timestamp);
 
         return redirect()->intended(route('admin.dashboard'));
     }

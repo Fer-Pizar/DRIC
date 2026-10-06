@@ -10,6 +10,7 @@ import SchoolRoundedIcon from "@mui/icons-material/SchoolRounded";
 import PublicRoundedIcon from "@mui/icons-material/PublicRounded";
 import GroupsRoundedIcon from "@mui/icons-material/GroupsRounded";
 import { getOptionalPageBySlug } from "@/lib/api/pages";
+import { publicAssetHref } from "@/lib/api/assets";
 import type { CmsBlock, CmsPage, CmsSection } from "@/types/cms";
 
 type Props = {
@@ -178,14 +179,16 @@ export default async function CampusLifePage({ params }: Props) {
           >
             <div className="p-8 md:p-10">
               <Link href={t.officialUrl} target="_blank" className="inline-flex items-center gap-5">
-                <div className="relative h-24 w-24 overflow-hidden rounded-full bg-white">
-                  <Image
-                    src={t.officialLogo}
-                    alt="UMSS logo"
-                    fill
-                    className="scale-[1.55] object-contain"
-                  />
-                </div>
+                {t.officialLogo ? (
+                  <div className="relative h-24 w-24 overflow-hidden rounded-full bg-white">
+                    <Image
+                      src={t.officialLogo}
+                      alt="UMSS logo"
+                      fill
+                      className="scale-[1.55] object-contain"
+                    />
+                  </div>
+                ) : null}
 
                 <div>
                   <p className="text-xs font-bold uppercase tracking-[0.25em] text-white/55">
@@ -274,11 +277,14 @@ export default async function CampusLifePage({ params }: Props) {
 
           <div className="mt-16 space-y-10">
             {resolvedMagazineSections.map((section, index) => {
+              const hasImage = Boolean(section.image);
               const content = (
                 <>
-                  <div className={index % 2 === 1 ? "relative h-[420px] lg:order-2" : "relative h-[420px]"}>
-                    <Image src={section.image} alt={section.title} fill className="object-cover" />
-                  </div>
+                  {section.image ? (
+                    <div className={index % 2 === 1 ? "relative h-[420px] lg:order-2" : "relative h-[420px]"}>
+                      <Image src={section.image} alt={section.title} fill className="object-cover" />
+                    </div>
+                  ) : null}
 
                   <div className="flex flex-col justify-center p-8 md:p-12">
                     <p className="text-sm font-bold uppercase tracking-[0.25em] text-[#003770]">
@@ -298,14 +304,14 @@ export default async function CampusLifePage({ params }: Props) {
                   href={section.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="grid overflow-hidden rounded-[2.5rem] border border-white/10 bg-white/[0.06] text-white shadow-2xl shadow-black/25 backdrop-blur-xl transition duration-500 hover:-translate-y-1 hover:border-white/25 lg:grid-cols-2"
+                  className={`grid overflow-hidden rounded-[2.5rem] border border-white/10 bg-white/[0.06] text-white shadow-2xl shadow-black/25 backdrop-blur-xl transition duration-500 hover:-translate-y-1 hover:border-white/25 ${hasImage ? "lg:grid-cols-2" : ""}`}
                 >
                   {content}
                 </Link>
               ) : (
                 <div
                   key={section.title}
-                  className="grid overflow-hidden rounded-[2.5rem] border border-white/10 bg-white/[0.06] shadow-2xl shadow-black/25 backdrop-blur-xl lg:grid-cols-2"
+                  className={`grid overflow-hidden rounded-[2.5rem] border border-white/10 bg-white/[0.06] shadow-2xl shadow-black/25 backdrop-blur-xl ${hasImage ? "lg:grid-cols-2" : ""}`}
                 >
                   {content}
                 </div>
@@ -317,11 +323,13 @@ export default async function CampusLifePage({ params }: Props) {
             href={resolvedMuseumSection.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-10 grid overflow-hidden rounded-[2.5rem] border border-white/10 bg-white/[0.06] text-white shadow-2xl shadow-black/25 backdrop-blur-xl transition duration-500 hover:-translate-y-1 hover:border-white/25 lg:grid-cols-2"
+            className={`mt-10 grid overflow-hidden rounded-[2.5rem] border border-white/10 bg-white/[0.06] text-white shadow-2xl shadow-black/25 backdrop-blur-xl transition duration-500 hover:-translate-y-1 hover:border-white/25 ${resolvedMuseumSection.image ? "lg:grid-cols-2" : ""}`}
           >
-            <div className="relative h-[420px]">
-              <Image src={resolvedMuseumSection.image} alt={resolvedMuseumSection.title} fill className="object-cover" />
-            </div>
+            {resolvedMuseumSection.image ? (
+              <div className="relative h-[420px]">
+                <Image src={resolvedMuseumSection.image} alt={resolvedMuseumSection.title} fill className="object-cover" />
+              </div>
+            ) : null}
 
             <div className="flex flex-col justify-center p-8 md:p-12">
               <p className="text-sm font-bold uppercase tracking-[0.25em] text-[#E30613]">
@@ -333,7 +341,7 @@ export default async function CampusLifePage({ params }: Props) {
           </Link>
 
           <div className="mt-20 overflow-hidden rounded-[2.5rem] bg-[#020617] text-white shadow-2xl shadow-slate-300/60">
-            <div className="grid gap-0 lg:grid-cols-[0.95fr_1.05fr]">
+            <div className={`grid gap-0 ${resolvedCochabambaSection.image ? "lg:grid-cols-[0.95fr_1.05fr]" : ""}`}>
               <div className="p-8 md:p-12">
                 <p className="text-sm font-bold uppercase tracking-[0.25em] text-[#E30613]">
                   {resolvedCochabambaSection.eyebrow}
@@ -364,9 +372,11 @@ export default async function CampusLifePage({ params }: Props) {
                 </Link>
               </div>
 
-              <div className="relative min-h-[390px]">
-                <Image src={resolvedCochabambaSection.image} alt={resolvedCochabambaSection.title} fill className="object-cover" />
-              </div>
+              {resolvedCochabambaSection.image ? (
+                <div className="relative min-h-[390px]">
+                  <Image src={resolvedCochabambaSection.image} alt={resolvedCochabambaSection.title} fill className="object-cover" />
+                </div>
+              ) : null}
             </div>
           </div>
         </div>
@@ -398,6 +408,7 @@ function mergeCampusCopy(defaults: {
   const official = section(page, "campus.official");
   const basic = section(page, "campus.basic");
   const officialLogo = block(page, "campus.official.logo");
+  const heroImage = block(page, "campus.hero.image");
 
   return {
     ...defaults,
@@ -410,8 +421,10 @@ function mergeCampusCopy(defaults: {
     basicTitle: basic?.title || defaults.basicTitle,
     basicText: basic?.summary || official?.summary || defaults.basicText,
     officialUrl: dataString(officialLogo, "url") || defaults.officialUrl,
-    heroImage: defaults.heroImage,
-    officialLogo: defaults.officialLogo,
+    heroImage: publicAssetHref(heroImage?.media?.url, defaults.heroImage),
+    officialLogo: dataBoolean(officialLogo, "image_hidden")
+      ? null
+      : publicAssetHref(officialLogo?.media?.url, defaults.officialLogo),
   };
 }
 
@@ -455,7 +468,9 @@ function cmsStories(page: CmsPage | null) {
         title: story.title || "",
         text: story.summary || "",
         button: story.cta_label || null,
-        image: systemImages[index] || "/images/campus-life/library.png",
+        image: dataBoolean(story, "image_hidden")
+          ? null
+          : publicAssetHref(story.media?.url, systemImages[index] || "/images/campus-life/library.png"),
         href: dataString(story, "url") || "#",
       }))
       .filter((story) => story.title && story.text) ?? []
@@ -481,4 +496,8 @@ function dataString(block: CmsBlock | undefined, key: string): string | null {
   const value = block?.data?.[key];
 
   return typeof value === "string" && value.trim() ? value : null;
+}
+
+function dataBoolean(block: CmsBlock | undefined, key: string): boolean {
+  return block?.data?.[key] === true;
 }

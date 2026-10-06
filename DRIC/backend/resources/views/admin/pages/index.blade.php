@@ -144,6 +144,13 @@
             line-height: 1.6;
         }
 
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
         .summary {
             display: grid;
             grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -197,6 +204,11 @@
             color: #fff;
             background: var(--blue);
             box-shadow: 0 14px 28px rgba(22, 65, 148, 0.22);
+        }
+
+        .btn-secondary {
+            color: var(--ink);
+            background: #e8edf5;
         }
 
         .btn-edit {
@@ -441,9 +453,12 @@
                 <p>Administra la informacion general y entra directo al contenido editable de cada seccion publica.</p>
             </div>
 
-            @if ($isAdmin)
-                <a href="{{ route('admin.pages.create') }}" class="btn btn-primary">Crear pagina</a>
-            @endif
+            <div class="hero-actions">
+                <a href="{{ route('admin.dashboard') }}" class="btn btn-secondary">Panel</a>
+                @if ($isAdmin)
+                    <a href="{{ route('admin.pages.create') }}" class="btn btn-primary">Crear pagina</a>
+                @endif
+            </div>
         </section>
 
         @if (session('success'))
@@ -451,21 +466,6 @@
                 {{ session('success') }}
             </div>
         @endif
-
-        <section class="summary" aria-label="Resumen de paginas">
-            <div class="summary-card">
-                <span>Pagina actual</span>
-                <strong>{{ $pages->count() }}</strong>
-            </div>
-            <div class="summary-card">
-                <span>Publicadas visibles</span>
-                <strong>{{ $pages->getCollection()->where('status', 'published')->count() }}</strong>
-            </div>
-            <div class="summary-card">
-                <span>Con pagina superior</span>
-                <strong>{{ $pages->getCollection()->filter(fn ($page) => $page->parent_id)->count() }}</strong>
-            </div>
-        </section>
 
         @if ($pages->count())
             @foreach ($groupedPages as $groupKey => $items)
@@ -497,14 +497,6 @@
 
                                 <div class="meta-grid">
                                     <div class="meta">
-                                        <span>Tipo</span>
-                                        <strong>{{ $pageTypeLabels[$page->page_type] ?? $page->page_type }}</strong>
-                                    </div>
-                                    <div class="meta">
-                                        <span>Pagina superior</span>
-                                        <strong>{{ $page->parent ? $pageTitle($page->parent) : 'Sin pagina superior' }}</strong>
-                                    </div>
-                                    <div class="meta">
                                         <span>Publicacion</span>
                                         <strong>{{ $page->published_at ? $page->published_at->format('Y-m-d H:i') : 'Sin fecha' }}</strong>
                                     </div>
@@ -515,7 +507,6 @@
                                 </div>
 
                                 <div class="actions">
-                                    <a href="{{ route('admin.pages.edit', $page) }}" class="btn btn-edit">Editar pagina</a>
                                     @if ($link)
                                         <a href="{{ $link[0] }}" class="btn btn-content">{{ $link[1] }}</a>
                                     @endif

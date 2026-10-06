@@ -130,7 +130,7 @@ function MobilityTrack({
             <h2 className="text-3xl font-semibold [overflow-wrap:anywhere] sm:text-4xl md:text-5xl">
               {title}
             </h2>
-            <p className="mt-4 max-w-4xl text-sm leading-7 text-white/66 [overflow-wrap:anywhere] md:text-base">
+            <p className="mt-4 max-w-4xl whitespace-pre-line text-sm leading-7 text-white/66 [overflow-wrap:anywhere] md:text-base">
               {intro}
             </p>
           </div>
@@ -154,7 +154,7 @@ function MobilityTrack({
                   {program.title}
                 </h3>
 
-                <p className="mt-4 text-sm leading-7 text-white/66 [overflow-wrap:anywhere]">{program.summary}</p>
+                <p className="mt-4 whitespace-pre-line text-sm leading-7 text-white/66 [overflow-wrap:anywhere]">{program.summary}</p>
 
                 <div className="dric-mobility-condition-panel mt-7 rounded-3xl border border-white/10 bg-[#020617]/40 p-5">
                   <div className="mb-4 flex items-center gap-2 text-sm font-bold text-white">
@@ -170,7 +170,7 @@ function MobilityTrack({
                     {program.conditions.map((condition) => (
                       <li key={condition} className="flex gap-3 text-sm leading-6 text-white/64 [overflow-wrap:anywhere]">
                         <WorkRoundedIcon sx={{ color: "#E30613", fontSize: 17, mt: "2px", flexShrink: 0 }} />
-                        <span>{condition}</span>
+                        <span className="whitespace-pre-line">{condition}</span>
                       </li>
                     ))}
                   </ul>
