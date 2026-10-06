@@ -147,7 +147,7 @@ export default async function ContactoPage({ params }: Props) {
           </div>
 
           <Card
-            className="dric-contact-map-card"
+            className="dric-contact-map-card h-full"
             sx={{
               borderRadius: "36px",
               background: "rgba(255,255,255,0.06)",
@@ -157,7 +157,7 @@ export default async function ContactoPage({ params }: Props) {
               overflow: "hidden",
             }}
           >
-            <div className="dric-contact-map-inner bg-white/[0.06] p-6 md:p-8">
+            <div className="dric-contact-map-inner flex h-full flex-col bg-white/[0.06] p-6 md:p-8">
               <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <div>
                   <p className="text-sm font-bold uppercase tracking-[0.25em] text-[#003770]">
@@ -187,11 +187,11 @@ export default async function ContactoPage({ params }: Props) {
                 </Button>
               </div>
 
-              <div className="overflow-hidden rounded-[28px] border border-white/10">
+              <div className="min-h-[620px] flex-1 overflow-hidden rounded-[28px] border border-white/10">
                 <iframe
                   title="DRIC UMSS Google Maps"
                   src="https://www.google.com/maps?q=Rectorado%20UMSS%20Cochabamba%20Bolivia&output=embed"
-                  className="h-[790px] w-full border-0"
+                  className="h-full min-h-[620px] w-full border-0"
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
                 />

@@ -36,6 +36,7 @@ class CampusLifeContentController extends Controller
             'translations.language',
             'sections.translations.language',
             'sections.contentBlocks.translations.language',
+            'sections.contentBlocks.mediaAsset',
         ]);
 
         return view('admin.pages.campus-life-content', [
@@ -249,7 +250,7 @@ class CampusLifeContentController extends Controller
             'official_url' => $this->blockData($page, 'campus.official.logo', 'url', 'https://www.umss.edu.bo/'),
             'hero_image' => $this->blockUploadedImage($page, 'campus.hero.image'),
             'hero_image_media_id' => $this->blockMediaId($page, 'campus.hero.image'),
-            'official_logo' => $this->blockUploadedImage($page, 'campus.official.logo') ?? '/images/campus-life/umss-logo.png',
+            'official_logo' => $this->blockHidden($page, 'campus.official.logo') ? null : ($this->blockUploadedImage($page, 'campus.official.logo') ?? '/images/campus-life/umss-logo.png'),
             'official_logo_media_id' => $this->blockMediaId($page, 'campus.official.logo'),
             'stats' => $this->stats($page),
             'features' => $this->features($page),
@@ -306,7 +307,7 @@ class CampusLifeContentController extends Controller
             $fallbacks[$index]['button_es'] = $this->blockValue($page, "campus.story.{$index}", 'es', 'cta_label', $fallbacks[$index]['button_es'] ?? '');
             $fallbacks[$index]['button_en'] = $this->blockValue($page, "campus.story.{$index}", 'en', 'cta_label', $fallbacks[$index]['button_en'] ?? '');
             $fallbacks[$index]['url'] = $this->blockData($page, "campus.story.{$index}", 'url', $fallbacks[$index]['url']);
-            $fallbacks[$index]['image'] = $this->blockUploadedImage($page, "campus.story.{$index}") ?? $fallbacks[$index]['image_url'];
+            $fallbacks[$index]['image'] = $this->blockHidden($page, "campus.story.{$index}") ? null : ($this->blockUploadedImage($page, "campus.story.{$index}") ?? $fallbacks[$index]['image_url']);
             $fallbacks[$index]['image_media_id'] = $this->blockMediaId($page, "campus.story.{$index}");
         }
 
@@ -338,10 +339,26 @@ class CampusLifeContentController extends Controller
 
     private function upsertBlock(Section $section, string $key, string $type, int $sortOrder, $languages, array $translations, array $data = []): ContentBlock
     {
-        $block = ContentBlock::updateOrCreate(
-            ['section_id' => $section->id, 'link_url' => $key],
-            ['block_type' => $type, 'sort_order' => $sortOrder, 'is_active' => true, 'data' => $data, 'media_asset_id' => null]
-        );
+        $block = ContentBlock::query()
+            ->where('section_id', $section->id)
+            ->where('link_url', $key)
+            ->first();
+
+        $payload = [
+            'block_type' => $type,
+            'sort_order' => $sortOrder,
+            'is_active' => true,
+            'data' => array_merge($block?->data ?? [], $data),
+        ];
+
+        if ($block) {
+            $block->update($payload);
+        } else {
+            $block = ContentBlock::create(array_merge($payload, [
+                'section_id' => $section->id,
+                'link_url' => $key,
+            ]));
+        }
 
         foreach (['es', 'en'] as $locale) {
             ContentBlockTranslation::updateOrCreate(
@@ -395,6 +412,11 @@ class CampusLifeContentController extends Controller
         return $block?->mediaAsset ? '/storage/'.ltrim($block->mediaAsset->file_path, '/') : null;
     }
 
+    private function blockHidden(Page $page, string $key): bool
+    {
+        return (bool) ($this->block($page, $key)?->data['image_hidden'] ?? false);
+    }
+
     private function blockMediaId(Page $page, string $key): ?int
     {
         return $this->block($page, $key)?->mediaAsset?->id;
@@ -411,18 +433,27 @@ class CampusLifeContentController extends Controller
     private function syncImageField(Request $request, ContentBlock $block, string $fileKey, string $removeKey, string $restoreKey, string $directory): void
     {
         if ($request->hasFile($fileKey)) {
-            $block->update(['media_asset_id' => $this->storeMediaFile($request->file($fileKey), $request->user()?->id, $directory)->id]);
+            $block->update([
+                'media_asset_id' => $this->storeMediaFile($request->file($fileKey), $request->user()?->id, $directory)->id,
+                'data' => array_merge($block->data ?? [], ['image_hidden' => false]),
+            ]);
             return;
         }
 
         $restoreId = $request->input($restoreKey);
         if ($restoreId && MediaAsset::query()->whereKey($restoreId)->exists()) {
-            $block->update(['media_asset_id' => $restoreId]);
+            $block->update([
+                'media_asset_id' => $restoreId,
+                'data' => array_merge($block->data ?? [], ['image_hidden' => false]),
+            ]);
             return;
         }
 
-        if ($request->boolean($removeKey) && $block->mediaAsset) {
-            $block->update(['media_asset_id' => null]);
+        if ($request->boolean($removeKey)) {
+            $block->update([
+                'media_asset_id' => null,
+                'data' => array_merge($block->data ?? [], ['image_hidden' => true]),
+            ]);
         }
     }
 

@@ -20,7 +20,6 @@ use Illuminate\View\View;
 
 class ScholarshipBecasContentController extends Controller
 {
-    private const CLEAN_LABEL_REGEX = '/\A[\p{L}\s.,]+\z/u';
     private const TYPE_OPTIONS = ['country', 'organization'];
 
     public function edit(Page $page): View
@@ -141,12 +140,12 @@ class ScholarshipBecasContentController extends Controller
         $rules = [];
 
         foreach (['es', 'en'] as $locale) {
-            $rules["{$locale}.title"] = ['required', 'string', 'max:180', 'regex:'.self::CLEAN_LABEL_REGEX];
+            $rules["{$locale}.title"] = ['required', 'string', 'max:180'];
             $rules["{$locale}.intro"] = ['required', 'string', 'max:900'];
-            $rules["{$locale}.countries_badge"] = ['required', 'string', 'max:100', 'regex:'.self::CLEAN_LABEL_REGEX];
-            $rules["{$locale}.countries_title"] = ['required', 'string', 'max:180', 'regex:'.self::CLEAN_LABEL_REGEX];
-            $rules["{$locale}.organizations_badge"] = ['required', 'string', 'max:120', 'regex:'.self::CLEAN_LABEL_REGEX];
-            $rules["{$locale}.organizations_title"] = ['required', 'string', 'max:180', 'regex:'.self::CLEAN_LABEL_REGEX];
+            $rules["{$locale}.countries_badge"] = ['required', 'string', 'max:100'];
+            $rules["{$locale}.countries_title"] = ['required', 'string', 'max:180'];
+            $rules["{$locale}.organizations_badge"] = ['required', 'string', 'max:120'];
+            $rules["{$locale}.organizations_title"] = ['required', 'string', 'max:180'];
         }
 
         return $rules;
@@ -158,7 +157,6 @@ class ScholarshipBecasContentController extends Controller
             'required' => 'Este campo es obligatorio.',
             'string' => 'Este campo debe contener texto.',
             'max' => 'Este campo supera el tamaño permitido.',
-            'regex' => 'Este campo solo puede contener letras, espacios, puntos y comas. No uses números ni símbolos especiales.',
             'url' => 'Ingresa una URL completa y válida, por ejemplo: https://www.umss.edu.bo',
         ];
     }
@@ -243,10 +241,10 @@ class ScholarshipBecasContentController extends Controller
             [
                 "{$key}" => ['array'],
                 "{$key}.*.id" => ['nullable', 'integer'],
-                "{$key}.*.name_es" => ['required', 'string', 'max:140', 'regex:'.self::CLEAN_LABEL_REGEX],
-                "{$key}.*.name_en" => ['required', 'string', 'max:140', 'regex:'.self::CLEAN_LABEL_REGEX],
-                "{$key}.*.region_es" => ['required', 'string', 'max:120', 'regex:'.self::CLEAN_LABEL_REGEX],
-                "{$key}.*.region_en" => ['required', 'string', 'max:120', 'regex:'.self::CLEAN_LABEL_REGEX],
+                "{$key}.*.name_es" => ['required', 'string', 'max:140'],
+                "{$key}.*.name_en" => ['required', 'string', 'max:140'],
+                "{$key}.*.region_es" => ['required', 'string', 'max:120'],
+                "{$key}.*.region_en" => ['required', 'string', 'max:120'],
                 "{$key}.*.summary_es" => ['required', 'string', 'max:700'],
                 "{$key}.*.summary_en" => ['required', 'string', 'max:700'],
                 "{$key}.*.url" => ['nullable', 'string', 'max:500'],
@@ -258,7 +256,6 @@ class ScholarshipBecasContentController extends Controller
                 "{$key}.*.region_en.required" => 'Escribe la categoría en inglés.',
                 "{$key}.*.summary_es.required" => 'Escribe la descripción en español.',
                 "{$key}.*.summary_en.required" => 'Escribe la descripción en inglés.',
-                "{$key}.*.regex" => 'Este campo solo puede contener letras, espacios, puntos y comas. No uses números ni símbolos especiales.',
             ]
         );
 

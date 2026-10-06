@@ -204,9 +204,8 @@
 
                                 <label>
                                     Texto descriptivo de la tarjeta UMSS
-                                    <textarea name="{{ $locale }}[basic_text]">{{ old($locale.'.basic_text', $content[$locale]['basic_text']) }}</textarea>
-                                    <span class="hint">Este mismo texto también aparece en el bloque de Información básica de la página pública.</span>
-                                    @error($locale.'.basic_text')<span class="field-error">{{ $message }}</span>@enderror
+                                    <textarea data-basic-text-mirror="{{ $locale }}">{{ old($locale.'.basic_text', $content[$locale]['basic_text']) }}</textarea>
+                                    <span class="hint">Es el mismo texto de Información básica. Puedes editarlo aquí o abajo; ambos campos se sincronizan.</span>
                                 </label>
                             </div>
                         </div>
@@ -284,6 +283,12 @@
                                     @error($locale.'.basic_title')<span class="field-error">{{ $message }}</span>@enderror
                                 </label>
 
+                                <label>
+                                    Texto de información básica
+                                    <textarea name="{{ $locale }}[basic_text]" data-basic-text-source="{{ $locale }}">{{ old($locale.'.basic_text', $content[$locale]['basic_text']) }}</textarea>
+                                    <span class="hint">Este párrafo aparece en la página pública dentro de Información básica y también alimenta el resumen de la tarjeta UMSS.</span>
+                                    @error($locale.'.basic_text')<span class="field-error">{{ $message }}</span>@enderror
+                                </label>
                             </div>
                         </div>
                     @endforeach
@@ -586,7 +591,40 @@
                 const last = stack.pop();
                 if (!last) return;
                 restore(last);
+                syncBasicTextPairs();
                 setUndo(button, stack);
+            });
+        }
+
+        function syncBasicTextPairs() {
+            document.querySelectorAll("[data-basic-text-source]").forEach((source) => {
+                const locale = source.dataset.basicTextSource;
+                const mirror = document.querySelector(`[data-basic-text-mirror="${locale}"]`);
+                if (mirror && mirror.value !== source.value) mirror.value = source.value;
+            });
+        }
+
+        function bindBasicTextMirrors() {
+            let syncing = false;
+            document.querySelectorAll("[data-basic-text-source]").forEach((source) => {
+                const locale = source.dataset.basicTextSource;
+                const mirror = document.querySelector(`[data-basic-text-mirror="${locale}"]`);
+                if (!mirror) return;
+
+                source.addEventListener("input", () => {
+                    if (syncing) return;
+                    syncing = true;
+                    mirror.value = source.value;
+                    syncing = false;
+                });
+
+                mirror.addEventListener("input", () => {
+                    if (syncing) return;
+                    syncing = true;
+                    source.value = mirror.value;
+                    source.dispatchEvent(new Event("input", { bubbles: true }));
+                    syncing = false;
+                });
             });
         }
 
@@ -889,6 +927,7 @@
 
         document.querySelectorAll("[data-undo-scope]").forEach(bindUndo);
         document.querySelectorAll("[data-image-card]").forEach(bindImageCard);
+        bindBasicTextMirrors();
         mediaEditorImage.addEventListener("load", () => {
             mediaEditorState.naturalWidth = mediaEditorImage.naturalWidth;
             mediaEditorState.naturalHeight = mediaEditorImage.naturalHeight;

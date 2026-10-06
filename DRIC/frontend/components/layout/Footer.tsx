@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useLocale } from "next-intl";
 import { fetchSiteSettings, type FooterSettings } from "@/lib/api/siteSettings";
 
 const defaultFooterSettings: FooterSettings = {
@@ -17,7 +18,29 @@ const defaultFooterSettings: FooterSettings = {
   },
 };
 
+const footerCopy = {
+  es: {
+    rights: "Todos los derechos reservados © 2026",
+    title: "Dirección de Relaciones Internacionales y Convenios",
+    addressLine1: "Av. Ballivián N. 591 esq. Reza, Cochabamba, Bolivia",
+    addressLine2: "Edif. Mariscal Andrés de Santa Cruz",
+    umssLabel: "Universidad Mayor de San Simón",
+    wordmarkAlt: "Universidad Mayor de San Simón. Ciencia y Conocimiento desde 1832",
+  },
+  en: {
+    rights: "All rights reserved © 2026",
+    title: "Office of International Relations and Agreements",
+    addressLine1: "Ballivián Ave. No. 591 at Reza, Cochabamba, Bolivia",
+    addressLine2: "Mariscal Andrés de Santa Cruz Building",
+    umssLabel: "Universidad Mayor de San Simón",
+    wordmarkAlt: "Universidad Mayor de San Simón. Science and Knowledge since 1832",
+  },
+};
+
 export default function Footer() {
+  const locale = useLocale();
+  const language = locale === "en" ? "en" : "es";
+  const copy = footerCopy[language];
   const [footerSettings, setFooterSettings] = useState(defaultFooterSettings);
 
   useEffect(() => {
@@ -72,7 +95,7 @@ export default function Footer() {
       <div className="mx-auto flex max-w-7xl flex-col">
         <div className="flex flex-col items-center justify-between gap-7 text-center sm:gap-5 md:flex-row md:text-left">
           <p className="dric-site-footer-muted text-sm leading-6 text-white/68 sm:text-base">
-            Todos los derechos reservados © 2026
+            {copy.rights}
           </p>
 
           <div className="flex items-center justify-center gap-4 sm:gap-5">
@@ -99,7 +122,7 @@ export default function Footer() {
 
         <div className="grid items-start gap-10 sm:gap-8 md:grid-cols-[150px_1fr] lg:grid-cols-[170px_1fr]">
           <div className="flex justify-center md:-ml-4 md:justify-start lg:-ml-6">
-            <a href={footerSettings.umss_url} target="_blank" rel="noopener noreferrer" aria-label="Universidad Mayor de San Simón">
+            <a href={footerSettings.umss_url} target="_blank" rel="noopener noreferrer" aria-label={copy.umssLabel}>
               <img
                 src="/images/brand/umss-triangle.png"
                 alt="UMSS"
@@ -110,11 +133,11 @@ export default function Footer() {
 
           <div className="text-center md:text-left">
             <h2 className="text-base font-normal uppercase leading-relaxed tracking-[0.01em] text-white sm:text-lg">
-              {footerSettings.title}
+              {copy.title}
             </h2>
             <address className="dric-site-footer-address mt-2 not-italic text-sm leading-7 text-white sm:text-base">
-              <p>{footerSettings.address_line_1}</p>
-              <p>{footerSettings.address_line_2}</p>
+              <p>{copy.addressLine1}</p>
+              <p>{copy.addressLine2}</p>
             </address>
           </div>
         </div>
@@ -122,7 +145,7 @@ export default function Footer() {
         <div className="flex justify-center pt-7 sm:pt-10 md:pt-0 lg:-mt-15">
           <img
             src="/images/brand/umss-wordmark.png"
-            alt="Universidad Mayor de San Simón. Ciencia y Conocimiento desde 1832"
+            alt={copy.wordmarkAlt}
             className="h-auto w-full max-w-[939px] opacity-20"
           />
         </div>
