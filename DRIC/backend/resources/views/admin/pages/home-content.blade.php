@@ -11,6 +11,9 @@
         if (\Illuminate\Support\Str::startsWith($path, '/storage/')) {
             return url($path);
         }
+        if (\Illuminate\Support\Str::startsWith($path, '/images/')) {
+            return route('admin.frontend-image', ['path' => ltrim($path, '/')]);
+        }
         return $frontendUrl.$path;
     };
 @endphp
@@ -41,6 +44,7 @@
         .btn-undo { align-items: center; background: #eef3fb; color: var(--blue); font-size: 20px; font-weight: 900; line-height: 1; min-width: 40px; padding: 9px 12px; text-shadow: 0 0 0 currentColor, .35px 0 0 currentColor, 0 .35px 0 currentColor; }
         .btn-undo:disabled { cursor: not-allowed; opacity: .42; }
         .undo-floating { position: absolute; right: 12px; top: 12px; z-index: 4; }
+        .faq-row .undo-floating { position: static; }
         [data-image-card] > .undo-floating { right: -10px; top: -10px; z-index: 6; }
         .alert { border-radius: 14px; margin-bottom: 18px; padding: 14px 16px; }
         .alert-success { background: #e8f8ee; border: 1px solid #bde8c9; color: #176534; }
@@ -68,6 +72,7 @@
         .btn-image-remove { align-items: center; background: rgba(127,0,16,.92); border: 2px solid rgba(255,255,255,.88); border-radius: 999px; color: #fff; display: inline-flex; font-size: 20px; font-weight: 900; height: 32px; justify-content: center; line-height: 1; padding: 0; position: absolute; right: 10px; top: 10px; width: 32px; z-index: 3; }
         .sticky-actions { align-items: center; background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 16px; bottom: 18px; box-shadow: 0 18px 45px rgba(15,23,42,.12); display: flex; justify-content: space-between; padding: 14px; position: sticky; z-index: 30; }
         .remove-row { align-items: center; display: flex; justify-content: space-between; gap: 12px; }
+        .remove-actions { align-items: center; display: inline-flex; gap: 10px; margin-left: auto; }
         .toggle-row { align-items: center; background: var(--soft); border: 1px solid var(--line); border-radius: 16px; display: flex; justify-content: space-between; gap: 18px; margin-bottom: 18px; padding: 16px; }
         .switch { align-items: center; cursor: pointer; display: inline-flex; flex: 0 0 auto; gap: 12px; user-select: none; }
         .switch input { height: 1px; opacity: 0; position: absolute; width: 1px; }
@@ -90,6 +95,7 @@
         .crop-frame img { left: 50%; max-width: none; position: absolute; top: 50%; transform-origin: center; user-select: none; -webkit-user-drag: none; }
         .crop-controls { align-items: center; display: grid; gap: 10px; grid-template-columns: auto minmax(180px, 1fr); }
         .crop-controls input { padding: 0; }
+        .crop-error { color: var(--red-dark); font-size: 13px; font-weight: 800; min-height: 18px; }
         .crop-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; }
         @media (max-width: 940px) { .topbar, .sticky-actions { align-items: stretch; flex-direction: column; } .language-grid, .two-grid, .three-grid { grid-template-columns: 1fr; } }
     </style>
@@ -156,7 +162,7 @@
                     @foreach ($content['countries'] as $index => $country)
                         <article class="item-card" data-image-card data-crop-aspect="1.333333" data-crop-label="Marco 4:3, similar a la tarjeta de país en Inicio.">
                             <h3>País {{ $index }}</h3>
-                            <input type="hidden" name="countries[{{ $index }}][existing_image]" value="{{ old('countries.'.$index.'.existing_image', $country['existing_image']) }}">
+                            <input type="hidden" name="countries[{{ $index }}][existing_image]" value="{{ old('countries.'.$index.'.existing_image', $country['existing_image']) }}" data-existing-image-input>
                             <input type="hidden" name="countries[{{ $index }}][image_remove]" value="0" data-remove-image-input>
                             @if ($country['image'])
                                 <div class="preview preview-country" data-image-preview>
@@ -197,6 +203,7 @@
                 </div>
                 <article class="item-card" data-image-card data-crop-aspect="1.6" data-crop-label="Marco ancho 16:10 para previsualizar Conócenos.">
                     <h3>Imagen Conócenos</h3>
+                    <input type="hidden" name="about_image_existing" value="{{ old('about_image_existing', $content['about_image']) }}" data-existing-image-input>
                     <input type="hidden" name="about_image_remove" value="0" data-remove-image-input>
                     <div class="preview preview-about" data-image-preview>
                         @if ($content['about_image'])
@@ -227,7 +234,7 @@
                     @foreach ($content['agreements'] as $index => $agreement)
                         <article class="item-card" data-image-card data-crop-aspect="0.8" data-crop-label="Marco vertical 4:5, similar a las tarjetas de acuerdos recientes.">
                             <h3>Acuerdo {{ $index }}</h3>
-                            <input type="hidden" name="agreements[{{ $index }}][existing_image]" value="{{ old('agreements.'.$index.'.existing_image', $agreement['existing_image']) }}">
+                            <input type="hidden" name="agreements[{{ $index }}][existing_image]" value="{{ old('agreements.'.$index.'.existing_image', $agreement['existing_image']) }}" data-existing-image-input>
                             <input type="hidden" name="agreements[{{ $index }}][image_remove]" value="0" data-remove-image-input>
                             @if ($agreement['image'])
                                 <div class="preview preview-agreement" data-image-preview>
@@ -324,7 +331,9 @@
                         <article class="item-card faq-row">
                             <div class="remove-row">
                                 <h3>Pregunta {{ $index + 1 }}</h3>
-                                <button type="button" class="btn btn-danger" data-remove-faq>Quitar</button>
+                                <div class="remove-actions">
+                                    <button type="button" class="btn btn-danger" data-remove-faq>Quitar</button>
+                                </div>
                             </div>
                             <input type="hidden" data-name="id" name="faqs[{{ $index }}][id]" value="{{ $faq['id'] }}">
                             <div class="language-grid">
@@ -386,7 +395,7 @@
 
     <template id="faq-template">
         <article class="item-card faq-row">
-            <div class="remove-row"><h3>Nueva pregunta</h3><button type="button" class="btn btn-danger" data-remove-faq>Quitar</button></div>
+            <div class="remove-row"><h3>Nueva pregunta</h3><div class="remove-actions"><button type="button" class="btn btn-danger" data-remove-faq>Quitar</button></div></div>
             <input type="hidden" data-name="id" value="">
             <div class="language-grid">
                 <div>
@@ -419,6 +428,7 @@
                 Zoom
                 <input type="range" id="crop-zoom" min="1" max="3" step="0.01" value="1">
             </label>
+            <div class="crop-error" id="crop-error"></div>
             <div class="crop-actions">
                 <button class="btn btn-secondary" type="button" id="crop-reset">Centrar</button>
                 <button class="btn btn-primary" type="button" id="crop-accept">Aceptar recorte</button>
@@ -432,6 +442,7 @@
         const cardHistory = new WeakMap();
         const fieldStartSnapshots = new WeakMap();
         const imageStartSnapshots = new WeakMap();
+        const undoStorageKey = `home-content-undo:${window.location.pathname}`;
         const maxImageBytes = 10 * 1024 * 1024;
 
         function editableFields(scope) {
@@ -455,6 +466,7 @@
             const empty = preview?.querySelector("[data-preview-empty]");
             const fileInput = card.querySelector("[data-image-file]");
             const removeInput = card.querySelector("[data-remove-image-input]");
+            const existingInput = card.querySelector("[data-existing-image-input]");
 
             return {
                 src: image?.getAttribute("src") || "",
@@ -462,6 +474,7 @@
                 emptyHidden: empty ? empty.hidden : true,
                 file: fileInput?.files?.[0] || null,
                 removeValue: removeInput?.value || "0",
+                existingValue: existingInput?.value || "",
             };
         }
 
@@ -477,6 +490,81 @@
             };
         }
 
+        function serializableSnapshot(snapshot) {
+            return {
+                fields: (snapshot.fields || []).map((field) => ({
+                    name: field.name,
+                    type: field.type,
+                    value: field.value,
+                    checked: field.checked,
+                })),
+                image: snapshot.image ? {
+                    src: snapshot.image.src,
+                    imageHidden: snapshot.image.imageHidden,
+                    emptyHidden: snapshot.image.emptyHidden,
+                    removeValue: snapshot.image.removeValue,
+                    existingValue: snapshot.image.existingValue,
+                } : null,
+            };
+        }
+
+        function scopeKey(scope) {
+            return editableFields(scope).map((field) => field.name || field.dataset.name || field.type).join("|");
+        }
+
+        function readUndoStore() {
+            try {
+                const stored = sessionStorage.getItem(undoStorageKey);
+                const parsed = stored ? JSON.parse(stored) : {};
+                return parsed && typeof parsed === "object" ? parsed : {};
+            } catch (error) {
+                sessionStorage.removeItem(undoStorageKey);
+                return {};
+            }
+        }
+
+        function writeUndoStore(store) {
+            const clean = Object.fromEntries(Object.entries(store).filter(([, value]) => Array.isArray(value) && value.length));
+            if (!Object.keys(clean).length) {
+                sessionStorage.removeItem(undoStorageKey);
+                return;
+            }
+            sessionStorage.setItem(undoStorageKey, JSON.stringify(clean));
+        }
+
+        function pushStoredSnapshot(scope, snapshot) {
+            const key = scopeKey(scope);
+            if (!key) return;
+
+            const record = serializableSnapshot(snapshot);
+            const store = readUndoStore();
+            if (!Array.isArray(store[key])) store[key] = [];
+
+            const serialized = JSON.stringify(record);
+            const last = store[key].length ? JSON.stringify(store[key][store[key].length - 1]) : null;
+            if (serialized !== last) store[key].push(record);
+            if (store[key].length > 20) store[key].shift();
+            writeUndoStore(store);
+        }
+
+        function popStoredSnapshot(scope) {
+            const key = scopeKey(scope);
+            if (!key) return null;
+
+            const store = readUndoStore();
+            const history = Array.isArray(store[key]) ? store[key] : [];
+            const snapshot = history.pop() || null;
+            if (history.length) store[key] = history;
+            else delete store[key];
+            writeUndoStore(store);
+            return snapshot;
+        }
+
+        function hasStoredSnapshots(scope) {
+            const history = readUndoStore()[scopeKey(scope)] || [];
+            return Array.isArray(history) && history.length > 0;
+        }
+
         function restoreImageState(scope, state) {
             if (!state) return;
 
@@ -486,6 +574,7 @@
             const preview = card.querySelector("[data-image-preview]");
             const fileInput = card.querySelector("[data-image-file]");
             const removeInput = card.querySelector("[data-remove-image-input]");
+            const existingInput = card.querySelector("[data-existing-image-input]");
             const empty = preview?.querySelector("[data-preview-empty]");
             let image = preview?.querySelector("[data-preview-image]");
 
@@ -533,6 +622,10 @@
             if (removeInput) {
                 removeInput.value = state.removeValue;
             }
+
+            if (existingInput) {
+                existingInput.value = state.existingValue || state.src || existingInput.value;
+            }
         }
 
         function restoreSnapshot(scope, snapshot) {
@@ -544,10 +637,12 @@
 
                 if (field.type === "checkbox") {
                     field.checked = item.checked;
-                    return;
+                } else {
+                    field.value = item.value;
                 }
 
-                field.value = item.value;
+                field.dispatchEvent(new Event("input", { bubbles: true }));
+                field.dispatchEvent(new Event("change", { bubbles: true }));
             });
 
             if (!Array.isArray(snapshot)) {
@@ -563,11 +658,17 @@
             return cardHistory.get(scope);
         }
 
+        function undoButtonFor(scope) {
+            return scope.classList.contains("faq-row")
+                ? scope.querySelector(".remove-row [data-undo-card]")
+                : scope.querySelector(":scope > [data-undo-card]");
+        }
+
         function setUndoState(scope) {
-            const button = scope.querySelector(":scope > [data-undo-card]");
+            const button = undoButtonFor(scope);
             if (!button) return;
 
-            button.disabled = historyFor(scope).length === 0;
+            button.disabled = historyFor(scope).length === 0 && !hasStoredSnapshots(scope);
         }
 
         function pushSnapshot(scope, snapshot = snapshotScope(scope)) {
@@ -577,6 +678,7 @@
 
             if (serialized !== last) {
                 history.push(snapshot);
+                pushStoredSnapshot(scope, snapshot);
             }
 
             if (history.length > 20) {
@@ -587,8 +689,13 @@
         }
 
         function undoScope(scope) {
-            const snapshot = historyFor(scope).pop();
+            const memorySnapshot = historyFor(scope).pop();
+            const snapshot = memorySnapshot || popStoredSnapshot(scope);
             if (!snapshot) return;
+
+            if (memorySnapshot) {
+                popStoredSnapshot(scope);
+            }
 
             restoreSnapshot(scope, snapshot);
             editableFields(scope).forEach((field) => fieldStartSnapshots.delete(field));
@@ -625,7 +732,14 @@
             button.title = "Deshacer último cambio";
             button.setAttribute("aria-label", "Deshacer último cambio");
             button.textContent = "↶";
-            scope.appendChild(button);
+
+            if (scope.classList.contains("faq-row")) {
+                const removeButton = scope.querySelector("[data-remove-faq]");
+                if (removeButton) removeButton.before(button);
+                else scope.querySelector(".remove-actions, .remove-row")?.appendChild(button);
+            } else {
+                scope.appendChild(button);
+            }
 
             button.addEventListener("click", () => undoScope(scope));
 
@@ -634,6 +748,8 @@
                 field.addEventListener("input", () => rememberFieldChange(field));
                 field.addEventListener("change", () => rememberFieldChange(field));
             });
+
+            setUndoState(scope);
         }
 
         function bindUndoScopes(root = document) {
@@ -645,6 +761,7 @@
                 row.querySelectorAll("[data-name]").forEach((field) => {
                     field.name = `faqs[${index}][${field.dataset.name}]`;
                 });
+                setUndoState(row);
             });
         }
 
@@ -730,6 +847,7 @@
             const image = preview.querySelector("[data-preview-image]");
             const fileInput = card.querySelector("[data-image-file]");
             const removeInput = card.querySelector("[data-remove-image-input]");
+            const existingInput = card.querySelector("[data-existing-image-input]");
 
             pushSnapshot(scope);
 
@@ -752,6 +870,10 @@
             if (removeInput) {
                 removeInput.value = "1";
             }
+
+            if (existingInput) {
+                existingInput.value = "";
+            }
         }
 
         function showSelectedImage(card, file) {
@@ -759,6 +881,7 @@
             const image = previewImageElement(preview);
             const empty = preview.querySelector("[data-preview-empty]");
             const removeInput = card.querySelector("[data-remove-image-input]");
+            const existingInput = card.querySelector("[data-existing-image-input]");
 
             if (image.dataset.objectUrl) {
                 URL.revokeObjectURL(image.dataset.objectUrl);
@@ -773,6 +896,10 @@
 
             if (removeInput) {
                 removeInput.value = "0";
+            }
+
+            if (existingInput) {
+                existingInput.value = "";
             }
         }
 
@@ -794,6 +921,11 @@
 
             preview?.addEventListener("click", (event) => {
                 if (event.target.closest("[data-remove-image]")) return;
+                const image = preview.querySelector("[data-preview-image]");
+                if (image?.src && !image.hidden) {
+                    openCropToolFromPreview(card);
+                    return;
+                }
                 requestImageFile();
             });
 
@@ -821,10 +953,12 @@
         const cropAccept = document.getElementById("crop-accept");
         const cropReset = document.getElementById("crop-reset");
         const cropClose = document.getElementById("crop-close");
+        const cropError = document.getElementById("crop-error");
         const cropState = {
             card: null,
             file: null,
             objectUrl: "",
+            sourceUrl: "",
             naturalWidth: 0,
             naturalHeight: 0,
             baseScale: 1,
@@ -885,7 +1019,7 @@
             renderCrop();
         }
 
-        function openCropTool(card, file) {
+        function openCropTool(card, file, sourceUrl = "") {
             const aspect = cropAspectFor(card);
 
             if (cropState.objectUrl) {
@@ -894,7 +1028,9 @@
 
             cropState.card = card;
             cropState.file = file;
-            cropState.objectUrl = URL.createObjectURL(file);
+            cropState.objectUrl = file ? URL.createObjectURL(file) : "";
+            cropState.sourceUrl = sourceUrl || cropState.objectUrl;
+            cropError.textContent = "";
             cropHelp.textContent = card.dataset.cropLabel || "Ajusta la imagen dentro del marco y acepta el recorte.";
             cropModal.classList.add("is-open");
             cropModal.setAttribute("aria-hidden", "false");
@@ -902,7 +1038,22 @@
             const size = frameSizeForAspect(aspect);
             cropFrame.style.width = `${size.width}px`;
             cropFrame.style.height = `${size.height}px`;
-            cropImage.src = cropState.objectUrl;
+            cropImage.src = cropState.sourceUrl;
+        }
+
+        function openCropToolFromPreview(card) {
+            const image = card.querySelector("[data-preview-image]");
+            const fileInput = card.querySelector("[data-image-file]");
+            const scope = card.closest("[data-undo-scope]") || card;
+            const selectedFile = fileInput?.files?.[0] || null;
+
+            imageStartSnapshots.set(fileInput, snapshotScope(scope));
+            if (selectedFile) {
+                openCropTool(card, selectedFile);
+                return;
+            }
+
+            openCropTool(card, null, image.src);
         }
 
         function closeCropTool(clearSelection = false) {
@@ -933,18 +1084,21 @@
             cropState.card = null;
             cropState.file = null;
             cropState.objectUrl = "";
+            cropState.sourceUrl = "";
+            cropError.textContent = "";
             cropImage.removeAttribute("src");
         }
 
-        function croppedFileName(file) {
-            const base = file.name.replace(/\.[^.]+$/, "") || "home-image";
+        function croppedFileName(file = null) {
+            const base = (file?.name || "home-image").replace(/\.[^.]+$/, "") || "home-image";
             return `${base}-recortada.jpg`;
         }
 
         function acceptCrop() {
             const card = cropState.card;
             const file = cropState.file;
-            if (!card || !file) return;
+            if (!card) return;
+            cropError.textContent = "";
 
             const scale = cropState.baseScale * cropState.zoom;
             const visibleLeft = (cropState.naturalWidth * scale - cropFrame.clientWidth) / 2 - cropState.offsetX;
@@ -961,25 +1115,28 @@
 
             canvas.width = outputWidth;
             canvas.height = outputHeight;
-            context.drawImage(cropImage, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, outputWidth, outputHeight);
+            try {
+                context.drawImage(cropImage, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, outputWidth, outputHeight);
+                canvas.toBlob((blob) => {
+                    if (!blob) return;
 
-            canvas.toBlob((blob) => {
-                if (!blob) return;
+                    const cropped = new File([blob], croppedFileName(file), { type: "image/jpeg" });
+                    const transfer = new DataTransfer();
+                    const fileInput = card.querySelector("[data-image-file]");
+                    const scope = card.closest("[data-undo-scope]") || card;
+                    const snapshot = imageStartSnapshots.get(fileInput) || snapshotScope(scope);
 
-                const cropped = new File([blob], croppedFileName(file), { type: "image/jpeg" });
-                const transfer = new DataTransfer();
-                const fileInput = card.querySelector("[data-image-file]");
-                const scope = card.closest("[data-undo-scope]") || card;
-                const snapshot = imageStartSnapshots.get(fileInput) || snapshotScope(scope);
-
-                transfer.items.add(cropped);
-                pushSnapshot(scope, snapshot);
-                fileInput.files = transfer.files;
-                imageStartSnapshots.delete(fileInput);
-                showSelectedImage(card, cropped);
-                imageErrorFor(fileInput).textContent = "";
-                closeCropTool(false);
-            }, "image/jpeg", .92);
+                    transfer.items.add(cropped);
+                    pushSnapshot(scope, snapshot);
+                    fileInput.files = transfer.files;
+                    imageStartSnapshots.delete(fileInput);
+                    showSelectedImage(card, cropped);
+                    imageErrorFor(fileInput).textContent = "";
+                    closeCropTool(false);
+                }, "image/jpeg", .92);
+            } catch (error) {
+                cropError.textContent = "Esta imagen no se puede recortar desde el navegador. Sube el archivo original para ajustarla.";
+            }
         }
 
         cropImage.addEventListener("load", () => {
@@ -1039,6 +1196,7 @@
 
         bindUndoScopes();
         document.querySelectorAll("[data-image-card]").forEach(bindImageCard);
+        window.addEventListener("pageshow", () => document.querySelectorAll("[data-undo-scope]").forEach(setUndoState));
     </script>
     @include('admin.partials.persistent-undo')
 </body>

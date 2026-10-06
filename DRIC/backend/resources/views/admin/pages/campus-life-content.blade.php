@@ -34,6 +34,7 @@
         .language-grid, .two-grid, .three-grid { display: grid; gap: 18px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
         .three-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
         .language-card, .item-card { box-shadow: none; padding: 76px 18px 18px; position: relative; }
+        .url-card { background: #fff; border: 1px solid #d8e2f2; border-radius: 18px; box-shadow: none; padding: 76px 18px 18px; position: relative; }
         .item-card { border-color: #d8e2f2; }
         .story-editor { border-color: #164194; border-left: 5px solid #164194; padding: 22px; }
         .story-editor + .story-editor { margin-top: 4px; }
@@ -158,11 +159,14 @@
                     <span class="panel-kicker">Portada</span>
                 </div>
 
-                <label>
-                    URL del sitio oficial UMSS
-                    <input type="url" name="official_url" value="{{ old('official_url', $content['official_url']) }}">
-                    @error('official_url')<span class="field-error">{{ $message }}</span>@enderror
-                </label>
+                <div class="url-card" data-undo-scope>
+                    <button class="btn btn-undo undo-floating" type="button" data-undo-card disabled title="Deshacer último cambio" aria-label="Deshacer último cambio">↶</button>
+                    <label>
+                        URL del sitio oficial UMSS
+                        <input type="url" name="official_url" value="{{ old('official_url', $content['official_url']) }}">
+                        @error('official_url')<span class="field-error">{{ $message }}</span>@enderror
+                    </label>
+                </div>
 
                 <div class="image-card @if (empty($content['official_logo'])) is-empty @endif" data-image-card data-media-id="{{ $content['official_logo_media_id'] ?? '' }}" data-crop-aspect="1" data-crop-label="Marco cuadrado 1:1, igual al logo circular de la tarjeta UMSS.">
                     <button class="btn btn-undo undo-floating" type="button" data-undo-card disabled title="Deshacer último cambio" aria-label="Deshacer último cambio">↶</button>
@@ -179,6 +183,7 @@
                         </div>
                         <input type="hidden" name="official_logo_remove" value="0" data-remove-image-input>
                         <input type="hidden" name="official_logo_restore" value="" data-restore-image-input>
+                        <input type="hidden" name="official_logo_unhide" value="0" data-unhide-image-input>
                         <input type="file" name="official_logo" accept=".jpg,.jpeg,.png,image/jpeg,image/png" data-image-input>
                         <span class="hint">JPG o PNG. Máximo 10 MB. Haz clic en la vista previa para recortar.</span>
                     </label>
@@ -332,17 +337,21 @@
                                             </div>
                                             <input type="hidden" name="stories[{{ $index }}][image_remove]" value="0" data-remove-image-input>
                                             <input type="hidden" name="stories[{{ $index }}][image_restore]" value="" data-restore-image-input>
+                                            <input type="hidden" name="stories[{{ $index }}][image_unhide]" value="0" data-unhide-image-input>
                                             <input type="file" name="stories[{{ $index }}][image]" accept=".jpg,.jpeg,.png,image/jpeg,image/png" data-image-input>
                                             <span class="hint">JPG o PNG. Máximo 10 MB. Haz clic en la vista previa para recortar.</span>
                                         </label>
                                     </div>
 
-                                    <label>
-                                        URL de redirección
-                                        <input type="url" name="stories[{{ $index }}][url]" value="{{ old('stories.'.$index.'.url', $story['url']) }}">
-                                        <span class="hint">Este enlace se abre al hacer clic en la tarjeta pública.</span>
-                                        @error('stories.'.$index.'.url')<span class="field-error">{{ $message }}</span>@enderror
-                                    </label>
+                                    <div class="url-card" data-undo-scope>
+                                        <button class="btn btn-undo undo-floating" type="button" data-undo-card disabled title="Deshacer último cambio" aria-label="Deshacer último cambio">↶</button>
+                                        <label>
+                                            URL de redirección
+                                            <input type="url" name="stories[{{ $index }}][url]" value="{{ old('stories.'.$index.'.url', $story['url']) }}">
+                                            <span class="hint">Este enlace se abre al hacer clic en la tarjeta pública.</span>
+                                            @error('stories.'.$index.'.url')<span class="field-error">{{ $message }}</span>@enderror
+                                        </label>
+                                    </div>
                                 </div>
 
                                 <div class="language-grid">
@@ -397,17 +406,21 @@
                                     </div>
                                     <input type="hidden" name="stories[3][image_remove]" value="0" data-remove-image-input>
                                     <input type="hidden" name="stories[3][image_restore]" value="" data-restore-image-input>
+                                    <input type="hidden" name="stories[3][image_unhide]" value="0" data-unhide-image-input>
                                     <input type="file" name="stories[3][image]" accept=".jpg,.jpeg,.png,image/jpeg,image/png" data-image-input>
                                     <span class="hint">JPG o PNG. Máximo 10 MB. Haz clic en la vista previa para recortar.</span>
                                 </label>
                             </div>
 
-                            <label>
-                                URL de redirección
-                                <input type="url" name="stories[3][url]" value="{{ old('stories.3.url', $story['url']) }}">
-                                <span class="hint">Este enlace se abre al hacer clic en la tarjeta pública.</span>
-                                @error('stories.3.url')<span class="field-error">{{ $message }}</span>@enderror
-                            </label>
+                            <div class="url-card" data-undo-scope>
+                                <button class="btn btn-undo undo-floating" type="button" data-undo-card disabled title="Deshacer último cambio" aria-label="Deshacer último cambio">↶</button>
+                                <label>
+                                    URL de redirección
+                                    <input type="url" name="stories[3][url]" value="{{ old('stories.3.url', $story['url']) }}">
+                                    <span class="hint">Este enlace se abre al hacer clic en la tarjeta pública.</span>
+                                    @error('stories.3.url')<span class="field-error">{{ $message }}</span>@enderror
+                                </label>
+                            </div>
                         </div>
 
                         <div class="language-grid">
@@ -460,17 +473,21 @@
                                     </div>
                                     <input type="hidden" name="stories[4][image_remove]" value="0" data-remove-image-input>
                                     <input type="hidden" name="stories[4][image_restore]" value="" data-restore-image-input>
+                                    <input type="hidden" name="stories[4][image_unhide]" value="0" data-unhide-image-input>
                                     <input type="file" name="stories[4][image]" accept=".jpg,.jpeg,.png,image/jpeg,image/png" data-image-input>
                                     <span class="hint">JPG o PNG. Máximo 10 MB. Haz clic en la vista previa para recortar.</span>
                                 </label>
                             </div>
 
-                            <label>
-                                URL de redirección
-                                <input type="url" name="stories[4][url]" value="{{ old('stories.4.url', $story['url']) }}">
-                                <span class="hint">Este enlace se abre desde el botón final de la página pública.</span>
-                                @error('stories.4.url')<span class="field-error">{{ $message }}</span>@enderror
-                            </label>
+                            <div class="url-card" data-undo-scope>
+                                <button class="btn btn-undo undo-floating" type="button" data-undo-card disabled title="Deshacer último cambio" aria-label="Deshacer último cambio">↶</button>
+                                <label>
+                                    URL de redirección
+                                    <input type="url" name="stories[4][url]" value="{{ old('stories.4.url', $story['url']) }}">
+                                    <span class="hint">Este enlace se abre desde el botón final de la página pública.</span>
+                                    @error('stories.4.url')<span class="field-error">{{ $message }}</span>@enderror
+                                </label>
+                            </div>
                         </div>
 
                         <div class="language-grid">
@@ -520,6 +537,7 @@
         const historyMap = new WeakMap();
         const pendingSnapshots = new WeakMap();
         const imageHistoryMap = new WeakMap();
+        const fieldUndoStorageKey = `campus-life-field-undo:${window.location.pathname}`;
         const imageUndoStorageKey = `campus-life-image-undo:${window.location.pathname}`;
         const mediaEditorModal = document.getElementById("media-editor-modal");
         const mediaEditorStage = document.getElementById("media-editor-stage");
@@ -546,8 +564,31 @@
             return [...scope.querySelectorAll("input, textarea, select")];
         }
 
+        function undoableFields(scope) {
+            return fields(scope).filter((field) => field.type !== "file" && field.type !== "hidden");
+        }
+
+        function fieldKey(field, scope) {
+            if (field.name) return field.name;
+            if (field.dataset.basicTextMirror) return `basic-text-mirror:${field.dataset.basicTextMirror}`;
+            if (field.id) return `id:${field.id}`;
+            return `index:${undoableFields(scope).indexOf(field)}`;
+        }
+
         function snapshot(scope) {
             return fields(scope).map((field) => ({ field, value: field.value, checked: field.checked }));
+        }
+
+        function serializableSnapshot(scope, snapshotItems = snapshot(scope)) {
+            return snapshotItems
+                .filter(({ field }) => field && field.type !== "file" && field.type !== "hidden")
+                .map(({ field, value, checked }) => ({
+                    key: fieldKey(field, scope),
+                    type: field.type,
+                    value,
+                    checked,
+                }))
+                .filter((item) => item.key);
         }
 
         function restore(snapshotItems) {
@@ -555,7 +596,84 @@
                 if (!field || !field.isConnected) return;
                 if (field.type === "checkbox" || field.type === "radio") field.checked = checked;
                 else field.value = value;
+                field.dispatchEvent(new Event("input", { bubbles: true }));
+                field.dispatchEvent(new Event("change", { bubbles: true }));
             });
+        }
+
+        function restoreSerializedSnapshot(scope, snapshotItems) {
+            const scopedFields = undoableFields(scope);
+            snapshotItems.forEach((item) => {
+                const field = scopedFields.find((candidate) => fieldKey(candidate, scope) === item.key);
+                if (!field) return;
+                if (field.type === "checkbox" || field.type === "radio") field.checked = item.checked;
+                else field.value = item.value;
+                field.dispatchEvent(new Event("input", { bubbles: true }));
+                field.dispatchEvent(new Event("change", { bubbles: true }));
+            });
+        }
+
+        function fieldScopeKey(scope) {
+            return undoableFields(scope).map((field) => fieldKey(field, scope)).join("|");
+        }
+
+        function readFieldUndoStore() {
+            try {
+                const stored = sessionStorage.getItem(fieldUndoStorageKey);
+                const parsed = stored ? JSON.parse(stored) : {};
+                return parsed && typeof parsed === "object" ? parsed : {};
+            } catch (error) {
+                sessionStorage.removeItem(fieldUndoStorageKey);
+                return {};
+            }
+        }
+
+        function writeFieldUndoStore(store) {
+            const clean = Object.fromEntries(Object.entries(store).filter(([, value]) => Array.isArray(value) && value.length));
+            if (!Object.keys(clean).length) {
+                sessionStorage.removeItem(fieldUndoStorageKey);
+                return;
+            }
+            sessionStorage.setItem(fieldUndoStorageKey, JSON.stringify(clean));
+        }
+
+        function pushStoredFieldSnapshot(scope, snapshotItems) {
+            const record = serializableSnapshot(scope, snapshotItems);
+            const key = fieldScopeKey(scope);
+            if (!key || !record.length) return;
+
+            const store = readFieldUndoStore();
+            if (!Array.isArray(store[key])) store[key] = [];
+
+            const serialized = JSON.stringify(record);
+            const last = store[key].length ? JSON.stringify(store[key][store[key].length - 1]) : null;
+            if (serialized !== last) store[key].push(record);
+            if (store[key].length > 25) store[key].shift();
+            writeFieldUndoStore(store);
+        }
+
+        function popStoredFieldSnapshot(scope) {
+            const key = fieldScopeKey(scope);
+            if (!key) return null;
+            const store = readFieldUndoStore();
+            const stack = Array.isArray(store[key]) ? store[key] : [];
+            const record = stack.pop() || null;
+            if (stack.length) store[key] = stack;
+            else delete store[key];
+            writeFieldUndoStore(store);
+            return record;
+        }
+
+        function refreshFieldUndoButton(scope) {
+            const button = scope.querySelector("[data-undo-card]");
+            if (!button) return;
+            const memoryStack = historyMap.get(scope) || [];
+            const storedStack = readFieldUndoStore()[fieldScopeKey(scope)] || [];
+            button.disabled = !(memoryStack.length || storedStack.length);
+        }
+
+        function refreshAllFieldUndoButtons() {
+            document.querySelectorAll("[data-undo-scope]").forEach(refreshFieldUndoButton);
         }
 
         function setUndo(button, stack) {
@@ -568,9 +686,11 @@
 
         function changed(scope, button) {
             const stack = historyMap.get(scope) || [];
-            stack.push(pendingSnapshots.get(scope) || snapshot(scope));
+            const previousSnapshot = pendingSnapshots.get(scope) || snapshot(scope);
+            stack.push(previousSnapshot);
             if (stack.length > 25) stack.shift();
             historyMap.set(scope, stack);
+            pushStoredFieldSnapshot(scope, previousSnapshot);
             pendingSnapshots.set(scope, snapshot(scope));
             setUndo(button, stack);
         }
@@ -589,11 +709,17 @@
             button?.addEventListener("click", () => {
                 const stack = historyMap.get(scope) || [];
                 const last = stack.pop();
-                if (!last) return;
-                restore(last);
+                const stored = last ? null : popStoredFieldSnapshot(scope);
+                if (!last && !stored) return;
+                if (last) {
+                    popStoredFieldSnapshot(scope);
+                    restore(last);
+                }
+                else restoreSerializedSnapshot(scope, stored);
                 syncBasicTextPairs();
-                setUndo(button, stack);
+                refreshFieldUndoButton(scope);
             });
+            refreshFieldUndoButton(scope);
         }
 
         function syncBasicTextPairs() {
@@ -726,10 +852,12 @@
             const input = card.querySelector("[data-image-input]");
             const removeInput = card.querySelector("[data-remove-image-input]");
             const restoreInput = card.querySelector("[data-restore-image-input]");
+            const unhideInput = card.querySelector("[data-unhide-image-input]");
 
             if (input) input.value = "";
             if (removeInput) removeInput.value = record.removeValue || "0";
             if (restoreInput) restoreInput.value = record.restoreValue || record.mediaId || "";
+            if (unhideInput) unhideInput.value = record.previewSrc && !record.restoreValue && !record.mediaId ? "1" : "0";
             if (record.mediaId) card.dataset.mediaId = record.mediaId;
             delete card.dataset.pendingImageSnapshot;
             if (record.previewSrc) setPreview(card, record.previewSrc);
@@ -851,6 +979,7 @@
                 const input = card.querySelector("[data-image-input]");
                 const removeInput = card.querySelector("[data-remove-image-input]");
                 const restoreInput = card.querySelector("[data-restore-image-input]");
+                const unhideInput = card.querySelector("[data-unhide-image-input]");
                 const sourceName = input?.files?.[0]?.name || card.querySelector("[data-preview-image]")?.alt || "campus-life-imagen.jpg";
                 const file = new File([blob], croppedFileName(sourceName), { type: "image/jpeg" });
                 const transfer = new DataTransfer();
@@ -859,6 +988,7 @@
                 input.files = transfer.files;
                 if (removeInput) removeInput.value = "0";
                 if (restoreInput) restoreInput.value = "";
+                if (unhideInput) unhideInput.value = "0";
                 setPreview(card, URL.createObjectURL(file));
                 closeMediaEditor();
             }, "image/jpeg", 0.92);
@@ -872,6 +1002,7 @@
             const input = card.querySelector("[data-image-input]");
             const removeInput = card.querySelector("[data-remove-image-input]");
             const restoreInput = card.querySelector("[data-restore-image-input]");
+            const unhideInput = card.querySelector("[data-unhide-image-input]");
             const button = card.querySelector("[data-undo-card]");
             const previewImage = card.querySelector("[data-preview-image]");
 
@@ -892,6 +1023,7 @@
                 card.dataset.pendingImageSnapshot = "1";
                 removeInput.value = "0";
                 if (restoreInput) restoreInput.value = "";
+                if (unhideInput) unhideInput.value = "0";
                 setPreview(card, URL.createObjectURL(file));
                 openMediaEditor(card);
             });
@@ -903,6 +1035,7 @@
                 input.value = "";
                 removeInput.value = "1";
                 if (restoreInput) restoreInput.value = "";
+                if (unhideInput) unhideInput.value = "0";
                 clearPreview(card);
             });
 
@@ -913,10 +1046,12 @@
 
             button?.addEventListener("click", (event) => {
                 const stack = imageHistoryMap.get(card) || [];
-                const record = stack.pop() || popStoredImageSnapshot(card);
+                const memoryRecord = stack.pop();
+                const record = memoryRecord || popStoredImageSnapshot(card);
                 if (!record) return;
                 event.preventDefault();
                 event.stopImmediatePropagation();
+                if (memoryRecord) popStoredImageSnapshot(card);
                 applyImageSnapshot(card, record);
                 setUndo(button, stack);
                 refreshImageUndoButton(card);
@@ -928,6 +1063,8 @@
         document.querySelectorAll("[data-undo-scope]").forEach(bindUndo);
         document.querySelectorAll("[data-image-card]").forEach(bindImageCard);
         bindBasicTextMirrors();
+        refreshAllFieldUndoButtons();
+        window.addEventListener("pageshow", refreshAllFieldUndoButtons);
         mediaEditorImage.addEventListener("load", () => {
             mediaEditorState.naturalWidth = mediaEditorImage.naturalWidth;
             mediaEditorState.naturalHeight = mediaEditorImage.naturalHeight;

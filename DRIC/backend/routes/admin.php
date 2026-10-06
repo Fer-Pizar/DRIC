@@ -34,6 +34,7 @@ Route::put('settings/topbar-logo', [SiteSettingController::class, 'updateTopbarL
 Route::put('settings/footer', [SiteSettingController::class, 'updateFooter'])->name('settings.footer.update');
 Route::get('profile', [ProfileController::class, 'edit'])->name('profile.edit');
 Route::put('profile', [ProfileController::class, 'update'])->name('profile.update');
+Route::get('frontend-image/{path}', [HomeContentController::class, 'frontendImage'])->where('path', '.*')->name('frontend-image');
 Route::get('pages/{page}/home-content', [HomeContentController::class, 'edit'])->name('pages.home.edit');
 Route::put('pages/{page}/home-content', [HomeContentController::class, 'update'])->name('pages.home.update');
 Route::get('pages/{page}/home-testimonials', [HomeTestimonialContentController::class, 'edit'])->name('home-testimonials.edit');

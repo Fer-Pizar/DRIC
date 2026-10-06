@@ -18,6 +18,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Illuminate\View\View;
 
 class HomeContentController extends Controller
@@ -44,6 +45,30 @@ class HomeContentController extends Controller
             'page' => $page,
             'content' => $this->formContent($page),
         ]);
+    }
+
+    public function frontendImage(string $path): BinaryFileResponse
+    {
+        abort_if(str_contains($path, '..'), 404);
+
+        $relativePath = ltrim($path, '/');
+        abort_unless(Str::startsWith($relativePath, 'images/'), 404);
+
+        $roots = [
+            public_path($relativePath),
+            base_path('../frontend/public/'.$relativePath),
+        ];
+
+        foreach ($roots as $root) {
+            $realPath = realpath($root);
+            if ($realPath && is_file($realPath)) {
+                return response()->file($realPath, [
+                    'Cache-Control' => 'public, max-age=3600',
+                ]);
+            }
+        }
+
+        abort(404);
     }
 
     public function update(Request $request, Page $page): RedirectResponse
@@ -154,11 +179,14 @@ class HomeContentController extends Controller
 
             foreach (self::COUNTRIES as $index) {
                 $country = $validated['countries'][$index];
+                $countryImageRemoved = (bool) ($country['image_remove'] ?? false);
+                $countryImage = $countryImageRemoved ? '' : $this->normalizeFrontendImagePath($country['existing_image'] ?: $this->countryFallbacks()[$index]['image']);
                 $block = $this->upsertFixedBlock($scholarships, 'scholarship_country_grid_item', $index, $languages, [
                     'es' => ['title' => $country['title_es'], 'summary' => null],
                     'en' => ['title' => $country['title_en'], 'summary' => null],
                 ], [
-                    'image' => ($country['image_remove'] ?? false) ? $this->countryFallbacks()[$index]['image'] : ($country['existing_image'] ?: $this->countryFallbacks()[$index]['image']),
+                    'image' => $countryImage,
+                    'image_hidden' => $countryImageRemoved,
                     'slug' => Str::slug($country['slug'] ?: $country['title_es']),
                 ]);
                 $block->link_url = $country['href'];
@@ -175,20 +203,30 @@ class HomeContentController extends Controller
             if ($request->hasFile('about_image')) {
                 $settings = $about->settings ?? [];
                 $settings['image'] = '/storage/'.ltrim($this->storeMedia($request, 'about_image', 'home/about', 'Imagen de Conócenos')->file_path, '/');
+                $settings['image_hidden'] = false;
                 $about->update(['settings' => $settings]);
             } elseif ($request->boolean('about_image_remove')) {
                 $settings = $about->settings ?? [];
-                $settings['image'] = '/images/administration/dric-team.jpg';
+                $settings['image'] = '';
+                $settings['image_hidden'] = true;
+                $about->update(['settings' => $settings]);
+            } elseif (filled($validated['about_image_existing'] ?? null)) {
+                $settings = $about->settings ?? [];
+                $settings['image'] = $this->normalizeFrontendImagePath($validated['about_image_existing']);
+                $settings['image_hidden'] = false;
                 $about->update(['settings' => $settings]);
             }
 
             foreach (self::AGREEMENTS as $index) {
                 $agreement = $validated['agreements'][$index];
+                $agreementImageRemoved = (bool) ($agreement['image_remove'] ?? false);
+                $agreementImage = $agreementImageRemoved ? '' : $this->normalizeFrontendImagePath($agreement['existing_image'] ?: $this->agreementFallbacks()[$index]['image']);
                 $block = $this->upsertFixedBlock($recentAgreements, 'recent_agreements_item', $index, $languages, [
                     'es' => ['title' => $agreement['title_es'], 'summary' => null],
                     'en' => ['title' => $agreement['title_en'], 'summary' => null],
                 ], [
-                    'image' => ($agreement['image_remove'] ?? false) ? $this->agreementFallbacks()[$index]['image'] : ($agreement['existing_image'] ?: $this->agreementFallbacks()[$index]['image']),
+                    'image' => $agreementImage,
+                    'image_hidden' => $agreementImageRemoved,
                     'slug' => Str::slug($agreement['title_es']),
                 ]);
                 $block->link_url = $agreement['href'];
@@ -246,6 +284,7 @@ class HomeContentController extends Controller
             'final_button_link' => ['required', 'string', 'max:500'],
             'final_cta_enabled' => ['nullable', 'boolean'],
             'about_image' => ['nullable', 'file', 'mimes:jpg,jpeg,png', 'max:'.self::MAX_IMAGE_KB],
+            'about_image_existing' => ['nullable', 'string', 'max:900'],
             'about_image_remove' => ['nullable', 'boolean'],
         ];
 
@@ -637,7 +676,12 @@ class HomeContentController extends Controller
 
     private function sectionImage(Page $page, string $key, string $fallback): string
     {
-        $image = $page->sections->firstWhere('section_key', $key)?->settings['image'] ?? null;
+        $settings = $page->sections->firstWhere('section_key', $key)?->settings ?? [];
+        if ((bool) ($settings['image_hidden'] ?? false)) {
+            return '';
+        }
+
+        $image = $this->normalizeFrontendImagePath($settings['image'] ?? null);
 
         return is_string($image) && trim($image) !== '' ? $image : $fallback;
     }
@@ -685,13 +729,36 @@ class HomeContentController extends Controller
 
     private function blockImage(?ContentBlock $block, string $fallback): string
     {
+        if ((bool) ($block?->data['image_hidden'] ?? false)) {
+            return '';
+        }
+
         if ($block?->mediaAsset?->file_path) {
             return '/storage/'.ltrim($block->mediaAsset->file_path, '/');
         }
 
-        $image = $block?->data['image'] ?? null;
+        $image = $this->normalizeFrontendImagePath($block?->data['image'] ?? null);
 
         return is_string($image) && trim($image) !== '' ? $image : $fallback;
+    }
+
+    private function normalizeFrontendImagePath(?string $path): string
+    {
+        $path = trim((string) $path);
+        if ($path === '') {
+            return '';
+        }
+
+        $decoded = rawurldecode($path);
+        if (preg_match('~/admin/frontend-image/(images/.+)$~', $decoded, $matches)) {
+            return '/'.$matches[1];
+        }
+
+        if (Str::startsWith($decoded, 'admin/frontend-image/images/')) {
+            return '/'.Str::after($decoded, 'admin/frontend-image/');
+        }
+
+        return $path;
     }
 
     private function authorizeHomeAccess(Page $page): void
