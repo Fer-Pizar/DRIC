@@ -33,8 +33,9 @@
         .panel-header { border-bottom: 1px solid var(--line); margin-bottom: 20px; padding-bottom: 16px; }
         .language-grid { display: grid; gap: 18px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
         .language-card, .document-card { box-shadow: none; padding: 18px; position: relative; }
-        .language-card, .document-card { padding-top: 76px; }
-        .document-card { display: grid; gap: 16px; }
+        .language-card { padding-top: 76px; }
+        .document-card { border: 2px solid var(--blue); box-shadow: 0 16px 42px rgba(22, 65, 148, 0.10); display: grid; gap: 16px; }
+        .document-card::before { background: var(--blue); border-radius: 18px 0 0 18px; content: ""; inset: -2px auto -2px -2px; position: absolute; width: 7px; }
         .document-header { align-items: center; display: flex; gap: 12px; justify-content: space-between; }
         .document-grid { display: grid; gap: 14px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
         label { display: grid; gap: 7px; font-size: 13px; font-weight: 800; }
@@ -114,13 +115,13 @@
                 <div class="documents-list" id="documents-list">
                     @forelse (old('documents', $documents) as $index => $document)
                         <article class="document-card" data-document-card>
-                            <button class="btn btn-undo undo-floating" type="button" data-undo-card disabled title="Deshacer último cambio" aria-label="Deshacer último cambio">↶</button>
                             <div class="document-header">
                                 <div>
                                     <h3>Normativa {{ $index + 1 }}</h3>
                                     <p class="muted">Orden actual del documento en la página pública.</p>
                                 </div>
                                 <div class="row-actions">
+                                    <button class="btn btn-undo" type="button" data-undo-card disabled title="Deshacer último cambio" aria-label="Deshacer último cambio">↶</button>
                                     <label class="checkline">
                                         <input type="checkbox" name="documents[{{ $index }}][is_active]" value="1" @checked((bool) ($document['is_active'] ?? true))>
                                         Publicar
@@ -202,13 +203,13 @@
 
         <template id="document-template">
             <article class="document-card" data-document-card>
-                <button class="btn btn-undo undo-floating" type="button" data-undo-card disabled title="Deshacer último cambio" aria-label="Deshacer último cambio">↶</button>
                 <div class="document-header">
                     <div>
                         <h3>Nueva normativa</h3>
                         <p class="muted">Se agregará al listado público después de guardar.</p>
                     </div>
                     <div class="row-actions">
+                        <button class="btn btn-undo" type="button" data-undo-card disabled title="Deshacer último cambio" aria-label="Deshacer último cambio">↶</button>
                         <label class="checkline">
                             <input type="checkbox" name="__NAME__[is_active]" value="1" checked>
                             Publicar
@@ -263,6 +264,7 @@
         const template = document.getElementById("document-template");
         const addButton = document.getElementById("add-document");
         const restoreButton = document.getElementById("restore-document");
+        const removedDocumentsStorageKey = `normative-removed-documents:${window.location.pathname}`;
         const removedDocuments = [];
         const undoHistory = new WeakMap();
         const pendingSnapshots = new WeakMap();
@@ -330,7 +332,94 @@
         }
 
         function setRestoreState() {
-            restoreButton.disabled = removedDocuments.length === 0;
+            restoreButton.disabled = removedDocuments.length === 0 && storedRemovedDocuments().length === 0;
+        }
+
+        function storedRemovedDocuments() {
+            try {
+                const stored = sessionStorage.getItem(removedDocumentsStorageKey);
+                const records = stored ? JSON.parse(stored) : [];
+                return Array.isArray(records) ? records.filter((record) => record?.html) : [];
+            } catch (error) {
+                sessionStorage.removeItem(removedDocumentsStorageKey);
+                return [];
+            }
+        }
+
+        function writeStoredRemovedDocuments(records) {
+            const cleanRecords = records.filter((record) => record?.html);
+            if (!cleanRecords.length) {
+                sessionStorage.removeItem(removedDocumentsStorageKey);
+                return;
+            }
+
+            sessionStorage.setItem(removedDocumentsStorageKey, JSON.stringify(cleanRecords));
+        }
+
+        function snapshotCardHtml(card) {
+            const clone = card.cloneNode(true);
+            card.querySelectorAll("input, textarea, select").forEach((field, index) => {
+                const clonedField = clone.querySelectorAll("input, textarea, select")[index];
+                if (!clonedField) return;
+
+                if (field.type === "file") {
+                    clonedField.value = "";
+                    return;
+                }
+
+                if (field.type === "checkbox" || field.type === "radio") {
+                    clonedField.checked = field.checked;
+                    if (field.checked) {
+                        clonedField.setAttribute("checked", "checked");
+                    } else {
+                        clonedField.removeAttribute("checked");
+                    }
+                    return;
+                }
+
+                if (field.tagName === "TEXTAREA") {
+                    clonedField.value = field.value;
+                    clonedField.textContent = field.value;
+                    return;
+                }
+
+                if (field.tagName === "SELECT") {
+                    [...clonedField.options].forEach((option) => {
+                        option.selected = option.value === field.value;
+                        if (option.selected) {
+                            option.setAttribute("selected", "selected");
+                        } else {
+                            option.removeAttribute("selected");
+                        }
+                    });
+                    return;
+                }
+
+                clonedField.value = field.value;
+                clonedField.setAttribute("value", field.value);
+            });
+
+            return clone.outerHTML;
+        }
+
+        function rememberRemovedDocument(card) {
+            const records = storedRemovedDocuments();
+            const index = [...list.querySelectorAll("[data-document-card]")].indexOf(card);
+            records.push({ html: snapshotCardHtml(card), index });
+            writeStoredRemovedDocuments(records);
+        }
+
+        function restoreRemovedRecord(record) {
+            const wrapper = document.createElement("div");
+            wrapper.innerHTML = record.html.trim();
+            const card = wrapper.firstElementChild;
+            if (!card) return;
+
+            const cards = list.querySelectorAll("[data-document-card]");
+            const reference = cards[Math.min(record.index ?? cards.length, cards.length)] || null;
+            list.insertBefore(card, reference);
+            bindCard(card);
+            refreshDocuments();
         }
 
         function refreshDocuments() {
@@ -348,6 +437,7 @@
             if (card.dataset.cardBound) return;
             card.dataset.cardBound = "true";
             card.querySelector("[data-remove-document]").addEventListener("click", () => {
+                rememberRemovedDocument(card);
                 removedDocuments.push(card);
                 card.remove();
                 refreshDocuments();
@@ -382,9 +472,20 @@
 
         restoreButton.addEventListener("click", () => {
             const card = removedDocuments.pop();
-            if (!card) return;
-            list.appendChild(card);
-            refreshDocuments();
+            if (card) {
+                const records = storedRemovedDocuments();
+                records.pop();
+                writeStoredRemovedDocuments(records);
+                list.appendChild(card);
+                refreshDocuments();
+                setRestoreState();
+                return;
+            }
+
+            const records = storedRemovedDocuments();
+            const record = records.pop();
+            writeStoredRemovedDocuments(records);
+            if (record) restoreRemovedRecord(record);
             setRestoreState();
         });
 

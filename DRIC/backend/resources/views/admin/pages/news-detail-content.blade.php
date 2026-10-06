@@ -181,13 +181,18 @@
                     <span class="hint">Formatos permitidos: JPG y PNG. Tamaño máximo por imagen: 10 MB.</span>
                     <span class="field-error" id="image-error"></span>
                     @error('images.*')<span class="field-error">{{ $message }}</span>@enderror
+                    @foreach ($errors->get('images.*') as $imageErrors)
+                        @foreach ($imageErrors as $imageError)
+                            <span class="field-error">{{ $imageError }}</span>
+                        @endforeach
+                    @endforeach
                 </label>
                 <div class="images-grid selected-images" id="selected-images"></div>
             </section>
 
             <div class="sticky-actions">
                 <span class="muted">Los cambios se publican al guardar y recargar la noticia pública.</span>
-                <button class="btn btn-primary" type="submit">Guardar detalle</button>
+                <button class="btn btn-primary" type="submit" id="save-detail-button">Guardar detalle</button>
             </div>
         </form>
 
@@ -224,6 +229,7 @@
         const removalHistory = [];
         const removedExistingImagesStorageKey = `news-detail-removed-images:${window.location.pathname}`;
         const restoreImageButton = document.getElementById("restore-image");
+        const saveDetailButton = document.getElementById("save-detail-button");
         const imageInput = document.getElementById("news-images-input");
         const selectedImagesContainer = document.getElementById("selected-images");
         const mediaEditorModal = document.getElementById("media-editor-modal");
@@ -252,6 +258,16 @@
             pointerY: 0,
         };
         let uploadItems = [];
+        let preparingUploads = 0;
+
+        function setPreparingUploads(isPreparing) {
+            preparingUploads += isPreparing ? 1 : -1;
+            preparingUploads = Math.max(0, preparingUploads);
+
+            if (!saveDetailButton) return;
+            saveDetailButton.disabled = preparingUploads > 0;
+            saveDetailButton.textContent = preparingUploads > 0 ? "Preparando imagen..." : "Guardar detalle";
+        }
 
         function editableFields(scope) {
             return [...scope.querySelectorAll("input:not([type='hidden']), textarea, select, [contenteditable='true']")];
@@ -437,7 +453,9 @@
         }
 
         function applyStoredRemovedImages() {
-            readRemovedImageRecords().forEach((record) => {
+            const records = readRemovedImageRecords();
+
+            records.forEach((record) => {
                 const existingCard = [...document.querySelectorAll("[data-existing-image-card]")]
                     .find((card) => imageIdFromCard(card) === record.id);
 
@@ -446,12 +464,13 @@
                     const restoreButton = existingCard.querySelector("[data-restore-existing-image]");
                     if (input) input.checked = true;
                     existingCard.classList.add("is-removed");
+                    existingCard.hidden = true;
                     if (restoreButton) restoreButton.disabled = false;
                     return;
                 }
-
-                imageGrid().append(restorableCardFor(record));
             });
+
+            writeRemovedImageRecords(records);
         }
 
         function removeExistingImage(card) {
@@ -469,6 +488,7 @@
             }
 
             card.classList.add("is-removed");
+            card.hidden = true;
             if (restoreButton) restoreButton.disabled = false;
             rememberRemovedImage(card);
             removedImages.push(card);
@@ -489,6 +509,7 @@
             }
 
             card.classList.remove("is-removed");
+            card.hidden = false;
             if (restoreButton) restoreButton.disabled = true;
             card.querySelector("[data-remove-existing-image]")?.removeAttribute("hidden");
             if (record) forgetRemovedImage(record.id);
@@ -529,19 +550,103 @@
             });
         }
 
-        function addUploads(files) {
-            const newItems = files.map((file) => ({
-                file,
-                originalFile: file,
-                url: URL.createObjectURL(file),
-                previous: null,
-            }));
-            uploadItems = [...uploadItems, ...newItems];
-            removedUploads.length = 0;
-            removalHistory.splice(0, removalHistory.length, ...removalHistory.filter((item) => item.type === "existing"));
-            renderSelectedImages();
-            setInputFiles();
-            setRestoreImageState();
+        function normalizedFileName(fileName) {
+            const base = String(fileName || "noticia-imagen").replace(/\.[^.]+$/, "");
+            return `${base}.jpg`;
+        }
+
+        function imageElementForFile(file) {
+            return new Promise((resolve, reject) => {
+                const url = URL.createObjectURL(file);
+                const image = new Image();
+
+                image.onload = () => {
+                    URL.revokeObjectURL(url);
+                    resolve(image);
+                };
+                image.onerror = () => {
+                    URL.revokeObjectURL(url);
+                    reject(new Error("No se pudo preparar esta imagen."));
+                };
+                image.src = url;
+            });
+        }
+
+        function canvasBlob(canvas, quality) {
+            return new Promise((resolve) => {
+                canvas.toBlob(resolve, "image/jpeg", quality);
+            });
+        }
+
+        async function normalizeUploadFile(file) {
+            const image = await imageElementForFile(file);
+            const maxSide = 1800;
+            const naturalWidth = image.naturalWidth || image.width;
+            const naturalHeight = image.naturalHeight || image.height;
+            const scale = Math.min(1, maxSide / Math.max(naturalWidth, naturalHeight));
+            const width = Math.max(1, Math.round(naturalWidth * scale));
+            const height = Math.max(1, Math.round(naturalHeight * scale));
+            const canvas = document.createElement("canvas");
+            const context = canvas.getContext("2d");
+
+            canvas.width = width;
+            canvas.height = height;
+            context.fillStyle = "#ffffff";
+            context.fillRect(0, 0, width, height);
+            context.drawImage(image, 0, 0, width, height);
+
+            let blob = await canvasBlob(canvas, 0.88);
+            if (blob && blob.size > 1800 * 1024) {
+                blob = await canvasBlob(canvas, 0.76);
+            }
+
+            if (!blob) {
+                return file;
+            }
+
+            return new File([blob], normalizedFileName(file.name), {
+                type: "image/jpeg",
+                lastModified: file.lastModified || Date.now(),
+            });
+        }
+
+        async function addUploads(files) {
+            const message = document.getElementById("image-error");
+            const preparedFiles = [];
+
+            message.textContent = "";
+            setPreparingUploads(true);
+
+            try {
+                for (const file of files) {
+                    try {
+                        preparedFiles.push(await normalizeUploadFile(file));
+                    } catch (error) {
+                        message.textContent = "No se pudo preparar una imagen. Intenta guardarla como JPG o PNG y vuelve a subirla.";
+                    }
+                }
+
+                const newItems = preparedFiles.map((file) => ({
+                    file,
+                    originalFile: file,
+                    url: URL.createObjectURL(file),
+                    previous: null,
+                }));
+
+                if (!newItems.length) {
+                    setInputFiles();
+                    return;
+                }
+
+                uploadItems = [...uploadItems, ...newItems];
+                removedUploads.length = 0;
+                removalHistory.splice(0, removalHistory.length, ...removalHistory.filter((item) => item.type === "existing"));
+                renderSelectedImages();
+                setInputFiles();
+                setRestoreImageState();
+            } finally {
+                setPreparingUploads(false);
+            }
         }
 
         function removeUpload(index) {

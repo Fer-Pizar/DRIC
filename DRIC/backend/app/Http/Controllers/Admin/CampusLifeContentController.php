@@ -16,7 +16,6 @@ use App\Support\PagePermissionMap;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 
@@ -110,8 +109,8 @@ class CampusLifeContentController extends Controller
                 );
             }
 
-            $heroImage = $this->upsertImageBlock($request, $hero, 'campus.hero.image', 'campus_hero_image', 1, $languages, 'hero_image', 'hero_image_remove', ['image' => '/images/campus-life/uni-view.png']);
-            $officialLogo = $this->upsertImageBlock($request, $official, 'campus.official.logo', 'campus_logo', 1, $languages, 'official_logo', 'official_logo_remove', ['image' => '/images/campus-life/umss-logo.png', 'url' => $validated['official_url']]);
+            $heroImage = $this->upsertImageBlock($request, $hero, 'campus.hero.image', 'campus_hero_image', 1, $languages, 'hero_image', 'hero_image_remove', 'hero_image_restore', ['image' => '/images/campus-life/uni-view.png']);
+            $officialLogo = $this->upsertImageBlock($request, $official, 'campus.official.logo', 'campus_logo', 1, $languages, 'official_logo', 'official_logo_remove', 'official_logo_restore', ['image' => '/images/campus-life/umss-logo.png', 'url' => $validated['official_url']]);
             $officialLogo->update(['data' => array_merge($officialLogo->data ?? [], ['url' => $validated['official_url']])]);
 
             foreach (self::STATS as $index) {
@@ -148,7 +147,7 @@ class CampusLifeContentController extends Controller
                     ],
                 ], ['url' => $validated['stories'][$index]['url'], 'image' => $fallback['image_url']]);
 
-                $this->syncImageField($request, $storyBlock, "stories.{$index}.image", "stories.{$index}.image_remove", 'campus-life');
+                $this->syncImageField($request, $storyBlock, "stories.{$index}.image", "stories.{$index}.image_remove", "stories.{$index}.image_restore", 'campus-life');
             }
         });
 
@@ -163,8 +162,10 @@ class CampusLifeContentController extends Controller
             'official_url' => ['required', 'url', 'max:500'],
             'hero_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:'.self::MAX_IMAGE_KB],
             'hero_image_remove' => ['nullable', 'boolean'],
+            'hero_image_restore' => ['nullable', 'integer', 'exists:media_assets,id'],
             'official_logo' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:'.self::MAX_IMAGE_KB],
             'official_logo_remove' => ['nullable', 'boolean'],
+            'official_logo_restore' => ['nullable', 'integer', 'exists:media_assets,id'],
         ];
 
         foreach (['es', 'en'] as $locale) {
@@ -203,6 +204,7 @@ class CampusLifeContentController extends Controller
             $rules["stories.{$index}.url"] = ['required', 'url', 'max:500'];
             $rules["stories.{$index}.image"] = ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:'.self::MAX_IMAGE_KB];
             $rules["stories.{$index}.image_remove"] = ['nullable', 'boolean'];
+            $rules["stories.{$index}.image_restore"] = ['nullable', 'integer', 'exists:media_assets,id'];
         }
 
         return $rules;
@@ -245,8 +247,10 @@ class CampusLifeContentController extends Controller
                 'basic_text' => $this->sectionValue($page, 'campus.basic', 'en', 'summary', 'Universidad Mayor de San Simón was founded by law on November 5, 1832. Today it is a public autonomous university with academic, scientific, technological and social outreach functions.'),
             ],
             'official_url' => $this->blockData($page, 'campus.official.logo', 'url', 'https://www.umss.edu.bo/'),
-            'hero_image' => $this->blockImage($page, 'campus.hero.image', '/images/campus-life/uni-view.png'),
-            'official_logo' => $this->blockImage($page, 'campus.official.logo', '/images/campus-life/umss-logo.png'),
+            'hero_image' => $this->blockUploadedImage($page, 'campus.hero.image'),
+            'hero_image_media_id' => $this->blockMediaId($page, 'campus.hero.image'),
+            'official_logo' => $this->blockUploadedImage($page, 'campus.official.logo') ?? '/images/campus-life/umss-logo.png',
+            'official_logo_media_id' => $this->blockMediaId($page, 'campus.official.logo'),
             'stats' => $this->stats($page),
             'features' => $this->features($page),
             'stories' => $this->stories($page),
@@ -302,7 +306,8 @@ class CampusLifeContentController extends Controller
             $fallbacks[$index]['button_es'] = $this->blockValue($page, "campus.story.{$index}", 'es', 'cta_label', $fallbacks[$index]['button_es'] ?? '');
             $fallbacks[$index]['button_en'] = $this->blockValue($page, "campus.story.{$index}", 'en', 'cta_label', $fallbacks[$index]['button_en'] ?? '');
             $fallbacks[$index]['url'] = $this->blockData($page, "campus.story.{$index}", 'url', $fallbacks[$index]['url']);
-            $fallbacks[$index]['image'] = $this->blockImage($page, "campus.story.{$index}", $fallbacks[$index]['image_url']);
+            $fallbacks[$index]['image'] = $this->blockUploadedImage($page, "campus.story.{$index}") ?? $fallbacks[$index]['image_url'];
+            $fallbacks[$index]['image_media_id'] = $this->blockMediaId($page, "campus.story.{$index}");
         }
 
         return $fallbacks;
@@ -383,42 +388,40 @@ class CampusLifeContentController extends Controller
         return is_string($value) && trim($value) !== '' ? $value : $fallback;
     }
 
-    private function blockImage(Page $page, string $key, string $fallback): string
+    private function blockUploadedImage(Page $page, string $key): ?string
     {
         $block = $this->block($page, $key);
 
-        if ($block?->mediaAsset) {
-            return '/storage/'.ltrim($block->mediaAsset->file_path, '/');
-        }
-
-        $value = $block?->data['image'] ?? null;
-
-        return is_string($value) && trim($value) !== '' ? $value : $fallback;
+        return $block?->mediaAsset ? '/storage/'.ltrim($block->mediaAsset->file_path, '/') : null;
     }
 
-    private function upsertImageBlock(Request $request, Section $section, string $key, string $type, int $sortOrder, $languages, string $fileKey, string $removeKey, array $data): ContentBlock
+    private function blockMediaId(Page $page, string $key): ?int
+    {
+        return $this->block($page, $key)?->mediaAsset?->id;
+    }
+
+    private function upsertImageBlock(Request $request, Section $section, string $key, string $type, int $sortOrder, $languages, string $fileKey, string $removeKey, string $restoreKey, array $data): ContentBlock
     {
         $block = $this->upsertBlock($section, $key, $type, $sortOrder, $languages, [], $data);
-        $this->syncImageField($request, $block, $fileKey, $removeKey, 'campus-life');
+        $this->syncImageField($request, $block, $fileKey, $removeKey, $restoreKey, 'campus-life');
 
         return $block->fresh();
     }
 
-    private function syncImageField(Request $request, ContentBlock $block, string $fileKey, string $removeKey, string $directory): void
+    private function syncImageField(Request $request, ContentBlock $block, string $fileKey, string $removeKey, string $restoreKey, string $directory): void
     {
         if ($request->hasFile($fileKey)) {
-            if ($block->mediaAsset) {
-                Storage::disk($block->mediaAsset->disk ?? 'public')->delete($block->mediaAsset->file_path);
-                $block->mediaAsset->delete();
-            }
-
             $block->update(['media_asset_id' => $this->storeMediaFile($request->file($fileKey), $request->user()?->id, $directory)->id]);
             return;
         }
 
+        $restoreId = $request->input($restoreKey);
+        if ($restoreId && MediaAsset::query()->whereKey($restoreId)->exists()) {
+            $block->update(['media_asset_id' => $restoreId]);
+            return;
+        }
+
         if ($request->boolean($removeKey) && $block->mediaAsset) {
-            Storage::disk($block->mediaAsset->disk ?? 'public')->delete($block->mediaAsset->file_path);
-            $block->mediaAsset->delete();
             $block->update(['media_asset_id' => null]);
         }
     }

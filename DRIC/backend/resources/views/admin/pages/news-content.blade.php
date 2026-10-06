@@ -34,8 +34,8 @@
         .language-grid, .news-fields { display: grid; gap: 18px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
         .language-card, .news-row { box-shadow: none; padding: 18px; position: relative; }
         .language-card { padding-top: 76px; }
-        .news-row { display: grid; gap: 14px; padding-top: 76px; }
-        .news-row > .undo-floating { right: 18px; top: 18px; }
+        .news-row { border: 2px solid var(--blue); box-shadow: 0 16px 42px rgba(22, 65, 148, 0.10); display: grid; gap: 14px; padding-top: 18px; }
+        .news-row::before { background: var(--blue); border-radius: 18px 0 0 18px; content: ""; inset: -2px auto -2px -2px; position: absolute; width: 7px; }
         .row-header { align-items: center; display: flex; justify-content: space-between; }
         .full { grid-column: 1 / -1; }
         .toggle-field { align-items: center; background: #f8fafc; border: 1px solid var(--line); border-radius: 14px; display: flex; gap: 12px; justify-content: space-between; padding: 12px 14px; }
@@ -127,10 +127,10 @@
 
                     @forelse ($rows as $index => $item)
                         <div class="news-row">
-                            <button class="btn btn-undo undo-floating" type="button" data-undo-row title="Deshacer último cambio" aria-label="Deshacer último cambio" disabled>↶</button>
                             <div class="row-header">
                                 <h3>Noticia <span class="row-number">{{ $loop->iteration }}</span></h3>
                                 <div class="actions">
+                                    <button class="btn btn-undo" type="button" data-undo-row title="Deshacer último cambio" aria-label="Deshacer último cambio" disabled>↶</button>
                                     @if (! empty($item['id']))
                                         <a class="btn btn-detail" href="{{ route('admin.news.detail.edit', $item['id']) }}">Detalle de la noticia</a>
                                     @else
@@ -217,10 +217,10 @@
 
     <template id="news-template">
         <div class="news-row">
-            <button class="btn btn-undo undo-floating" type="button" data-undo-row title="Deshacer último cambio" aria-label="Deshacer último cambio" disabled>↶</button>
             <div class="row-header">
                 <h3>Noticia <span class="row-number"></span></h3>
                 <div class="actions">
+                    <button class="btn btn-undo" type="button" data-undo-row title="Deshacer último cambio" aria-label="Deshacer último cambio" disabled>↶</button>
                     <span class="hint">Guarda primero para editar el detalle.</span>
                     <button class="btn btn-danger" type="button" data-remove-row>Quitar</button>
                 </div>

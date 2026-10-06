@@ -32,9 +32,12 @@
         .panel { padding: 24px; }
         .panel-header { border-bottom: 1px solid var(--line); margin-bottom: 20px; padding-bottom: 16px; }
         .language-grid, .report-grid { display: grid; gap: 18px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-        .language-card, .report-card { box-shadow: none; padding: 76px 18px 18px; position: relative; }
-        .report-card { display: grid; gap: 16px; }
+        .language-card { box-shadow: none; padding: 76px 18px 18px; position: relative; }
+        .report-card { border: 2px solid var(--blue); box-shadow: 0 16px 42px rgba(22, 65, 148, 0.10); display: grid; gap: 16px; padding: 18px; position: relative; }
+        .report-card::before { background: var(--blue); border-radius: 18px 0 0 18px; content: ""; inset: -2px auto -2px -2px; position: absolute; width: 7px; }
         .report-header { align-items: center; display: flex; gap: 12px; justify-content: space-between; }
+        .report-section { background: #f8fafc; border: 1px solid var(--line); border-radius: 14px; display: grid; gap: 14px; padding: 16px; }
+        .report-section-title { color: var(--blue); font-size: 13px; font-weight: 900; letter-spacing: .04em; margin: 0; text-transform: uppercase; }
         label { display: grid; gap: 7px; font-size: 13px; font-weight: 800; }
         input, textarea { border: 1px solid #cfd6e3; border-radius: 12px; color: var(--ink); font: inherit; font-weight: 500; padding: 12px 13px; width: 100%; }
         textarea { line-height: 1.55; min-height: 104px; resize: vertical; }
@@ -171,13 +174,13 @@
                 <div class="reports-list" id="reports-list">
                     @forelse (old('reports', $reports) as $index => $report)
                         <article class="report-card" data-report-card>
-                            <button class="btn btn-undo undo-floating" type="button" data-undo-card disabled title="Deshacer último cambio" aria-label="Deshacer último cambio">↶</button>
                             <div class="report-header">
                                 <div>
                                     <h3>Informe {{ $index + 1 }}</h3>
                                     <p class="muted">Se ordena automáticamente por gestión, de mayor a menor.</p>
                                 </div>
                                 <div class="row-actions">
+                                    <button class="btn btn-undo" type="button" data-undo-card disabled title="Deshacer último cambio" aria-label="Deshacer último cambio">↶</button>
                                     <label class="checkline">
                                         <input type="checkbox" name="reports[{{ $index }}][is_active]" value="1" @checked((bool) ($report['is_active'] ?? true))>
                                         Publicar
@@ -189,33 +192,22 @@
                             <input type="hidden" name="reports[{{ $index }}][id]" value="{{ $report['id'] ?? '' }}">
                             <input type="hidden" name="reports[{{ $index }}][existing_url]" value="{{ $report['url'] ?? '' }}">
 
-                            <div class="report-grid">
-                                <label>
-                                    Gestión
-                                    <input type="number" min="1900" max="2100" name="reports[{{ $index }}][year]" value="{{ $report['year'] ?? '' }}" placeholder="2024">
-                                    @error('reports.'.$index.'.year')<span class="field-error">{{ $message }}</span>@enderror
-                                </label>
+                            <div class="report-section">
+                                <p class="report-section-title">Portada del informe</p>
+                                <div class="report-grid">
+                                    <label>
+                                        Gestión visible
+                                        <input type="number" min="1900" max="2100" name="reports[{{ $index }}][year]" value="{{ $report['year'] ?? '' }}" placeholder="2024">
+                                        <span class="hint">Aparece en el lomo y cuerpo de la tarjeta pública.</span>
+                                        @error('reports.'.$index.'.year')<span class="field-error">{{ $message }}</span>@enderror
+                                    </label>
 
-                                <label>
-                                    Fecha visible en español
-                                    <input type="text" name="reports[{{ $index }}][date_es]" value="{{ $report['date_es'] ?? '' }}" placeholder="Oct 15, 2024">
-                                    @error('reports.'.$index.'.date_es')<span class="field-error">{{ $message }}</span>@enderror
-                                </label>
-                            </div>
-
-                            <label>
-                                Fecha visible en inglés
-                                <input type="text" name="reports[{{ $index }}][date_en]" value="{{ $report['date_en'] ?? '' }}" placeholder="Oct 15, 2024">
-                                <span class="hint">Si se deja vacío, se usará la fecha en español.</span>
-                                @error('reports.'.$index.'.date_en')<span class="field-error">{{ $message }}</span>@enderror
-                            </label>
-
-                            <div class="report-grid">
-                                <label>
-                                    Título en español
-                                    <input type="text" name="reports[{{ $index }}][title_es]" value="{{ $report['title_es'] ?? '' }}">
-                                    @error('reports.'.$index.'.title_es')<span class="field-error">{{ $message }}</span>@enderror
-                                </label>
+                                    <label>
+                                        Título en español
+                                        <input type="text" name="reports[{{ $index }}][title_es]" value="{{ $report['title_es'] ?? '' }}">
+                                        @error('reports.'.$index.'.title_es')<span class="field-error">{{ $message }}</span>@enderror
+                                    </label>
+                                </div>
 
                                 <label>
                                     Título en inglés
@@ -225,24 +217,45 @@
                                 </label>
                             </div>
 
-                            <label>
-                                URL del PDF
-                                <input type="text" name="reports[{{ $index }}][url]" value="{{ $report['url'] ?? '' }}" placeholder="https://.../informe.pdf">
-                                <span class="hint">Puedes pegar una URL externa o dejar este campo vacío si subes un PDF nuevo.</span>
-                                @error('reports.'.$index.'.url')<span class="field-error">{{ $message }}</span>@enderror
-                            </label>
+                            <div class="report-section">
+                                <p class="report-section-title">Fecha visible</p>
+                                <div class="report-grid">
+                                    <label>
+                                        Fecha visible en español
+                                        <input type="text" name="reports[{{ $index }}][date_es]" value="{{ $report['date_es'] ?? '' }}" placeholder="Oct 15, 2024">
+                                        @error('reports.'.$index.'.date_es')<span class="field-error">{{ $message }}</span>@enderror
+                                    </label>
 
-                            @if (! empty($report['file_name']))
-                                <p class="current-file">PDF cargado actualmente: {{ $report['file_name'] }}</p>
-                            @endif
+                                    <label>
+                                        Fecha visible en inglés
+                                        <input type="text" name="reports[{{ $index }}][date_en]" value="{{ $report['date_en'] ?? '' }}" placeholder="Oct 15, 2024">
+                                        <span class="hint">Si se deja vacío, se usará la fecha en español.</span>
+                                        @error('reports.'.$index.'.date_en')<span class="field-error">{{ $message }}</span>@enderror
+                                    </label>
+                                </div>
+                            </div>
 
-                            <label>
-                                Subir o reemplazar PDF
-                                <input type="file" name="reports[{{ $index }}][pdf]" accept="application/pdf,.pdf" data-pdf-input>
-                                <span class="hint">Formato permitido: PDF. Tamaño máximo: 20 MB.</span>
-                                <span class="field-error" data-pdf-error></span>
-                                @error('reports.'.$index.'.pdf')<span class="field-error">{{ $message }}</span>@enderror
-                            </label>
+                            <div class="report-section">
+                                <p class="report-section-title">Descarga PDF</p>
+                                <label>
+                                    URL del PDF
+                                    <input type="text" name="reports[{{ $index }}][url]" value="{{ $report['url'] ?? '' }}" placeholder="https://.../informe.pdf">
+                                    <span class="hint">Puedes pegar una URL externa o dejar este campo vacío si subes un PDF nuevo.</span>
+                                    @error('reports.'.$index.'.url')<span class="field-error">{{ $message }}</span>@enderror
+                                </label>
+
+                                @if (! empty($report['file_name']))
+                                    <p class="current-file">PDF cargado actualmente: {{ $report['file_name'] }}</p>
+                                @endif
+
+                                <label>
+                                    Subir o reemplazar PDF
+                                    <input type="file" name="reports[{{ $index }}][pdf]" accept="application/pdf,.pdf" data-pdf-input>
+                                    <span class="hint">Formato permitido: PDF. Tamaño máximo: 20 MB.</span>
+                                    <span class="field-error" data-pdf-error></span>
+                                    @error('reports.'.$index.'.pdf')<span class="field-error">{{ $message }}</span>@enderror
+                                </label>
+                            </div>
                         </article>
                     @empty
                     @endforelse
@@ -262,13 +275,13 @@
 
         <template id="report-template">
             <article class="report-card" data-report-card>
-                <button class="btn btn-undo undo-floating" type="button" data-undo-card disabled title="Deshacer último cambio" aria-label="Deshacer último cambio">↶</button>
                 <div class="report-header">
                     <div>
                         <h3>Nuevo informe</h3>
                         <p class="muted">Se agregará al listado público después de guardar.</p>
                     </div>
                     <div class="row-actions">
+                        <button class="btn btn-undo" type="button" data-undo-card disabled title="Deshacer último cambio" aria-label="Deshacer último cambio">↶</button>
                         <label class="checkline">
                             <input type="checkbox" name="__NAME__[is_active]" value="1" checked>
                             Publicar
@@ -278,43 +291,53 @@
                 </div>
                 <input type="hidden" name="__NAME__[id]" value="">
                 <input type="hidden" name="__NAME__[existing_url]" value="">
-                <div class="report-grid">
-                    <label>
-                        Gestión
-                        <input type="number" min="1900" max="2100" name="__NAME__[year]" placeholder="2024">
-                    </label>
-                    <label>
-                        Fecha visible en español
-                        <input type="text" name="__NAME__[date_es]" placeholder="Oct 15, 2024">
-                    </label>
-                </div>
-                <label>
-                    Fecha visible en inglés
-                    <input type="text" name="__NAME__[date_en]" placeholder="Oct 15, 2024">
-                    <span class="hint">Si se deja vacío, se usará la fecha en español.</span>
-                </label>
-                <div class="report-grid">
-                    <label>
-                        Título en español
-                        <input type="text" name="__NAME__[title_es]">
-                    </label>
+                <div class="report-section">
+                    <p class="report-section-title">Portada del informe</p>
+                    <div class="report-grid">
+                        <label>
+                            Gestión visible
+                            <input type="number" min="1900" max="2100" name="__NAME__[year]" placeholder="2024">
+                            <span class="hint">Aparece en el lomo y cuerpo de la tarjeta pública.</span>
+                        </label>
+                        <label>
+                            Título en español
+                            <input type="text" name="__NAME__[title_es]">
+                        </label>
+                    </div>
                     <label>
                         Título en inglés
                         <input type="text" name="__NAME__[title_en]">
                         <span class="hint">Si se deja vacío, se usará el título en español.</span>
                     </label>
                 </div>
-                <label>
-                    URL del PDF
-                    <input type="text" name="__NAME__[url]" placeholder="https://.../informe.pdf">
-                    <span class="hint">Puedes pegar una URL externa o dejar este campo vacío si subes un PDF nuevo.</span>
-                </label>
-                <label>
-                    Subir PDF
-                    <input type="file" name="__NAME__[pdf]" accept="application/pdf,.pdf" data-pdf-input>
-                    <span class="hint">Formato permitido: PDF. Tamaño máximo: 20 MB.</span>
-                    <span class="field-error" data-pdf-error></span>
-                </label>
+                <div class="report-section">
+                    <p class="report-section-title">Fecha visible</p>
+                    <div class="report-grid">
+                        <label>
+                            Fecha visible en español
+                            <input type="text" name="__NAME__[date_es]" placeholder="Oct 15, 2024">
+                        </label>
+                        <label>
+                            Fecha visible en inglés
+                            <input type="text" name="__NAME__[date_en]" placeholder="Oct 15, 2024">
+                            <span class="hint">Si se deja vacío, se usará la fecha en español.</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="report-section">
+                    <p class="report-section-title">Descarga PDF</p>
+                    <label>
+                        URL del PDF
+                        <input type="text" name="__NAME__[url]" placeholder="https://.../informe.pdf">
+                        <span class="hint">Puedes pegar una URL externa o dejar este campo vacío si subes un PDF nuevo.</span>
+                    </label>
+                    <label>
+                        Subir PDF
+                        <input type="file" name="__NAME__[pdf]" accept="application/pdf,.pdf" data-pdf-input>
+                        <span class="hint">Formato permitido: PDF. Tamaño máximo: 20 MB.</span>
+                        <span class="field-error" data-pdf-error></span>
+                    </label>
+                </div>
             </article>
         </template>
     </main>
