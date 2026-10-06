@@ -194,7 +194,6 @@ function getCmsArticle(page: CmsPage | null, slug: string, locale: Locale): Arti
     excerpt: localized(block.summary),
     deck: localizedOptional(dataString(block, `deck_${locale}`)) ?? catalogArticle?.deck,
     detailTitle: localizedOptional(dataString(block, `detail_title_${locale}`)),
-    image: catalogArticle?.image,
     images: galleryImages(block),
     bodyHtml: block.body ? localized(richBodyHtml(block.body)) : undefined,
     body: block.body
@@ -295,10 +294,13 @@ function shouldUseDropCap(value: string): boolean {
 }
 
 function galleryImages(block: CmsBlock): string[] | undefined {
+  const mediaUrls = [block.media?.url, block.media_asset?.url]
+    .map((url) => publicAssetUrl(url))
+    .filter((url): url is string => Boolean(url));
   const images = block.data?.images;
 
   if (!Array.isArray(images)) {
-    return undefined;
+    return mediaUrls.length ? mediaUrls : undefined;
   }
 
   const urls = images
@@ -310,7 +312,11 @@ function galleryImages(block: CmsBlock): string[] | undefined {
     })
     .filter((url): url is string => Boolean(url));
 
-  return urls.length ? urls : undefined;
+  const allUrls = [...mediaUrls, ...urls].filter(
+    (url, index, list) => list.indexOf(url) === index,
+  );
+
+  return allUrls.length ? allUrls : undefined;
 }
 
 function dataString(block: CmsBlock, key: string): string | null {

@@ -46,9 +46,9 @@
         .editor blockquote { border-left: 4px solid var(--blue); color: #475569; margin: 16px 0; padding-left: 16px; }
         .gallery-actions { align-items: center; display: flex; gap: 10px; justify-content: space-between; margin-bottom: 14px; }
         .gallery-actions .muted { margin: 0; }
-        .images-grid { display: grid; gap: 18px; grid-template-columns: 1fr; margin: 14px auto 0; max-width: 980px; }
-        .image-card { box-shadow: none; overflow: visible; padding: 12px; position: relative; transition: opacity .2s ease, filter .2s ease; }
-        .image-card img { aspect-ratio: 16 / 8.2; border-radius: 18px; display: block; object-fit: cover; width: 100%; }
+        .images-grid { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); margin: 14px auto 0; max-width: 980px; }
+        .image-card { background: #f8fafc; box-shadow: none; overflow: visible; padding: 12px; position: relative; transition: opacity .2s ease, filter .2s ease; }
+        .image-card img { background: #fff; border: 1px solid var(--line); border-radius: 18px; cursor: zoom-in; display: block; height: 260px; object-fit: contain; padding: 10px; width: 100%; }
         .image-card .hint { margin-top: 9px; }
         .image-card.is-removed { opacity: .45; }
         .image-card.is-removed img { filter: grayscale(1); }
@@ -56,17 +56,25 @@
         .btn-image-remove { align-items: center; background: var(--red-dark); border: 3px solid #fff; border-radius: 999px; color: #fff; cursor: pointer; display: inline-flex; font-size: 20px; font-weight: 900; height: 34px; justify-content: center; line-height: 1; position: absolute; right: -9px; top: -9px; width: 34px; z-index: 3; }
         .image-card > .btn-undo { left: -9px; min-height: 40px; position: absolute; top: -9px; z-index: 4; }
         .selected-images:empty { display: none; }
-        .crop-modal { align-items: center; background: rgba(15, 23, 42, .64); display: none; inset: 0; justify-content: center; padding: 22px; position: fixed; z-index: 50; }
-        .crop-modal.is-open { display: flex; }
-        .crop-dialog { background: #fff; border-radius: 18px; box-shadow: 0 24px 80px rgba(15, 23, 42, .24); display: grid; gap: 16px; max-height: calc(100vh - 44px); max-width: 980px; overflow: auto; padding: 20px; width: min(100%, 980px); }
-        .crop-stage { aspect-ratio: 16 / 8.2; background: #0f172a; border-radius: 18px; overflow: hidden; position: relative; width: 100%; }
-        .crop-stage img { height: 100%; left: 50%; object-fit: cover; position: absolute; top: 50%; transform-origin: center; width: 100%; }
-        .crop-controls { display: grid; gap: 12px; }
-        .crop-controls input[type="range"] { width: 100%; }
-        .crop-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; }
         .image-card.is-removed .btn-image-remove { display: none; }
+        .media-editor-modal { background: #0f1113; color: #f8fafc; display: none; inset: 0; position: fixed; z-index: 80; }
+        .media-editor-modal.is-open { display: grid; grid-template-rows: auto 1fr auto; }
+        .media-editor-top { align-items: center; background: #171717; display: flex; gap: 18px; justify-content: space-between; padding: 14px 18px; }
+        .media-editor-title { align-items: center; display: flex; gap: 18px; font-size: 28px; font-weight: 900; }
+        .media-editor-back { background: transparent; border: 0; color: #fff; cursor: pointer; font-size: 34px; line-height: 1; padding: 4px 8px; }
+        .media-editor-apply { background: #f8fafc; border: 0; border-radius: 999px; color: #111827; cursor: pointer; font-size: 18px; font-weight: 900; padding: 12px 28px; }
+        .media-editor-workspace { align-items: center; display: flex; justify-content: center; min-height: 0; overflow: hidden; padding: 34px 28px; }
+        .media-editor-stage { aspect-ratio: 16 / 8.2; background: #111827; max-height: 70vh; max-width: 1040px; overflow: hidden; position: relative; touch-action: none; width: min(100%, 1040px); }
+        .media-editor-stage img { left: 50%; max-width: none; position: absolute; top: 50%; transform-origin: center; user-select: none; -webkit-user-drag: none; }
+        .media-editor-stage::before { border: 6px solid #ff2b93; content: ""; inset: 0; pointer-events: none; position: absolute; z-index: 3; }
+        .media-editor-stage::after { background: rgba(0, 0, 0, .42); content: ""; inset: 0; pointer-events: none; position: absolute; z-index: 2; }
+        .media-editor-frame { border: 6px solid #ff2b93; inset: 0; pointer-events: none; position: absolute; z-index: 4; }
+        .media-editor-controls { align-items: center; display: grid; gap: 18px; grid-template-columns: auto minmax(220px, 560px) auto; justify-content: center; padding: 20px 28px 28px; }
+        .media-editor-controls span { color: #cbd5e1; font-size: 28px; line-height: 1; }
+        .media-editor-controls input { accent-color: #ff2b93; width: 100%; }
+        .media-editor-error { color: #fecdd3; font-size: 13px; font-weight: 800; min-height: 18px; text-align: center; }
         .sr-only { height: 1px; margin: -1px; overflow: hidden; padding: 0; position: absolute; width: 1px; clip: rect(0,0,0,0); border: 0; }
-        .sticky-actions { align-items: center; background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 16px; bottom: 18px; box-shadow: 0 18px 45px rgba(15,23,42,.12); display: flex; justify-content: space-between; padding: 14px; position: sticky; }
+        .sticky-actions { align-items: center; background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 16px; bottom: 18px; box-shadow: 0 18px 45px rgba(15,23,42,.12); display: flex; justify-content: space-between; padding: 14px; position: sticky; z-index: 30; }
         @media (max-width: 820px) { .topbar, .sticky-actions { align-items: stretch; flex-direction: column; } .language-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
@@ -147,14 +155,14 @@
                 </div>
 
                 <div class="gallery-actions">
-                    <p class="muted">Vista real del carrusel público: marco ancho 16:8.2. Haz clic en una imagen nueva para recortarla.</p>
+                    <p class="muted">Puedes agregar varias imágenes. La vista previa muestra cada foto completa, reducida dentro de su propio marco.</p>
                     <button class="btn btn-undo" type="button" id="restore-image" title="Restaurar última imagen quitada" aria-label="Restaurar última imagen quitada" disabled>↶</button>
                 </div>
 
                 @if (count($images))
                     <div class="images-grid">
                         @foreach ($images as $image)
-                            <div class="image-card" data-existing-image-card>
+                            <div class="image-card" data-existing-image-card data-image-id="{{ $image['media_asset_id'] ?? '' }}">
                                 <button class="btn btn-undo" type="button" data-restore-existing-image disabled title="Restaurar esta imagen" aria-label="Restaurar esta imagen">↶</button>
                                 <button class="btn-image-remove" type="button" data-remove-existing-image aria-label="Quitar imagen">×</button>
                                 <img src="{{ $image['url'] ?? '' }}" alt="{{ $image['file_name'] ?? 'Imagen de noticia' }}">
@@ -183,26 +191,28 @@
             </div>
         </form>
 
-        <div class="crop-modal" id="crop-modal" aria-hidden="true">
-            <div class="crop-dialog" role="dialog" aria-modal="true" aria-labelledby="crop-title">
-                <div>
-                    <h2 id="crop-title">Recortar imagen</h2>
-                    <p class="muted">Ajusta el encuadre al formato real del carrusel de noticias.</p>
+        <div class="media-editor-modal" id="media-editor-modal" aria-hidden="true">
+            <div class="media-editor-top">
+                <div class="media-editor-title">
+                    <button class="media-editor-back" type="button" id="media-editor-close" aria-label="Volver">‹</button>
+                    <span>Editar imagen</span>
                 </div>
-                <div class="crop-stage" id="crop-stage">
-                    <img id="crop-image" alt="Vista previa de recorte">
-                </div>
-                <div class="crop-controls">
-                    <label>Zoom<input id="crop-zoom" type="range" min="1" max="3" step="0.01" value="1"></label>
-                    <label>Horizontal<input id="crop-x" type="range" min="-100" max="100" step="1" value="0"></label>
-                    <label>Vertical<input id="crop-y" type="range" min="-100" max="100" step="1" value="0"></label>
-                </div>
-                <div class="crop-actions">
-                    <button class="btn btn-secondary" type="button" id="crop-cancel">Cancelar</button>
-                    <button class="btn btn-primary" type="button" id="crop-accept">Aceptar recorte</button>
+                <button class="media-editor-apply" type="button" id="media-editor-apply">Aplicar</button>
+            </div>
+            <div class="media-editor-workspace">
+                <div class="media-editor-stage" id="media-editor-stage">
+                    <img id="media-editor-image" alt="Vista previa del encuadre">
+                    <div class="media-editor-frame" aria-hidden="true"></div>
                 </div>
             </div>
+            <div class="media-editor-controls">
+                <span aria-hidden="true">−</span>
+                <input id="media-editor-zoom" type="range" min="1" max="3" step="0.01" value="1" aria-label="Zoom de imagen">
+                <span aria-hidden="true">＋</span>
+            </div>
+            <div class="media-editor-error" id="media-editor-error"></div>
         </div>
+
     </main>
 
     <script>
@@ -212,19 +222,36 @@
         const removedImages = [];
         const removedUploads = [];
         const removalHistory = [];
+        const removedExistingImagesStorageKey = `news-detail-removed-images:${window.location.pathname}`;
         const restoreImageButton = document.getElementById("restore-image");
         const imageInput = document.getElementById("news-images-input");
         const selectedImagesContainer = document.getElementById("selected-images");
-        const cropModal = document.getElementById("crop-modal");
-        const cropImage = document.getElementById("crop-image");
-        const cropZoom = document.getElementById("crop-zoom");
-        const cropX = document.getElementById("crop-x");
-        const cropY = document.getElementById("crop-y");
-        const cropCancel = document.getElementById("crop-cancel");
-        const cropAccept = document.getElementById("crop-accept");
-        const cropAspect = 16 / 8.2;
+        const mediaEditorModal = document.getElementById("media-editor-modal");
+        const mediaEditorStage = document.getElementById("media-editor-stage");
+        const mediaEditorImage = document.getElementById("media-editor-image");
+        const mediaEditorZoom = document.getElementById("media-editor-zoom");
+        const mediaEditorClose = document.getElementById("media-editor-close");
+        const mediaEditorApply = document.getElementById("media-editor-apply");
+        const mediaEditorError = document.getElementById("media-editor-error");
+        const mediaEditorAspect = 16 / 8.2;
+        const mediaEditorState = {
+            kind: null,
+            index: null,
+            card: null,
+            file: null,
+            sourceUrl: "",
+            objectUrl: "",
+            naturalWidth: 0,
+            naturalHeight: 0,
+            baseScale: 1,
+            zoom: 1,
+            offsetX: 0,
+            offsetY: 0,
+            dragging: false,
+            pointerX: 0,
+            pointerY: 0,
+        };
         let uploadItems = [];
-        let activeCropIndex = null;
 
         function editableFields(scope) {
             return [...scope.querySelectorAll("input:not([type='hidden']), textarea, select, [contenteditable='true']")];
@@ -291,17 +318,159 @@
         }
 
         function setRestoreImageState() {
-            if (restoreImageButton) restoreImageButton.disabled = removalHistory.length === 0;
+            if (restoreImageButton) restoreImageButton.disabled = removalHistory.length === 0 && readRemovedImageRecords().length === 0;
+        }
+
+        function readRemovedImageRecords() {
+            try {
+                const stored = sessionStorage.getItem(removedExistingImagesStorageKey);
+                const records = stored ? JSON.parse(stored) : [];
+                return Array.isArray(records) ? records.filter((record) => record?.id) : [];
+            } catch (error) {
+                sessionStorage.removeItem(removedExistingImagesStorageKey);
+                return [];
+            }
+        }
+
+        function writeRemovedImageRecords(records) {
+            const cleanRecords = records.filter((record) => record?.id);
+            if (!cleanRecords.length) {
+                sessionStorage.removeItem(removedExistingImagesStorageKey);
+                return;
+            }
+
+            sessionStorage.setItem(removedExistingImagesStorageKey, JSON.stringify(cleanRecords));
+        }
+
+        function imageIdFromCard(card) {
+            return card?.querySelector("[data-remove-existing-image-input]")?.value
+                || card?.querySelector("[data-restored-image-input]")?.value
+                || card?.dataset.imageId
+                || "";
+        }
+
+        function imageRecordFromCard(card) {
+            const image = card?.querySelector("img");
+            const id = imageIdFromCard(card);
+
+            if (!id || !image) return null;
+
+            return {
+                id,
+                url: image.getAttribute("src") || "",
+                fileName: image.getAttribute("alt") || "Imagen de noticia",
+            };
+        }
+
+        function rememberRemovedImage(card) {
+            const record = imageRecordFromCard(card);
+            if (!record) return;
+
+            const records = readRemovedImageRecords().filter((item) => item.id !== record.id);
+            records.push(record);
+            writeRemovedImageRecords(records);
+        }
+
+        function forgetRemovedImage(cardOrId) {
+            const id = typeof cardOrId === "string" ? cardOrId : imageIdFromCard(cardOrId);
+            if (!id) return;
+
+            writeRemovedImageRecords(readRemovedImageRecords().filter((record) => record.id !== id));
+        }
+
+        function popRemovedImageRecord() {
+            const records = readRemovedImageRecords();
+            const record = records.pop();
+            writeRemovedImageRecords(records);
+            return record || null;
+        }
+
+        function imageGrid() {
+            let grid = document.querySelector(".images-grid:not(.selected-images)");
+            if (grid) return grid;
+
+            grid = document.createElement("div");
+            grid.className = "images-grid";
+            const uploadLabel = imageInput?.closest("label");
+            uploadLabel?.before(grid);
+            return grid;
+        }
+
+        function addRestoreInput(record) {
+            if (!record?.id || document.querySelector(`[data-restored-image-input][value="${CSS.escape(record.id)}"]`)) return;
+
+            const input = document.createElement("input");
+            input.type = "hidden";
+            input.name = "restore_images[]";
+            input.value = record.id;
+            input.dataset.restoredImageInput = "";
+            document.querySelector("form")?.append(input);
+        }
+
+        function removeRestoreInput(id) {
+            document.querySelectorAll(`[data-restored-image-input][value="${CSS.escape(String(id))}"]`).forEach((input) => input.remove());
+        }
+
+        function restorableCardFor(record) {
+            const card = document.createElement("div");
+            card.className = "image-card is-removed";
+            card.dataset.existingImageCard = "";
+            card.dataset.imageId = record.id;
+            card.dataset.restorableMissingImage = "";
+            card.innerHTML = `
+                <button class="btn btn-undo" type="button" data-restore-existing-image title="Restaurar esta imagen" aria-label="Restaurar esta imagen">↶</button>
+                <button class="btn-image-remove" type="button" data-remove-existing-image aria-label="Quitar imagen" hidden>×</button>
+                <img src="${escapeHtml(record.url)}" alt="${escapeHtml(record.fileName || "Imagen de noticia")}">
+                <span class="hint">Imagen quitada en esta sesión. Puedes restaurarla antes de guardar otra vez.</span>
+            `;
+
+            card.querySelector("img").addEventListener("click", () => openMediaEditorForExisting(card));
+            card.querySelector("[data-restore-existing-image]").addEventListener("click", () => {
+                restoreExistingImage(card);
+                const historyIndex = removalHistory.findLastIndex((item) => item.type === "existing" && imageIdFromCard(item.card) === record.id);
+                if (historyIndex >= 0) removalHistory.splice(historyIndex, 1);
+                setRestoreImageState();
+            });
+            card.querySelector("[data-remove-existing-image]").addEventListener("click", () => removeExistingImage(card));
+
+            return card;
+        }
+
+        function applyStoredRemovedImages() {
+            readRemovedImageRecords().forEach((record) => {
+                const existingCard = [...document.querySelectorAll("[data-existing-image-card]")]
+                    .find((card) => imageIdFromCard(card) === record.id);
+
+                if (existingCard) {
+                    const input = existingCard.querySelector("[data-remove-existing-image-input]");
+                    const restoreButton = existingCard.querySelector("[data-restore-existing-image]");
+                    if (input) input.checked = true;
+                    existingCard.classList.add("is-removed");
+                    if (restoreButton) restoreButton.disabled = false;
+                    return;
+                }
+
+                imageGrid().append(restorableCardFor(record));
+            });
         }
 
         function removeExistingImage(card) {
             if (!card) return;
             const input = card.querySelector("[data-remove-existing-image-input]");
-            if (!input || input.checked) return;
             const restoreButton = card.querySelector("[data-restore-existing-image]");
-            input.checked = true;
+
+            if (input) {
+                if (input.checked) return;
+                input.checked = true;
+            } else {
+                const id = imageIdFromCard(card);
+                if (!id || card.classList.contains("is-removed")) return;
+                removeRestoreInput(id);
+            }
+
             card.classList.add("is-removed");
             if (restoreButton) restoreButton.disabled = false;
+            rememberRemovedImage(card);
             removedImages.push(card);
             removalHistory.push({ type: "existing", card });
             setRestoreImageState();
@@ -310,11 +479,19 @@
         function restoreExistingImage(card) {
             if (!card) return;
             const input = card.querySelector("[data-remove-existing-image-input]");
-            if (!input) return;
             const restoreButton = card.querySelector("[data-restore-existing-image]");
-            input.checked = false;
+            const record = imageRecordFromCard(card);
+
+            if (input) {
+                input.checked = false;
+            } else if (record) {
+                addRestoreInput(record);
+            }
+
             card.classList.remove("is-removed");
             if (restoreButton) restoreButton.disabled = true;
+            card.querySelector("[data-remove-existing-image]")?.removeAttribute("hidden");
+            if (record) forgetRemovedImage(record.id);
         }
 
         function setInputFiles() {
@@ -342,26 +519,24 @@
                 card.className = "image-card";
                 card.dataset.uploadImageCard = "";
                 card.innerHTML = `
-                    <button class="btn btn-undo" type="button" data-restore-upload-image ${item.previous ? "" : "disabled"} title="Restaurar recorte anterior" aria-label="Restaurar recorte anterior">↶</button>
                     <button class="btn-image-remove" type="button" data-remove-upload-image aria-label="Quitar imagen">×</button>
                     <img src="${item.url}" alt="${escapeHtml(item.file.name)}">
-                    <span class="hint">Imagen nueva. Haz clic en la foto para recortarla.</span>
+                    <span class="hint">Haz clic en la imagen para ajustar el encuadre de la vista pública.</span>
                 `;
-                card.querySelector("img").addEventListener("click", () => openCrop(index));
+                card.querySelector("img").addEventListener("click", () => openMediaEditorForUpload(index));
                 card.querySelector("[data-remove-upload-image]").addEventListener("click", () => removeUpload(index));
-                card.querySelector("[data-restore-upload-image]").addEventListener("click", () => restoreUploadCrop(index));
                 selectedImagesContainer.append(card);
             });
         }
 
         function addUploads(files) {
-            uploadItems.forEach(revokeUploadUrl);
-            uploadItems = files.map((file) => ({
+            const newItems = files.map((file) => ({
                 file,
                 originalFile: file,
                 url: URL.createObjectURL(file),
                 previous: null,
             }));
+            uploadItems = [...uploadItems, ...newItems];
             removedUploads.length = 0;
             removalHistory.splice(0, removalHistory.length, ...removalHistory.filter((item) => item.type === "existing"));
             renderSelectedImages();
@@ -387,92 +562,150 @@
             setInputFiles();
         }
 
-        function restoreUploadCrop(index) {
-            const item = uploadItems[index];
-            if (!item?.previous) return;
-            revokeUploadUrl(item);
-            uploadItems[index] = {
-                ...item.previous,
-                previous: null,
-            };
-            renderSelectedImages();
-            setInputFiles();
+        function resetMediaEditorState() {
+            mediaEditorState.kind = null;
+            mediaEditorState.index = null;
+            mediaEditorState.card = null;
+            mediaEditorState.file = null;
+            mediaEditorState.sourceUrl = "";
+            mediaEditorState.naturalWidth = 0;
+            mediaEditorState.naturalHeight = 0;
+            mediaEditorState.baseScale = 1;
+            mediaEditorState.zoom = 1;
+            mediaEditorState.offsetX = 0;
+            mediaEditorState.offsetY = 0;
+            mediaEditorState.dragging = false;
+            mediaEditorError.textContent = "";
+            if (mediaEditorState.objectUrl) URL.revokeObjectURL(mediaEditorState.objectUrl);
+            mediaEditorState.objectUrl = "";
+            mediaEditorImage.removeAttribute("src");
         }
 
-        function updateCropPreview() {
-            const zoom = Number(cropZoom.value);
-            const x = Number(cropX.value);
-            const y = Number(cropY.value);
-            cropImage.style.transform = `translate(calc(-50% + ${x * 0.28}%), calc(-50% + ${y * 0.28}%)) scale(${zoom})`;
+        function croppedFileName(fileName) {
+            const base = String(fileName || "noticia-imagen").replace(/\.[^.]+$/, "");
+            return `${base}-encuadrada.jpg`;
         }
 
-        function openCrop(index) {
+        function clampMediaEditorOffsets() {
+            const stageWidth = mediaEditorStage.clientWidth;
+            const stageHeight = mediaEditorStage.clientHeight;
+            const imageWidth = mediaEditorState.naturalWidth * mediaEditorState.baseScale * mediaEditorState.zoom;
+            const imageHeight = mediaEditorState.naturalHeight * mediaEditorState.baseScale * mediaEditorState.zoom;
+            const maxX = Math.max(0, (imageWidth - stageWidth) / 2);
+            const maxY = Math.max(0, (imageHeight - stageHeight) / 2);
+            mediaEditorState.offsetX = Math.min(maxX, Math.max(-maxX, mediaEditorState.offsetX));
+            mediaEditorState.offsetY = Math.min(maxY, Math.max(-maxY, mediaEditorState.offsetY));
+        }
+
+        function renderMediaEditor() {
+            clampMediaEditorOffsets();
+            mediaEditorImage.style.width = `${mediaEditorState.naturalWidth * mediaEditorState.baseScale * mediaEditorState.zoom}px`;
+            mediaEditorImage.style.height = `${mediaEditorState.naturalHeight * mediaEditorState.baseScale * mediaEditorState.zoom}px`;
+            mediaEditorImage.style.transform = `translate(calc(-50% + ${mediaEditorState.offsetX}px), calc(-50% + ${mediaEditorState.offsetY}px))`;
+        }
+
+        function resetMediaEditorPosition() {
+            const stageWidth = mediaEditorStage.clientWidth;
+            const stageHeight = mediaEditorStage.clientHeight;
+            mediaEditorState.baseScale = Math.max(
+                stageWidth / mediaEditorState.naturalWidth,
+                stageHeight / mediaEditorState.naturalHeight
+            );
+            mediaEditorState.zoom = 1;
+            mediaEditorState.offsetX = 0;
+            mediaEditorState.offsetY = 0;
+            mediaEditorZoom.value = "1";
+            renderMediaEditor();
+        }
+
+        function openMediaEditorForUpload(index) {
             const item = uploadItems[index];
             if (!item) return;
-            activeCropIndex = index;
-            cropImage.src = item.url;
-            cropZoom.value = "1";
-            cropX.value = "0";
-            cropY.value = "0";
-            updateCropPreview();
-            cropModal.classList.add("is-open");
-            cropModal.setAttribute("aria-hidden", "false");
+            resetMediaEditorState();
+            mediaEditorState.kind = "upload";
+            mediaEditorState.index = index;
+            mediaEditorState.file = item.file;
+            mediaEditorState.sourceUrl = item.url;
+            mediaEditorImage.src = item.url;
+            mediaEditorModal.classList.add("is-open");
+            mediaEditorModal.setAttribute("aria-hidden", "false");
         }
 
-        function closeCrop() {
-            activeCropIndex = null;
-            cropModal.classList.remove("is-open");
-            cropModal.setAttribute("aria-hidden", "true");
+        function openMediaEditorForExisting(card) {
+            if (!card || card.classList.contains("is-removed")) return;
+            const image = card.querySelector("img");
+            if (!image?.src) return;
+            resetMediaEditorState();
+            mediaEditorState.kind = "existing";
+            mediaEditorState.card = card;
+            mediaEditorState.sourceUrl = image.src;
+            mediaEditorImage.src = image.src;
+            mediaEditorModal.classList.add("is-open");
+            mediaEditorModal.setAttribute("aria-hidden", "false");
         }
 
-        function cropActiveImage() {
-            const item = uploadItems[activeCropIndex];
-            if (!item) return;
-            const image = new Image();
-            image.onload = () => {
-                const canvas = document.createElement("canvas");
-                const outputWidth = 1600;
-                const outputHeight = Math.round(outputWidth / cropAspect);
-                canvas.width = outputWidth;
-                canvas.height = outputHeight;
-                const zoom = Number(cropZoom.value);
-                let cropWidth = image.naturalWidth / zoom;
-                let cropHeight = cropWidth / cropAspect;
+        function closeMediaEditor() {
+            mediaEditorModal.classList.remove("is-open");
+            mediaEditorModal.setAttribute("aria-hidden", "true");
+            resetMediaEditorState();
+        }
 
-                if (cropHeight > image.naturalHeight / zoom) {
-                    cropHeight = image.naturalHeight / zoom;
-                    cropWidth = cropHeight * cropAspect;
+        function applyMediaEditor() {
+            if (!mediaEditorState.kind || !mediaEditorState.naturalWidth || !mediaEditorState.naturalHeight) return;
+            mediaEditorError.textContent = "";
+
+            const outputWidth = 1600;
+            const outputHeight = Math.round(outputWidth / mediaEditorAspect);
+            const stageWidth = mediaEditorStage.clientWidth;
+            const stageHeight = mediaEditorStage.clientHeight;
+            const scale = mediaEditorState.baseScale * mediaEditorState.zoom;
+            const visibleLeft = (mediaEditorState.naturalWidth * scale - stageWidth) / 2 - mediaEditorState.offsetX;
+            const visibleTop = (mediaEditorState.naturalHeight * scale - stageHeight) / 2 - mediaEditorState.offsetY;
+            const sourceX = Math.max(0, visibleLeft / scale);
+            const sourceY = Math.max(0, visibleTop / scale);
+            const sourceWidth = Math.min(mediaEditorState.naturalWidth - sourceX, stageWidth / scale);
+            const sourceHeight = Math.min(mediaEditorState.naturalHeight - sourceY, stageHeight / scale);
+            const canvas = document.createElement("canvas");
+            canvas.width = outputWidth;
+            canvas.height = outputHeight;
+            const context = canvas.getContext("2d");
+            try {
+                context.drawImage(mediaEditorImage, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, outputWidth, outputHeight);
+            } catch (error) {
+                mediaEditorError.textContent = "No se pudo editar esta imagen desde el navegador. Sube el archivo original para ajustarla.";
+                return;
+            }
+
+            try {
+                canvas.toBlob((blob) => {
+                if (!blob) return;
+                const sourceName = mediaEditorState.file?.name
+                    || mediaEditorState.card?.querySelector("img")?.alt
+                    || "noticia-imagen.jpg";
+                const file = new File([blob], croppedFileName(sourceName), { type: "image/jpeg" });
+                const item = {
+                    file,
+                    originalFile: file,
+                    url: URL.createObjectURL(file),
+                    previous: null,
+                };
+
+                if (mediaEditorState.kind === "upload" && Number.isInteger(mediaEditorState.index)) {
+                    const previousItem = uploadItems[mediaEditorState.index];
+                    if (previousItem) revokeUploadUrl(previousItem);
+                    uploadItems[mediaEditorState.index] = item;
+                } else if (mediaEditorState.kind === "existing" && mediaEditorState.card) {
+                    removeExistingImage(mediaEditorState.card);
+                    uploadItems.push(item);
                 }
 
-                const maxX = Math.max(0, image.naturalWidth - cropWidth);
-                const maxY = Math.max(0, image.naturalHeight - cropHeight);
-                const offsetX = (Number(cropX.value) + 100) / 200;
-                const offsetY = (Number(cropY.value) + 100) / 200;
-                const sx = maxX * offsetX;
-                const sy = maxY * offsetY;
-                const context = canvas.getContext("2d");
-                context.drawImage(image, sx, sy, cropWidth, cropHeight, 0, 0, outputWidth, outputHeight);
-                canvas.toBlob((blob) => {
-                    if (!blob) return;
-                    const extension = item.file.type === "image/png" ? "png" : "jpg";
-                    const basename = item.file.name.replace(/\.[^.]+$/, "");
-                    const croppedFile = new File([blob], `${basename}-recortada.${extension}`, { type: item.file.type || "image/jpeg" });
-                    uploadItems[activeCropIndex] = {
-                        file: croppedFile,
-                        url: URL.createObjectURL(croppedFile),
-                        originalFile: item.originalFile,
-                        previous: {
-                            file: item.file,
-                            originalFile: item.originalFile,
-                            url: item.url,
-                        },
-                    };
-                    renderSelectedImages();
-                    setInputFiles();
-                    closeCrop();
-                }, item.file.type || "image/jpeg", 0.92);
-            };
-            image.src = item.url;
+                renderSelectedImages();
+                setInputFiles();
+                closeMediaEditor();
+                }, "image/jpeg", 0.92);
+            } catch (error) {
+                mediaEditorError.textContent = "No se pudo editar esta imagen desde el navegador. Sube el archivo original para ajustarla.";
+            }
         }
 
         function rememberSelection() {
@@ -664,7 +897,47 @@
             addUploads(files);
         });
 
+        mediaEditorImage.addEventListener("load", () => {
+            mediaEditorState.naturalWidth = mediaEditorImage.naturalWidth;
+            mediaEditorState.naturalHeight = mediaEditorImage.naturalHeight;
+            resetMediaEditorPosition();
+        });
+        mediaEditorZoom.addEventListener("input", () => {
+            mediaEditorState.zoom = Number(mediaEditorZoom.value);
+            renderMediaEditor();
+        });
+        mediaEditorStage.addEventListener("pointerdown", (event) => {
+            mediaEditorState.dragging = true;
+            mediaEditorState.pointerX = event.clientX;
+            mediaEditorState.pointerY = event.clientY;
+            mediaEditorStage.setPointerCapture(event.pointerId);
+        });
+        mediaEditorStage.addEventListener("pointermove", (event) => {
+            if (!mediaEditorState.dragging) return;
+            mediaEditorState.offsetX += event.clientX - mediaEditorState.pointerX;
+            mediaEditorState.offsetY += event.clientY - mediaEditorState.pointerY;
+            mediaEditorState.pointerX = event.clientX;
+            mediaEditorState.pointerY = event.clientY;
+            renderMediaEditor();
+        });
+        mediaEditorStage.addEventListener("pointerup", (event) => {
+            mediaEditorState.dragging = false;
+            mediaEditorStage.releasePointerCapture(event.pointerId);
+        });
+        mediaEditorStage.addEventListener("pointercancel", () => {
+            mediaEditorState.dragging = false;
+        });
+        mediaEditorClose.addEventListener("click", closeMediaEditor);
+        mediaEditorApply.addEventListener("click", applyMediaEditor);
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "Escape" && mediaEditorModal.classList.contains("is-open")) {
+                closeMediaEditor();
+            }
+        });
         document.querySelectorAll("[data-undo-scope]").forEach(bindUndoScope);
+        document.querySelectorAll("[data-existing-image-card] img").forEach((image) => {
+            image.addEventListener("click", () => openMediaEditorForExisting(image.closest("[data-existing-image-card]")));
+        });
         document.querySelectorAll("[data-remove-existing-image]").forEach((button) => {
             button.addEventListener("click", () => removeExistingImage(button.closest("[data-existing-image-card]")));
         });
@@ -680,10 +953,25 @@
             });
         });
         restoreImageButton?.addEventListener("click", () => {
-            const latest = removalHistory.pop();
+            let latest = removalHistory.pop();
+            if (!latest) {
+                const record = popRemovedImageRecord();
+                if (record) {
+                    let card = [...document.querySelectorAll("[data-existing-image-card]")]
+                        .find((candidate) => imageIdFromCard(candidate) === record.id);
+
+                    if (!card) {
+                        card = restorableCardFor(record);
+                        imageGrid().append(card);
+                    }
+
+                    latest = { type: "existing", card, alreadyForgotten: true };
+                }
+            }
             if (!latest) return;
             if (latest.type === "existing") {
                 restoreExistingImage(latest.card);
+                if (!latest.alreadyForgotten) forgetRemovedImage(latest.card);
                 const index = removedImages.lastIndexOf(latest.card);
                 if (index >= 0) removedImages.splice(index, 1);
             }
@@ -694,13 +982,9 @@
             }
             setRestoreImageState();
         });
-        [cropZoom, cropX, cropY].forEach((control) => control.addEventListener("input", updateCropPreview));
-        cropCancel.addEventListener("click", closeCrop);
-        cropAccept.addEventListener("click", cropActiveImage);
-        cropModal.addEventListener("click", (event) => {
-            if (event.target === cropModal) closeCrop();
-        });
+        applyStoredRemovedImages();
         setRestoreImageState();
     </script>
+    @include('admin.partials.persistent-undo')
 </body>
 </html>
