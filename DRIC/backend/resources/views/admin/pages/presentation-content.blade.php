@@ -11,6 +11,13 @@
         if (\Illuminate\Support\Str::startsWith($path, '/storage/')) {
             return url($path);
         }
+        if (\Illuminate\Support\Str::startsWith($path, '/images/')) {
+            $frontendPublicFile = base_path('../frontend/public'.str_replace('/', DIRECTORY_SEPARATOR, $path));
+            if (is_file($frontendPublicFile) && is_readable($frontendPublicFile)) {
+                $mime = mime_content_type($frontendPublicFile) ?: 'image/jpeg';
+                return 'data:'.$mime.';base64,'.base64_encode(file_get_contents($frontendPublicFile));
+            }
+        }
         return $frontendUrl.$path;
     };
 @endphp
@@ -358,64 +365,14 @@
             text-align: center;
         }
 
-        .crop-modal {
-            align-items: center;
-            background: rgba(2, 6, 23, .78);
-            display: none;
-            inset: 0;
-            justify-content: center;
-            padding: 18px;
-            position: fixed;
-            z-index: 50;
-        }
-
-        .crop-modal.is-open {
-            display: flex;
-        }
-
-        .crop-dialog {
-            background: #fff;
-            border: 1px solid var(--line);
-            border-radius: 18px;
-            box-shadow: 0 30px 90px rgba(0, 0, 0, .34);
-            display: grid;
-            gap: 16px;
-            max-height: calc(100vh - 36px);
-            max-width: 920px;
-            overflow: auto;
-            padding: 18px;
-            width: min(100%, 920px);
-        }
-
-        .crop-top {
-            align-items: start;
-            display: flex;
-            gap: 16px;
-            justify-content: space-between;
-        }
-
-        .crop-stage {
-            align-items: center;
-            background: #020617;
-            border-radius: 16px;
-            display: flex;
-            justify-content: center;
-            min-height: 280px;
-            overflow: hidden;
-            padding: 16px;
-            position: relative;
-            touch-action: none;
-        }
-
-        .crop-frame {
-            border: 2px solid #fff;
-            box-shadow: 0 0 0 999px rgba(2, 6, 23, .58), 0 18px 44px rgba(0, 0, 0, .3);
-            cursor: grab;
-            max-height: min(68vh, 620px);
-            overflow: hidden;
-            position: relative;
-            width: min(100%, 740px);
-        }
+        .crop-modal { background: #0f1113; color: #f8fafc; display: none; inset: 0; position: fixed; z-index: 80; }
+        .crop-modal.is-open { display: grid; grid-template-rows: auto 1fr auto auto; }
+        .crop-dialog { display: contents; }
+        .crop-top { align-items: center; background: #171717; display: flex; gap: 18px; justify-content: space-between; padding: 14px 18px; }
+        .crop-top h2 { color: #f8fafc; font-size: 28px; font-weight: 900; }
+        .crop-top .muted { display: none; }
+        .crop-stage { align-items: center; display: flex; justify-content: center; min-height: 0; overflow: hidden; padding: 34px 28px; position: relative; touch-action: none; }
+        .crop-frame { background: #111827; border: 6px solid #ff2b93; cursor: grab; max-height: none; overflow: hidden; position: relative; width: min(calc(100vw - 72px), 900px); }
 
         .crop-frame.is-dragging {
             cursor: grabbing;
@@ -431,28 +388,16 @@
             -webkit-user-drag: none;
         }
 
-        .crop-controls {
-            align-items: center;
-            display: grid;
-            gap: 10px;
-            grid-template-columns: auto minmax(180px, 1fr);
-        }
+        .crop-controls { align-items: center; display: grid; gap: 18px; grid-template-columns: auto minmax(220px, 560px) auto; justify-content: center; padding: 20px 28px 10px; }
+        .crop-controls::before { content: "-"; color: #cbd5e1; font-size: 28px; font-weight: 900; line-height: 1; }
+        .crop-controls::after { content: "+"; color: #cbd5e1; font-size: 28px; font-weight: 900; line-height: 1; }
+        .crop-controls input { accent-color: #ff2b93; padding: 0; width: 100%; }
+        .crop-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; padding: 0 28px 24px; }
 
-        .crop-controls input {
-            padding: 0;
-        }
-
-        .crop-actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: flex-end;
-        }
-
-        .btn-cancel {
-            background: #fff1f2;
-            color: var(--red-dark);
-        }
+        .btn-cancel { background: transparent; color: #fff; font-size: 34px; line-height: 1; padding: 4px 10px; }
+        .btn-cancel::before { content: "‹"; }
+        .btn-cancel { font-size: 0; }
+        .btn-cancel::before { font-size: 34px; }
 
         .sticky-actions {
             align-items: center;
@@ -1189,9 +1134,16 @@
                     return;
                 }
 
-                if (fileInput) {
-                    rememberImageStart();
+                const currentImage = card.querySelector("[data-preview-image]");
+
+                if (currentImage?.src) {
+                    const scope = card.closest("[data-undo-scope]") || card;
+                    imageStartSnapshots.set(fileInput, snapshotCard(scope));
+                    openCropTool(card, null, currentImage.src);
+                    return;
                 }
+
+                rememberImageStart();
                 fileInput?.click();
             });
 
@@ -1227,6 +1179,7 @@
             card: null,
             file: null,
             objectUrl: "",
+            sourceUrl: "",
             naturalWidth: 0,
             naturalHeight: 0,
             baseScale: 1,
@@ -1296,7 +1249,7 @@
             renderCrop();
         }
 
-        function openCropTool(card, file) {
+        function openCropTool(card, file = null, sourceUrl = "") {
             const aspect = cropAspectFor(card);
 
             if (cropState.objectUrl) {
@@ -1305,14 +1258,15 @@
 
             cropState.card = card;
             cropState.file = file;
-            cropState.objectUrl = URL.createObjectURL(file);
+            cropState.objectUrl = file ? URL.createObjectURL(file) : "";
+            cropState.sourceUrl = cropState.objectUrl || sourceUrl;
             cropHelp.textContent = cropLabelFor(card);
             cropModal.classList.add("is-open");
             cropModal.setAttribute("aria-hidden", "false");
             const size = frameSizeForAspect(aspect);
             cropFrame.style.width = `${size.width}px`;
             cropFrame.style.height = `${size.height}px`;
-            cropImage.src = cropState.objectUrl;
+            cropImage.src = cropState.sourceUrl;
         }
 
         function closeCropTool(clearSelection = false) {
@@ -1343,11 +1297,12 @@
             cropState.card = null;
             cropState.file = null;
             cropState.objectUrl = "";
+            cropState.sourceUrl = "";
             cropImage.removeAttribute("src");
         }
 
         function croppedFileName(file) {
-            const base = file.name.replace(/\.[^.]+$/, "") || "presentation-image";
+            const base = String(file?.name || "presentation-image").replace(/\.[^.]+$/, "") || "presentation-image";
             return `${base}-recortada.jpg`;
         }
 
@@ -1355,7 +1310,7 @@
             const card = cropState.card;
             const file = cropState.file;
 
-            if (!card || !file) return;
+            if (!card) return;
 
             const frameWidth = cropFrame.clientWidth;
             const frameHeight = cropFrame.clientHeight;

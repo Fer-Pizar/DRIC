@@ -6,6 +6,8 @@
         ? 'Acceso completo a paginas, usuarios, roles y permisos.'
         : 'Acceso limitado a las secciones asignadas por Direccion.';
     $photoUrl = ! $isAdmin && $user->profile_photo_path ? asset('storage/'.$user->profile_photo_path) : null;
+    $menuForm = old('menu', $mobileMenuSettings);
+    $menuItemCount = max(count(data_get($menuForm, 'es.items', [])), count(data_get($menuForm, 'en.items', [])));
 @endphp
 
 <!DOCTYPE html>
@@ -372,6 +374,38 @@
             color: var(--ink);
         }
 
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .form-actions button {
+            width: auto;
+        }
+
+        .btn-undo {
+            align-items: center;
+            background: #edf2fb;
+            color: var(--blue);
+            display: inline-flex;
+            font-size: 24px;
+            justify-content: center;
+            min-height: 46px;
+            padding: 10px 16px;
+            width: 56px;
+        }
+
+        .btn-undo:not(:disabled):hover {
+            box-shadow: 0 16px 30px rgba(22, 65, 148, 0.16);
+        }
+
+        .btn-undo:disabled {
+            cursor: not-allowed;
+            opacity: .42;
+            transform: none;
+        }
+
         .image-card {
             background: var(--soft);
             border: 1px solid var(--line);
@@ -487,18 +521,18 @@
 
         .settings-form {
             display: grid;
-            gap: 18px;
+            gap: 14px;
         }
 
         .settings-group {
             border: 1px solid var(--line);
             border-radius: 18px;
-            background: var(--soft);
-            padding: 18px;
+            background: linear-gradient(180deg, #f8fafc 0%, #f2f5fa 100%);
+            padding: 14px;
         }
 
         .settings-group-title {
-            margin: 0 0 14px;
+            margin: 0 0 12px;
             color: var(--blue-dark);
             font-size: 13px;
             font-weight: 900;
@@ -508,12 +542,46 @@
 
         .settings-grid {
             display: grid;
-            gap: 14px;
+            gap: 12px;
             grid-template-columns: repeat(2, minmax(0, 1fr));
         }
 
         .settings-grid .span-2 {
             grid-column: 1 / -1;
+        }
+
+        .footer-locale-grid {
+            display: grid;
+            gap: 12px;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .footer-locale-card {
+            background: rgba(255,255,255,.86);
+            border: 1px solid #dbe3f0;
+            border-radius: 16px;
+            display: grid;
+            gap: 10px;
+            padding: 12px;
+        }
+
+        .footer-locale-card h4 {
+            align-items: center;
+            color: var(--ink);
+            display: flex;
+            font-size: 14px;
+            gap: 8px;
+            margin: 0;
+        }
+
+        .footer-locale-card h4 span {
+            background: #e8edf5;
+            border-radius: 999px;
+            color: var(--blue-dark);
+            font-size: 11px;
+            font-weight: 900;
+            padding: 5px 8px;
+            text-transform: uppercase;
         }
 
         .settings-form label {
@@ -532,7 +600,7 @@
             color: var(--ink);
             font: inherit;
             font-weight: 500;
-            padding: 12px 13px;
+            padding: 10px 12px;
         }
 
         .footer-preview {
@@ -602,6 +670,234 @@
             line-height: 1.6;
         }
 
+        .menu-settings {
+            border: 1px solid rgba(22, 65, 148, 0.10);
+            border-radius: 26px;
+            background: rgba(255, 255, 255, 0.90);
+            box-shadow: 0 20px 60px rgba(15, 23, 42, 0.08);
+            display: grid;
+            gap: 20px;
+            grid-template-columns: minmax(280px, .78fr) minmax(0, 1.22fr);
+            align-items: start;
+            margin-top: 18px;
+            padding: 24px;
+        }
+
+        .menu-preview {
+            background:
+                radial-gradient(circle at top left, rgba(181, 18, 27, .26), transparent 19rem),
+                linear-gradient(135deg, #041226 0%, #141824 100%);
+            border: 1px solid rgba(255, 255, 255, .10);
+            border-radius: 22px;
+            color: #fff;
+            aspect-ratio: 1 / 1;
+            max-width: 440px;
+            min-height: 0;
+            overflow: hidden;
+            padding: 24px;
+            width: 100%;
+        }
+
+        .menu-preview .eyebrow {
+            color: #ef233c;
+            margin-bottom: 14px;
+        }
+
+        .menu-preview h3 {
+            color: #fff;
+            font-size: clamp(32px, 3.4vw, 42px);
+            font-weight: 300;
+            letter-spacing: -.05em;
+            line-height: .96;
+            margin: 0;
+            text-transform: uppercase;
+        }
+
+        .menu-preview p {
+            color: rgba(255, 255, 255, .64);
+            font-size: 14px;
+            line-height: 1.58;
+            margin: 14px 0 0;
+        }
+
+        .menu-preview small {
+            color: rgba(255, 255, 255, .42);
+            display: block;
+            font-weight: 800;
+            letter-spacing: .18em;
+            margin-top: 22px;
+            text-transform: uppercase;
+        }
+
+        .menu-tabs {
+            display: grid;
+            gap: 12px;
+        }
+
+        .menu-editor-panel {
+            background: linear-gradient(180deg, #f8fafc 0%, #f2f5fa 100%);
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            padding: 16px;
+        }
+
+        .menu-editor-head {
+            align-items: center;
+            display: flex;
+            gap: 12px;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .menu-editor-head h4 {
+            align-items: center;
+            display: flex;
+            gap: 8px;
+            margin: 0;
+            color: var(--ink);
+            font-size: 16px;
+        }
+
+        .menu-editor-head span,
+        .menu-lang-tag {
+            background: #e8edf5;
+            border-radius: 999px;
+            color: var(--blue-dark);
+            font-size: 11px;
+            font-weight: 900;
+            padding: 5px 8px;
+            text-transform: uppercase;
+        }
+
+        .menu-hero-fields {
+            display: grid;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .menu-field-pair {
+            background: rgba(255, 255, 255, .82);
+            border: 1px solid #dbe3f0;
+            border-radius: 16px;
+            display: grid;
+            gap: 10px;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            padding: 12px;
+        }
+
+        .menu-field-pair-title {
+            align-items: center;
+            color: var(--blue);
+            display: flex;
+            font-size: 12px;
+            font-weight: 900;
+            gap: 8px;
+            grid-column: 1 / -1;
+            letter-spacing: .06em;
+            margin: 0;
+            text-transform: uppercase;
+        }
+
+        .menu-field-pair-title::before,
+        .menu-item-top strong::before {
+            background: var(--blue);
+            border-radius: 4px;
+            content: "";
+            display: inline-block;
+            flex: 0 0 auto;
+            height: 10px;
+            width: 10px;
+        }
+
+        .menu-hero-fields label,
+        .menu-item label {
+            display: grid;
+            gap: 7px;
+            color: var(--blue-dark);
+            font-size: 12px;
+            font-weight: 900;
+        }
+
+        .menu-hero-fields input,
+        .menu-hero-fields textarea,
+        .menu-item input {
+            border: 1px solid #cfd6e3;
+            border-radius: 12px;
+            color: var(--ink);
+            font: inherit;
+            font-weight: 500;
+            padding: 10px 12px;
+            width: 100%;
+        }
+
+        .menu-hero-fields textarea {
+            min-height: 82px;
+            resize: vertical;
+        }
+
+        .menu-items-list {
+            display: grid;
+            gap: 10px;
+        }
+
+        .menu-item {
+            background: rgba(255, 255, 255, .9);
+            border: 1px solid #dbe3f0;
+            border-radius: 16px;
+            display: grid;
+            gap: 10px;
+            padding: 12px;
+        }
+
+        .menu-item-top {
+            align-items: center;
+            display: flex;
+            gap: 10px;
+            justify-content: space-between;
+        }
+
+        .menu-item-top strong {
+            align-items: center;
+            color: var(--blue);
+            display: inline-flex;
+            gap: 8px;
+        }
+
+        .menu-item-grid {
+            display: grid;
+            gap: 10px;
+            grid-template-columns: minmax(0, .72fr) minmax(0, 1fr) minmax(0, 1fr);
+        }
+
+        .menu-item-grid .span-2 {
+            grid-column: span 1;
+        }
+
+        .menu-item-grid .route-field {
+            grid-row: span 2;
+        }
+
+        .menu-item-grid .route-field input {
+            min-height: 46px;
+        }
+
+        .btn-secondary,
+        .btn-danger-soft {
+            width: auto;
+        }
+
+        .btn-secondary {
+            background: #eaf0ff;
+            color: var(--blue-dark);
+        }
+
+        .btn-danger-soft {
+            background: #fff1f2;
+            color: #9f1239;
+            min-height: 40px;
+            padding: 9px 12px;
+        }
+
         .notice,
         .error-list {
             margin: 0 0 16px;
@@ -646,7 +942,11 @@
             .grid,
             .logo-settings,
             .footer-settings,
+            .menu-settings,
+            .footer-locale-grid,
             .settings-grid,
+            .menu-field-pair,
+            .menu-item-grid,
             .footer-preview-body {
                 grid-template-columns: 1fr;
             }
@@ -818,17 +1118,21 @@
                         @method('PUT')
 
                         <input type="hidden" name="topbar_logo_remove" value="0" data-remove-image-input>
+                        <input type="hidden" name="topbar_logo_restore" value="" data-restore-image-input>
                         <label for="topbar_logo">
                             Nuevo logo
                             <input id="topbar_logo" name="topbar_logo" type="file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" data-image-file>
                             <span class="hint">JPG, PNG o WebP. Maximo 2 MB. Tambien puedes hacer clic en la vista previa para elegir una imagen.</span>
                             @error('topbar_logo')<span class="field-error">{{ $message }}</span>@enderror
                         </label>
-                        <button type="submit">Guardar logo</button>
+                        <div class="form-actions">
+                            <button class="btn-undo" type="button" data-logo-undo disabled aria-label="Deshacer cambio de logo">↶</button>
+                            <button type="submit">Guardar logo</button>
+                        </div>
                     </form>
                 </div>
 
-                <div class="image-card" data-image-card>
+                <div class="image-card" data-image-card data-current-image-path="{{ $topbarLogoPath ?? '' }}" data-default-image-src="{{ $frontendUrl }}/images/brand/DRIC_logo.png">
                     <div class="preview preview-logo" data-image-preview aria-label="Logo actual del topbar">
                         <img src="{{ $topbarLogoUrl }}" alt="{{ $hasCustomTopbarLogo ? 'Logo personalizado actual del topbar' : 'Logo predeterminado actual del topbar' }}" data-preview-image>
                         <span class="preview-ruler">Logo topbar</span>
@@ -874,22 +1178,45 @@
 
                     <div class="settings-group">
                         <p class="settings-group-title">Texto institucional</p>
-                        <div class="settings-grid">
-                            <label class="span-2">
-                                Nombre institucional
-                                <input type="text" name="footer_title" value="{{ old('footer_title', $footerSettings['footer_title']) }}" maxlength="180" required>
-                                @error('footer_title')<span class="field-error">{{ $message }}</span>@enderror
-                            </label>
-                            <label class="span-2">
-                                Direccion
-                                <input type="text" name="footer_address_line_1" value="{{ old('footer_address_line_1', $footerSettings['footer_address_line_1']) }}" maxlength="180" required>
-                                @error('footer_address_line_1')<span class="field-error">{{ $message }}</span>@enderror
-                            </label>
-                            <label class="span-2">
-                                Edificio
-                                <input type="text" name="footer_address_line_2" value="{{ old('footer_address_line_2', $footerSettings['footer_address_line_2']) }}" maxlength="180" required>
-                                @error('footer_address_line_2')<span class="field-error">{{ $message }}</span>@enderror
-                            </label>
+                        <div class="footer-locale-grid">
+                            <div class="footer-locale-card">
+                                <h4><span>ES</span> Español</h4>
+                                <label>
+                                    Nombre institucional
+                                    <input type="text" name="footer_title" value="{{ old('footer_title', $footerSettings['footer_title']) }}" maxlength="180" required>
+                                    @error('footer_title')<span class="field-error">{{ $message }}</span>@enderror
+                                </label>
+                                <label>
+                                    Dirección
+                                    <input type="text" name="footer_address_line_1" value="{{ old('footer_address_line_1', $footerSettings['footer_address_line_1']) }}" maxlength="180" required>
+                                    @error('footer_address_line_1')<span class="field-error">{{ $message }}</span>@enderror
+                                </label>
+                                <label>
+                                    Edificio
+                                    <input type="text" name="footer_address_line_2" value="{{ old('footer_address_line_2', $footerSettings['footer_address_line_2']) }}" maxlength="180" required>
+                                    @error('footer_address_line_2')<span class="field-error">{{ $message }}</span>@enderror
+                                </label>
+                            </div>
+                            <div class="footer-locale-card">
+                                <h4><span>EN</span> English</h4>
+                                <label>
+                                    Institutional name
+                                    <input type="text" name="footer_title_en" value="{{ old('footer_title_en', $footerSettings['footer_title_en']) }}" maxlength="180" required>
+                                    @error('footer_title_en')<span class="field-error">{{ $message }}</span>@enderror
+                                </label>
+                                <label>
+                                    Address
+                                    <input type="text" name="footer_address_line_1_en" value="{{ old('footer_address_line_1_en', $footerSettings['footer_address_line_1_en']) }}" maxlength="180" required>
+                                    @error('footer_address_line_1_en')<span class="field-error">{{ $message }}</span>@enderror
+                                </label>
+                                <label>
+                                    Building
+                                    <input type="text" name="footer_address_line_2_en" value="{{ old('footer_address_line_2_en', $footerSettings['footer_address_line_2_en']) }}" maxlength="180" required>
+                                    @error('footer_address_line_2_en')<span class="field-error">{{ $message }}</span>@enderror
+                                </label>
+                            </div>
+                        </div>
+                        <div class="settings-grid" style="margin-top:12px;">
                             <label class="span-2">
                                 URL del logo UMSS
                                 <input type="url" name="footer_umss_url" value="{{ old('footer_umss_url', $footerSettings['footer_umss_url']) }}" maxlength="500" required>
@@ -929,7 +1256,113 @@
                         </div>
                     </div>
 
-                    <button type="submit">Guardar footer</button>
+                    <div class="form-actions">
+                        <button class="btn-undo" type="button" data-footer-undo disabled aria-label="Deshacer cambio del footer">↶</button>
+                        <button type="submit">Guardar footer</button>
+                    </div>
+                </form>
+            </section>
+
+            <section class="menu-settings" aria-labelledby="mobile-menu-title">
+                <div>
+                    <h3 id="mobile-menu-title">Menú principal</h3>
+                    <p>Administra el contenido del menú superior desplegable. El diseño público se mantiene fijo; aquí solo cambian textos, orden y destinos.</p>
+
+                    <div class="menu-preview" aria-label="Vista previa del menu">
+                        <p class="eyebrow">{{ data_get($menuForm, 'en.kicker', 'Explore DRIC') }}</p>
+                        <h3>{{ data_get($menuForm, 'en.title', 'Global UMSS') }}</h3>
+                        <p>{{ data_get($menuForm, 'en.copy', '') }}</p>
+                        <small>{{ data_get($menuForm, 'en.footer', 'Universidad Mayor de San Simón · DRIC') }}</small>
+                    </div>
+                </div>
+
+                <form class="settings-form" method="POST" action="{{ route('admin.settings.mobile-menu.update') }}" data-menu-form>
+                    @csrf
+                    @method('PUT')
+
+                    <div class="menu-tabs">
+                        <div class="menu-editor-panel">
+                            <div class="menu-editor-head">
+                                <h4><span>ES/EN</span> Bloque principal</h4>
+                            </div>
+
+                            <div class="menu-hero-fields">
+                                @foreach ([
+                                    'kicker' => ['label' => 'Etiqueta superior', 'type' => 'input', 'max' => 80],
+                                    'title' => ['label' => 'Título principal', 'type' => 'input', 'max' => 120],
+                                    'copy' => ['label' => 'Descripción', 'type' => 'textarea', 'max' => 420],
+                                    'footer' => ['label' => 'Texto inferior', 'type' => 'input', 'max' => 120],
+                                ] as $field => $meta)
+                                    <div class="menu-field-pair">
+                                        <p class="menu-field-pair-title">{{ $meta['label'] }}</p>
+                                        @foreach (['es' => 'Español', 'en' => 'English'] as $locale => $label)
+                                            <label>
+                                                <span><span class="menu-lang-tag">{{ strtoupper($locale) }}</span> {{ $label }}</span>
+                                                @if ($meta['type'] === 'textarea')
+                                                    <textarea name="menu[{{ $locale }}][{{ $field }}]" maxlength="{{ $meta['max'] }}" required>{{ data_get($menuForm, $locale.'.'.$field) }}</textarea>
+                                                @else
+                                                    <input type="text" name="menu[{{ $locale }}][{{ $field }}]" value="{{ data_get($menuForm, $locale.'.'.$field) }}" maxlength="{{ $meta['max'] }}" required>
+                                                @endif
+                                                @error('menu.'.$locale.'.'.$field)<span class="field-error">{{ $message }}</span>@enderror
+                                            </label>
+                                        @endforeach
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+
+                        <div class="menu-editor-panel">
+                            <div class="menu-editor-head">
+                                <h4><span>Tabs</span> Pestañas del menú</h4>
+                                <button class="btn-secondary" type="button" data-add-menu-item>Agregar pestaña</button>
+                            </div>
+
+                            <div class="menu-items-list" data-menu-items>
+                                @for ($index = 0; $index < $menuItemCount; $index++)
+                                    @php
+                                        $esItem = data_get($menuForm, 'es.items.'.$index, []);
+                                        $enItem = data_get($menuForm, 'en.items.'.$index, []);
+                                        $href = data_get($esItem, 'href', data_get($enItem, 'href', ''));
+                                    @endphp
+                                    <div class="menu-item" data-menu-item>
+                                        <div class="menu-item-top">
+                                            <strong>Pestaña {{ $index + 1 }}</strong>
+                                            <button class="btn-danger-soft" type="button" data-remove-menu-item>Quitar</button>
+                                        </div>
+                                        <div class="menu-item-grid">
+                                            <label class="route-field">
+                                                Ruta o URL
+                                                <input type="text" data-menu-href value="{{ $href }}" maxlength="500" required>
+                                                <input type="hidden" name="menu[es][items][{{ $index }}][href]" value="{{ $href }}" data-hidden-href="es">
+                                                <input type="hidden" name="menu[en][items][{{ $index }}][href]" value="{{ $href }}" data-hidden-href="en">
+                                            </label>
+                                            <label>
+                                                <span><span class="menu-lang-tag">ES</span> Título</span>
+                                                <input type="text" name="menu[es][items][{{ $index }}][label]" value="{{ data_get($esItem, 'label') }}" maxlength="80" required>
+                                            </label>
+                                            <label>
+                                                <span><span class="menu-lang-tag">EN</span> Title</span>
+                                                <input type="text" name="menu[en][items][{{ $index }}][label]" value="{{ data_get($enItem, 'label') }}" maxlength="80" required>
+                                            </label>
+                                            <label>
+                                                <span><span class="menu-lang-tag">ES</span> Subtítulo</span>
+                                                <input type="text" name="menu[es][items][{{ $index }}][description]" value="{{ data_get($esItem, 'description') }}" maxlength="120" required>
+                                            </label>
+                                            <label>
+                                                <span><span class="menu-lang-tag">EN</span> Subtitle</span>
+                                                <input type="text" name="menu[en][items][{{ $index }}][description]" value="{{ data_get($enItem, 'description') }}" maxlength="120" required>
+                                            </label>
+                                        </div>
+                                    </div>
+                                @endfor
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button class="btn-undo" type="button" data-menu-undo disabled aria-label="Deshacer cambio del menu">↶</button>
+                        <button type="submit">Guardar menú</button>
+                    </div>
                 </form>
             </section>
         @endif
@@ -947,6 +1380,50 @@
     <script>
         const maxLogoBytes = 2 * 1024 * 1024;
         const allowedLogoTypes = ["image/jpeg", "image/png", "image/webp"];
+        const undoScope = `admin-dashboard:${window.location.pathname}`;
+
+        function readUndoStack(key) {
+            try {
+                return JSON.parse(sessionStorage.getItem(key) || "[]");
+            } catch (error) {
+                return [];
+            }
+        }
+
+        function writeUndoStack(key, stack) {
+            sessionStorage.setItem(key, JSON.stringify(stack.slice(-80)));
+        }
+
+        function pushUndoState(key, state, button) {
+            const stack = readUndoStack(key);
+            const lastState = stack[stack.length - 1];
+
+            if (lastState && JSON.stringify(lastState) === JSON.stringify(state)) {
+                return;
+            }
+
+            stack.push(state);
+            writeUndoStack(key, stack);
+            updateUndoButton(key, button);
+        }
+
+        function popUndoState(key, button) {
+            const stack = readUndoStack(key);
+            const state = stack.pop();
+
+            writeUndoStack(key, stack);
+            updateUndoButton(key, button);
+
+            return state || null;
+        }
+
+        function updateUndoButton(key, button) {
+            if (!button) {
+                return;
+            }
+
+            button.disabled = readUndoStack(key).length === 0;
+        }
 
         function imageErrorFor(input) {
             let error = input.parentElement.querySelector(".client-file-error");
@@ -1019,6 +1496,7 @@
             const image = preview.querySelector("[data-preview-image]");
             const fileInput = document.querySelector("[data-image-file]");
             const removeInput = document.querySelector("[data-remove-image-input]");
+            const restoreInput = document.querySelector("[data-restore-image-input]");
 
             if (fileInput) {
                 fileInput.value = "";
@@ -1041,6 +1519,12 @@
             if (removeInput) {
                 removeInput.value = "1";
             }
+
+            if (restoreInput) {
+                restoreInput.value = "";
+            }
+
+            card.dataset.currentImagePath = "";
         }
 
         function showSelectedImage(card, file) {
@@ -1048,6 +1532,7 @@
             const image = previewImageElement(preview);
             const empty = preview.querySelector("[data-preview-empty]");
             const removeInput = document.querySelector("[data-remove-image-input]");
+            const restoreInput = document.querySelector("[data-restore-image-input]");
 
             if (image.dataset.objectUrl) {
                 URL.revokeObjectURL(image.dataset.objectUrl);
@@ -1063,12 +1548,79 @@
             if (removeInput) {
                 removeInput.value = "0";
             }
+
+            if (restoreInput) {
+                restoreInput.value = "";
+            }
+
+            card.dataset.currentImagePath = "";
         }
 
         document.querySelectorAll("[data-image-card]").forEach((card) => {
             const fileInput = document.querySelector("[data-image-file]");
             const preview = card.querySelector("[data-image-preview]");
             const removeButton = card.querySelector("[data-remove-image]");
+            const removeInput = document.querySelector("[data-remove-image-input]");
+            const restoreInput = document.querySelector("[data-restore-image-input]");
+            const undoButton = document.querySelector("[data-logo-undo]");
+            const logoUndoKey = `${undoScope}:topbar-logo`;
+
+            function logoSnapshot() {
+                const image = preview.querySelector("[data-preview-image]");
+                const src = image && !image.hidden ? image.getAttribute("src") || "" : "";
+                const path = card.dataset.currentImagePath || "";
+                const defaultSrc = card.dataset.defaultImageSrc || "";
+
+                return {
+                    src,
+                    path,
+                    isDefault: Boolean(src && defaultSrc && src === defaultSrc && !path),
+                    removeValue: removeInput?.value || "0",
+                };
+            }
+
+            function applyLogoSnapshot(snapshot) {
+                const image = previewImageElement(preview);
+                const empty = preview.querySelector("[data-preview-empty]");
+
+                if (fileInput) {
+                    fileInput.value = "";
+                    imageErrorFor(fileInput).textContent = "";
+                    fileInput.classList.remove("is-invalid");
+                }
+
+                if (image.dataset.objectUrl) {
+                    URL.revokeObjectURL(image.dataset.objectUrl);
+                    delete image.dataset.objectUrl;
+                }
+
+                if (snapshot.src) {
+                    image.src = snapshot.src;
+                    image.hidden = false;
+
+                    if (empty) {
+                        empty.hidden = true;
+                    }
+                } else {
+                    image.removeAttribute("src");
+                    image.hidden = true;
+                    previewEmpty(preview);
+                }
+
+                card.dataset.currentImagePath = snapshot.path || "";
+
+                if (restoreInput) {
+                    restoreInput.value = snapshot.path || "";
+                }
+
+                if (removeInput) {
+                    removeInput.value = snapshot.path
+                        ? "0"
+                        : (snapshot.isDefault ? "1" : snapshot.removeValue || "0");
+                }
+            }
+
+            updateUndoButton(logoUndoKey, undoButton);
 
             preview?.addEventListener("click", (event) => {
                 if (event.target.closest("[data-remove-image]")) {
@@ -1080,6 +1632,7 @@
 
             removeButton?.addEventListener("click", (event) => {
                 event.stopPropagation();
+                pushUndoState(logoUndoKey, logoSnapshot(), undoButton);
                 clearImagePreview(card);
             });
 
@@ -1088,7 +1641,309 @@
                     return;
                 }
 
+                pushUndoState(logoUndoKey, logoSnapshot(), undoButton);
                 showSelectedImage(card, fileInput.files[0]);
+            });
+
+            undoButton?.addEventListener("click", () => {
+                const snapshot = popUndoState(logoUndoKey, undoButton);
+
+                if (snapshot) {
+                    applyLogoSnapshot(snapshot);
+                }
+            });
+        });
+
+        document.querySelectorAll("[data-footer-undo]").forEach((undoButton) => {
+            const form = undoButton.closest("form");
+            const footerUndoKey = `${undoScope}:footer`;
+            let beforeEdit = null;
+
+            function fields() {
+                return Array.from(form.querySelectorAll("input[type='text'], input[type='url']"));
+            }
+
+            function footerSnapshot() {
+                return fields().map((field) => ({
+                    name: field.name,
+                    value: field.value,
+                }));
+            }
+
+            function applyFooterSnapshot(snapshot) {
+                snapshot.forEach((entry) => {
+                    const field = fields().find((candidate) => candidate.name === entry.name);
+
+                    if (field) {
+                        field.value = entry.value;
+                    }
+                });
+            }
+
+            function maybePushBeforeEdit() {
+                if (!beforeEdit) {
+                    return;
+                }
+
+                if (JSON.stringify(beforeEdit) !== JSON.stringify(footerSnapshot())) {
+                    pushUndoState(footerUndoKey, beforeEdit, undoButton);
+                    beforeEdit = footerSnapshot();
+                }
+            }
+
+            updateUndoButton(footerUndoKey, undoButton);
+
+            form.addEventListener("focusin", (event) => {
+                if (event.target.matches("input[type='text'], input[type='url']")) {
+                    beforeEdit = footerSnapshot();
+                }
+            });
+
+            form.addEventListener("input", maybePushBeforeEdit);
+            form.addEventListener("change", maybePushBeforeEdit);
+
+            form.addEventListener("submit", () => {
+                maybePushBeforeEdit();
+            });
+
+            undoButton.addEventListener("click", () => {
+                const snapshot = popUndoState(footerUndoKey, undoButton);
+
+                if (snapshot) {
+                    applyFooterSnapshot(snapshot);
+                    beforeEdit = footerSnapshot();
+                }
+            });
+        });
+
+        document.querySelectorAll("[data-menu-form]").forEach((form) => {
+            const menuUndoKey = `${undoScope}:mobile-menu`;
+            const undoButton = form.querySelector("[data-menu-undo]");
+            let beforeMenuEdit = null;
+
+            function menuItemsList() {
+                return form.querySelector("[data-menu-items]");
+            }
+
+            function syncSharedHrefs() {
+                form.querySelectorAll("[data-menu-item]").forEach((item) => {
+                    const href = item.querySelector("[data-menu-href]")?.value || "";
+
+                    item.querySelectorAll("[data-hidden-href]").forEach((input) => {
+                        input.value = href;
+                    });
+                });
+            }
+
+            function reindexMenuItems() {
+                syncSharedHrefs();
+
+                Array.from(form.querySelectorAll("[data-menu-item]")).forEach((item, index) => {
+                    const title = item.querySelector(".menu-item-top strong");
+
+                    if (title) {
+                        title.textContent = `Pestaña ${index + 1}`;
+                    }
+
+                    item.querySelectorAll("input[name], [data-hidden-href], [data-menu-field]").forEach((input) => {
+                        const locale = input.dataset.hiddenHref || input.dataset.menuLocale || (input.name.includes("menu[en]") ? "en" : "es");
+                        const field = input.dataset.hiddenHref
+                            ? "href"
+                            : input.dataset.menuField || (input.name.includes("[label]")
+                            ? "label"
+                            : input.name.includes("[description]")
+                                ? "description"
+                                : "href");
+
+                        input.name = `menu[${locale}][items][${index}][${field}]`;
+                    });
+                });
+            }
+
+            function menuSnapshot() {
+                reindexMenuItems();
+
+                return ["es", "en"].reduce((snapshot, locale) => {
+                    const getValue = (selector) => form.querySelector(selector)?.value || "";
+
+                    snapshot[locale] = {
+                        kicker: getValue(`[name="menu[${locale}][kicker]"]`),
+                        title: getValue(`[name="menu[${locale}][title]"]`),
+                        copy: getValue(`[name="menu[${locale}][copy]"]`),
+                        footer: getValue(`[name="menu[${locale}][footer]"]`),
+                        items: Array.from(form.querySelectorAll("[data-menu-item]")).map((item) => ({
+                            label: item.querySelector(`[name^="menu[${locale}]"][name*="[label]"]`)?.value || "",
+                            href: item.querySelector("[data-menu-href]")?.value || "",
+                            description: item.querySelector(`[name^="menu[${locale}]"][name*="[description]"]`)?.value || "",
+                        })),
+                    };
+
+                    return snapshot;
+                }, {});
+            }
+
+            function createMenuItem(item = {}) {
+                const list = menuItemsList();
+
+                if (!list) {
+                    return null;
+                }
+
+                const es = item.es || {};
+                const en = item.en || {};
+                const href = item.href || es.href || en.href || "";
+                const element = document.createElement("div");
+                element.className = "menu-item";
+                element.dataset.menuItem = "";
+                element.innerHTML = `
+                    <div class="menu-item-top">
+                        <strong>Pestaña</strong>
+                        <button class="btn-danger-soft" type="button" data-remove-menu-item>Quitar</button>
+                    </div>
+                    <div class="menu-item-grid">
+                        <label class="route-field">
+                            Ruta o URL
+                            <input type="text" data-menu-href maxlength="500" required>
+                            <input type="hidden" data-hidden-href="es">
+                            <input type="hidden" data-hidden-href="en">
+                        </label>
+                        <label>
+                            <span><span class="menu-lang-tag">ES</span> Título</span>
+                            <input type="text" data-menu-locale="es" data-menu-field="label" maxlength="80" required>
+                        </label>
+                        <label>
+                            <span><span class="menu-lang-tag">EN</span> Title</span>
+                            <input type="text" data-menu-locale="en" data-menu-field="label" maxlength="80" required>
+                        </label>
+                        <label>
+                            <span><span class="menu-lang-tag">ES</span> Subtítulo</span>
+                            <input type="text" data-menu-locale="es" data-menu-field="description" maxlength="120" required>
+                        </label>
+                        <label>
+                            <span><span class="menu-lang-tag">EN</span> Subtitle</span>
+                            <input type="text" data-menu-locale="en" data-menu-field="description" maxlength="120" required>
+                        </label>
+                    </div>
+                `;
+
+                const hrefInput = element.querySelector("[data-menu-href]");
+                const hiddenHrefs = element.querySelectorAll("[data-hidden-href]");
+                const textInputs = Array.from(element.querySelectorAll("input[type='text']:not([data-menu-href])"));
+
+                hrefInput.value = href;
+                hiddenHrefs.forEach((input) => {
+                    input.value = href;
+                });
+                textInputs[0].value = es.label || "";
+                textInputs[1].value = en.label || "";
+                textInputs[2].value = es.description || "";
+                textInputs[3].value = en.description || "";
+
+                list.appendChild(element);
+                reindexMenuItems();
+
+                return element;
+            }
+
+            function applyMenuSnapshot(snapshot) {
+                ["es", "en"].forEach((locale) => {
+                    const localeData = snapshot[locale] || {};
+
+                    const setFieldValue = (selector, value) => {
+                        const field = form.querySelector(selector);
+
+                        if (field) {
+                            field.value = value || "";
+                        }
+                    };
+
+                    setFieldValue(`[name="menu[${locale}][kicker]"]`, localeData.kicker);
+                    setFieldValue(`[name="menu[${locale}][title]"]`, localeData.title);
+                    setFieldValue(`[name="menu[${locale}][copy]"]`, localeData.copy);
+                    setFieldValue(`[name="menu[${locale}][footer]"]`, localeData.footer);
+                });
+
+                const list = menuItemsList();
+                const esItems = snapshot.es?.items || [];
+                const enItems = snapshot.en?.items || [];
+                const itemCount = Math.max(esItems.length, enItems.length);
+
+                if (list) {
+                    list.innerHTML = "";
+                }
+
+                for (let index = 0; index < itemCount; index += 1) {
+                    createMenuItem({
+                        es: esItems[index] || {},
+                        en: enItems[index] || {},
+                        href: esItems[index]?.href || enItems[index]?.href || "",
+                    });
+                }
+
+                reindexMenuItems();
+            }
+
+            function maybePushMenuBeforeEdit() {
+                if (!beforeMenuEdit) {
+                    return;
+                }
+
+                if (JSON.stringify(beforeMenuEdit) !== JSON.stringify(menuSnapshot())) {
+                    pushUndoState(menuUndoKey, beforeMenuEdit, undoButton);
+                    beforeMenuEdit = menuSnapshot();
+                }
+            }
+
+            updateUndoButton(menuUndoKey, undoButton);
+            reindexMenuItems();
+
+            form.addEventListener("focusin", (event) => {
+                if (event.target.matches("input[type='text'], textarea")) {
+                    beforeMenuEdit = menuSnapshot();
+                }
+            });
+
+            form.addEventListener("input", maybePushMenuBeforeEdit);
+
+            form.addEventListener("click", (event) => {
+                const addButton = event.target.closest("[data-add-menu-item]");
+                const removeButton = event.target.closest("[data-remove-menu-item]");
+
+                if (addButton) {
+                    beforeMenuEdit = menuSnapshot();
+                    const newItem = createMenuItem({ es: {}, en: {}, href: "" });
+                    maybePushMenuBeforeEdit();
+
+                    if (newItem) {
+                        newItem.scrollIntoView({ behavior: "smooth", block: "center" });
+                        requestAnimationFrame(() => {
+                            newItem.querySelector("[data-menu-href]")?.focus();
+                        });
+                    }
+                }
+
+                if (removeButton) {
+                    const item = removeButton.closest("[data-menu-item]");
+
+                    beforeMenuEdit = menuSnapshot();
+                    item?.remove();
+                    reindexMenuItems();
+                    maybePushMenuBeforeEdit();
+                }
+            });
+
+            form.addEventListener("submit", () => {
+                maybePushMenuBeforeEdit();
+                reindexMenuItems();
+            });
+
+            undoButton?.addEventListener("click", () => {
+                const snapshot = popUndoState(menuUndoKey, undoButton);
+
+                if (snapshot) {
+                    applyMenuSnapshot(snapshot);
+                    beforeMenuEdit = menuSnapshot();
+                }
             });
         });
     </script>

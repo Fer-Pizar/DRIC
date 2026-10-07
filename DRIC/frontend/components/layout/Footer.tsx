@@ -6,8 +6,11 @@ import { fetchSiteSettings, type FooterSettings } from "@/lib/api/siteSettings";
 
 const defaultFooterSettings: FooterSettings = {
   title: "Dirección de Relaciones Internacionales y Convenios",
+  title_en: "Office of International Relations and Agreements",
   address_line_1: "Av. Ballivián N. 591 esq. Reza, Cochabamba, Bolivia",
+  address_line_1_en: "Ballivián Ave. No. 591 at Reza, Cochabamba, Bolivia",
   address_line_2: "Edif. Mariscal Andrés de Santa Cruz",
+  address_line_2_en: "Mariscal Andrés de Santa Cruz Building",
   umss_url: "https://www.umss.edu.bo/",
   social_links: {
     linkedin: "https://bo.linkedin.com/school/umssboloficial/?trk=public_post_feed-actor-image",
@@ -86,6 +89,12 @@ export default function Footer() {
       icon: "/images/social/youtube.png",
     },
   ];
+  const institutionalTitle =
+    language === "en" ? footerSettings.title_en || copy.title : footerSettings.title || copy.title;
+  const addressLine1 =
+    language === "en" ? footerSettings.address_line_1_en || copy.addressLine1 : footerSettings.address_line_1 || copy.addressLine1;
+  const addressLine2 =
+    language === "en" ? footerSettings.address_line_2_en || copy.addressLine2 : footerSettings.address_line_2 || copy.addressLine2;
 
   return (
     <footer
@@ -133,11 +142,11 @@ export default function Footer() {
 
           <div className="text-center md:text-left">
             <h2 className="text-base font-normal uppercase leading-relaxed tracking-[0.01em] text-white sm:text-lg">
-              {copy.title}
+              {institutionalTitle}
             </h2>
             <address className="dric-site-footer-address mt-2 not-italic text-sm leading-7 text-white sm:text-base">
-              <p>{copy.addressLine1}</p>
-              <p>{copy.addressLine2}</p>
+              <p>{addressLine1}</p>
+              <p>{addressLine2}</p>
             </address>
           </div>
         </div>

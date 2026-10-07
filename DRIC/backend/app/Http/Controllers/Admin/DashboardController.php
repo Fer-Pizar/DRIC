@@ -20,9 +20,11 @@ class DashboardController extends Controller
             'topbarLogoUrl' => $topbarLogoPath
                 ? url('storage/'.ltrim($topbarLogoPath, '/'))
                 : $frontendUrl.'/images/brand/DRIC_logo.png',
+            'topbarLogoPath' => $topbarLogoPath,
             'hasCustomTopbarLogo' => (bool) $topbarLogoPath,
             'frontendUrl' => $frontendUrl,
             'footerSettings' => SiteSetting::footerSettings(),
+            'mobileMenuSettings' => SiteSetting::mobileMenuSettings(),
         ]);
     }
 }

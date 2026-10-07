@@ -32,6 +32,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', DashboardController::class)->name('dashboard');
 Route::put('settings/topbar-logo', [SiteSettingController::class, 'updateTopbarLogo'])->name('settings.topbar-logo.update');
 Route::put('settings/footer', [SiteSettingController::class, 'updateFooter'])->name('settings.footer.update');
+Route::put('settings/mobile-menu', [SiteSettingController::class, 'updateMobileMenu'])->name('settings.mobile-menu.update');
 Route::get('profile', [ProfileController::class, 'edit'])->name('profile.edit');
 Route::put('profile', [ProfileController::class, 'update'])->name('profile.update');
 Route::get('frontend-image/{path}', [HomeContentController::class, 'frontendImage'])->where('path', '.*')->name('frontend-image');

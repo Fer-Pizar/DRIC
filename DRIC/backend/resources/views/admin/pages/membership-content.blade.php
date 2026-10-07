@@ -11,6 +11,13 @@
         if (\Illuminate\Support\Str::startsWith($path, '/storage/')) {
             return url($path);
         }
+        if (\Illuminate\Support\Str::startsWith($path, '/images/')) {
+            $frontendPublicFile = base_path('../frontend/public'.str_replace('/', DIRECTORY_SEPARATOR, $path));
+            if (is_file($frontendPublicFile) && is_readable($frontendPublicFile)) {
+                $mime = mime_content_type($frontendPublicFile) ?: 'image/png';
+                return 'data:'.$mime.';base64,'.base64_encode(file_get_contents($frontendPublicFile));
+            }
+        }
         return $frontendUrl.$path;
     };
 @endphp
@@ -62,10 +69,29 @@
         .field-error, .live-error { color: var(--red-dark); font-size: 12px; font-weight: 800; line-height: 1.45; }
         .live-error:empty { display: none; }
         .is-invalid { border-color: var(--red-dark) !important; box-shadow: 0 0 0 3px rgba(127, 0, 16, 0.10); }
-        .preview { align-items: center; background: #f8fafc; border: 1px solid #d6deeb; border-radius: 14px; display: flex; height: 112px; justify-content: center; max-width: 260px; overflow: visible; position: relative; }
-        .preview img { height: auto; max-height: 96px; max-width: 220px; object-fit: contain; padding: 10px; width: auto; }
+        .image-card { background: #f8fafc; border: 1px dashed #cfd8e8; border-radius: 18px; display: grid; gap: 10px; padding: 14px; position: relative; }
+        .image-card.is-empty .preview { display: none; }
+        .image-card.is-empty .btn-image-remove { display: none; }
+        .preview { align-items: center; aspect-ratio: 1 / 1; background: #eef2f7; border: 1px solid #d6deeb; border-radius: 16px; cursor: zoom-in; display: flex; height: 180px; justify-content: center; max-width: 180px; overflow: hidden; position: relative; width: 180px; }
+        .preview img { display: block; height: 100%; object-fit: contain; padding: 12px; width: 100%; }
         .preview-empty { color: var(--muted); font-size: 12px; font-weight: 800; padding: 14px; text-align: center; }
+        .preview-ruler { background: rgba(23, 32, 51, .78); border-radius: 999px; bottom: 10px; color: #fff; font-size: 12px; font-weight: 800; left: 10px; padding: 6px 9px; position: absolute; }
         .btn-image-remove { align-items: center; background: rgba(127,0,16,.96); border: 2px solid rgba(255,255,255,.92); border-radius: 999px; box-shadow: 0 8px 20px rgba(15,23,42,.22); color: #fff; display: inline-flex; font-size: 20px; font-weight: 900; height: 32px; justify-content: center; line-height: 1; padding: 0; position: absolute; right: -8px; top: -8px; width: 32px; z-index: 5; }
+        .media-editor-modal { background: #0f1113; color: #f8fafc; display: none; inset: 0; position: fixed; z-index: 80; }
+        .media-editor-modal.is-open { display: grid; grid-template-rows: auto 1fr auto auto; }
+        .media-editor-top { align-items: center; background: #171717; display: flex; gap: 18px; justify-content: space-between; padding: 14px 18px; }
+        .media-editor-title { align-items: center; display: flex; gap: 18px; font-size: 28px; font-weight: 900; }
+        .media-editor-back { background: transparent; border: 0; color: #fff; cursor: pointer; font-size: 34px; line-height: 1; padding: 4px 8px; }
+        .media-editor-apply { background: #f8fafc; border: 0; border-radius: 999px; color: #111827; cursor: pointer; font-size: 18px; font-weight: 900; padding: 12px 28px; }
+        .media-editor-workspace { align-items: center; display: flex; justify-content: center; min-height: 0; overflow: hidden; padding: 34px 28px; }
+        .media-editor-stage { aspect-ratio: 1 / 1; background: #fff; height: auto; max-height: none; max-width: none; overflow: hidden; position: relative; touch-action: none; width: min(calc(100vw - 72px), calc(100vh - 250px), 720px); }
+        .media-editor-stage img { left: 50%; max-width: none; position: absolute; top: 50%; transform-origin: center; user-select: none; -webkit-user-drag: none; }
+        .media-editor-stage::after { display: none; }
+        .media-editor-frame { border: 6px solid #ff2b93; inset: 0; pointer-events: none; position: absolute; z-index: 4; }
+        .media-editor-controls { align-items: center; display: grid; gap: 18px; grid-template-columns: auto minmax(220px, 560px) auto; justify-content: center; padding: 20px 28px 10px; }
+        .media-editor-controls span { color: #cbd5e1; font-size: 28px; line-height: 1; }
+        .media-editor-controls input { accent-color: #ff2b93; width: 100%; }
+        .media-editor-error { color: #fecdd3; font-size: 13px; font-weight: 800; min-height: 24px; padding: 0 28px 22px; text-align: center; }
         .empty-state { background: var(--soft); border: 1px dashed #cfd6e3; border-radius: 16px; color: var(--muted); padding: 22px; text-align: center; }
         .sticky-actions { align-items: center; background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 16px; bottom: 18px; box-shadow: 0 18px 45px rgba(15,23,42,.12); display: flex; justify-content: space-between; padding: 14px; position: sticky; z-index: 30; }
         @media (max-width: 820px) { .topbar, .panel-header, .sticky-actions { align-items: stretch; flex-direction: column; } .language-grid, .membership-fields { grid-template-columns: 1fr; } h1 { font-size: 28px; } }
@@ -229,7 +255,8 @@
                                     <span class="hint">Solo este campo permite @ y caracteres propios de un correo.</span>
                                     @error('memberships.'.$index.'.extra_info_email')<span class="field-error">{{ $message }}</span>@enderror
                                 </label>
-                                <label class="full">
+                                <label class="full image-card @if (empty($membership['image'])) is-empty @endif" data-image-card data-crop-aspect="1" data-crop-label="Marco cuadrado 1:1 para logo de membresía. Puedes dejar aire blanco para que el logo completo se vea.">
+                                    <button class="btn btn-undo undo-floating" type="button" data-image-undo data-undo-card disabled title="Deshacer último cambio de imagen" aria-label="Deshacer último cambio de imagen">↶</button>
                                     Imagen
                                     <div class="preview" data-image-preview>
                                         @if (!empty($membership['image']))
@@ -237,10 +264,11 @@
                                         @else
                                             <span class="preview-empty" data-preview-empty>Sin logo seleccionado.</span>
                                         @endif
+                                        <span class="preview-ruler">1:1 logo</span>
                                         <button class="btn-image-remove" type="button" data-remove-image aria-label="Quitar imagen actual">×</button>
                                     </div>
-                                    <input type="file" data-name="image" name="memberships[{{ $index }}][image]" accept=".jpg,.jpeg,.png,image/jpeg,image/png">
-                                    <span class="hint">Solo JPG o PNG. Tamaño máximo: 10 MB. Vista previa al tamaño real del logo en la tarjeta.</span>
+                                    <input type="file" data-name="image" name="memberships[{{ $index }}][image]" accept=".jpg,.jpeg,.png,image/jpeg,image/png" data-image-input>
+                                    <span class="hint">Solo JPG o PNG. Tamaño máximo: 10 MB. Haz clic en el logo para ajustarlo dentro del marco cuadrado.</span>
                                     @error('memberships.'.$index.'.image')<span class="field-error">{{ $message }}</span>@enderror
                                 </label>
                             </div>
@@ -313,10 +341,32 @@
                 <label class="pador-field">Texto de información extra en español<textarea data-name="pador_text_es"></textarea><span class="hint">Este texto se muestra dentro de la tarjeta cuando el interruptor está activo.</span></label>
                 <label class="pador-field">Texto de información extra en inglés<textarea data-name="pador_text_en"></textarea><span class="hint">Si se deja vacío, se usará el texto en español.</span></label>
                 <label class="pador-field full">Correo de contacto<input type="text" data-name="extra_info_email" value="" placeholder="dric@umss.edu.bo"><span class="hint">Solo este campo permite @ y caracteres propios de un correo.</span></label>
-                <label class="full">Imagen<div class="preview" data-image-preview><span class="preview-empty" data-preview-empty>Sin logo seleccionado.</span><button class="btn-image-remove" type="button" data-remove-image aria-label="Quitar imagen actual">×</button></div><input type="file" data-name="image" accept=".jpg,.jpeg,.png,image/jpeg,image/png"><span class="hint">Solo JPG o PNG. Tamaño máximo: 10 MB. Vista previa al tamaño real del logo en la tarjeta.</span></label>
+                <label class="full image-card is-empty" data-image-card data-crop-aspect="1" data-crop-label="Marco cuadrado 1:1 para logo de membresía. Puedes dejar aire blanco para que el logo completo se vea."><button class="btn btn-undo undo-floating" type="button" data-image-undo data-undo-card disabled title="Deshacer último cambio de imagen" aria-label="Deshacer último cambio de imagen">↶</button>Imagen<div class="preview" data-image-preview><span class="preview-empty" data-preview-empty>Sin logo seleccionado.</span><span class="preview-ruler">1:1 logo</span><button class="btn-image-remove" type="button" data-remove-image aria-label="Quitar imagen actual">×</button></div><input type="file" data-name="image" accept=".jpg,.jpeg,.png,image/jpeg,image/png" data-image-input><span class="hint">Solo JPG o PNG. Tamaño máximo: 10 MB. Haz clic en el logo para ajustarlo dentro del marco cuadrado.</span></label>
             </div>
         </div>
     </template>
+
+    <div class="media-editor-modal" id="media-editor-modal" aria-hidden="true">
+        <div class="media-editor-top">
+            <div class="media-editor-title">
+                <button class="media-editor-back" type="button" id="media-editor-close" aria-label="Volver">‹</button>
+                <span>Editar logo</span>
+            </div>
+            <button class="media-editor-apply" type="button" id="media-editor-apply">Aplicar</button>
+        </div>
+        <div class="media-editor-workspace">
+            <div class="media-editor-stage" id="media-editor-stage">
+                <img id="media-editor-image" alt="Vista previa del encuadre">
+                <div class="media-editor-frame" aria-hidden="true"></div>
+            </div>
+        </div>
+        <div class="media-editor-controls">
+            <span aria-hidden="true">−</span>
+            <input id="media-editor-zoom" type="range" min="1" max="3" step="0.01" value="1" aria-label="Zoom de imagen">
+            <span aria-hidden="true">＋</span>
+        </div>
+        <div class="media-editor-error" id="media-editor-error"></div>
+    </div>
 
     <script>
         const cleanLabelPattern = /^[\p{L}\s.,]+$/u;
@@ -330,6 +380,25 @@
         const removedRows = [];
         const removedRowsStorageKey = `membership-removed-rows:${window.location.pathname}`;
         const rowUndoStorageKey = `membership-row-undo:${window.location.pathname}`;
+        const mediaEditorModal = document.getElementById("media-editor-modal");
+        const mediaEditorStage = document.getElementById("media-editor-stage");
+        const mediaEditorImage = document.getElementById("media-editor-image");
+        const mediaEditorZoom = document.getElementById("media-editor-zoom");
+        const mediaEditorClose = document.getElementById("media-editor-close");
+        const mediaEditorApply = document.getElementById("media-editor-apply");
+        const mediaEditorError = document.getElementById("media-editor-error");
+        const mediaEditorState = {
+            row: null,
+            naturalWidth: 0,
+            naturalHeight: 0,
+            baseScale: 1,
+            zoom: 1,
+            offsetX: 0,
+            offsetY: 0,
+            dragging: false,
+            pointerX: 0,
+            pointerY: 0,
+        };
 
         function ensureLiveError(field) {
             let message = field.parentElement.querySelector(".live-error");
@@ -390,19 +459,19 @@
             const file = field.files?.[0];
             field.classList.remove("is-invalid");
             message.textContent = "";
-            if (!file) return;
+            if (!file) return false;
             if (!["image/jpeg", "image/png"].includes(file.type)) {
                 field.classList.add("is-invalid");
                 message.textContent = "Ese formato no está permitido. Solo se aceptan imágenes JPG o PNG.";
-                return;
+                return false;
             }
             if (file.size > 10 * 1024 * 1024) {
                 field.classList.add("is-invalid");
                 message.textContent = "La imagen es demasiado pesada. El tamaño máximo permitido es 10 MB.";
-                return;
+                return false;
             }
 
-            showSelectedImage(field.closest(".membership-row"), file);
+            return true;
         }
 
         function editableFields(row) {
@@ -413,7 +482,7 @@
             const preview = row.querySelector("[data-image-preview]");
             const image = preview?.querySelector("[data-preview-image]");
             const empty = preview?.querySelector("[data-preview-empty]");
-            const fileInput = row.querySelector("input[type='file'][data-name='image']");
+            const fileInput = row.querySelector("[data-image-input]");
             const removeInput = row.querySelector("[data-remove-image-input]");
 
             return {
@@ -527,6 +596,7 @@
             }
 
             image.hidden = false;
+            preview.closest("[data-image-card]")?.classList.remove("is-empty");
             return image;
         }
 
@@ -542,6 +612,7 @@
             }
 
             empty.hidden = false;
+            preview.closest("[data-image-card]")?.classList.add("is-empty");
         }
 
         function restoreImageState(row, state) {
@@ -582,6 +653,7 @@
             }
 
             if (removeInput) removeInput.value = state.removeValue || "0";
+            row.querySelector("[data-image-card]")?.classList.toggle("is-empty", !state.src && !state.file);
         }
 
         function restoreSnapshot(row, snapshot) {
@@ -607,8 +679,10 @@
         }
 
         function setUndoState(row) {
-            const button = row.querySelector(":scope > [data-undo-row], :scope > [data-undo-card], :scope > .row-header [data-undo-row]");
-            if (button) button.disabled = historyFor(row).length === 0 && storedRowHistory(row).length === 0;
+            const hasHistory = historyFor(row).length > 0 || storedRowHistory(row).length > 0;
+            row.querySelectorAll(":scope > [data-undo-row], :scope > [data-undo-card], :scope > .row-header [data-undo-row], :scope [data-image-undo]").forEach((button) => {
+                button.disabled = !hasHistory;
+            });
         }
 
         function pushSnapshot(row, snapshot = snapshotRow(row)) {
@@ -660,12 +734,13 @@
             image.hidden = false;
             if (empty) empty.hidden = true;
             if (removeInput) removeInput.value = "0";
+            row.querySelector("[data-image-card]")?.classList.remove("is-empty");
         }
 
         function clearImagePreview(row) {
             const preview = row.querySelector("[data-image-preview]");
             const image = preview?.querySelector("[data-preview-image]");
-            const fileInput = row.querySelector("input[type='file'][data-name='image']");
+            const fileInput = row.querySelector("[data-image-input]");
             const removeInput = row.querySelector("[data-remove-image-input]");
 
             pushSnapshot(row);
@@ -686,6 +761,122 @@
 
             if (preview) previewEmpty(preview);
             if (removeInput) removeInput.value = "1";
+        }
+
+        function resetMediaEditorState() {
+            mediaEditorState.row = null;
+            mediaEditorState.naturalWidth = 0;
+            mediaEditorState.naturalHeight = 0;
+            mediaEditorState.baseScale = 1;
+            mediaEditorState.zoom = 1;
+            mediaEditorState.offsetX = 0;
+            mediaEditorState.offsetY = 0;
+            mediaEditorState.dragging = false;
+            mediaEditorError.textContent = "";
+            mediaEditorImage.removeAttribute("src");
+        }
+
+        function clampMediaEditorOffsets() {
+            const stageWidth = mediaEditorStage.clientWidth;
+            const stageHeight = mediaEditorStage.clientHeight;
+            const imageWidth = mediaEditorState.naturalWidth * mediaEditorState.baseScale * mediaEditorState.zoom;
+            const imageHeight = mediaEditorState.naturalHeight * mediaEditorState.baseScale * mediaEditorState.zoom;
+            const maxX = Math.max(0, (imageWidth - stageWidth) / 2);
+            const maxY = Math.max(0, (imageHeight - stageHeight) / 2);
+            mediaEditorState.offsetX = Math.min(maxX, Math.max(-maxX, mediaEditorState.offsetX));
+            mediaEditorState.offsetY = Math.min(maxY, Math.max(-maxY, mediaEditorState.offsetY));
+        }
+
+        function renderMediaEditor() {
+            clampMediaEditorOffsets();
+            mediaEditorImage.style.width = `${mediaEditorState.naturalWidth * mediaEditorState.baseScale * mediaEditorState.zoom}px`;
+            mediaEditorImage.style.height = `${mediaEditorState.naturalHeight * mediaEditorState.baseScale * mediaEditorState.zoom}px`;
+            mediaEditorImage.style.transform = `translate(calc(-50% + ${mediaEditorState.offsetX}px), calc(-50% + ${mediaEditorState.offsetY}px))`;
+        }
+
+        function resetMediaEditorPosition() {
+            const stageWidth = mediaEditorStage.clientWidth;
+            const stageHeight = mediaEditorStage.clientHeight;
+            mediaEditorState.baseScale = Math.min(
+                stageWidth / mediaEditorState.naturalWidth,
+                stageHeight / mediaEditorState.naturalHeight
+            );
+            mediaEditorState.zoom = 1;
+            mediaEditorState.offsetX = 0;
+            mediaEditorState.offsetY = 0;
+            mediaEditorZoom.value = "1";
+            renderMediaEditor();
+        }
+
+        function openMediaEditor(row) {
+            const image = row.querySelector("[data-preview-image]");
+            const card = row.querySelector("[data-image-card]");
+            if (!image?.src || !card) return;
+
+            resetMediaEditorState();
+            mediaEditorState.row = row;
+            mediaEditorStage.style.aspectRatio = String(Number(card.dataset.cropAspect || 1));
+            mediaEditorImage.src = image.src;
+            mediaEditorModal.classList.add("is-open");
+            mediaEditorModal.setAttribute("aria-hidden", "false");
+        }
+
+        function closeMediaEditor() {
+            mediaEditorModal.classList.remove("is-open");
+            mediaEditorModal.setAttribute("aria-hidden", "true");
+            resetMediaEditorState();
+        }
+
+        function croppedFileName(fileName) {
+            const base = String(fileName || "membership-logo").replace(/\.[^.]+$/, "");
+            return `${base}-encuadrado.jpg`;
+        }
+
+        function applyMediaEditor() {
+            const row = mediaEditorState.row;
+            if (!row || !mediaEditorState.naturalWidth || !mediaEditorState.naturalHeight) return;
+            mediaEditorError.textContent = "";
+
+            const card = row.querySelector("[data-image-card]");
+            const aspect = Number(card?.dataset.cropAspect || 1);
+            const outputWidth = 1200;
+            const outputHeight = Math.round(outputWidth / aspect);
+            const stageWidth = mediaEditorStage.clientWidth;
+            const stageHeight = mediaEditorStage.clientHeight;
+            const scale = mediaEditorState.baseScale * mediaEditorState.zoom;
+            const outputScaleX = outputWidth / stageWidth;
+            const outputScaleY = outputHeight / stageHeight;
+            const drawWidth = mediaEditorState.naturalWidth * scale * outputScaleX;
+            const drawHeight = mediaEditorState.naturalHeight * scale * outputScaleY;
+            const drawX = (outputWidth - drawWidth) / 2 + mediaEditorState.offsetX * outputScaleX;
+            const drawY = (outputHeight - drawHeight) / 2 + mediaEditorState.offsetY * outputScaleY;
+            const canvas = document.createElement("canvas");
+            canvas.width = outputWidth;
+            canvas.height = outputHeight;
+
+            try {
+                const context = canvas.getContext("2d");
+                context.fillStyle = "#ffffff";
+                context.fillRect(0, 0, outputWidth, outputHeight);
+                context.drawImage(mediaEditorImage, drawX, drawY, drawWidth, drawHeight);
+            } catch (error) {
+                mediaEditorError.textContent = "No se pudo editar esta imagen desde el navegador. Sube el archivo original para ajustarla.";
+                return;
+            }
+
+            canvas.toBlob((blob) => {
+                if (!blob) return;
+                const input = row.querySelector("[data-image-input]");
+                const removeInput = row.querySelector("[data-remove-image-input]");
+                const file = new File([blob], croppedFileName(input?.files?.[0]?.name || "membership-logo.jpg"), { type: "image/jpeg" });
+                const transfer = new DataTransfer();
+
+                transfer.items.add(file);
+                input.files = transfer.files;
+                if (removeInput) removeInput.value = "0";
+                showSelectedImage(row, file);
+                closeMediaEditor();
+            }, "image/jpeg", 0.92);
         }
 
         function setRestoreMembershipState() {
@@ -827,8 +1018,11 @@
             if (field.matches("input[type='file']")) {
                 field.addEventListener("change", () => {
                     const row = field.closest(".membership-row");
-                    if (row) pushSnapshot(row);
-                    validateUpload(field);
+                    if (!row) return;
+                    pushSnapshot(row);
+                    if (!validateUpload(field)) return;
+                    showSelectedImage(row, field.files[0]);
+                    openMediaEditor(row);
                 });
             }
             if (field.matches("input[type='text']")) {
@@ -845,6 +1039,13 @@
             row.dataset.bound = "1";
 
             row.querySelector("[data-undo-row]")?.addEventListener("click", () => undoRow(row));
+            row.querySelectorAll("[data-image-undo]").forEach((button) => {
+                button.addEventListener("click", (event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    undoRow(row);
+                });
+            });
 
             row.querySelector("[data-remove-row]").addEventListener("click", () => {
                 rememberRemovedRow(row);
@@ -852,7 +1053,19 @@
                 refreshRows();
             });
 
-            row.querySelector("[data-remove-image]")?.addEventListener("click", () => clearImagePreview(row));
+            row.querySelector("[data-remove-image]")?.addEventListener("click", (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                clearImagePreview(row);
+            });
+
+            row.querySelector("[data-image-preview]")?.addEventListener("click", (event) => {
+                event.preventDefault();
+                if (event.target.closest("[data-remove-image]")) return;
+                if (!row.querySelector("[data-preview-image]")?.src) return;
+                pushSnapshot(row);
+                openMediaEditor(row);
+            });
 
             editableFields(row).forEach((field) => {
                 field.addEventListener("focusin", () => markFieldStart(field));
@@ -879,6 +1092,41 @@
         document.querySelectorAll(".language-card").forEach(bindUndoCard);
         setRestoreMembershipState();
         refreshRows();
+        mediaEditorImage.addEventListener("load", () => {
+            mediaEditorState.naturalWidth = mediaEditorImage.naturalWidth;
+            mediaEditorState.naturalHeight = mediaEditorImage.naturalHeight;
+            resetMediaEditorPosition();
+        });
+        mediaEditorZoom.addEventListener("input", () => {
+            mediaEditorState.zoom = Number(mediaEditorZoom.value);
+            renderMediaEditor();
+        });
+        mediaEditorStage.addEventListener("pointerdown", (event) => {
+            mediaEditorState.dragging = true;
+            mediaEditorState.pointerX = event.clientX;
+            mediaEditorState.pointerY = event.clientY;
+            mediaEditorStage.setPointerCapture(event.pointerId);
+        });
+        mediaEditorStage.addEventListener("pointermove", (event) => {
+            if (!mediaEditorState.dragging) return;
+            mediaEditorState.offsetX += event.clientX - mediaEditorState.pointerX;
+            mediaEditorState.offsetY += event.clientY - mediaEditorState.pointerY;
+            mediaEditorState.pointerX = event.clientX;
+            mediaEditorState.pointerY = event.clientY;
+            renderMediaEditor();
+        });
+        mediaEditorStage.addEventListener("pointerup", (event) => {
+            mediaEditorState.dragging = false;
+            mediaEditorStage.releasePointerCapture(event.pointerId);
+        });
+        mediaEditorStage.addEventListener("pointercancel", () => {
+            mediaEditorState.dragging = false;
+        });
+        mediaEditorClose.addEventListener("click", closeMediaEditor);
+        mediaEditorApply.addEventListener("click", applyMediaEditor);
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "Escape" && mediaEditorModal.classList.contains("is-open")) closeMediaEditor();
+        });
     </script>
     @include('admin.partials.persistent-undo')
 </body>

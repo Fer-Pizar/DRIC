@@ -3312,6 +3312,51 @@ html[data-theme="light"] .dric-mobile-menu-link:hover .dric-mobile-menu-link-des
   color: #003770 !important;
 }
 
+.dric-mobile-menu-links {
+  max-height: min(58vh, calc(100dvh - 12rem));
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-right: 0.35rem;
+  scrollbar-color: rgba(255, 255, 255, 0.32) transparent;
+  scrollbar-width: thin;
+}
+
+.dric-mobile-menu-links::-webkit-scrollbar {
+  width: 4px;
+}
+
+.dric-mobile-menu-links::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.dric-mobile-menu-links::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.28);
+  border-radius: 999px;
+}
+
+.dric-mobile-menu-links::-webkit-scrollbar-thumb:hover {
+  background: rgba(125, 211, 252, 0.52);
+}
+
+html[data-theme="light"] .dric-mobile-menu-links {
+  scrollbar-color: rgba(0, 55, 112, 0.32) transparent;
+}
+
+html[data-theme="light"] .dric-mobile-menu-links::-webkit-scrollbar-thumb {
+  background: rgba(0, 55, 112, 0.26);
+}
+
+html[data-theme="light"] .dric-mobile-menu-links::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 55, 112, 0.46);
+}
+
+@media (min-width: 1280px) {
+  .dric-mobile-menu-links {
+    max-height: calc(100dvh - 9.5rem);
+  }
+}
+
 .dric-presentation-page {
   background: #020617 !important;
 }
