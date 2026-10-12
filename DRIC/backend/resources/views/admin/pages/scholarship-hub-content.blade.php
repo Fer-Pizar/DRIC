@@ -41,6 +41,7 @@
         .card-heading { align-items: flex-start; display: flex; gap: 16px; justify-content: space-between; margin-bottom: 16px; }
         .card-heading .muted { font-size: 13px; font-weight: 800; margin-top: 4px; }
         .card-heading .btn { flex-shrink: 0; }
+        .card-actions { align-items: center; display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; }
         @media (max-width: 900px) { .topbar, .sticky-actions, .card-heading { align-items: stretch; flex-direction: column; } .language-grid, .two-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
@@ -122,9 +123,11 @@
                                     <p class="muted">Tarjeta {{ $index }} de Becas y Movilidad</p>
                                 </div>
 
-                                @if ($cardEditLinks[$index] ?? null)
-                                    <a class="btn btn-primary" href="{{ $cardEditLinks[$index]['href'] }}">{{ $cardEditLinks[$index]['label'] }}</a>
-                                @endif
+                                <div class="card-actions" data-card-actions>
+                                    @if ($cardEditLinks[$index] ?? null)
+                                        <a class="btn btn-primary" href="{{ $cardEditLinks[$index]['href'] }}">{{ $cardEditLinks[$index]['label'] }}</a>
+                                    @endif
+                                </div>
                             </div>
 
                             <label>
@@ -196,7 +199,7 @@
         }
 
         function setUndoState(scope) {
-            const button = scope.querySelector(":scope > [data-undo-card]");
+            const button = scope.querySelector("[data-undo-card]");
             if (!button) return;
 
             button.disabled = historyFor(scope).length === 0;
@@ -250,14 +253,15 @@
             scope.dataset.undoBound = "1";
 
             const button = document.createElement("button");
-            button.className = "btn btn-undo undo-floating";
+            const actions = scope.querySelector(":scope > .card-heading [data-card-actions]");
+            button.className = actions ? "btn btn-undo" : "btn btn-undo undo-floating";
             button.type = "button";
             button.dataset.undoCard = "";
             button.disabled = true;
             button.title = "Deshacer último cambio";
             button.setAttribute("aria-label", "Deshacer último cambio");
             button.textContent = "↶";
-            scope.appendChild(button);
+            (actions || scope).appendChild(button);
 
             button.addEventListener("click", () => undoScope(scope));
 

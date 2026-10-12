@@ -11,6 +11,9 @@
         if (\Illuminate\Support\Str::startsWith($path, '/storage/')) {
             return url($path);
         }
+        if (\Illuminate\Support\Str::startsWith($path, '/images/')) {
+            return route('admin.frontend-image', ['path' => ltrim($path, '/')]);
+        }
         return $frontendUrl.$path;
     };
     $rows = old('testimonials', $testimonials);
@@ -55,6 +58,7 @@
         textarea { line-height: 1.55; min-height: 130px; resize: vertical; }
         .hint { color: var(--muted); font-size: 12px; font-weight: 500; line-height: 1.45; }
         .field-error { color: var(--red-dark); font-size: 12px; font-weight: 800; line-height: 1.45; }
+        .panel-headline { align-items: center; display: flex; gap: 14px; justify-content: space-between; }
         .preview { align-items: center; background: #111827; border: 1px solid #d6deeb; border-radius: 18px; display: flex; justify-content: center; margin-bottom: 12px; overflow: visible; padding: 0; position: relative; width: 100%; }
         .preview[data-image-preview] { cursor: pointer; }
         .preview-selfie { aspect-ratio: 1 / 1; border-radius: 999px; max-width: 180px; }
@@ -77,7 +81,7 @@
         .crop-controls { align-items: center; display: grid; gap: 10px; grid-template-columns: auto minmax(180px, 1fr); }
         .crop-controls input { padding: 0; }
         .crop-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; }
-        @media (max-width: 940px) { .topbar, .sticky-actions { align-items: stretch; flex-direction: column; } .language-grid, .meta-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 940px) { .topbar, .sticky-actions, .panel-headline { align-items: stretch; flex-direction: column; } .language-grid, .meta-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -102,7 +106,10 @@
 
             <section class="panel">
                 <div class="panel-header">
-                    <h2>Lista de testimonios</h2>
+                    <div class="panel-headline">
+                        <h2>Lista de testimonios</h2>
+                        <button class="btn btn-undo" type="button" id="restore-testimonial" disabled title="Restaurar último testimonio quitado" aria-label="Restaurar último testimonio quitado">↶</button>
+                    </div>
                     <p class="muted">El orden de las tarjetas aquí será el mismo orden del carrusel en la página pública.</p>
                 </div>
 
@@ -252,6 +259,7 @@
                 Zoom
                 <input type="range" id="crop-zoom" min="1" max="3" step="0.01" value="1">
             </label>
+            <div class="field-error" id="crop-error"></div>
             <div class="crop-actions">
                 <button class="btn btn-secondary" type="button" id="crop-reset">Centrar</button>
                 <button class="btn btn-primary" type="button" id="crop-accept">Aceptar recorte</button>
@@ -262,9 +270,15 @@
     <script>
         const list = document.getElementById("testimonial-list");
         const template = document.getElementById("testimonial-template");
+        const restoreTestimonialButton = document.getElementById("restore-testimonial");
         const maxImageBytes = 5 * 1024 * 1024;
         const cardHistory = new WeakMap();
         const fieldStartSnapshots = new WeakMap();
+        const trackedUndoFields = new Set();
+        const imageStartSnapshots = new WeakMap();
+        const undoStorageKey = `home-testimonials-undo:${window.location.pathname}`;
+        const removedStorageKey = `${undoStorageKey}:removed`;
+        const form = document.getElementById("testimonials-form");
 
         function starsForRating(value) {
             return "★".repeat(Math.max(1, Math.min(5, Math.ceil(Number(value || 10) / 2))));
@@ -281,6 +295,7 @@
             const empty = preview?.querySelector("[data-preview-empty]");
             const fileInput = imageCard?.querySelector("[data-image-file]");
             const removeInput = card.querySelector("[data-remove-image-input]");
+            const existingInput = card.querySelector("[data-name='existing_image']");
 
             return {
                 src: image?.getAttribute("src") || "",
@@ -288,6 +303,7 @@
                 emptyHidden: empty ? empty.hidden : true,
                 file: fileInput?.files?.[0] || null,
                 removeValue: removeInput?.value || "0",
+                existingValue: existingInput?.value || "",
             };
         }
 
@@ -303,6 +319,162 @@
             };
         }
 
+        function serializableSnapshot(snapshot) {
+            return {
+                fields: (snapshot.fields || []).map((field) => ({
+                    name: field.name,
+                    type: field.type,
+                    value: field.value,
+                    checked: field.checked,
+                })),
+                image: snapshot.image ? {
+                    src: snapshot.image.src,
+                    imageHidden: snapshot.image.imageHidden,
+                    emptyHidden: snapshot.image.emptyHidden,
+                    removeValue: snapshot.image.removeValue,
+                    existingValue: snapshot.image.existingValue,
+                } : null,
+            };
+        }
+
+        function cardKey(card) {
+            return editableFields(card).map((field) => field.name || field.dataset.name || field.type).join("|");
+        }
+
+        function readUndoStore() {
+            try {
+                const stored = sessionStorage.getItem(undoStorageKey);
+                const parsed = stored ? JSON.parse(stored) : {};
+                return parsed && typeof parsed === "object" ? parsed : {};
+            } catch (error) {
+                sessionStorage.removeItem(undoStorageKey);
+                return {};
+            }
+        }
+
+        function writeUndoStore(store) {
+            const clean = Object.fromEntries(Object.entries(store).filter(([, value]) => Array.isArray(value) && value.length));
+            if (!Object.keys(clean).length) {
+                sessionStorage.removeItem(undoStorageKey);
+                return;
+            }
+
+            sessionStorage.setItem(undoStorageKey, JSON.stringify(clean));
+        }
+
+        function pushStoredSnapshot(card, snapshot) {
+            const key = cardKey(card);
+            if (!key) return;
+
+            const record = serializableSnapshot(snapshot);
+            const store = readUndoStore();
+            if (!Array.isArray(store[key])) store[key] = [];
+
+            const serialized = JSON.stringify(record);
+            const last = store[key].length ? JSON.stringify(store[key][store[key].length - 1]) : null;
+            if (serialized !== last) store[key].push(record);
+            if (store[key].length > 20) store[key].shift();
+            writeUndoStore(store);
+        }
+
+        function popStoredSnapshot(card) {
+            const key = cardKey(card);
+            if (!key) return null;
+
+            const store = readUndoStore();
+            const history = Array.isArray(store[key]) ? store[key] : [];
+            const snapshot = history.pop() || null;
+            if (history.length) store[key] = history;
+            else delete store[key];
+            writeUndoStore(store);
+            return snapshot;
+        }
+
+        function hasStoredSnapshots(card) {
+            const history = readUndoStore()[cardKey(card)] || [];
+            return Array.isArray(history) && history.length > 0;
+        }
+
+        function readRemovedHistory() {
+            try {
+                const stored = sessionStorage.getItem(removedStorageKey);
+                const parsed = stored ? JSON.parse(stored) : [];
+                return Array.isArray(parsed) ? parsed : [];
+            } catch (error) {
+                sessionStorage.removeItem(removedStorageKey);
+                return [];
+            }
+        }
+
+        function writeRemovedHistory(history) {
+            const clean = history.filter(Boolean).slice(-20);
+            if (!clean.length) {
+                sessionStorage.removeItem(removedStorageKey);
+                return;
+            }
+
+            sessionStorage.setItem(removedStorageKey, JSON.stringify(clean));
+        }
+
+        function setRestoreTestimonialState() {
+            if (!restoreTestimonialButton) return;
+            restoreTestimonialButton.disabled = readRemovedHistory().length === 0;
+        }
+
+        function removedSnapshot(row) {
+            return {
+                index: Array.from(list.children).indexOf(row),
+                fields: editableFields(row).map((field) => ({
+                    key: field.dataset.name || field.name,
+                    type: field.type,
+                    value: field.value,
+                    checked: field.checked,
+                })),
+                image: serializableSnapshot(snapshotCard(row)).image,
+            };
+        }
+
+        function pushRemovedSnapshot(row) {
+            const history = readRemovedHistory();
+            history.push(removedSnapshot(row));
+            writeRemovedHistory(history);
+            setRestoreTestimonialState();
+        }
+
+        function popRemovedSnapshot() {
+            const history = readRemovedHistory();
+            const snapshot = history.pop() || null;
+            writeRemovedHistory(history);
+            setRestoreTestimonialState();
+            return snapshot;
+        }
+
+        function restoreRemovedTestimonial() {
+            const snapshot = popRemovedSnapshot();
+            if (!snapshot) return;
+
+            const row = template.content.firstElementChild.cloneNode(true);
+            const insertIndex = Math.max(0, Math.min(Number(snapshot.index ?? list.children.length), list.children.length));
+            list.insertBefore(row, list.children[insertIndex] || null);
+
+            (snapshot.fields || []).forEach((item) => {
+                const field = row.querySelector(`[data-name="${item.key}"]`);
+                if (!field) return;
+
+                if (field.type === "checkbox") {
+                    field.checked = Boolean(item.checked);
+                } else {
+                    field.value = item.value ?? "";
+                }
+            });
+
+            restoreImageState(row, snapshot.image);
+            renameTestimonials();
+            bindUndoCard(row);
+            bindImageCard(row.querySelector("[data-image-card]"));
+            row.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+
         function restoreImageState(card, state) {
             if (!state) return;
 
@@ -310,6 +482,7 @@
             const preview = imageCard?.querySelector("[data-image-preview]");
             const fileInput = imageCard?.querySelector("[data-image-file]");
             const removeInput = card.querySelector("[data-remove-image-input]");
+            const existingInput = card.querySelector("[data-name='existing_image']");
             if (!imageCard || !preview) return;
 
             const image = previewImageElement(preview);
@@ -352,6 +525,10 @@
             if (removeInput) {
                 removeInput.value = state.removeValue || "0";
             }
+
+            if (existingInput) {
+                existingInput.value = state.existingValue || state.src || "";
+            }
         }
 
         function restoreSnapshot(card, snapshot) {
@@ -384,7 +561,7 @@
             const button = card.querySelector("[data-undo-card]");
             if (!button) return;
 
-            button.disabled = historyFor(card).length === 0;
+            button.disabled = historyFor(card).length === 0 && !hasStoredSnapshots(card);
         }
 
         function pushSnapshot(card, snapshot = snapshotCard(card)) {
@@ -394,6 +571,7 @@
 
             if (serialized !== last) {
                 history.push(snapshot);
+                pushStoredSnapshot(card, snapshot);
             }
 
             if (history.length > 20) {
@@ -404,8 +582,13 @@
         }
 
         function undoCard(card) {
-            const snapshot = historyFor(card).pop();
+            const memorySnapshot = historyFor(card).pop();
+            const snapshot = memorySnapshot || popStoredSnapshot(card);
             if (!snapshot) return;
+
+            if (memorySnapshot) {
+                popStoredSnapshot(card);
+            }
 
             restoreSnapshot(card, snapshot);
             editableFields(card).forEach((field) => fieldStartSnapshots.delete(field));
@@ -417,6 +600,7 @@
             if (!card || fieldStartSnapshots.has(field)) return;
 
             fieldStartSnapshots.set(field, snapshotCard(card));
+            trackedUndoFields.add(field);
         }
 
         function rememberFieldChange(field) {
@@ -426,6 +610,26 @@
 
             pushSnapshot(card, snapshot);
             fieldStartSnapshots.delete(field);
+            trackedUndoFields.delete(field);
+        }
+
+        function flushPendingUndoSnapshots() {
+            Array.from(trackedUndoFields).forEach((field) => {
+                const card = field.closest(".testimonial-row");
+                const snapshot = fieldStartSnapshots.get(field);
+                if (!card || !snapshot) {
+                    trackedUndoFields.delete(field);
+                    return;
+                }
+
+                const currentSnapshot = snapshotCard(card);
+                if (JSON.stringify(serializableSnapshot(snapshot)) !== JSON.stringify(serializableSnapshot(currentSnapshot))) {
+                    pushSnapshot(card, snapshot);
+                }
+
+                fieldStartSnapshots.delete(field);
+                trackedUndoFields.delete(field);
+            });
         }
 
         function bindUndoCard(card) {
@@ -463,7 +667,9 @@
 
         list.addEventListener("click", (event) => {
             if (!event.target.matches("[data-remove-testimonial]")) return;
-            event.target.closest(".testimonial-row").remove();
+            const row = event.target.closest(".testimonial-row");
+            pushRemovedSnapshot(row);
+            row.remove();
             renameTestimonials();
         });
 
@@ -544,6 +750,7 @@
             const image = preview.querySelector("[data-preview-image]");
             const fileInput = card.querySelector("[data-image-file]");
             const removeInput = row.querySelector("[data-remove-image-input]");
+            const existingInput = row.querySelector("[data-name='existing_image']");
 
             pushSnapshot(row);
 
@@ -566,13 +773,18 @@
             if (removeInput) {
                 removeInput.value = "1";
             }
+            if (existingInput) {
+                existingInput.value = "";
+            }
         }
 
         function showSelectedImage(card, file) {
             const preview = card.querySelector("[data-image-preview]");
             const image = previewImageElement(preview);
             const empty = preview.querySelector("[data-preview-empty]");
-            const removeInput = card.closest(".testimonial-row").querySelector("[data-remove-image-input]");
+            const row = card.closest(".testimonial-row");
+            const removeInput = row.querySelector("[data-remove-image-input]");
+            const existingInput = row.querySelector("[data-name='existing_image']");
 
             if (image.dataset.objectUrl) {
                 URL.revokeObjectURL(image.dataset.objectUrl);
@@ -588,6 +800,9 @@
             if (removeInput) {
                 removeInput.value = "0";
             }
+            if (existingInput) {
+                existingInput.value = "";
+            }
         }
 
         function bindImageCard(card) {
@@ -600,11 +815,18 @@
 
             function requestImageFile() {
                 if (!fileInput) return;
+                imageStartSnapshots.set(fileInput, snapshotCard(card.closest(".testimonial-row")));
                 fileInput.click();
             }
 
             preview?.addEventListener("click", (event) => {
                 if (event.target.closest("[data-remove-image]")) return;
+                const image = preview.querySelector("[data-preview-image]");
+                if (image?.src && !image.hidden) {
+                    imageStartSnapshots.set(fileInput, snapshotCard(card.closest(".testimonial-row")));
+                    openCropTool(card, null, image.src);
+                    return;
+                }
                 requestImageFile();
             });
 
@@ -627,10 +849,12 @@
         const cropAccept = document.getElementById("crop-accept");
         const cropReset = document.getElementById("crop-reset");
         const cropClose = document.getElementById("crop-close");
+        const cropError = document.getElementById("crop-error");
         const cropState = {
             card: null,
             file: null,
             objectUrl: "",
+            sourceUrl: "",
             naturalWidth: 0,
             naturalHeight: 0,
             baseScale: 1,
@@ -685,14 +909,16 @@
             renderCrop();
         }
 
-        function openCropTool(card, file) {
+        function openCropTool(card, file, sourceUrl = "") {
             if (cropState.objectUrl) {
                 URL.revokeObjectURL(cropState.objectUrl);
             }
 
             cropState.card = card;
             cropState.file = file;
-            cropState.objectUrl = URL.createObjectURL(file);
+            cropState.objectUrl = file ? URL.createObjectURL(file) : "";
+            cropState.sourceUrl = sourceUrl || cropState.objectUrl;
+            cropError.textContent = "";
             cropHelp.textContent = card.dataset.cropLabel || "Marco cuadrado 1:1, igual al selfie circular del carrusel.";
             cropModal.classList.add("is-open");
             cropModal.setAttribute("aria-hidden", "false");
@@ -700,7 +926,7 @@
             const size = frameSizeForAspect(Number(card.dataset.cropAspect || "1"));
             cropFrame.style.width = `${size.width}px`;
             cropFrame.style.height = `${size.height}px`;
-            cropImage.src = cropState.objectUrl;
+            cropImage.src = cropState.sourceUrl;
         }
 
         function closeCropTool(clearSelection = false) {
@@ -710,7 +936,13 @@
 
             if (clearSelection && card) {
                 const fileInput = card.querySelector("[data-image-file]");
-                if (fileInput) fileInput.value = "";
+                const snapshot = fileInput ? imageStartSnapshots.get(fileInput) : null;
+                if (snapshot) {
+                    restoreImageState(card.closest(".testimonial-row"), snapshot.image);
+                    imageStartSnapshots.delete(fileInput);
+                } else if (fileInput) {
+                    fileInput.value = "";
+                }
             }
 
             if (cropState.objectUrl) {
@@ -720,43 +952,63 @@
             cropState.card = null;
             cropState.file = null;
             cropState.objectUrl = "";
+            cropState.sourceUrl = "";
+            cropError.textContent = "";
             cropImage.removeAttribute("src");
         }
 
         function acceptCrop() {
             const card = cropState.card;
             const file = cropState.file;
-            if (!card || !file) return;
+            if (!card) return;
+            cropError.textContent = "";
 
             const scale = cropState.baseScale * cropState.zoom;
             const visibleLeft = (cropState.naturalWidth * scale - cropFrame.clientWidth) / 2 - cropState.offsetX;
             const visibleTop = (cropState.naturalHeight * scale - cropFrame.clientHeight) / 2 - cropState.offsetY;
             const sourceX = Math.max(0, visibleLeft / scale);
             const sourceY = Math.max(0, visibleTop / scale);
-            const sourceWidth = Math.min(cropState.naturalWidth - sourceX, cropFrame.clientWidth / scale);
-            const sourceHeight = Math.min(cropState.naturalHeight - sourceY, cropFrame.clientHeight / scale);
+            const sourceSize = Math.min(
+                cropState.naturalWidth - sourceX,
+                cropState.naturalHeight - sourceY,
+                cropFrame.clientWidth / scale,
+                cropFrame.clientHeight / scale
+            );
             const canvas = document.createElement("canvas");
             const context = canvas.getContext("2d");
-            const base = file.name.replace(/\.[^.]+$/, "") || "selfie";
+            const base = (file?.name || "selfie").replace(/\.[^.]+$/, "") || "selfie";
             const croppedName = `${base}-recortada.jpg`;
 
             canvas.width = 900;
             canvas.height = 900;
-            context.drawImage(cropImage, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, 900, 900);
+            try {
+                context.drawImage(cropImage, sourceX, sourceY, sourceSize, sourceSize, 0, 0, 900, 900);
+            } catch (error) {
+                cropError.textContent = "Esta imagen no se puede recortar desde el navegador. Sube el archivo original para ajustarla.";
+                return;
+            }
 
-            canvas.toBlob((blob) => {
-                if (!blob) return;
+            try {
+                canvas.toBlob((blob) => {
+                    if (!blob) return;
 
-                const cropped = new File([blob], croppedName, { type: "image/jpeg" });
-                const transfer = new DataTransfer();
-                const fileInput = card.querySelector("[data-image-file]");
+                    const cropped = new File([blob], croppedName, { type: "image/jpeg" });
+                    const transfer = new DataTransfer();
+                    const fileInput = card.querySelector("[data-image-file]");
+                    const row = card.closest(".testimonial-row");
+                    const snapshot = imageStartSnapshots.get(fileInput) || snapshotCard(row);
 
-                transfer.items.add(cropped);
-                fileInput.files = transfer.files;
-                showSelectedImage(card, cropped);
-                imageErrorFor(fileInput).textContent = "";
-                closeCropTool(false);
-            }, "image/jpeg", .92);
+                    transfer.items.add(cropped);
+                    pushSnapshot(row, snapshot);
+                    fileInput.files = transfer.files;
+                    imageStartSnapshots.delete(fileInput);
+                    showSelectedImage(card, cropped);
+                    imageErrorFor(fileInput).textContent = "";
+                    closeCropTool(false);
+                }, "image/jpeg", .92);
+            } catch (error) {
+                cropError.textContent = "Esta imagen no se puede recortar desde el navegador. Sube el archivo original para ajustarla.";
+            }
         }
 
         cropImage.addEventListener("load", () => {
@@ -813,7 +1065,13 @@
         renameTestimonials();
         document.querySelectorAll(".testimonial-row").forEach(bindUndoCard);
         document.querySelectorAll("[data-image-card]").forEach(bindImageCard);
+        restoreTestimonialButton?.addEventListener("click", restoreRemovedTestimonial);
+        setRestoreTestimonialState();
+        form?.addEventListener("submit", flushPendingUndoSnapshots);
+        window.addEventListener("pageshow", () => {
+            document.querySelectorAll(".testimonial-row").forEach(setUndoState);
+            setRestoreTestimonialState();
+        });
     </script>
-    @include('admin.partials.persistent-undo')
 </body>
 </html>

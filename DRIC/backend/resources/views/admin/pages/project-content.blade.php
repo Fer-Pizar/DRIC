@@ -145,6 +145,25 @@
             gap: 14px;
         }
 
+        .project-card-editor {
+            border: 2px solid rgba(22, 65, 148, .28);
+            display: grid;
+            gap: 18px;
+        }
+
+        .project-card-header {
+            align-items: center;
+            display: flex;
+            gap: 14px;
+            justify-content: space-between;
+        }
+
+        .project-card-body {
+            display: grid;
+            gap: 18px;
+            grid-template-columns: minmax(300px, .82fr) minmax(0, 1fr);
+        }
+
         .language-card,
         .media-card {
             background: #fff;
@@ -218,8 +237,8 @@
         }
 
         .preview-project-card {
-            aspect-ratio: 2 / 1;
-            min-height: 180px;
+            aspect-ratio: 13 / 6;
+            min-height: 0;
         }
 
         .preview img {
@@ -319,7 +338,8 @@
             }
 
             .language-grid,
-            .media-grid {
+            .media-grid,
+            .project-card-body {
                 grid-template-columns: 1fr;
             }
 
@@ -413,54 +433,60 @@
                 </div>
                 <div class="cards-grid">
                     @foreach ([1, 2] as $index)
-                        <div class="language-card">
-                            <h3>Tarjeta {{ $index }}</h3>
-                            <div class="language-grid" style="margin-top:14px;">
-                                @foreach (['es' => 'Español', 'en' => 'Inglés'] as $locale => $label)
-                                    <div class="field-grid">
-                                        <h3>{{ $label }}</h3>
-                                        <label>
-                                            Título
-                                            <input type="text" name="{{ $locale }}[card_{{ $index }}_title]" value="{{ old($locale.'.card_'.$index.'_title', $content[$locale]['card_'.$index.'_title']) }}">
-                                            @error($locale.'.card_'.$index.'_title')<span class="field-error">{{ $message }}</span>@enderror
-                                        </label>
-                                        <label>
-                                            Descripción
-                                            <textarea name="{{ $locale }}[card_{{ $index }}_description]">{{ old($locale.'.card_'.$index.'_description', $content[$locale]['card_'.$index.'_description']) }}</textarea>
-                                            @error($locale.'.card_'.$index.'_description')<span class="field-error">{{ $message }}</span>@enderror
-                                        </label>
-                                        <label>
-                                            Texto del botón
-                                            <input type="text" name="{{ $locale }}[card_{{ $index }}_button]" value="{{ old($locale.'.card_'.$index.'_button', $content[$locale]['card_'.$index.'_button']) }}">
-                                            @error($locale.'.card_'.$index.'_button')<span class="field-error">{{ $message }}</span>@enderror
-                                        </label>
-                                    </div>
-                                @endforeach
+                        <div class="language-card project-card-editor">
+                            <div class="project-card-header">
+                                <h3>Tarjeta {{ $index }}</h3>
                             </div>
-                            <div class="field-grid" style="margin-top:14px;">
-                                <label>
-                                    Destino del botón de la tarjeta
-                                    <input type="text" name="card_{{ $index }}_href" value="{{ old('card_'.$index.'_href', $content['card_'.$index.'_href']) }}">
-                                    <span class="hint">Puedes usar una URL completa o una ruta interna como apoyo-financiero.</span>
-                                    @error('card_'.$index.'_href')<span class="field-error">{{ $message }}</span>@enderror
-                                </label>
-                                <div class="media-card" data-image-card data-crop-aspect="2" data-crop-label="Marco ancho 2:1, similar a la imagen superior de la tarjeta pública de Proyectos.">
+                            <div class="project-card-body">
+                                <div class="media-card" data-image-card data-crop-aspect="2.1666667" data-crop-label="Marco ancho 13:6, igual a la imagen superior de la tarjeta pública de Proyectos.">
                                     <div class="preview preview-project-card" data-image-preview>
                                         @if ($content['card_'.$index.'_image_url'])
                                             <img src="{{ $preview($content['card_'.$index.'_image_url']) }}" alt="Imagen de la tarjeta {{ $index }}" data-preview-image>
                                         @else
                                             <span class="preview-empty" data-preview-empty>Se usará la imagen actual del sitio hasta subir una nueva.</span>
                                         @endif
-                                        <span class="preview-ruler">2:1 tarjeta</span>
+                                        <span class="preview-ruler">13:6 tarjeta</span>
                                         <button class="btn-image-remove" type="button" data-remove-image aria-label="Quitar imagen actual">×</button>
                                     </div>
                                     <input type="hidden" name="card_{{ $index }}_image_remove" value="0" data-remove-image-input>
+                                    <input type="hidden" name="card_{{ $index }}_image_restore_media_id" value="" data-restore-media-input>
+                                    <input type="hidden" value="{{ $content['card_'.$index.'_image_id'] }}" data-current-media-input>
                                     <label>
                                         Imagen de la tarjeta {{ $index }}
                                         <input type="file" name="card_{{ $index }}_image" accept=".jpg,.jpeg,.png,image/jpeg,image/png" data-image-file>
-                                        <span class="hint">La X quita la selección actual. Solo JPG o PNG. Tamaño máximo: 10 MB.</span>
+                                        <span class="hint">Haz clic en la imagen para ajustar el encuadre. La X quita la selección actual. Solo JPG o PNG. Tamaño máximo: 10 MB.</span>
                                         @error('card_'.$index.'_image')<span class="field-error">{{ $message }}</span>@enderror
                                     </label>
+                                </div>
+                                <div class="field-grid">
+                                    <label>
+                                        Destino del botón de la tarjeta
+                                        <input type="text" name="card_{{ $index }}_href" value="{{ old('card_'.$index.'_href', $content['card_'.$index.'_href']) }}">
+                                        <span class="hint">Puedes usar una URL completa o una ruta interna como apoyo-financiero.</span>
+                                        @error('card_'.$index.'_href')<span class="field-error">{{ $message }}</span>@enderror
+                                    </label>
+                                    <div class="language-grid">
+                                        @foreach (['es' => 'Español', 'en' => 'Inglés'] as $locale => $label)
+                                            <div class="field-grid">
+                                                <h3>{{ $label }}</h3>
+                                                <label>
+                                                    Título
+                                                    <input type="text" name="{{ $locale }}[card_{{ $index }}_title]" value="{{ old($locale.'.card_'.$index.'_title', $content[$locale]['card_'.$index.'_title']) }}">
+                                                    @error($locale.'.card_'.$index.'_title')<span class="field-error">{{ $message }}</span>@enderror
+                                                </label>
+                                                <label>
+                                                    Descripción
+                                                    <textarea name="{{ $locale }}[card_{{ $index }}_description]">{{ old($locale.'.card_'.$index.'_description', $content[$locale]['card_'.$index.'_description']) }}</textarea>
+                                                    @error($locale.'.card_'.$index.'_description')<span class="field-error">{{ $message }}</span>@enderror
+                                                </label>
+                                                <label>
+                                                    Texto del botón
+                                                    <input type="text" name="{{ $locale }}[card_{{ $index }}_button]" value="{{ old($locale.'.card_'.$index.'_button', $content[$locale]['card_'.$index.'_button']) }}">
+                                                    @error($locale.'.card_'.$index.'_button')<span class="field-error">{{ $message }}</span>@enderror
+                                                </label>
+                                            </div>
+                                        @endforeach
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -511,6 +537,7 @@
                 <button class="btn btn-secondary" type="button" id="crop-reset">Centrar</button>
                 <button class="btn btn-primary" type="button" id="crop-accept">Aceptar recorte</button>
             </div>
+            <div class="field-error" id="crop-error"></div>
         </div>
     </div>
 
@@ -527,6 +554,7 @@
         const cardHistory = new WeakMap();
         const fieldStartSnapshots = new WeakMap();
         const imageStartSnapshots = new WeakMap();
+        const imageUndoStorageKey = `admin-project-image-undo:${window.location.pathname}`;
         const maxImageBytes = 10 * 1024 * 1024;
         const maxPdfBytes = 20 * 1024 * 1024;
 
@@ -551,6 +579,8 @@
             const empty = preview?.querySelector("[data-preview-empty]");
             const fileInput = card.querySelector("[data-image-file]");
             const removeInput = card.querySelector("[data-remove-image-input]");
+            const restoreInput = card.querySelector("[data-restore-media-input]");
+            const currentInput = card.querySelector("[data-current-media-input]");
 
             return {
                 src: image?.getAttribute("src") || "",
@@ -558,7 +588,83 @@
                 emptyHidden: empty ? empty.hidden : true,
                 file: fileInput?.files?.[0] || null,
                 removeValue: removeInput?.value || "0",
+                restoreMediaId: restoreInput?.value || "",
+                currentMediaId: currentInput?.value || "",
             };
+        }
+
+        function serializableSnapshot(snapshot) {
+            return {
+                fields: snapshot.fields,
+                image: snapshot.image ? { ...snapshot.image, file: null } : null,
+            };
+        }
+
+        function imageStorageKeyFor(scope) {
+            return imageCardFor(scope)?.querySelector("[data-image-file]")?.name || "";
+        }
+
+        function readImageHistories() {
+            try {
+                const stored = sessionStorage.getItem(imageUndoStorageKey);
+                const parsed = stored ? JSON.parse(stored) : {};
+                return parsed && typeof parsed === "object" ? parsed : {};
+            } catch (error) {
+                sessionStorage.removeItem(imageUndoStorageKey);
+                return {};
+            }
+        }
+
+        function writeImageHistories(histories) {
+            const keys = Object.keys(histories).filter((key) => Array.isArray(histories[key]) && histories[key].length);
+
+            if (!keys.length) {
+                sessionStorage.removeItem(imageUndoStorageKey);
+                return;
+            }
+
+            sessionStorage.setItem(imageUndoStorageKey, JSON.stringify(histories));
+        }
+
+        function persistentImageHistory(scope) {
+            const key = imageStorageKeyFor(scope);
+            if (!key) return [];
+
+            const histories = readImageHistories();
+            return Array.isArray(histories[key]) ? histories[key] : [];
+        }
+
+        function pushPersistentImageSnapshot(scope, snapshot) {
+            const key = imageStorageKeyFor(scope);
+            if (!key) return;
+
+            const histories = readImageHistories();
+            if (!Array.isArray(histories[key])) histories[key] = [];
+
+            const cleanSnapshot = serializableSnapshot(snapshot);
+            const serialized = JSON.stringify(cleanSnapshot);
+            const last = histories[key].length ? JSON.stringify(histories[key][histories[key].length - 1]) : null;
+
+            if (serialized !== last) histories[key].push(cleanSnapshot);
+            if (histories[key].length > 20) histories[key].shift();
+            writeImageHistories(histories);
+        }
+
+        function popPersistentImageSnapshot(scope) {
+            const key = imageStorageKeyFor(scope);
+            if (!key) return null;
+
+            const histories = readImageHistories();
+            const history = histories[key];
+            if (!Array.isArray(history) || !history.length) return null;
+
+            const snapshot = history.pop();
+            if (!history.length) {
+                delete histories[key];
+            }
+
+            writeImageHistories(histories);
+            return snapshot;
         }
 
         function snapshotScope(scope) {
@@ -582,6 +688,7 @@
             const preview = card.querySelector("[data-image-preview]");
             const fileInput = card.querySelector("[data-image-file]");
             const removeInput = card.querySelector("[data-remove-image-input]");
+            const restoreInput = card.querySelector("[data-restore-media-input]");
             const empty = preview?.querySelector("[data-preview-empty]");
             let image = preview?.querySelector("[data-preview-image]");
 
@@ -627,7 +734,11 @@
             }
 
             if (removeInput) {
-                removeInput.value = state.removeValue;
+                removeInput.value = state.currentMediaId || state.restoreMediaId ? state.removeValue : (state.src ? "1" : state.removeValue);
+            }
+
+            if (restoreInput) {
+                restoreInput.value = state.restoreMediaId || state.currentMediaId || "";
             }
         }
 
@@ -664,7 +775,7 @@
             const button = scope.querySelector(":scope > [data-undo-card]");
             if (!button) return;
 
-            button.disabled = historyFor(scope).length === 0;
+            button.disabled = historyFor(scope).length === 0 && persistentImageHistory(scope).length === 0;
         }
 
         function pushSnapshot(scope, snapshot = snapshotScope(scope)) {
@@ -680,11 +791,15 @@
                 history.shift();
             }
 
+            if (imageCardFor(scope)) {
+                pushPersistentImageSnapshot(scope, snapshot);
+            }
+
             setUndoState(scope);
         }
 
         function undoScope(scope) {
-            const snapshot = historyFor(scope).pop();
+            const snapshot = historyFor(scope).pop() || popPersistentImageSnapshot(scope);
             if (!snapshot) return;
 
             restoreSnapshot(scope, snapshot);
@@ -846,6 +961,8 @@
             const image = preview.querySelector("[data-preview-image]");
             const fileInput = card.querySelector("[data-image-file]");
             const removeInput = card.querySelector("[data-remove-image-input]");
+            const restoreInput = card.querySelector("[data-restore-media-input]");
+            const currentInput = card.querySelector("[data-current-media-input]");
 
             pushSnapshot(scope);
 
@@ -868,6 +985,14 @@
             if (removeInput) {
                 removeInput.value = "1";
             }
+
+            if (restoreInput) {
+                restoreInput.value = "";
+            }
+
+            if (currentInput) {
+                currentInput.value = "";
+            }
         }
 
         function showSelectedImage(card, file) {
@@ -875,6 +1000,7 @@
             const image = previewImageElement(preview);
             const empty = preview.querySelector("[data-preview-empty]");
             const removeInput = card.querySelector("[data-remove-image-input]");
+            const restoreInput = card.querySelector("[data-restore-media-input]");
 
             if (image.dataset.objectUrl) {
                 URL.revokeObjectURL(image.dataset.objectUrl);
@@ -889,6 +1015,10 @@
 
             if (removeInput) {
                 removeInput.value = "0";
+            }
+
+            if (restoreInput) {
+                restoreInput.value = "";
             }
         }
 
@@ -908,8 +1038,12 @@
             preview?.addEventListener("click", (event) => {
                 if (event.target.closest("[data-remove-image]")) return;
 
-                if (fileInput) {
+                const currentImage = card.querySelector("[data-preview-image]");
+
+                if (currentImage?.src && !currentImage.hidden) {
                     rememberImageStart();
+                    openCropTool(card, null, currentImage.src);
+                    return;
                 }
 
                 fileInput?.click();
@@ -935,10 +1069,12 @@
         const cropAccept = document.getElementById("crop-accept");
         const cropReset = document.getElementById("crop-reset");
         const cropClose = document.getElementById("crop-close");
+        const cropError = document.getElementById("crop-error");
         const cropState = {
             card: null,
             file: null,
             objectUrl: "",
+            sourceUrl: "",
             naturalWidth: 0,
             naturalHeight: 0,
             baseScale: 1,
@@ -999,7 +1135,7 @@
             renderCrop();
         }
 
-        function openCropTool(card, file) {
+        function openCropTool(card, file = null, sourceUrl = "") {
             const aspect = cropAspectFor(card);
 
             if (cropState.objectUrl) {
@@ -1008,7 +1144,9 @@
 
             cropState.card = card;
             cropState.file = file;
-            cropState.objectUrl = URL.createObjectURL(file);
+            cropState.objectUrl = file ? URL.createObjectURL(file) : "";
+            cropState.sourceUrl = cropState.objectUrl || sourceUrl;
+            cropError.textContent = "";
             cropHelp.textContent = card.dataset.cropLabel || "Ajusta la imagen dentro del marco y acepta el recorte.";
             cropModal.classList.add("is-open");
             cropModal.setAttribute("aria-hidden", "false");
@@ -1016,7 +1154,7 @@
             const size = frameSizeForAspect(aspect);
             cropFrame.style.width = `${size.width}px`;
             cropFrame.style.height = `${size.height}px`;
-            cropImage.src = cropState.objectUrl;
+            cropImage.src = cropState.sourceUrl;
         }
 
         function closeCropTool(clearSelection = false) {
@@ -1047,18 +1185,20 @@
             cropState.card = null;
             cropState.file = null;
             cropState.objectUrl = "";
+            cropState.sourceUrl = "";
+            cropError.textContent = "";
             cropImage.removeAttribute("src");
         }
 
         function croppedFileName(file) {
-            const base = file.name.replace(/\.[^.]+$/, "") || "project-image";
+            const base = String(file?.name || "project-image").replace(/\.[^.]+$/, "") || "project-image";
             return `${base}-recortada.jpg`;
         }
 
         function acceptCrop() {
             const card = cropState.card;
             const file = cropState.file;
-            if (!card || !file) return;
+            if (!card) return;
 
             const scale = cropState.baseScale * cropState.zoom;
             const visibleLeft = (cropState.naturalWidth * scale - cropFrame.clientWidth) / 2 - cropState.offsetX;
@@ -1075,25 +1215,38 @@
 
             canvas.width = outputWidth;
             canvas.height = outputHeight;
-            context.drawImage(cropImage, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, outputWidth, outputHeight);
 
-            canvas.toBlob((blob) => {
-                if (!blob) return;
+            try {
+                context.drawImage(cropImage, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, outputWidth, outputHeight);
+            } catch (error) {
+                cropError.textContent = "Esta imagen no se puede recortar desde el navegador. Sube el archivo original para ajustarla.";
+                return;
+            }
 
-                const cropped = new File([blob], croppedFileName(file), { type: "image/jpeg" });
-                const transfer = new DataTransfer();
-                const fileInput = card.querySelector("[data-image-file]");
-                const scope = card.closest("[data-undo-scope]") || card;
-                const snapshot = imageStartSnapshots.get(fileInput) || snapshotScope(scope);
+            try {
+                canvas.toBlob((blob) => {
+                    if (!blob) {
+                        cropError.textContent = "Esta imagen no se puede recortar desde el navegador. Sube el archivo original para ajustarla.";
+                        return;
+                    }
 
-                transfer.items.add(cropped);
-                pushSnapshot(scope, snapshot);
-                fileInput.files = transfer.files;
-                imageStartSnapshots.delete(fileInput);
-                showSelectedImage(card, cropped);
-                ensureLiveError(fileInput).textContent = "";
-                closeCropTool(false);
-            }, "image/jpeg", .92);
+                    const cropped = new File([blob], croppedFileName(file), { type: "image/jpeg" });
+                    const transfer = new DataTransfer();
+                    const fileInput = card.querySelector("[data-image-file]");
+                    const scope = card.closest("[data-undo-scope]") || card;
+                    const snapshot = imageStartSnapshots.get(fileInput) || snapshotScope(scope);
+
+                    transfer.items.add(cropped);
+                    pushSnapshot(scope, snapshot);
+                    fileInput.files = transfer.files;
+                    imageStartSnapshots.delete(fileInput);
+                    showSelectedImage(card, cropped);
+                    ensureLiveError(fileInput).textContent = "";
+                    closeCropTool(false);
+                }, "image/jpeg", .92);
+            } catch (error) {
+                cropError.textContent = "Esta imagen no se puede recortar desde el navegador. Sube el archivo original para ajustarla.";
+            }
         }
 
         cropImage.addEventListener("load", () => {
@@ -1166,6 +1319,10 @@
 
         document.querySelectorAll(".language-card, .media-card").forEach(bindUndoScope);
         document.querySelectorAll("[data-image-card]").forEach(bindImageCard);
+        document.querySelectorAll("[data-image-card]").forEach((card) => {
+            const scope = card.closest("[data-undo-scope]") || card;
+            setUndoState(scope);
+        });
     </script>
     @include('admin.partials.persistent-undo')
 </body>

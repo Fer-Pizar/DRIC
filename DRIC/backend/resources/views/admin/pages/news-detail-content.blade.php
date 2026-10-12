@@ -11,6 +11,8 @@
         .shell { margin: 0 auto; max-width: 1180px; padding: 36px 20px 56px; }
         .topbar, .panel, .language-card, .image-card { background: #fff; border: 1px solid var(--line); border-radius: 18px; box-shadow: 0 18px 50px rgba(15, 23, 42, 0.08); }
         .topbar { align-items: center; display: flex; gap: 18px; justify-content: space-between; margin-bottom: 22px; padding: 24px; }
+        .topbar > div:first-child { flex: 1 1 auto; min-width: 0; }
+        .topbar > .actions { flex: 0 0 auto; justify-content: flex-end; margin-left: auto; }
         h1, h2, h3 { margin: 0; }
         h1 { font-size: 32px; line-height: 1.15; }
         h2 { font-size: 22px; }
@@ -31,7 +33,9 @@
         .panel { padding: 24px; }
         .panel-header { border-bottom: 1px solid var(--line); margin-bottom: 20px; padding-bottom: 16px; }
         .language-grid { display: grid; gap: 18px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-        .language-card { box-shadow: none; padding: 76px 18px 18px; position: relative; }
+        .language-card { box-shadow: none; padding: 18px; position: relative; }
+        .language-card > h3 { padding-right: 64px; }
+        .language-card > .btn-undo { right: 18px; top: 18px; }
         label { display: grid; gap: 7px; font-size: 13px; font-weight: 800; }
         textarea, input[type="file"] { border: 1px solid #cfd6e3; border-radius: 12px; color: var(--ink); font: inherit; font-weight: 500; padding: 12px 13px; width: 100%; }
         input[type="text"] { border: 1px solid #cfd6e3; border-radius: 12px; color: var(--ink); font: inherit; font-weight: 500; padding: 12px 13px; width: 100%; }

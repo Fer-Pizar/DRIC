@@ -19,10 +19,12 @@ class DashboardController extends Controller
             'isAdmin' => auth()->user()->hasRole('Admin'),
             'topbarLogoUrl' => $topbarLogoPath
                 ? url('storage/'.ltrim($topbarLogoPath, '/'))
-                : $frontendUrl.'/images/brand/DRIC_logo.png',
+                : route('admin.frontend-image', ['path' => 'images/brand/DRIC_logo.png']),
+            'topbarLogoPath' => $topbarLogoPath,
             'hasCustomTopbarLogo' => (bool) $topbarLogoPath,
             'frontendUrl' => $frontendUrl,
             'footerSettings' => SiteSetting::footerSettings(),
+            'mobileMenuSettings' => SiteSetting::mobileMenuSettings(),
         ]);
     }
 }

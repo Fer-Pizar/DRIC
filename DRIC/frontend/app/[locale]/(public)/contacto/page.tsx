@@ -7,6 +7,7 @@ import EmailRoundedIcon from "@mui/icons-material/EmailRounded";
 import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
 import OpenInNewRoundedIcon from "@mui/icons-material/OpenInNewRounded";
 import PublicRoundedIcon from "@mui/icons-material/PublicRounded";
+import EventAvailableRoundedIcon from "@mui/icons-material/EventAvailableRounded";
 import { getOptionalPageBySlug } from "@/lib/api/pages";
 import type { CmsBlock, CmsPage, CmsSection } from "@/types/cms";
 
@@ -37,6 +38,7 @@ export default async function ContactoPage({ params }: Props) {
     socialSummary: isEnglish
       ? "Official social networks for news, calls and institutional activities."
       : "Redes sociales oficiales para conocer novedades, convocatorias y actividades institucionales.",
+    consultation: isEnglish ? "Ask DRIC" : "Consulta a DRIC",
   }, cmsPage);
 
   const socialLinks = cmsSocialLinks(cmsPage);
@@ -58,6 +60,38 @@ export default async function ContactoPage({ params }: Props) {
           <p className="mt-8 max-w-3xl text-base leading-8 text-white/70 md:text-lg">
             {labels.intro}
           </p>
+
+          <Button
+            href={`/${locale}/agendar-cita`}
+            variant="contained"
+            startIcon={<EventAvailableRoundedIcon />}
+            sx={{
+              mt: 5,
+              borderRadius: "999px",
+              px: { xs: 3, sm: 4 },
+              py: 1.45,
+              border: "1px solid rgba(255,255,255,0.2)",
+              background:
+                "linear-gradient(135deg, rgba(227,6,19,0.96), rgba(0,55,112,0.96))",
+              boxShadow:
+                "0 0 0 1px rgba(255,255,255,0.08), 0 18px 45px rgba(0,55,112,0.24), 0 12px 34px rgba(227,6,19,0.16)",
+              color: "white",
+              fontWeight: 900,
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+              transition: "transform 180ms ease, box-shadow 180ms ease, filter 180ms ease",
+              "&:hover": {
+                background:
+                  "linear-gradient(135deg, rgba(255,30,45,0.98), rgba(0,77,150,0.98))",
+                boxShadow:
+                  "0 0 24px rgba(125,211,252,0.16), 0 22px 58px rgba(0,55,112,0.3), 0 14px 38px rgba(227,6,19,0.22)",
+                filter: "brightness(1.05)",
+                transform: "translateY(-2px)",
+              },
+            }}
+          >
+            {labels.consultation}
+          </Button>
         </div>
       </section>
 
@@ -218,6 +252,7 @@ function mergeContactCopy(defaults: {
   openMap: string;
   social: string;
   socialSummary: string;
+  consultation: string;
 }, page: CmsPage | null) {
   const hero = section(page, "contact.hero");
   const phone = section(page, "contact.phone");

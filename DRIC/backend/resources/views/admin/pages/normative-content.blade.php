@@ -33,7 +33,8 @@
         .panel-header { border-bottom: 1px solid var(--line); margin-bottom: 20px; padding-bottom: 16px; }
         .language-grid { display: grid; gap: 18px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
         .language-card, .document-card { box-shadow: none; padding: 18px; position: relative; }
-        .language-card { padding-top: 76px; }
+        .language-card > h3 { padding-right: 64px; }
+        .language-card > .btn-undo { right: 18px; top: 18px; }
         .document-card { border: 2px solid var(--blue); box-shadow: 0 16px 42px rgba(22, 65, 148, 0.10); display: grid; gap: 16px; }
         .document-card::before { background: var(--blue); border-radius: 18px 0 0 18px; content: ""; inset: -2px auto -2px -2px; position: absolute; width: 7px; }
         .document-header { align-items: center; display: flex; gap: 12px; justify-content: space-between; }

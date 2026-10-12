@@ -5,30 +5,26 @@ import Link from "next/link";
 import { X } from "lucide-react";
 import { useLocale } from "next-intl";
 import { useEffect } from "react";
+import { fallbackSiteSettings, type MobileMenuSettings } from "@/lib/api/siteSettings";
 
 type MobileMenuProps = {
   open: boolean;
   onClose: () => void;
   logoSrc: string;
+  menuSettings?: MobileMenuSettings;
 };
 
-const menuItems = [
-  { label: { es: "Inicio", en: "Home" }, href: "inicio", description: { es: "Página principal", en: "Main page" } },
-  { label: { es: "Presentación", en: "Presentation" }, href: "presentacion", description: { es: "Historia, misión y estructura", en: "History, mission and structure" } },
-  { label: { es: "Convenios", en: "Agreements" }, href: "convenios", description: { es: "Relaciones institucionales", en: "Institutional relations" } },
-  { label: { es: "Proyectos", en: "Projects" }, href: "proyectos", description: { es: "Cooperación y financiamiento", en: "Cooperation and funding" } },
-  { label: { es: "Becas y Movilidad", en: "Scholarships and Mobility" }, href: "becas-movilidad", description: { es: "Oportunidades internacionales", en: "International opportunities" } },
-  { label: { es: "Membresías", en: "Memberships" }, href: "membresias", description: { es: "Redes académicas globales", en: "Global academic networks" } },
-  { label: { es: "Noticias", en: "News" }, href: "noticias", description: { es: "Actualidad institucional", en: "Institutional updates" } },
-  { label: { es: "Normativas", en: "Regulations" }, href: "normativas", description: { es: "Documentos y normativa", en: "Documents and regulations" } },
-  { label: { es: "Informes de Gestión", en: "Management Reports" }, href: "informes-gestion", description: { es: "Archivo institucional", en: "Institutional archive" } },
-  { label: { es: "Campus Life", en: "Campus Life" }, href: "campus-life", description: { es: "Vida universitaria UMSS", en: "UMSS university life" } },
-  { label: { es: "Verificar Certificado", en: "Verify Certificate" }, href: "validar-certificado", description: { es: "Validación institucional", en: "Institutional validation" } },
-  { label: { es: "Contacto", en: "Contact" }, href: "contacto", description: { es: "Ubicación y canales", en: "Location and channels" } },
-];
+function menuHref(locale: "es" | "en", href: string) {
+  if (/^https?:\/\//i.test(href)) {
+    return href;
+  }
 
-export default function MobileMenu({ open, onClose, logoSrc }: MobileMenuProps) {
+  return `/${locale}/${href.replace(/^\/+/, "")}`;
+}
+
+export default function MobileMenu({ open, onClose, logoSrc, menuSettings }: MobileMenuProps) {
   const locale = useLocale() as "es" | "en";
+  const menu = menuSettings?.[locale] ?? fallbackSiteSettings.mobile_menu[locale];
 
   useEffect(() => {
     if (!open) {
@@ -78,34 +74,32 @@ export default function MobileMenu({ open, onClose, logoSrc }: MobileMenuProps) 
         <div className="grid flex-1 items-start gap-5 pt-10 pb-6 lg:grid-cols-[0.88fr_1.12fr] lg:gap-8">
           <div className="dric-mobile-menu-feature rounded-[1.7rem] border border-white/10 bg-white/10 p-6 shadow-2xl shadow-black/20 backdrop-blur-xl lg:block xl:p-7">
             <p className="dric-mobile-menu-kicker text-xs font-bold uppercase tracking-[0.28em] text-[#E30613]">
-              {locale === "en" ? "Explore DRIC" : "Explora DRIC"}
+              {menu.kicker}
             </p>
 
             <h2 className="dric-mobile-menu-title mt-4 text-4xl font-light uppercase leading-[0.95] tracking-[-0.07em] sm:text-5xl lg:text-4xl xl:text-5xl">
-              {locale === "en" ? "Global UMSS" : "UMSS Global"}
+              {menu.title}
             </h2>
 
             <p className="dric-mobile-menu-copy mt-4 text-sm leading-7 text-white/62">
-              {locale === "en"
-                ? "Navigate through institutional information, agreements, projects, scholarships, reports, campus life, certificate verification and contact channels."
-                : "Navega por información institucional, convenios, proyectos, becas, informes, vida universitaria, verificación de certificados y canales de contacto."}
+              {menu.copy}
             </p>
           </div>
 
-          <nav className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 xl:auto-rows-[5.7rem]">
-            {menuItems.map((item) => (
+          <nav className="dric-mobile-menu-links grid grid-cols-1 gap-2.5 sm:grid-cols-2 xl:auto-rows-[5.7rem]">
+            {menu.items.map((item) => (
               <Link
                 key={item.href}
-                href={`/${locale}/${item.href}`}
+                href={menuHref(locale, item.href)}
                 onClick={onClose}
                 className="dric-mobile-menu-link group flex min-h-[5.7rem] flex-col justify-center overflow-hidden rounded-[1.35rem] border border-white/10 bg-white/[0.055] px-5 py-3 no-underline transition hover:-translate-y-0.5 hover:border-white/25 hover:bg-white/[0.09] xl:min-h-[5.5rem]"
               >
                 <p className="dric-mobile-menu-link-title text-xl font-light uppercase leading-[0.95] tracking-[-0.035em] text-white sm:text-2xl xl:text-[1.55rem]">  
-                  {item.label[locale]}
+                  {item.label}
                 </p>
 
                 <span className="dric-mobile-menu-link-description mt-2 block truncate text-[0.67rem] font-semibold uppercase leading-none tracking-[0.18em] text-white/38 no-underline decoration-transparent group-hover:text-cyan-300">
-                  {item.description[locale]}
+                  {item.description}
                 </span>
               </Link>
             ))}
@@ -113,7 +107,7 @@ export default function MobileMenu({ open, onClose, logoSrc }: MobileMenuProps) 
         </div>
 
         <div className="dric-mobile-menu-footer pb-1 text-[0.65rem] uppercase tracking-[0.2em] text-white/35 sm:text-xs xl:absolute xl:bottom-5 xl:left-10 xl:z-10 xl:pb-0">
-          Universidad Mayor de San Simón · DRIC
+          {menu.footer}
         </div>
       </div>
     </div>

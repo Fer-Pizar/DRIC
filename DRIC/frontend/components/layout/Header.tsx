@@ -9,7 +9,7 @@ import { Menu, Moon, Sun, Languages } from "lucide-react";
 import { useLocale } from "next-intl";
 import MobileMenu from "./MobileMenu";
 import { mobilityData, slugifyProgramTitle, type Program } from "@/app/[locale]/(public)/becas-movilidad/movilidad-pasantias/data";
-import { fetchSiteSettings } from "@/lib/api/siteSettings";
+import { fallbackSiteSettings, fetchSiteSettings, type MobileMenuSettings } from "@/lib/api/siteSettings";
 
 const LANGUAGE_SCROLL_KEY = "dric-language-scroll-y";
 const DEFAULT_TOPBAR_LOGO = "/images/brand/DRIC_logo.png";
@@ -82,6 +82,7 @@ export default function Header() {
   const [open, setOpen] = useState(false);
   const [theme, setTheme] = useState<"dark" | "light">("dark");
   const [topbarLogo, setTopbarLogo] = useState(DEFAULT_TOPBAR_LOGO);
+  const [mobileMenuSettings, setMobileMenuSettings] = useState<MobileMenuSettings>(fallbackSiteSettings.mobile_menu);
 
   const locale = useLocale();
   const pathname = usePathname();
@@ -100,11 +101,17 @@ export default function Header() {
     let mounted = true;
 
     fetchSiteSettings().then((settings) => {
-      if (!mounted || !settings.topbar_logo_url) {
+      if (!mounted) {
         return;
       }
 
-      setTopbarLogo(settings.topbar_logo_url);
+      if (settings.topbar_logo_url) {
+        setTopbarLogo(settings.topbar_logo_url);
+      }
+
+      if (settings.mobile_menu) {
+        setMobileMenuSettings(settings.mobile_menu);
+      }
     });
 
     return () => {
@@ -199,7 +206,7 @@ export default function Header() {
         </div>
       </header>
 
-      <MobileMenu open={open} onClose={() => setOpen(false)} logoSrc={topbarLogo} />
+      <MobileMenu open={open} onClose={() => setOpen(false)} logoSrc={topbarLogo} menuSettings={mobileMenuSettings} />
     </>
   );
 }

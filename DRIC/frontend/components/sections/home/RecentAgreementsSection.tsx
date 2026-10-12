@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import type { CmsSection } from "@/types/cms";
+import { publicAssetUrl } from "@/lib/api/assets";
 
 type Props = {
   section: CmsSection;
@@ -52,9 +53,9 @@ export default function RecentAgreementsSection({
         {/* Agreements Grid */}
         <div className="grid gap-10 md:grid-cols-2 xl:grid-cols-3">
           {section.blocks.map((block, index) => {
-            const image =
-              block.media?.url ??
-              String(block.data?.image ?? "");
+            const image = block.data?.image_hidden
+              ? ""
+              : publicAssetUrl(String(block.media?.url ?? block.data?.image ?? "")) ?? "";
 
             const slug = String(
               block.data?.slug ??
@@ -93,44 +94,48 @@ export default function RecentAgreementsSection({
                   className="group relative block overflow-hidden rounded-[34px] border border-white/10 bg-white/[0.03] backdrop-blur-xl"
                 >
                   {/* Image */}
-                  <div className="relative h-[460px] overflow-hidden">
-                    <Image
-                      src={image}
-                      alt={block.title ?? ""}
-                      fill
-                      className="
-                        object-cover
-                        grayscale
-                        transition-all
-                        duration-700
-                        group-hover:scale-110
-                        group-hover:grayscale-0
-                      "
-                    />
+                  {image ? (
+                    <div className="relative h-[460px] overflow-hidden">
+                      <Image
+                        src={image}
+                        alt={block.title ?? ""}
+                        fill
+                        className="
+                          object-cover
+                          grayscale
+                          transition-all
+                          duration-700
+                          group-hover:scale-110
+                          group-hover:grayscale-0
+                        "
+                      />
 
-                    {/* Overlay */}
-                    <div
-                      className="
-                        absolute inset-0
-                        bg-gradient-to-t
-                        from-black
-                        via-black/20
-                        to-transparent
-                      "
-                    />
+                      {/* Overlay */}
+                      <div
+                        className="
+                          absolute inset-0
+                          bg-gradient-to-t
+                          from-black
+                          via-black/20
+                          to-transparent
+                        "
+                      />
 
-                    {/* Glow */}
-                    <div
-                      className="
-                        absolute inset-0
-                        opacity-0
-                        transition-opacity
-                        duration-700
-                        group-hover:opacity-100
-                        bg-cyan-400/10
-                      "
-                    />
-                  </div>
+                      {/* Glow */}
+                      <div
+                        className="
+                          absolute inset-0
+                          opacity-0
+                          transition-opacity
+                          duration-700
+                          group-hover:opacity-100
+                          bg-cyan-400/10
+                        "
+                      />
+                    </div>
+                  ) : (
+                    <div className="h-[220px] bg-white/[0.04]" />
+                  )}
 
                   {/* Content */}
                   <div className="absolute bottom-0 left-0 z-10 p-8">

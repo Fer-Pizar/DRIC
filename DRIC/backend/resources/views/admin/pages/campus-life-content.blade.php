@@ -33,7 +33,17 @@
         .panel-kicker { background: #eef3fb; border-radius: 999px; color: var(--blue); flex: 0 0 auto; font-size: 12px; font-weight: 900; letter-spacing: .08em; padding: 8px 11px; text-transform: uppercase; }
         .language-grid, .two-grid, .three-grid { display: grid; gap: 18px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
         .three-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-        .language-card, .item-card { box-shadow: none; padding: 76px 18px 18px; position: relative; }
+        .language-card, .item-card { box-shadow: none; padding: 18px; position: relative; }
+        .url-card { background: #fff; border: 1px solid #d8e2f2; border-radius: 18px; box-shadow: none; padding: 18px; position: relative; }
+        .language-card > h3,
+        .item-card > h3,
+        .url-card > h3,
+        .language-card > label:first-of-type,
+        .item-card > label:first-of-type,
+        .url-card > label:first-of-type { padding-right: 64px; }
+        .language-card > .btn-undo,
+        .item-card > .btn-undo,
+        .url-card > .btn-undo { right: 18px; top: 18px; }
         .item-card { border-color: #d8e2f2; }
         .story-editor { border-color: #164194; border-left: 5px solid #164194; padding: 22px; }
         .story-editor + .story-editor { margin-top: 4px; }
@@ -47,19 +57,20 @@
         textarea { line-height: 1.55; min-height: 104px; resize: vertical; }
         .hint { color: var(--muted); font-size: 12px; font-weight: 500; line-height: 1.45; }
         .field-error { color: var(--red-dark); font-size: 12px; font-weight: 800; line-height: 1.45; }
-        .image-card { background: #f8fafc; border: 1px dashed #cfd8e8; border-radius: 18px; display: grid; gap: 10px; padding: 14px; position: relative; }
+        .image-card { background: #f8fafc; border: 1px dashed #cfd8e8; border-radius: 18px; display: grid; gap: 12px; padding: 18px; position: relative; }
         .image-card label { gap: 10px; }
+        .image-card > .btn-undo { bottom: 46px; right: 18px; top: auto; }
         .image-card.is-empty .preview { display: none; }
         .image-card.is-empty .btn-image-remove { display: none; }
-        .preview { align-items: center; background: #eef2f7; border: 1px solid var(--line); border-radius: 16px; display: flex; justify-content: center; max-height: 320px; min-height: 150px; overflow: hidden; padding: 0; position: relative; }
+        .preview { align-items: center; background: #eef2f7; border: 1px solid var(--line); border-radius: 16px; display: flex; justify-content: center; max-height: 380px; min-height: 190px; overflow: hidden; padding: 0; position: relative; }
         .preview img { border-radius: 16px; cursor: zoom-in; display: block; height: 100%; object-fit: contain; padding: 10px; width: 100%; }
-        .preview-logo img { object-fit: contain; padding: 18px; }
         .preview-hero { aspect-ratio: 16 / 9; }
-        .preview-logo { aspect-ratio: 1 / 1; max-width: 180px; min-height: 180px; }
+        .preview-logo { aspect-ratio: 1 / 1; background: #fff; border-radius: 999px; height: 132px; max-height: 132px; max-width: 132px; min-height: 132px; overflow: hidden; width: 132px; }
+        .preview-logo img { border-radius: 999px; object-fit: contain; padding: 0; transform: scale(1.55); }
         .preview-story { aspect-ratio: 16 / 10; width: 100%; }
         .preview-empty { color: var(--muted); font-weight: 700; padding: 18px; text-align: center; }
         .preview-ruler { background: rgba(23, 32, 51, .78); border-radius: 999px; bottom: 10px; color: #fff; font-size: 12px; font-weight: 800; left: 10px; padding: 6px 9px; position: absolute; }
-        .btn-image-remove { align-items: center; background: var(--red-dark); border: 3px solid #fff; border-radius: 999px; color: #fff; cursor: pointer; display: inline-flex; font-size: 20px; font-weight: 900; height: 34px; justify-content: center; line-height: 1; position: absolute; right: -10px; top: -10px; width: 34px; z-index: 5; }
+        .btn-image-remove { align-items: center; background: var(--red-dark); border: 3px solid #fff; border-radius: 999px; color: #fff; cursor: pointer; display: inline-flex; font-size: 20px; font-weight: 900; height: 34px; justify-content: center; line-height: 1; position: absolute; right: 10px; top: 10px; width: 34px; z-index: 5; }
         .media-editor-modal { background: #0f1113; color: #f8fafc; display: none; inset: 0; position: fixed; z-index: 80; }
         .media-editor-modal.is-open { display: grid; grid-template-rows: auto 1fr auto; }
         .media-editor-top { align-items: center; background: #171717; display: flex; gap: 18px; justify-content: space-between; padding: 14px 18px; }
@@ -68,9 +79,11 @@
         .media-editor-apply { background: #f8fafc; border: 0; border-radius: 999px; color: #111827; cursor: pointer; font-size: 18px; font-weight: 900; padding: 12px 28px; }
         .media-editor-workspace { align-items: center; display: flex; justify-content: center; min-height: 0; overflow: hidden; padding: 34px 28px; }
         .media-editor-stage { background: #111827; max-height: 70vh; max-width: 1040px; overflow: hidden; position: relative; touch-action: none; width: min(100%, 1040px); }
+        .media-editor-stage.is-circle { border-radius: 999px; max-width: min(70vh, 640px); width: min(78vw, 640px); }
         .media-editor-stage img { left: 50%; max-width: none; position: absolute; top: 50%; transform-origin: center; user-select: none; -webkit-user-drag: none; }
         .media-editor-stage::after { background: rgba(0, 0, 0, .42); content: ""; inset: 0; pointer-events: none; position: absolute; z-index: 2; }
         .media-editor-frame { border: 6px solid #ff2b93; inset: 0; pointer-events: none; position: absolute; z-index: 4; }
+        .media-editor-frame.is-circle { border-radius: 999px; }
         .media-editor-controls { align-items: center; display: grid; gap: 18px; grid-template-columns: auto minmax(220px, 560px) auto; justify-content: center; padding: 20px 28px 28px; }
         .media-editor-controls span { color: #cbd5e1; font-size: 28px; line-height: 1; }
         .media-editor-controls input { accent-color: #ff2b93; width: 100%; }
@@ -158,13 +171,16 @@
                     <span class="panel-kicker">Portada</span>
                 </div>
 
-                <label>
-                    URL del sitio oficial UMSS
-                    <input type="url" name="official_url" value="{{ old('official_url', $content['official_url']) }}">
-                    @error('official_url')<span class="field-error">{{ $message }}</span>@enderror
-                </label>
+                <div class="url-card" data-undo-scope>
+                    <button class="btn btn-undo undo-floating" type="button" data-undo-card disabled title="Deshacer último cambio" aria-label="Deshacer último cambio">↶</button>
+                    <label>
+                        URL del sitio oficial UMSS
+                        <input type="url" name="official_url" value="{{ old('official_url', $content['official_url']) }}">
+                        @error('official_url')<span class="field-error">{{ $message }}</span>@enderror
+                    </label>
+                </div>
 
-                <div class="image-card @if (empty($content['official_logo'])) is-empty @endif" data-image-card data-media-id="{{ $content['official_logo_media_id'] ?? '' }}" data-crop-aspect="1" data-crop-label="Marco cuadrado 1:1, igual al logo circular de la tarjeta UMSS.">
+                <div class="image-card @if (empty($content['official_logo'])) is-empty @endif" data-image-card data-media-id="{{ $content['official_logo_media_id'] ?? '' }}" data-crop-aspect="1" data-crop-shape="circle" data-crop-title="Editar logo UMSS" data-crop-label="Marco circular 96x96, igual al logo UMSS de la tarjeta pública.">
                     <button class="btn btn-undo undo-floating" type="button" data-undo-card disabled title="Deshacer último cambio" aria-label="Deshacer último cambio">↶</button>
                     <label>
                         Logo UMSS
@@ -174,11 +190,12 @@
                             @else
                                 <span class="preview-empty" data-preview-empty>Sin logo seleccionado.</span>
                             @endif
-                            <span class="preview-ruler">1:1 logo</span>
+                            <span class="preview-ruler">96x96 circular</span>
                             <button class="btn-image-remove" type="button" data-remove-image aria-label="Quitar logo actual">×</button>
                         </div>
                         <input type="hidden" name="official_logo_remove" value="0" data-remove-image-input>
                         <input type="hidden" name="official_logo_restore" value="" data-restore-image-input>
+                        <input type="hidden" name="official_logo_unhide" value="0" data-unhide-image-input>
                         <input type="file" name="official_logo" accept=".jpg,.jpeg,.png,image/jpeg,image/png" data-image-input>
                         <span class="hint">JPG o PNG. Máximo 10 MB. Haz clic en la vista previa para recortar.</span>
                     </label>
@@ -332,17 +349,21 @@
                                             </div>
                                             <input type="hidden" name="stories[{{ $index }}][image_remove]" value="0" data-remove-image-input>
                                             <input type="hidden" name="stories[{{ $index }}][image_restore]" value="" data-restore-image-input>
+                                            <input type="hidden" name="stories[{{ $index }}][image_unhide]" value="0" data-unhide-image-input>
                                             <input type="file" name="stories[{{ $index }}][image]" accept=".jpg,.jpeg,.png,image/jpeg,image/png" data-image-input>
                                             <span class="hint">JPG o PNG. Máximo 10 MB. Haz clic en la vista previa para recortar.</span>
                                         </label>
                                     </div>
 
-                                    <label>
-                                        URL de redirección
-                                        <input type="url" name="stories[{{ $index }}][url]" value="{{ old('stories.'.$index.'.url', $story['url']) }}">
-                                        <span class="hint">Este enlace se abre al hacer clic en la tarjeta pública.</span>
-                                        @error('stories.'.$index.'.url')<span class="field-error">{{ $message }}</span>@enderror
-                                    </label>
+                                    <div class="url-card" data-undo-scope>
+                                        <button class="btn btn-undo undo-floating" type="button" data-undo-card disabled title="Deshacer último cambio" aria-label="Deshacer último cambio">↶</button>
+                                        <label>
+                                            URL de redirección
+                                            <input type="url" name="stories[{{ $index }}][url]" value="{{ old('stories.'.$index.'.url', $story['url']) }}">
+                                            <span class="hint">Este enlace se abre al hacer clic en la tarjeta pública.</span>
+                                            @error('stories.'.$index.'.url')<span class="field-error">{{ $message }}</span>@enderror
+                                        </label>
+                                    </div>
                                 </div>
 
                                 <div class="language-grid">
@@ -397,17 +418,21 @@
                                     </div>
                                     <input type="hidden" name="stories[3][image_remove]" value="0" data-remove-image-input>
                                     <input type="hidden" name="stories[3][image_restore]" value="" data-restore-image-input>
+                                    <input type="hidden" name="stories[3][image_unhide]" value="0" data-unhide-image-input>
                                     <input type="file" name="stories[3][image]" accept=".jpg,.jpeg,.png,image/jpeg,image/png" data-image-input>
                                     <span class="hint">JPG o PNG. Máximo 10 MB. Haz clic en la vista previa para recortar.</span>
                                 </label>
                             </div>
 
-                            <label>
-                                URL de redirección
-                                <input type="url" name="stories[3][url]" value="{{ old('stories.3.url', $story['url']) }}">
-                                <span class="hint">Este enlace se abre al hacer clic en la tarjeta pública.</span>
-                                @error('stories.3.url')<span class="field-error">{{ $message }}</span>@enderror
-                            </label>
+                            <div class="url-card" data-undo-scope>
+                                <button class="btn btn-undo undo-floating" type="button" data-undo-card disabled title="Deshacer último cambio" aria-label="Deshacer último cambio">↶</button>
+                                <label>
+                                    URL de redirección
+                                    <input type="url" name="stories[3][url]" value="{{ old('stories.3.url', $story['url']) }}">
+                                    <span class="hint">Este enlace se abre al hacer clic en la tarjeta pública.</span>
+                                    @error('stories.3.url')<span class="field-error">{{ $message }}</span>@enderror
+                                </label>
+                            </div>
                         </div>
 
                         <div class="language-grid">
@@ -460,17 +485,21 @@
                                     </div>
                                     <input type="hidden" name="stories[4][image_remove]" value="0" data-remove-image-input>
                                     <input type="hidden" name="stories[4][image_restore]" value="" data-restore-image-input>
+                                    <input type="hidden" name="stories[4][image_unhide]" value="0" data-unhide-image-input>
                                     <input type="file" name="stories[4][image]" accept=".jpg,.jpeg,.png,image/jpeg,image/png" data-image-input>
                                     <span class="hint">JPG o PNG. Máximo 10 MB. Haz clic en la vista previa para recortar.</span>
                                 </label>
                             </div>
 
-                            <label>
-                                URL de redirección
-                                <input type="url" name="stories[4][url]" value="{{ old('stories.4.url', $story['url']) }}">
-                                <span class="hint">Este enlace se abre desde el botón final de la página pública.</span>
-                                @error('stories.4.url')<span class="field-error">{{ $message }}</span>@enderror
-                            </label>
+                            <div class="url-card" data-undo-scope>
+                                <button class="btn btn-undo undo-floating" type="button" data-undo-card disabled title="Deshacer último cambio" aria-label="Deshacer último cambio">↶</button>
+                                <label>
+                                    URL de redirección
+                                    <input type="url" name="stories[4][url]" value="{{ old('stories.4.url', $story['url']) }}">
+                                    <span class="hint">Este enlace se abre desde el botón final de la página pública.</span>
+                                    @error('stories.4.url')<span class="field-error">{{ $message }}</span>@enderror
+                                </label>
+                            </div>
                         </div>
 
                         <div class="language-grid">
@@ -520,11 +549,14 @@
         const historyMap = new WeakMap();
         const pendingSnapshots = new WeakMap();
         const imageHistoryMap = new WeakMap();
+        const fieldUndoStorageKey = `campus-life-field-undo:${window.location.pathname}`;
         const imageUndoStorageKey = `campus-life-image-undo:${window.location.pathname}`;
         const mediaEditorModal = document.getElementById("media-editor-modal");
         const mediaEditorStage = document.getElementById("media-editor-stage");
         const mediaEditorImage = document.getElementById("media-editor-image");
         const mediaEditorZoom = document.getElementById("media-editor-zoom");
+        const mediaEditorFrame = mediaEditorStage.querySelector(".media-editor-frame");
+        const mediaEditorTitle = document.querySelector(".media-editor-title span");
         const mediaEditorClose = document.getElementById("media-editor-close");
         const mediaEditorApply = document.getElementById("media-editor-apply");
         const mediaEditorError = document.getElementById("media-editor-error");
@@ -546,8 +578,31 @@
             return [...scope.querySelectorAll("input, textarea, select")];
         }
 
+        function undoableFields(scope) {
+            return fields(scope).filter((field) => field.type !== "file" && field.type !== "hidden");
+        }
+
+        function fieldKey(field, scope) {
+            if (field.name) return field.name;
+            if (field.dataset.basicTextMirror) return `basic-text-mirror:${field.dataset.basicTextMirror}`;
+            if (field.id) return `id:${field.id}`;
+            return `index:${undoableFields(scope).indexOf(field)}`;
+        }
+
         function snapshot(scope) {
             return fields(scope).map((field) => ({ field, value: field.value, checked: field.checked }));
+        }
+
+        function serializableSnapshot(scope, snapshotItems = snapshot(scope)) {
+            return snapshotItems
+                .filter(({ field }) => field && field.type !== "file" && field.type !== "hidden")
+                .map(({ field, value, checked }) => ({
+                    key: fieldKey(field, scope),
+                    type: field.type,
+                    value,
+                    checked,
+                }))
+                .filter((item) => item.key);
         }
 
         function restore(snapshotItems) {
@@ -555,7 +610,84 @@
                 if (!field || !field.isConnected) return;
                 if (field.type === "checkbox" || field.type === "radio") field.checked = checked;
                 else field.value = value;
+                field.dispatchEvent(new Event("input", { bubbles: true }));
+                field.dispatchEvent(new Event("change", { bubbles: true }));
             });
+        }
+
+        function restoreSerializedSnapshot(scope, snapshotItems) {
+            const scopedFields = undoableFields(scope);
+            snapshotItems.forEach((item) => {
+                const field = scopedFields.find((candidate) => fieldKey(candidate, scope) === item.key);
+                if (!field) return;
+                if (field.type === "checkbox" || field.type === "radio") field.checked = item.checked;
+                else field.value = item.value;
+                field.dispatchEvent(new Event("input", { bubbles: true }));
+                field.dispatchEvent(new Event("change", { bubbles: true }));
+            });
+        }
+
+        function fieldScopeKey(scope) {
+            return undoableFields(scope).map((field) => fieldKey(field, scope)).join("|");
+        }
+
+        function readFieldUndoStore() {
+            try {
+                const stored = sessionStorage.getItem(fieldUndoStorageKey);
+                const parsed = stored ? JSON.parse(stored) : {};
+                return parsed && typeof parsed === "object" ? parsed : {};
+            } catch (error) {
+                sessionStorage.removeItem(fieldUndoStorageKey);
+                return {};
+            }
+        }
+
+        function writeFieldUndoStore(store) {
+            const clean = Object.fromEntries(Object.entries(store).filter(([, value]) => Array.isArray(value) && value.length));
+            if (!Object.keys(clean).length) {
+                sessionStorage.removeItem(fieldUndoStorageKey);
+                return;
+            }
+            sessionStorage.setItem(fieldUndoStorageKey, JSON.stringify(clean));
+        }
+
+        function pushStoredFieldSnapshot(scope, snapshotItems) {
+            const record = serializableSnapshot(scope, snapshotItems);
+            const key = fieldScopeKey(scope);
+            if (!key || !record.length) return;
+
+            const store = readFieldUndoStore();
+            if (!Array.isArray(store[key])) store[key] = [];
+
+            const serialized = JSON.stringify(record);
+            const last = store[key].length ? JSON.stringify(store[key][store[key].length - 1]) : null;
+            if (serialized !== last) store[key].push(record);
+            if (store[key].length > 25) store[key].shift();
+            writeFieldUndoStore(store);
+        }
+
+        function popStoredFieldSnapshot(scope) {
+            const key = fieldScopeKey(scope);
+            if (!key) return null;
+            const store = readFieldUndoStore();
+            const stack = Array.isArray(store[key]) ? store[key] : [];
+            const record = stack.pop() || null;
+            if (stack.length) store[key] = stack;
+            else delete store[key];
+            writeFieldUndoStore(store);
+            return record;
+        }
+
+        function refreshFieldUndoButton(scope) {
+            const button = scope.querySelector("[data-undo-card]");
+            if (!button) return;
+            const memoryStack = historyMap.get(scope) || [];
+            const storedStack = readFieldUndoStore()[fieldScopeKey(scope)] || [];
+            button.disabled = !(memoryStack.length || storedStack.length);
+        }
+
+        function refreshAllFieldUndoButtons() {
+            document.querySelectorAll("[data-undo-scope]").forEach(refreshFieldUndoButton);
         }
 
         function setUndo(button, stack) {
@@ -568,9 +700,11 @@
 
         function changed(scope, button) {
             const stack = historyMap.get(scope) || [];
-            stack.push(pendingSnapshots.get(scope) || snapshot(scope));
+            const previousSnapshot = pendingSnapshots.get(scope) || snapshot(scope);
+            stack.push(previousSnapshot);
             if (stack.length > 25) stack.shift();
             historyMap.set(scope, stack);
+            pushStoredFieldSnapshot(scope, previousSnapshot);
             pendingSnapshots.set(scope, snapshot(scope));
             setUndo(button, stack);
         }
@@ -589,11 +723,17 @@
             button?.addEventListener("click", () => {
                 const stack = historyMap.get(scope) || [];
                 const last = stack.pop();
-                if (!last) return;
-                restore(last);
+                const stored = last ? null : popStoredFieldSnapshot(scope);
+                if (!last && !stored) return;
+                if (last) {
+                    popStoredFieldSnapshot(scope);
+                    restore(last);
+                }
+                else restoreSerializedSnapshot(scope, stored);
                 syncBasicTextPairs();
-                setUndo(button, stack);
+                refreshFieldUndoButton(scope);
             });
+            refreshFieldUndoButton(scope);
         }
 
         function syncBasicTextPairs() {
@@ -636,7 +776,6 @@
             img.src = src;
             img.alt = "Vista previa";
             img.dataset.previewImage = "";
-            img.addEventListener("error", () => clearPreview(card));
             preview.prepend(img);
             card.classList.remove("is-empty");
         }
@@ -726,10 +865,12 @@
             const input = card.querySelector("[data-image-input]");
             const removeInput = card.querySelector("[data-remove-image-input]");
             const restoreInput = card.querySelector("[data-restore-image-input]");
+            const unhideInput = card.querySelector("[data-unhide-image-input]");
 
             if (input) input.value = "";
             if (removeInput) removeInput.value = record.removeValue || "0";
             if (restoreInput) restoreInput.value = record.restoreValue || record.mediaId || "";
+            if (unhideInput) unhideInput.value = record.previewSrc && !record.restoreValue && !record.mediaId ? "1" : "0";
             if (record.mediaId) card.dataset.mediaId = record.mediaId;
             delete card.dataset.pendingImageSnapshot;
             if (record.previewSrc) setPreview(card, record.previewSrc);
@@ -755,6 +896,9 @@
             mediaEditorState.offsetY = 0;
             mediaEditorState.dragging = false;
             mediaEditorError.textContent = "";
+            mediaEditorStage.classList.remove("is-circle");
+            mediaEditorFrame?.classList.remove("is-circle");
+            if (mediaEditorTitle) mediaEditorTitle.textContent = "Editar imagen";
             mediaEditorImage.removeAttribute("src");
         }
 
@@ -797,6 +941,10 @@
             mediaEditorState.card = card;
             mediaEditorState.sourceUrl = src;
             mediaEditorStage.style.aspectRatio = String(Number(card.dataset.cropAspect || 1.6));
+            const isCircle = card.dataset.cropShape === "circle";
+            mediaEditorStage.classList.toggle("is-circle", isCircle);
+            mediaEditorFrame?.classList.toggle("is-circle", isCircle);
+            if (mediaEditorTitle) mediaEditorTitle.textContent = card.dataset.cropTitle || "Editar imagen";
             mediaEditorImage.src = src;
             mediaEditorModal.classList.add("is-open");
             mediaEditorModal.setAttribute("aria-hidden", "false");
@@ -851,6 +999,7 @@
                 const input = card.querySelector("[data-image-input]");
                 const removeInput = card.querySelector("[data-remove-image-input]");
                 const restoreInput = card.querySelector("[data-restore-image-input]");
+                const unhideInput = card.querySelector("[data-unhide-image-input]");
                 const sourceName = input?.files?.[0]?.name || card.querySelector("[data-preview-image]")?.alt || "campus-life-imagen.jpg";
                 const file = new File([blob], croppedFileName(sourceName), { type: "image/jpeg" });
                 const transfer = new DataTransfer();
@@ -859,6 +1008,7 @@
                 input.files = transfer.files;
                 if (removeInput) removeInput.value = "0";
                 if (restoreInput) restoreInput.value = "";
+                if (unhideInput) unhideInput.value = "0";
                 setPreview(card, URL.createObjectURL(file));
                 closeMediaEditor();
             }, "image/jpeg", 0.92);
@@ -872,13 +1022,9 @@
             const input = card.querySelector("[data-image-input]");
             const removeInput = card.querySelector("[data-remove-image-input]");
             const restoreInput = card.querySelector("[data-restore-image-input]");
+            const unhideInput = card.querySelector("[data-unhide-image-input]");
             const button = card.querySelector("[data-undo-card]");
             const previewImage = card.querySelector("[data-preview-image]");
-
-            if (previewImage) {
-                previewImage.addEventListener("error", () => clearPreview(card));
-                if (previewImage.complete && previewImage.naturalWidth === 0) clearPreview(card);
-            }
 
             input.addEventListener("change", () => {
                 const file = input.files[0];
@@ -892,31 +1038,38 @@
                 card.dataset.pendingImageSnapshot = "1";
                 removeInput.value = "0";
                 if (restoreInput) restoreInput.value = "";
+                if (unhideInput) unhideInput.value = "0";
                 setPreview(card, URL.createObjectURL(file));
                 openMediaEditor(card);
             });
 
             card.querySelector("[data-remove-image]").addEventListener("click", (event) => {
                 event.preventDefault();
+                event.stopPropagation();
                 pushImageSnapshot(card);
                 delete card.dataset.pendingImageSnapshot;
                 input.value = "";
                 removeInput.value = "1";
                 if (restoreInput) restoreInput.value = "";
+                if (unhideInput) unhideInput.value = "0";
                 clearPreview(card);
             });
 
             card.querySelector("[data-image-preview]").addEventListener("click", (event) => {
+                event.preventDefault();
+                event.stopPropagation();
                 if (event.target.closest("button")) return;
                 openMediaEditor(card);
             });
 
             button?.addEventListener("click", (event) => {
                 const stack = imageHistoryMap.get(card) || [];
-                const record = stack.pop() || popStoredImageSnapshot(card);
+                const memoryRecord = stack.pop();
+                const record = memoryRecord || popStoredImageSnapshot(card);
                 if (!record) return;
                 event.preventDefault();
                 event.stopImmediatePropagation();
+                if (memoryRecord) popStoredImageSnapshot(card);
                 applyImageSnapshot(card, record);
                 setUndo(button, stack);
                 refreshImageUndoButton(card);
@@ -928,6 +1081,8 @@
         document.querySelectorAll("[data-undo-scope]").forEach(bindUndo);
         document.querySelectorAll("[data-image-card]").forEach(bindImageCard);
         bindBasicTextMirrors();
+        refreshAllFieldUndoButtons();
+        window.addEventListener("pageshow", refreshAllFieldUndoButtons);
         mediaEditorImage.addEventListener("load", () => {
             mediaEditorState.naturalWidth = mediaEditorImage.naturalWidth;
             mediaEditorState.naturalHeight = mediaEditorImage.naturalHeight;

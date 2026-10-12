@@ -5,19 +5,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel DRIC - Crear usuario</title>
     <style>
-        body { margin: 0; padding: 40px; background: #f7f7f7; color: #222; font-family: Arial, sans-serif; }
-        .container { max-width: 800px; margin: 0 auto; background: #fff; padding: 24px; border-radius: 12px; box-shadow: 0 4px 18px rgba(0,0,0,.08); }
-        .header { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 24px; }
-        .btn { display: inline-block; padding: 10px 16px; border-radius: 8px; text-decoration: none; font-weight: bold; border: 0; cursor: pointer; }
-        .btn-primary { background: #2563eb; color: #fff; }
-        .btn-secondary { background: #6b7280; color: #fff; }
+        :root { --blue:#164194; --blue-dark:#0f2f6f; --red:#b5121b; --ink:#172033; --muted:#647084; --line:#d8e0ec; --soft:#f5f7fb; }
+        * { box-sizing: border-box; }
+        body { margin: 0; min-height: 100vh; padding: 40px; background: linear-gradient(180deg, #f4f7fb 0%, #edf2f7 100%); color: var(--ink); font-family: Arial, sans-serif; }
+        .container { max-width: 920px; margin: 0 auto; background: rgba(255,255,255,.94); padding: 28px; border: 1px solid rgba(22,65,148,.1); border-radius: 22px; box-shadow: 0 20px 60px rgba(15,23,42,.08); }
+        .header { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 24px; padding-bottom: 18px; border-bottom: 1px solid #e7edf5; }
+        h1 { margin: 0; color: var(--blue); font-size: 34px; letter-spacing: -.03em; }
+        .btn { display: inline-flex; align-items: center; justify-content: center; min-height: 46px; padding: 12px 18px; border-radius: 14px; text-decoration: none; font-weight: 900; border: 0; cursor: pointer; }
+        .btn-primary { background: var(--blue); color: #fff; }
+        .btn-secondary { background: #eaf0ff; color: var(--blue-dark); }
         form { display: grid; gap: 20px; }
+        .user-form-card { display: grid; gap: 18px; }
+        .form-section { border: 1px solid var(--line); border-radius: 18px; background: var(--soft); padding: 16px; }
+        .section-head { margin-bottom: 14px; }
+        .section-head h2 { margin: 0; color: var(--blue-dark); font-size: 17px; letter-spacing: -.01em; }
+        .section-head p { margin: 6px 0 0; }
+        .section-grid { display: grid; gap: 16px; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+        .field { display: grid; gap: 7px; min-width: 0; }
+        .field.span-2 { grid-column: 1 / -1; }
+        .field label, .roles-title { color: var(--blue-dark); font-size: 13px; font-weight: 900; }
+        .field input[type="text"], .field input[type="email"], .field input[type="password"] { width: 100%; height: 48px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 14px; color: var(--ink); font: inherit; }
+        .hint { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.45; }
+        .field-error { color: #b5121b; font-size: 13px; font-weight: 800; }
+        .roles-list { display: grid; gap: 10px; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 12px; }
+        .role-option { display: flex; gap: 10px; align-items: center; min-height: 48px; padding: 12px 14px; border: 1px solid #e0e6f0; border-radius: 14px; background: #fff; font-weight: 800; }
+        .actions { display: flex; justify-content: flex-end; padding-top: 4px; }
         @media (max-width: 640px) {
             body { padding: 16px; }
             .container { padding: 18px; border-radius: 10px; }
             .header { align-items: stretch; flex-direction: column; }
+            .section-grid, .roles-list { grid-template-columns: 1fr; }
             h1 { font-size: 28px; line-height: 1.15; }
             .btn { box-sizing: border-box; text-align: center; width: 100%; }
+            .actions { display: block; }
         }
     </style>
 </head>
@@ -31,7 +51,7 @@
         <form action="{{ route('admin.users.store') }}" method="POST">
             @csrf
             @include('admin.users._form')
-            <div><button type="submit" class="btn btn-primary">Guardar usuario</button></div>
+            <div class="actions"><button type="submit" class="btn btn-primary">Guardar usuario</button></div>
         </form>
     </main>
 </body>

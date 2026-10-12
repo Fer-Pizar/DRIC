@@ -309,6 +309,16 @@ class MembershipContentController extends Controller
                     $block->mediaAsset->delete();
                 }
                 $block->media_asset_id = null;
+            } else {
+                $currentMediaPath = $block->mediaAsset?->file_path
+                    ? '/storage/'.ltrim($block->mediaAsset->file_path, '/')
+                    : '';
+
+                if ($block->mediaAsset && $membership['existing_image'] !== $currentMediaPath) {
+                    Storage::disk($block->mediaAsset->disk ?? 'public')->delete($block->mediaAsset->file_path);
+                    $block->mediaAsset->delete();
+                    $block->media_asset_id = null;
+                }
             }
 
             $block->save();

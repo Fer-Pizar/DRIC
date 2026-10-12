@@ -11,6 +11,8 @@
         .shell { margin: 0 auto; max-width: 1240px; padding: 36px 20px 56px; }
         .topbar, .panel, .language-card, .item-card, .link-card { background: #fff; border: 1px solid var(--line); border-radius: 18px; box-shadow: 0 18px 50px rgba(15, 23, 42, 0.08); }
         .topbar { align-items: center; display: flex; gap: 18px; justify-content: space-between; margin-bottom: 22px; padding: 24px; }
+        .topbar > div:first-child { flex: 1 1 auto; min-width: 0; }
+        .topbar > .actions { flex: 0 0 auto; justify-content: flex-end; margin-left: auto; }
         h1, h2, h3 { margin: 0; }
         h1 { font-size: 34px; line-height: 1.1; }
         h2 { color: var(--blue); font-size: 24px; }
@@ -240,6 +242,7 @@
         const fieldStartSnapshots = new WeakMap();
         const removedOpportunityHistory = new WeakMap();
         const removedLinkHistory = new WeakMap();
+        const fieldUndoStorageKey = `admin-field-undo:${window.location.pathname}`;
         const removedOpportunityStorageKey = `awards-opportunities-removed-opportunities:${window.location.pathname}`;
         const removedLinkStorageKey = `awards-opportunities-removed-links:${window.location.pathname}`;
 
@@ -254,6 +257,30 @@
                 value: field.value,
                 checked: field.checked,
             }));
+        }
+
+        function readFieldHistories() {
+            try {
+                const stored = sessionStorage.getItem(fieldUndoStorageKey);
+                const parsed = stored ? JSON.parse(stored) : {};
+                return parsed && typeof parsed === 'object' ? parsed : {};
+            } catch (error) {
+                sessionStorage.removeItem(fieldUndoStorageKey);
+                return {};
+            }
+        }
+
+        function persistentScopeKey(scope) {
+            return snapshotScope(scope)
+                .filter((item) => item.name)
+                .map((item) => item.name)
+                .join('|');
+        }
+
+        function hasPersistentUndo(scope) {
+            const key = persistentScopeKey(scope);
+            const histories = readFieldHistories();
+            return Boolean(key && Array.isArray(histories[key]) && histories[key].length);
         }
 
         function restoreSnapshot(scope, snapshot) {
@@ -274,8 +301,8 @@
         }
 
         function setUndoState(scope) {
-            const button = scope.querySelector(':scope > [data-undo-card]');
-            if (button) button.disabled = historyFor(scope).length === 0;
+            const button = scope.querySelector('[data-undo-card]');
+            if (button) button.disabled = historyFor(scope).length === 0 && !hasPersistentUndo(scope);
         }
 
         function pushSnapshot(scope, snapshot = snapshotScope(scope)) {
@@ -315,14 +342,18 @@
             scope.dataset.undoBound = '1';
 
             const button = document.createElement('button');
-            button.className = 'btn btn-undo undo-floating';
+            const actions = scope.matches('.link-card')
+                ? scope.querySelector(':scope > .link-actions')
+                : scope.querySelector(':scope > .item-header .item-actions');
+
+            button.className = actions ? 'btn btn-undo' : 'btn btn-undo undo-floating';
             button.type = 'button';
             button.dataset.undoCard = '';
             button.disabled = true;
             button.title = 'Deshacer último cambio';
             button.setAttribute('aria-label', 'Deshacer último cambio');
             button.textContent = '↶';
-            scope.appendChild(button);
+            (actions || scope).appendChild(button);
 
             button.addEventListener('click', () => undoScope(scope));
             editableFields(scope).forEach((field) => {
@@ -330,6 +361,8 @@
                 field.addEventListener('input', () => rememberFieldChange(field));
                 field.addEventListener('change', () => rememberFieldChange(field));
             });
+
+            setUndoState(scope);
         }
 
         function bindUndoScopes(root = document) {

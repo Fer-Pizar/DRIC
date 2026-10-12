@@ -33,9 +33,13 @@
         .panel-header { border-bottom: 1px solid var(--line); margin-bottom: 20px; padding-bottom: 16px; }
         .language-grid, .two-grid { display: grid; gap: 18px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
         .language-card, .social-card, .notice { box-shadow: none; padding: 18px; }
-        .language-card, .social-card { padding-top: 76px; position: relative; }
+        .language-card { position: relative; }
+        .language-card > h3 { padding-right: 64px; }
+        .language-card > .btn-undo { right: 18px; top: 18px; }
+        .social-card { position: relative; }
         .social-card { display: grid; gap: 16px; }
         .social-header { align-items: center; display: flex; gap: 12px; justify-content: space-between; }
+        .social-actions { align-items: center; display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; }
         label { display: grid; gap: 7px; font-size: 13px; font-weight: 800; }
         input, textarea { border: 1px solid #cfd6e3; border-radius: 12px; color: var(--ink); font: inherit; font-weight: 500; padding: 12px 13px; width: 100%; }
         textarea { line-height: 1.55; min-height: 104px; resize: vertical; }
@@ -197,10 +201,12 @@
                 <div class="social-list" id="social-list">
                     @forelse (old('social_links', $socialLinks) as $index => $socialLink)
                         <article class="social-card" data-social-card>
-                            <button class="btn btn-undo undo-floating" type="button" data-undo-card disabled title="Deshacer último cambio" aria-label="Deshacer último cambio">↶</button>
                             <div class="social-header">
                                 <h3>Red social {{ $index + 1 }}</h3>
-                                <button class="btn btn-remove" type="button" data-remove-social>Quitar</button>
+                                <div class="social-actions">
+                                    <button class="btn btn-undo" type="button" data-undo-card disabled title="Deshacer último cambio" aria-label="Deshacer último cambio">↶</button>
+                                    <button class="btn btn-remove" type="button" data-remove-social>Quitar</button>
+                                </div>
                             </div>
 
                             <input type="hidden" name="social_links[{{ $index }}][id]" value="{{ $socialLink['id'] ?? '' }}">
@@ -249,10 +255,12 @@
 
         <template id="social-template">
             <article class="social-card" data-social-card>
-                <button class="btn btn-undo undo-floating" type="button" data-undo-card disabled title="Deshacer último cambio" aria-label="Deshacer último cambio">↶</button>
                 <div class="social-header">
                     <h3>Nueva red social</h3>
-                    <button class="btn btn-remove" type="button" data-remove-social>Quitar</button>
+                    <div class="social-actions">
+                        <button class="btn btn-undo" type="button" data-undo-card disabled title="Deshacer último cambio" aria-label="Deshacer último cambio">↶</button>
+                        <button class="btn btn-remove" type="button" data-remove-social>Quitar</button>
+                    </div>
                 </div>
                 <input type="hidden" name="__NAME__[id]" value="">
                 <div class="two-grid">
@@ -280,6 +288,7 @@
         const addButton = document.getElementById("add-social");
         const restoreButton = document.getElementById("restore-social");
         const removedSocialCards = [];
+        const removedSocialStorageKey = `contact-removed-social:${window.location.pathname}`;
         const undoHistory = new WeakMap();
         const pendingSnapshots = new WeakMap();
         let nextIndex = {{ count(old('social_links', $socialLinks)) }};
@@ -345,8 +354,56 @@
             });
         }
 
+        function readRemovedSocialStore() {
+            try {
+                const stored = sessionStorage.getItem(removedSocialStorageKey);
+                const parsed = stored ? JSON.parse(stored) : [];
+                return Array.isArray(parsed) ? parsed : [];
+            } catch (error) {
+                sessionStorage.removeItem(removedSocialStorageKey);
+                return [];
+            }
+        }
+
+        function writeRemovedSocialStore(stack) {
+            if (!stack.length) {
+                sessionStorage.removeItem(removedSocialStorageKey);
+                return;
+            }
+
+            sessionStorage.setItem(removedSocialStorageKey, JSON.stringify(stack.slice(-20)));
+        }
+
+        function cleanSocialCardForStorage(card) {
+            const clone = card.cloneNode(true);
+            delete clone.dataset.cardBound;
+            delete clone.dataset.undoBound;
+            clone.querySelectorAll("[data-undo-bound]").forEach((node) => delete node.dataset.undoBound);
+            clone.querySelectorAll("[data-undo-card]").forEach((button) => {
+                button.disabled = true;
+            });
+
+            return clone.outerHTML;
+        }
+
+        function pushRemovedSocialCard(card) {
+            const stack = readRemovedSocialStore();
+            stack.push({
+                html: cleanSocialCardForStorage(card),
+                index: Array.from(list.querySelectorAll("[data-social-card]")).indexOf(card),
+            });
+            writeRemovedSocialStore(stack);
+        }
+
+        function popRemovedSocialCard() {
+            const stack = readRemovedSocialStore();
+            const record = stack.pop() || null;
+            writeRemovedSocialStore(stack);
+            return record;
+        }
+
         function setRestoreState() {
-            restoreButton.disabled = removedSocialCards.length === 0;
+            restoreButton.disabled = removedSocialCards.length === 0 && readRemovedSocialStore().length === 0;
         }
 
         function refreshSocialCards() {
@@ -365,6 +422,7 @@
             card.dataset.cardBound = "true";
             card.querySelector("[data-remove-social]").addEventListener("click", () => {
                 removedSocialCards.push(card);
+                pushRemovedSocialCard(card);
                 card.remove();
                 refreshSocialCards();
                 setRestoreState();
@@ -377,9 +435,23 @@
         setRestoreState();
 
         restoreButton.addEventListener("click", () => {
-            const card = removedSocialCards.pop();
+            const memoryCard = removedSocialCards.pop();
+            const storedRecord = popRemovedSocialCard();
+            const card = (() => {
+                if (!storedRecord?.html) return memoryCard || null;
+                const wrapper = document.createElement("div");
+                wrapper.innerHTML = storedRecord.html.trim();
+                return wrapper.firstElementChild;
+            })();
+
             if (!card) return;
-            list.appendChild(card);
+
+            delete card.dataset.cardBound;
+            delete card.dataset.undoBound;
+            const targetIndex = Number.isInteger(storedRecord?.index) ? storedRecord.index : list.querySelectorAll("[data-social-card]").length;
+            const reference = list.querySelectorAll("[data-social-card]")[targetIndex] || null;
+            list.insertBefore(card, reference);
+            if (storedRecord?.html) bindSocialCard(card);
             refreshSocialCards();
             setRestoreState();
         });

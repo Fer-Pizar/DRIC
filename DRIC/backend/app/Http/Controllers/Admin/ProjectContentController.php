@@ -111,6 +111,8 @@ class ProjectContentController extends Controller
                     $card->update([
                         'media_asset_id' => $this->storeMedia($request, "card_{$index}_image", "projects/card-{$index}", 'image')->id,
                     ]);
+                } elseif ($validated["card_{$index}_image_restore_media_id"] ?? null) {
+                    $card->update(['media_asset_id' => $validated["card_{$index}_image_restore_media_id"]]);
                 } elseif ($request->boolean("card_{$index}_image_remove")) {
                     $card->update(['media_asset_id' => null]);
                 }
@@ -153,6 +155,8 @@ class ProjectContentController extends Controller
             'card_2_image' => ['nullable', 'file', 'mimes:jpg,jpeg,png', 'max:'.self::MAX_IMAGE_KB],
             'card_1_image_remove' => ['nullable', 'boolean'],
             'card_2_image_remove' => ['nullable', 'boolean'],
+            'card_1_image_restore_media_id' => ['nullable', 'integer', 'exists:media_assets,id'],
+            'card_2_image_restore_media_id' => ['nullable', 'integer', 'exists:media_assets,id'],
             'procedure_pdf' => ['nullable', 'file', 'mimes:pdf', 'max:'.self::MAX_PDF_KB],
         ]);
     }
@@ -207,6 +211,8 @@ class ProjectContentController extends Controller
             'card_2_href' => $this->blockData($page, 'projects.card.2', 'href', 'apoyo-financiero'),
             'card_1_image_url' => $this->blockMediaUrl($page, 'projects.card.1', '/images/hero/hero-dric.jpg'),
             'card_2_image_url' => $this->blockMediaUrl($page, 'projects.card.2', '/images/agreements/international-flags.jpg'),
+            'card_1_image_id' => $this->block($page, 'projects.card.1')?->media_asset_id,
+            'card_2_image_id' => $this->block($page, 'projects.card.2')?->media_asset_id,
         ];
     }
 

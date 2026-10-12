@@ -11,7 +11,7 @@ type Props = {
 const content = {
   es: {
     eyebrow: "Atención DRIC",
-    title: "Agenda una cita con la DRIC",
+    title: "Consulta o agenda una cita con la DRIC",
     intro:
       "Cuéntanos brevemente el motivo de tu consulta para orientar mejor tu atención. El mensaje será preparado para enviarse al correo institucional de la DRIC.",
     name: "Nombre completo",
@@ -36,7 +36,7 @@ const content = {
   },
   en: {
     eyebrow: "DRIC Assistance",
-    title: "Schedule an appointment with DRIC",
+    title: "Ask or schedule an appointment with DRIC",
     intro:
       "Tell us briefly the reason for your request so we can guide your appointment properly. The message will be prepared to be sent to DRIC’s institutional email.",
     name: "Full name",

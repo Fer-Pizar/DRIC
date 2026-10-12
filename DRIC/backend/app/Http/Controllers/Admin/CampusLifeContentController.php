@@ -110,8 +110,8 @@ class CampusLifeContentController extends Controller
                 );
             }
 
-            $heroImage = $this->upsertImageBlock($request, $hero, 'campus.hero.image', 'campus_hero_image', 1, $languages, 'hero_image', 'hero_image_remove', 'hero_image_restore', ['image' => '/images/campus-life/uni-view.png']);
-            $officialLogo = $this->upsertImageBlock($request, $official, 'campus.official.logo', 'campus_logo', 1, $languages, 'official_logo', 'official_logo_remove', 'official_logo_restore', ['image' => '/images/campus-life/umss-logo.png', 'url' => $validated['official_url']]);
+            $heroImage = $this->upsertImageBlock($request, $hero, 'campus.hero.image', 'campus_hero_image', 1, $languages, 'hero_image', 'hero_image_remove', 'hero_image_restore', 'hero_image_unhide', ['image' => '/images/campus-life/uni-view.png']);
+            $officialLogo = $this->upsertImageBlock($request, $official, 'campus.official.logo', 'campus_logo', 1, $languages, 'official_logo', 'official_logo_remove', 'official_logo_restore', 'official_logo_unhide', ['image' => '/images/campus-life/umss-logo.png', 'url' => $validated['official_url']]);
             $officialLogo->update(['data' => array_merge($officialLogo->data ?? [], ['url' => $validated['official_url']])]);
 
             foreach (self::STATS as $index) {
@@ -148,7 +148,7 @@ class CampusLifeContentController extends Controller
                     ],
                 ], ['url' => $validated['stories'][$index]['url'], 'image' => $fallback['image_url']]);
 
-                $this->syncImageField($request, $storyBlock, "stories.{$index}.image", "stories.{$index}.image_remove", "stories.{$index}.image_restore", 'campus-life');
+                $this->syncImageField($request, $storyBlock, "stories.{$index}.image", "stories.{$index}.image_remove", "stories.{$index}.image_restore", "stories.{$index}.image_unhide", 'campus-life');
             }
         });
 
@@ -164,9 +164,11 @@ class CampusLifeContentController extends Controller
             'hero_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:'.self::MAX_IMAGE_KB],
             'hero_image_remove' => ['nullable', 'boolean'],
             'hero_image_restore' => ['nullable', 'integer', 'exists:media_assets,id'],
+            'hero_image_unhide' => ['nullable', 'boolean'],
             'official_logo' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:'.self::MAX_IMAGE_KB],
             'official_logo_remove' => ['nullable', 'boolean'],
             'official_logo_restore' => ['nullable', 'integer', 'exists:media_assets,id'],
+            'official_logo_unhide' => ['nullable', 'boolean'],
         ];
 
         foreach (['es', 'en'] as $locale) {
@@ -206,6 +208,7 @@ class CampusLifeContentController extends Controller
             $rules["stories.{$index}.image"] = ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:'.self::MAX_IMAGE_KB];
             $rules["stories.{$index}.image_remove"] = ['nullable', 'boolean'];
             $rules["stories.{$index}.image_restore"] = ['nullable', 'integer', 'exists:media_assets,id'];
+            $rules["stories.{$index}.image_unhide"] = ['nullable', 'boolean'];
         }
 
         return $rules;
@@ -422,15 +425,15 @@ class CampusLifeContentController extends Controller
         return $this->block($page, $key)?->mediaAsset?->id;
     }
 
-    private function upsertImageBlock(Request $request, Section $section, string $key, string $type, int $sortOrder, $languages, string $fileKey, string $removeKey, string $restoreKey, array $data): ContentBlock
+    private function upsertImageBlock(Request $request, Section $section, string $key, string $type, int $sortOrder, $languages, string $fileKey, string $removeKey, string $restoreKey, string $unhideKey, array $data): ContentBlock
     {
         $block = $this->upsertBlock($section, $key, $type, $sortOrder, $languages, [], $data);
-        $this->syncImageField($request, $block, $fileKey, $removeKey, $restoreKey, 'campus-life');
+        $this->syncImageField($request, $block, $fileKey, $removeKey, $restoreKey, $unhideKey, 'campus-life');
 
         return $block->fresh();
     }
 
-    private function syncImageField(Request $request, ContentBlock $block, string $fileKey, string $removeKey, string $restoreKey, string $directory): void
+    private function syncImageField(Request $request, ContentBlock $block, string $fileKey, string $removeKey, string $restoreKey, string $unhideKey, string $directory): void
     {
         if ($request->hasFile($fileKey)) {
             $block->update([
@@ -444,6 +447,13 @@ class CampusLifeContentController extends Controller
         if ($restoreId && MediaAsset::query()->whereKey($restoreId)->exists()) {
             $block->update([
                 'media_asset_id' => $restoreId,
+                'data' => array_merge($block->data ?? [], ['image_hidden' => false]),
+            ]);
+            return;
+        }
+
+        if ($request->boolean($unhideKey)) {
+            $block->update([
                 'data' => array_merge($block->data ?? [], ['image_hidden' => false]),
             ]);
             return;

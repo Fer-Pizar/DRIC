@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { CmsSection } from "@/types/cms";
+import { publicAssetUrl } from "@/lib/api/assets";
 
 type Props = {
   section: CmsSection;
@@ -8,12 +9,13 @@ type Props = {
 
 function getCountryCard(block: CmsSection["blocks"][number], locale: string) {
   const title = block.title ?? "";
-  const image = String(block.data?.image ?? block.media?.url ?? "");
+  const rawImage = block.data?.image_hidden ? "" : String(block.media?.url ?? block.data?.image ?? "");
+  const image = publicAssetUrl(rawImage) ?? "";
   const href = block.link_url ?? `/becas-movilidad/becas/${getCountrySlug(block)}`;
 
   return {
     title,
-    image: block.media?.url ?? image,
+    image,
     slug: getCountrySlug(block),
     href: localizedHref(href, locale),
   };
@@ -58,15 +60,17 @@ export default function ScholarshipGridSection({ section, locale = "es" }: Props
                 href={countryCard.href}
                 className="dric-scholarship-card dric-scholarship-country-card group block overflow-hidden rounded-3xl border border-white/10 bg-slate-900 transition duration-500 hover:-translate-y-3 hover:scale-[1.03] hover:border-cyan-300/70 hover:shadow-[0_0_45px_rgba(0,55,112,0.25)]"
               >
-                <div className="relative overflow-hidden">
-                  <img
-                    src={countryCard.image}
-                    alt={countryCard.title}
-                    className="h-64 w-full object-cover transition duration-700 group-hover:scale-110 group-hover:brightness-110"
-                  />
+                {countryCard.image ? (
+                  <div className="relative overflow-hidden">
+                    <img
+                      src={countryCard.image}
+                      alt={countryCard.title}
+                      className="h-64 w-full object-cover transition duration-700 group-hover:scale-110 group-hover:brightness-110"
+                    />
 
-                  <div className="absolute inset-0 bg-cyan-300/0 transition duration-500 group-hover:bg-cyan-300/10" />
-                </div>
+                    <div className="absolute inset-0 bg-cyan-300/0 transition duration-500 group-hover:bg-cyan-300/10" />
+                  </div>
+                ) : null}
 
                 <div className="dric-scholarship-card-strip p-6">
                   <h3 className="dric-scholarship-card-title text-2xl font-light transition duration-300 group-hover:text-cyan-300">

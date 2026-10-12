@@ -11,6 +11,8 @@
         .shell { margin: 0 auto; max-width: 1240px; padding: 36px 20px 56px; }
         .topbar, .panel, .language-card, .program-card { background: #fff; border: 1px solid var(--line); border-radius: 18px; box-shadow: 0 18px 50px rgba(15, 23, 42, 0.08); }
         .topbar { align-items: center; display: flex; gap: 18px; justify-content: space-between; margin-bottom: 22px; padding: 24px; }
+        .topbar > div:first-child { flex: 1 1 auto; min-width: 0; }
+        .topbar > .actions { flex: 0 0 auto; justify-content: flex-end; margin-left: auto; }
         h1, h2, h3 { margin: 0; }
         h1 { font-size: 34px; line-height: 1.1; }
         h2 { color: var(--blue); font-size: 24px; }

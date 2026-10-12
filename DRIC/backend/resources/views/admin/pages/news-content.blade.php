@@ -33,7 +33,8 @@
         .panel-header { align-items: start; border-bottom: 1px solid var(--line); display: flex; gap: 16px; justify-content: space-between; margin-bottom: 20px; padding-bottom: 16px; }
         .language-grid, .news-fields { display: grid; gap: 18px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
         .language-card, .news-row { box-shadow: none; padding: 18px; position: relative; }
-        .language-card { padding-top: 76px; }
+        .language-card > h3 { padding-right: 64px; }
+        .language-card > .btn-undo { right: 18px; top: 18px; }
         .news-row { border: 2px solid var(--blue); box-shadow: 0 16px 42px rgba(22, 65, 148, 0.10); display: grid; gap: 14px; padding-top: 18px; }
         .news-row::before { background: var(--blue); border-radius: 18px 0 0 18px; content: ""; inset: -2px auto -2px -2px; position: absolute; width: 7px; }
         .row-header { align-items: center; display: flex; justify-content: space-between; }

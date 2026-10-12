@@ -279,7 +279,7 @@
         }
 
         function setUndoState(scope) {
-            const button = scope.querySelector(':scope > [data-undo-card]');
+            const button = scope.querySelector('[data-undo-card]');
             if (button) button.disabled = historyFor(scope).length === 0;
         }
 
@@ -323,14 +323,23 @@
             scope.dataset.undoBound = '1';
 
             const button = document.createElement('button');
-            button.className = 'btn btn-undo undo-floating';
+            const actions = scope.matches('.link-card')
+                ? scope.querySelector(':scope > .link-actions')
+                : (scope.matches('.item-card') ? scope.querySelector(':scope > .item-header .item-actions') : null);
+            const removeButton = actions?.querySelector('[data-remove-opportunity], [data-remove-link]');
+
+            button.className = actions ? 'btn btn-undo' : 'btn btn-undo undo-floating';
             button.type = 'button';
             button.dataset.undoCard = '';
             button.disabled = true;
             button.title = 'Deshacer último cambio';
             button.setAttribute('aria-label', 'Deshacer último cambio');
             button.textContent = '↶';
-            scope.appendChild(button);
+            if (actions) {
+                actions.insertBefore(button, removeButton || null);
+            } else {
+                scope.appendChild(button);
+            }
 
             button.addEventListener('click', () => undoScope(scope));
             editableFields(scope).forEach((field) => {
