@@ -11,6 +11,9 @@
         if (\Illuminate\Support\Str::startsWith($path, '/storage/')) {
             return url($path);
         }
+        if (\Illuminate\Support\Str::startsWith($path, '/images/')) {
+            return route('admin.frontend-image', ['path' => ltrim($path, '/')]);
+        }
         return $frontendUrl.$path;
     };
 @endphp
@@ -280,6 +283,8 @@
             border-radius: 18px;
             display: flex;
             justify-content: center;
+            margin-left: auto;
+            margin-right: auto;
             margin-bottom: 14px;
             overflow: visible;
             position: relative;
@@ -292,10 +297,12 @@
 
         .preview-hero {
             aspect-ratio: 16 / 10;
+            max-width: 390px;
         }
 
         .preview-card {
-            aspect-ratio: 4 / 3;
+            aspect-ratio: 16 / 10;
+            max-width: 330px;
         }
 
         .preview img {
@@ -439,7 +446,7 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('admin.pages.agreements.update', $page) }}" enctype="multipart/form-data">
+        <form method="POST" action="{{ route('admin.pages.agreements.update', $page) }}" enctype="multipart/form-data" id="agreement-form">
             @csrf
             @method('PUT')
 
@@ -555,14 +562,14 @@
                                 <h3>Tarjeta {{ $index }}</h3>
                                 <button class="btn btn-undo" type="button" data-undo-card disabled title="Deshacer último cambio" aria-label="Deshacer último cambio">↶</button>
                             </div>
-                            <div class="media-card" style="margin-top:14px;" data-image-card data-crop-aspect="1.333333" data-crop-label="Marco 4:3, igual al área de imagen de las tarjetas de Convenios.">
+                            <div class="media-card" style="margin-top:14px;" data-image-card data-crop-aspect="1.6" data-crop-label="Marco 16:10, igual al área de imagen de las tarjetas de Convenios.">
                                 <div class="preview preview-card" data-image-preview>
                                     @if ($content['card_'.$index.'_image_url'])
                                         <img src="{{ $preview($content['card_'.$index.'_image_url']) }}" alt="Imagen de tarjeta {{ $index }}" data-preview-image>
                                     @else
                                         <span class="preview-empty" data-preview-empty>Se usará la imagen actual del sitio hasta subir una nueva.</span>
                                     @endif
-                                    <span class="preview-ruler">4:3 tarjeta</span>
+                                    <span class="preview-ruler">16:10 tarjeta</span>
                                     <button class="btn-image-remove" type="button" data-remove-image aria-label="Quitar imagen actual">×</button>
                                 </div>
                                 <input type="hidden" name="card_{{ $index }}_image_remove" value="0" data-remove-image-input>
@@ -651,6 +658,7 @@
                 Zoom
                 <input type="range" id="crop-zoom" min="1" max="3" step="0.01" value="1">
             </label>
+            <div class="field-error" id="crop-error"></div>
             <div class="crop-actions">
                 <button class="btn btn-secondary" type="button" id="crop-reset">Centrar</button>
                 <button class="btn btn-primary" type="button" id="crop-accept">Aceptar recorte</button>
@@ -672,6 +680,10 @@
         const maxImageBytes = 5 * 1024 * 1024;
         const cardHistory = new WeakMap();
         const fieldStartSnapshots = new WeakMap();
+        const trackedUndoFields = new Set();
+        const imageStartSnapshots = new WeakMap();
+        const undoStorageKey = `agreement-content-undo:${window.location.pathname}`;
+        const agreementForm = document.getElementById("agreement-form");
 
         function editableFields(card) {
             return Array.from(card.querySelectorAll("input:not([type='file']), textarea"));
@@ -704,6 +716,81 @@
                 })),
                 image: imageState(card),
             };
+        }
+
+        function serializableSnapshot(snapshot) {
+            return {
+                fields: (snapshot.fields || []).map((field) => ({
+                    name: field.name,
+                    type: field.type,
+                    value: field.value,
+                    checked: field.checked,
+                })),
+                image: snapshot.image ? {
+                    src: snapshot.image.src,
+                    imageHidden: snapshot.image.imageHidden,
+                    emptyHidden: snapshot.image.emptyHidden,
+                    removeValue: snapshot.image.removeValue,
+                } : null,
+            };
+        }
+
+        function cardKey(card) {
+            return editableFields(card).map((field) => field.name || field.type).join("|");
+        }
+
+        function readUndoStore() {
+            try {
+                const stored = sessionStorage.getItem(undoStorageKey);
+                const parsed = stored ? JSON.parse(stored) : {};
+                return parsed && typeof parsed === "object" ? parsed : {};
+            } catch (error) {
+                sessionStorage.removeItem(undoStorageKey);
+                return {};
+            }
+        }
+
+        function writeUndoStore(store) {
+            const clean = Object.fromEntries(Object.entries(store).filter(([, value]) => Array.isArray(value) && value.length));
+            if (!Object.keys(clean).length) {
+                sessionStorage.removeItem(undoStorageKey);
+                return;
+            }
+
+            sessionStorage.setItem(undoStorageKey, JSON.stringify(clean));
+        }
+
+        function pushStoredSnapshot(card, snapshot) {
+            const key = cardKey(card);
+            if (!key) return;
+
+            const record = serializableSnapshot(snapshot);
+            const store = readUndoStore();
+            if (!Array.isArray(store[key])) store[key] = [];
+
+            const serialized = JSON.stringify(record);
+            const last = store[key].length ? JSON.stringify(store[key][store[key].length - 1]) : null;
+            if (serialized !== last) store[key].push(record);
+            if (store[key].length > 20) store[key].shift();
+            writeUndoStore(store);
+        }
+
+        function popStoredSnapshot(card) {
+            const key = cardKey(card);
+            if (!key) return null;
+
+            const store = readUndoStore();
+            const history = Array.isArray(store[key]) ? store[key] : [];
+            const snapshot = history.pop() || null;
+            if (history.length) store[key] = history;
+            else delete store[key];
+            writeUndoStore(store);
+            return snapshot;
+        }
+
+        function hasStoredSnapshots(card) {
+            const history = readUndoStore()[cardKey(card)] || [];
+            return Array.isArray(history) && history.length > 0;
         }
 
         function previewImageElement(preview) {
@@ -792,7 +879,7 @@
             const button = card.querySelector("[data-undo-card]");
             if (!button) return;
 
-            button.disabled = historyFor(card).length === 0;
+            button.disabled = historyFor(card).length === 0 && !hasStoredSnapshots(card);
         }
 
         function pushSnapshot(card, snapshot = snapshotCard(card)) {
@@ -802,6 +889,7 @@
 
             if (serialized !== last) {
                 history.push(snapshot);
+                pushStoredSnapshot(card, snapshot);
             }
 
             if (history.length > 20) {
@@ -812,8 +900,13 @@
         }
 
         function undoCard(card) {
-            const snapshot = historyFor(card).pop();
+            const memorySnapshot = historyFor(card).pop();
+            const snapshot = memorySnapshot || popStoredSnapshot(card);
             if (!snapshot) return;
+
+            if (memorySnapshot) {
+                popStoredSnapshot(card);
+            }
 
             restoreSnapshot(card, snapshot);
             editableFields(card).forEach((field) => fieldStartSnapshots.delete(field));
@@ -825,6 +918,7 @@
             if (!card || fieldStartSnapshots.has(field)) return;
 
             fieldStartSnapshots.set(field, snapshotCard(card));
+            trackedUndoFields.add(field);
         }
 
         function rememberFieldChange(field) {
@@ -834,6 +928,26 @@
 
             pushSnapshot(card, snapshot);
             fieldStartSnapshots.delete(field);
+            trackedUndoFields.delete(field);
+        }
+
+        function flushPendingUndoSnapshots() {
+            Array.from(trackedUndoFields).forEach((field) => {
+                const card = field.closest(".language-card, .media-card");
+                const snapshot = fieldStartSnapshots.get(field);
+                if (!card || !snapshot) {
+                    trackedUndoFields.delete(field);
+                    return;
+                }
+
+                const currentSnapshot = snapshotCard(card);
+                if (JSON.stringify(serializableSnapshot(snapshot)) !== JSON.stringify(serializableSnapshot(currentSnapshot))) {
+                    pushSnapshot(card, snapshot);
+                }
+
+                fieldStartSnapshots.delete(field);
+                trackedUndoFields.delete(field);
+            });
         }
 
         function bindUndoCard(card) {
@@ -1045,11 +1159,18 @@
 
             function requestImageFile() {
                 if (!fileInput) return;
+                imageStartSnapshots.set(fileInput, snapshotCard(imageUndoScope(card)));
                 fileInput.click();
             }
 
             preview?.addEventListener("click", (event) => {
                 if (event.target.closest("[data-remove-image]")) return;
+                const image = preview.querySelector("[data-preview-image]");
+                if (image?.src && !image.hidden) {
+                    imageStartSnapshots.set(fileInput, snapshotCard(imageUndoScope(card)));
+                    openCropTool(card, null, image.src);
+                    return;
+                }
                 requestImageFile();
             });
 
@@ -1072,10 +1193,12 @@
         const cropAccept = document.getElementById("crop-accept");
         const cropReset = document.getElementById("crop-reset");
         const cropClose = document.getElementById("crop-close");
+        const cropError = document.getElementById("crop-error");
         const cropState = {
             card: null,
             file: null,
             objectUrl: "",
+            sourceUrl: "",
             naturalWidth: 0,
             naturalHeight: 0,
             baseScale: 1,
@@ -1134,14 +1257,16 @@
             renderCrop();
         }
 
-        function openCropTool(card, file) {
+        function openCropTool(card, file, sourceUrl = "") {
             if (cropState.objectUrl) {
                 URL.revokeObjectURL(cropState.objectUrl);
             }
 
             cropState.card = card;
             cropState.file = file;
-            cropState.objectUrl = URL.createObjectURL(file);
+            cropState.objectUrl = file ? URL.createObjectURL(file) : "";
+            cropState.sourceUrl = sourceUrl || cropState.objectUrl;
+            cropError.textContent = "";
             cropHelp.textContent = card.dataset.cropLabel || "Ajusta la imagen dentro del marco y acepta el recorte.";
             cropModal.classList.add("is-open");
             cropModal.setAttribute("aria-hidden", "false");
@@ -1149,7 +1274,7 @@
             const size = frameSizeForAspect(cropAspectFor(card));
             cropFrame.style.width = `${size.width}px`;
             cropFrame.style.height = `${size.height}px`;
-            cropImage.src = cropState.objectUrl;
+            cropImage.src = cropState.sourceUrl;
         }
 
         function closeCropTool(clearSelection = false) {
@@ -1159,7 +1284,13 @@
 
             if (clearSelection && card) {
                 const fileInput = card.querySelector("[data-image-file]");
-                if (fileInput) fileInput.value = "";
+                const snapshot = fileInput ? imageStartSnapshots.get(fileInput) : null;
+                if (snapshot) {
+                    restoreImageState(imageUndoScope(card), snapshot.image);
+                    imageStartSnapshots.delete(fileInput);
+                } else if (fileInput) {
+                    fileInput.value = "";
+                }
             }
 
             if (cropState.objectUrl) {
@@ -1169,13 +1300,16 @@
             cropState.card = null;
             cropState.file = null;
             cropState.objectUrl = "";
+            cropState.sourceUrl = "";
+            cropError.textContent = "";
             cropImage.removeAttribute("src");
         }
 
         function acceptCrop() {
             const card = cropState.card;
             const file = cropState.file;
-            if (!card || !file) return;
+            if (!card) return;
+            cropError.textContent = "";
 
             const aspect = cropAspectFor(card);
             const scale = cropState.baseScale * cropState.zoom;
@@ -1189,25 +1323,38 @@
             const outputHeight = Math.round(outputWidth / aspect);
             const canvas = document.createElement("canvas");
             const context = canvas.getContext("2d");
-            const base = file.name.replace(/\.[^.]+$/, "") || "agreement-image";
+            const base = (file?.name || "agreement-image").replace(/\.[^.]+$/, "") || "agreement-image";
 
             canvas.width = outputWidth;
             canvas.height = outputHeight;
-            context.drawImage(cropImage, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, outputWidth, outputHeight);
+            try {
+                context.drawImage(cropImage, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, outputWidth, outputHeight);
+            } catch (error) {
+                cropError.textContent = "Esta imagen no se puede recortar desde el navegador. Sube el archivo original para ajustarla.";
+                return;
+            }
 
-            canvas.toBlob((blob) => {
-                if (!blob) return;
+            try {
+                canvas.toBlob((blob) => {
+                    if (!blob) return;
 
-                const cropped = new File([blob], `${base}-recortada.jpg`, { type: "image/jpeg" });
-                const transfer = new DataTransfer();
-                const fileInput = card.querySelector("[data-image-file]");
+                    const cropped = new File([blob], `${base}-recortada.jpg`, { type: "image/jpeg" });
+                    const transfer = new DataTransfer();
+                    const fileInput = card.querySelector("[data-image-file]");
+                    const undoCard = imageUndoScope(card);
+                    const snapshot = imageStartSnapshots.get(fileInput) || snapshotCard(undoCard);
 
-                transfer.items.add(cropped);
-                fileInput.files = transfer.files;
-                showSelectedImage(card, cropped);
-                imageErrorFor(fileInput).textContent = "";
-                closeCropTool(false);
-            }, "image/jpeg", .92);
+                    transfer.items.add(cropped);
+                    pushSnapshot(undoCard, snapshot);
+                    fileInput.files = transfer.files;
+                    imageStartSnapshots.delete(fileInput);
+                    showSelectedImage(card, cropped);
+                    imageErrorFor(fileInput).textContent = "";
+                    closeCropTool(false);
+                }, "image/jpeg", .92);
+            } catch (error) {
+                cropError.textContent = "Esta imagen no se puede recortar desde el navegador. Sube el archivo original para ajustarla.";
+            }
         }
 
         cropImage.addEventListener("load", () => {
@@ -1277,7 +1424,8 @@
 
         document.querySelectorAll(".language-card, .media-card").forEach(bindUndoCard);
         document.querySelectorAll("[data-image-card]").forEach(bindImageCard);
+        agreementForm?.addEventListener("submit", flushPendingUndoSnapshots);
+        window.addEventListener("pageshow", () => document.querySelectorAll(".language-card, .media-card").forEach(setUndoState));
     </script>
-    @include('admin.partials.persistent-undo')
 </body>
 </html>

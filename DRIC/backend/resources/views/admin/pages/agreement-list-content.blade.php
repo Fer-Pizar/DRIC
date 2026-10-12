@@ -182,51 +182,6 @@
 
         .panel { padding: 24px; }
 
-        .workflow-grid {
-            display: grid;
-            gap: 14px;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-        }
-
-        .workflow-card {
-            background: #fff;
-            border: 1px solid var(--line);
-            border-radius: 18px;
-            box-shadow: 0 18px 50px rgba(15, 23, 42, 0.08);
-            display: grid;
-            gap: 8px;
-            padding: 18px;
-        }
-
-        .workflow-card strong {
-            align-items: center;
-            color: var(--blue);
-            display: flex;
-            font-size: 15px;
-            gap: 10px;
-        }
-
-        .workflow-card strong::before {
-            align-items: center;
-            background: #eef3fb;
-            border-radius: 999px;
-            color: var(--blue);
-            content: attr(data-step);
-            display: inline-flex;
-            flex: 0 0 auto;
-            font-size: 12px;
-            height: 28px;
-            justify-content: center;
-            width: 28px;
-        }
-
-        .workflow-card span {
-            color: var(--muted);
-            font-size: 13px;
-            font-weight: 600;
-            line-height: 1.5;
-        }
-
         .panel-header {
             align-items: start;
             border-bottom: 1px solid var(--line);
@@ -446,10 +401,6 @@
                 flex-direction: column;
             }
 
-            .workflow-grid {
-                grid-template-columns: 1fr;
-            }
-
             .list-tools {
                 align-items: stretch;
                 justify-content: flex-start;
@@ -493,23 +444,6 @@
         <form method="POST" action="{{ route('admin.agreement-lists.update', $list) }}">
             @csrf
             @method('PUT')
-
-            @if ($list === 'ceub-gobierno')
-                <section class="workflow-grid" aria-label="Guía de edición">
-                    <div class="workflow-card">
-                        <strong data-step="1">Clasificación pública</strong>
-                        <span>Elige CEUB, un país existente o agrega un nuevo país. Esta decisión organiza el documento en la página pública.</span>
-                    </div>
-                    <div class="workflow-card">
-                        <strong data-step="2">Texto visible</strong>
-                        <span>Revisa el título en español y su versión profesional en inglés.</span>
-                    </div>
-                    <div class="workflow-card">
-                        <strong data-step="3">Documento</strong>
-                        <span>Confirma que la URL abre el PDF o enlace institucional correcto.</span>
-                    </div>
-                </section>
-            @endif
 
             <section class="panel">
                 <div class="panel-header">

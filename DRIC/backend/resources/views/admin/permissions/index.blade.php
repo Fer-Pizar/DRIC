@@ -38,8 +38,7 @@
         <div class="header">
             <h1>Permisos</h1>
             <div class="header-actions">
-                <a href="{{ route('admin.roles.index') }}" class="btn btn-secondary">Volver a roles</a>
-                <a href="{{ route('admin.permissions.create') }}" class="btn btn-primary">Crear permiso</a>
+                <a href="{{ route('admin.dashboard') }}" class="btn btn-secondary">Volver panel</a>
             </div>
         </div>
 

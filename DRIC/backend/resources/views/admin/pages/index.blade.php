@@ -53,6 +53,10 @@
     };
 
     $pageTitle = function ($page) {
+        if ($page->slug === 'convenios') {
+            return 'Convenios';
+        }
+
         return $page->translations->firstWhere('language.code', 'es')?->title
             ?? str($page->slug)->replace('-', ' ')->title();
     };

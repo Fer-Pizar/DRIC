@@ -442,6 +442,8 @@
         const cardHistory = new WeakMap();
         const fieldStartSnapshots = new WeakMap();
         const imageStartSnapshots = new WeakMap();
+        const trackedUndoFields = new Set();
+        const homeForm = document.getElementById("home-form");
         const undoStorageKey = `home-content-undo:${window.location.pathname}`;
         const maxImageBytes = 10 * 1024 * 1024;
 
@@ -707,6 +709,7 @@
             if (!scope || fieldStartSnapshots.has(field)) return;
 
             fieldStartSnapshots.set(field, snapshotScope(scope));
+            trackedUndoFields.add(field);
         }
 
         function rememberFieldChange(field) {
@@ -716,6 +719,26 @@
 
             pushSnapshot(scope, snapshot);
             fieldStartSnapshots.delete(field);
+            trackedUndoFields.delete(field);
+        }
+
+        function flushPendingUndoSnapshots() {
+            Array.from(trackedUndoFields).forEach((field) => {
+                const scope = field.closest("[data-undo-scope]");
+                const snapshot = fieldStartSnapshots.get(field);
+                if (!scope || !snapshot) {
+                    trackedUndoFields.delete(field);
+                    return;
+                }
+
+                const currentSnapshot = snapshotScope(scope);
+                if (JSON.stringify(serializableSnapshot(snapshot)) !== JSON.stringify(serializableSnapshot(currentSnapshot))) {
+                    pushSnapshot(scope, snapshot);
+                }
+
+                fieldStartSnapshots.delete(field);
+                trackedUndoFields.delete(field);
+            });
         }
 
         function bindUndoScope(scope) {
@@ -1196,8 +1219,8 @@
 
         bindUndoScopes();
         document.querySelectorAll("[data-image-card]").forEach(bindImageCard);
+        homeForm?.addEventListener("submit", flushPendingUndoSnapshots);
         window.addEventListener("pageshow", () => document.querySelectorAll("[data-undo-scope]").forEach(setUndoState));
     </script>
-    @include('admin.partials.persistent-undo')
 </body>
 </html>
