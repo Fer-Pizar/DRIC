@@ -1,1 +1,1599 @@
-Web page
+# Sitio Web Institucional DRIC
+
+Plataforma web institucional desarrollada para la **Dirección de Relaciones Internacionales y Convenios (DRIC)** de la **Universidad Mayor de San Simón (UMSS)**.
+
+El sistema proporciona un sitio web institucional moderno y bilingüe, acompañado de una plataforma de administración de contenido que permite al personal autorizado gestionar información pública, convenios, becas, proyectos, documentos institucionales, noticias, certificados y otros servicios relacionados con la DRIC.
+
+La solución utiliza una arquitectura con separación entre frontend y backend:
+
+- **Frontend:** Next.js, React, TypeScript y Material UI.
+- **Backend:** Laravel y PHP.
+- **Base de datos:** PostgreSQL.
+- **Comunicación:** API mediante HTTP/JSON.
+- **Administración:** sistema de gestión de contenido basado en Laravel.
+- **Internacionalización:** español e inglés.
+- **Autorización:** control de acceso basado en roles y permisos.
+- **Control de versiones:** Git, GitHub y GitLab.
+
+---
+
+## Índice
+
+1. [Descripción general](#descripción-general)
+2. [Características principales](#características-principales)
+3. [Arquitectura del sistema](#arquitectura-del-sistema)
+4. [Tecnologías utilizadas](#tecnologías-utilizadas)
+5. [Estructura del proyecto](#estructura-del-proyecto)
+6. [Requisitos del sistema](#requisitos-del-sistema)
+7. [Instalación](#instalación)
+8. [Configuración del backend](#configuración-del-backend)
+9. [Configuración del frontend](#configuración-del-frontend)
+10. [Configuración de la base de datos](#configuración-de-la-base-de-datos)
+11. [Ejecución de la aplicación](#ejecución-de-la-aplicación)
+12. [Comandos disponibles](#comandos-disponibles)
+13. [Internacionalización](#internacionalización)
+14. [Gestión de contenido](#gestión-de-contenido)
+15. [Autenticación y autorización](#autenticación-y-autorización)
+16. [Verificación de certificados](#verificación-de-certificados)
+17. [Sitio web público](#sitio-web-público)
+18. [Flujo de desarrollo](#flujo-de-desarrollo)
+19. [Pruebas y calidad de código](#pruebas-y-calidad-de-código)
+20. [Despliegue en producción](#despliegue-en-producción)
+21. [Consideraciones de seguridad](#consideraciones-de-seguridad)
+22. [Solución de problemas](#solución-de-problemas)
+23. [Contexto del proyecto](#contexto-del-proyecto)
+
+---
+
+# Descripción general
+
+El Sitio Web Institucional de la DRIC fue desarrollado con el propósito de centralizar y modernizar la presencia digital de la **Dirección de Relaciones Internacionales y Convenios de la Universidad Mayor de San Simón**.
+
+La plataforma reemplaza un enfoque fragmentado de publicación y gestión de información mediante una solución estructurada conformada por un frontend público independiente, un backend desarrollado con Laravel, una base de datos relacional PostgreSQL y un panel administrativo protegido.
+
+El sistema permite administrar tanto la comunicación institucional dirigida al público como las operaciones internas necesarias para mantener actualizado el contenido publicado.
+
+Entre sus principales objetivos se encuentran:
+
+- Centralizar la información institucional.
+- Proporcionar un sitio web accesible y adaptable a diferentes dispositivos.
+- Publicar contenido institucional en español e inglés.
+- Permitir al personal autorizado administrar contenido sin modificar directamente el código fuente.
+- Gestionar convenios, becas, proyectos, membresías, noticias y documentos institucionales.
+- Proporcionar un mecanismo público de verificación de certificados.
+- Mantener información estructurada mediante una base de datos relacional.
+- Separar la presentación pública de las operaciones administrativas.
+- Aplicar autenticación, roles y permisos sobre las funcionalidades del panel administrativo.
+- Facilitar el mantenimiento y evolución futura del sistema.
+
+---
+
+# Características principales
+
+## Sitio web institucional público
+
+La aplicación pública reúne las principales áreas de información y servicios de la DRIC:
+
+- Inicio.
+- Presentación institucional.
+- Convenios.
+- Proyectos.
+- Becas y movilidad.
+- Membresías institucionales.
+- Noticias.
+- Normativas.
+- Informes de gestión.
+- Campus Life.
+- Contacto.
+- Verificación pública de certificados.
+- Agendamiento y formularios de contacto.
+- Experiencias estudiantiles.
+
+La interfaz pública posee un diseño adaptable para equipos de escritorio, tablets y dispositivos móviles.
+
+---
+
+## Contenido bilingüe
+
+El sistema funciona en:
+
+- Español.
+- Inglés.
+
+El español constituye el idioma predeterminado.
+
+Las traducciones correspondientes a elementos de interfaz son gestionadas desde el frontend, mientras que el contenido institucional puede almacenarse y administrarse de manera independiente para ambos idiomas.
+
+El sistema de administración contempla la publicación de contenido bilingüe y permite mantener las versiones correspondientes en español e inglés.
+
+---
+
+## Sistema de gestión de contenido
+
+Los usuarios autorizados pueden mantener el contenido del sitio web mediante el panel administrativo.
+
+Dependiendo del rol y los permisos asignados, las operaciones disponibles pueden incluir:
+
+- Consultar contenido.
+- Crear contenido.
+- Modificar contenido.
+- Publicar información.
+- Gestionar imágenes.
+- Administrar enlaces.
+- Gestionar documentos PDF.
+- Mantener versiones en español e inglés.
+- Administrar registros de verificación de certificados.
+- Actualizar las diferentes secciones institucionales.
+
+De esta manera, las tareas habituales de mantenimiento pueden realizarse sin necesidad de modificar directamente el código fuente del frontend.
+
+---
+
+## Control de acceso basado en roles
+
+El acceso administrativo utiliza un modelo de **Role-Based Access Control (RBAC)**.
+
+```text
+Usuario
+   |
+   v
+Rol
+   |
+   v
+Permisos
+   |
+   v
+Operaciones autorizadas
+```
+
+La gestión de roles y permisos se implementa mediante:
+
+```text
+spatie/laravel-permission
+```
+
+Este enfoque separa la autenticación de la autorización y evita que todas las funcionalidades administrativas estén disponibles para cualquier usuario autenticado.
+
+---
+
+## Verificación de certificados
+
+El sitio incorpora un servicio público para verificar certificados registrados en el sistema.
+
+El usuario puede introducir un código de verificación y, cuando existe un registro válido y activo, consultar la información asociada.
+
+Los registros de certificados contemplan información como:
+
+- Código de verificación.
+- Nombre completo.
+- Tipo de certificado.
+- Fecha de emisión.
+- Descripción.
+- Estado activo o inactivo.
+
+La administración de estos registros se realiza desde el panel administrativo protegido.
+
+---
+
+## Modo claro y oscuro
+
+La interfaz pública dispone de soporte para:
+
+- Modo claro.
+- Modo oscuro.
+
+La gestión de temas forma parte de la arquitectura del frontend basada en React y Material UI.
+
+---
+
+# Arquitectura del sistema
+
+El proyecto emplea una arquitectura cliente-servidor con una separación explícita entre las responsabilidades del frontend y el backend.
+
+```text
+                         USUARIOS
+                            |
+               +------------+------------+
+               |                         |
+               v                         v
+         Sitio público            Panel administrativo
+            Next.js                   Laravel
+               |                         |
+               |       HTTP / JSON       |
+               +------------+------------+
+                            |
+                            v
+                   BACKEND LARAVEL
+            Rutas / Middleware / MVC
+                            |
+                            v
+                        Servicios
+                            |
+                            v
+                      Eloquent ORM
+                            |
+                            v
+                       PostgreSQL
+```
+
+La estructura principal puede representarse de la siguiente manera:
+
+```text
+Cliente
+   |
+   v
+Frontend Next.js / React
+   |
+   | HTTP / JSON
+   v
+Backend Laravel
+   |
+   v
+Lógica de aplicación
+   |
+   v
+Eloquent ORM
+   |
+   v
+PostgreSQL
+```
+
+## Características arquitectónicas
+
+### Arquitectura cliente-servidor
+
+El navegador funciona como cliente, mientras que Laravel y PostgreSQL proporcionan los servicios de aplicación, lógica de negocio y persistencia de información.
+
+### Separación frontend-backend
+
+El frontend público y el backend son mantenidos como aplicaciones diferenciadas.
+
+Esta separación favorece:
+
+- Mantenibilidad.
+- Separación de responsabilidades.
+- Flexibilidad de despliegue.
+- Evolución independiente de la interfaz.
+- Reutilización de servicios mediante API.
+
+### Backend organizado en capas
+
+Laravel distribuye las responsabilidades de la aplicación mediante componentes como:
+
+- Rutas.
+- Middleware.
+- Controladores.
+- Modelos.
+- Servicios.
+- Capa de persistencia.
+
+### MVC
+
+El backend utiliza las convenciones del patrón **Modelo-Vista-Controlador (MVC)** proporcionadas por Laravel para las funcionalidades administrativas y del lado servidor.
+
+### API HTTP/JSON orientada a REST
+
+La comunicación entre el frontend y el backend utiliza solicitudes HTTP e intercambio de información mediante JSON.
+
+La API proporciona los recursos requeridos por la interfaz pública sin permitir acceso directo a la base de datos.
+
+### Monolito modular
+
+El backend se mantiene como una sola aplicación Laravel organizada en diferentes componentes y áreas funcionales.
+
+El sistema **no utiliza una arquitectura de microservicios**.
+
+Esta decisión permite mantener una separación clara entre responsabilidades sin introducir la complejidad operativa propia de una infraestructura distribuida.
+
+---
+
+# Tecnologías utilizadas
+
+## Frontend
+
+| Tecnología              | Versión / Restricción | Función                           |
+| ----------------------- | --------------------: | --------------------------------- |
+| Next.js                 |              `16.1.7` | Framework principal del frontend  |
+| React                   |              `19.2.3` | Construcción de interfaces        |
+| React DOM               |              `19.2.3` | Renderizado en navegador          |
+| TypeScript              |                  `^5` | Tipado estático                   |
+| Material UI             |              `^9.0.1` | Sistema de componentes visuales   |
+| MUI Icons               |              `^9.0.1` | Iconografía                       |
+| MUI Next.js Integration |              `^9.0.1` | Integración entre Next.js y MUI   |
+| Emotion React           |            `^11.14.0` | CSS-in-JS                         |
+| Emotion Styled          |            `^11.14.1` | Componentes estilizados           |
+| Emotion Cache           |            `^11.14.0` | Gestión de caché de estilos       |
+| next-intl               |              `^4.8.3` | Internacionalización              |
+| Framer Motion           |            `^12.38.0` | Animaciones                       |
+| Lucide React            |            `^0.577.0` | Iconografía adicional             |
+| clsx                    |              `^2.1.1` | Gestión condicional de clases     |
+| Tailwind Merge          |              `^3.5.0` | Resolución de clases Tailwind     |
+| Tailwind CSS            |                  `^4` | Utilidades de estilos             |
+| ESLint                  |                  `^9` | Análisis estático                 |
+| eslint-config-next      |              `16.1.7` | Configuración ESLint para Next.js |
+
+---
+
+## Backend
+
+| Tecnología                |                Versión / Restricción | Función                         |
+| ------------------------- | -----------------------------------: | ------------------------------- |
+| PHP                       |                               `^8.2` | Lenguaje y entorno de ejecución |
+| Laravel                   |                              `^12.0` | Framework backend               |
+| Laravel Tinker            |                            `^2.10.1` | Consola interactiva             |
+| Spatie Laravel Permission |                               `^7.2` | Roles y permisos                |
+| Eloquent ORM              |                           Laravel 12 | Mapeo objeto-relacional         |
+| PostgreSQL                | Compatible con configuración Laravel | Base de datos relacional        |
+
+---
+
+## Dependencias de desarrollo del backend
+
+| Paquete      | Versión / Restricción |
+| ------------ | --------------------: |
+| Faker        |               `^1.23` |
+| Laravel Pail |              `^1.2.2` |
+| Laravel Pint |               `^1.24` |
+| Laravel Sail |               `^1.41` |
+| Mockery      |                `^1.6` |
+| Collision    |                `^8.6` |
+| PHPUnit      |             `^11.5.3` |
+
+---
+
+## Herramientas de recursos del backend
+
+La aplicación Laravel utiliza además una cadena de herramientas basada en Vite.
+
+| Tecnología           | Versión / Restricción |
+| -------------------- | --------------------: |
+| Vite                 |              `^7.0.7` |
+| Laravel Vite Plugin  |              `^2.0.0` |
+| Tailwind CSS         |              `^4.0.0` |
+| Tailwind Vite Plugin |              `^4.0.0` |
+| Axios                |             `^1.11.0` |
+| concurrently         |              `^9.0.1` |
+
+---
+
+# Estructura del proyecto
+
+El repositorio mantiene separados el frontend y el backend.
+
+```text
+DRIC/
+│
+├── backend/
+│   ├── app/
+│   ├── bootstrap/
+│   ├── config/
+│   ├── database/
+│   ├── public/
+│   ├── resources/
+│   ├── routes/
+│   ├── storage/
+│   ├── tests/
+│   ├── artisan
+│   ├── composer.json
+│   ├── package.json
+│   └── vite.config.*
+│
+└── frontend/
+    ├── app/
+    ├── public/
+    ├── components/
+    ├── messages/
+    ├── i18n/
+    ├── package.json
+    ├── tsconfig.json
+    ├── next.config.*
+    └── eslint.config.*
+```
+
+La separación principal es:
+
+```text
+frontend  -> aplicación web pública
+backend   -> API, CMS, autenticación y persistencia
+```
+
+La estructura interna puede evolucionar a medida que se incorporen nuevas funcionalidades sin modificar esta separación general.
+
+---
+
+# Requisitos del sistema
+
+Antes de instalar el proyecto, el equipo de desarrollo debe contar con las siguientes herramientas.
+
+## Requisitos principales
+
+```text
+Git
+Node.js
+npm
+PHP >= 8.2
+Composer
+PostgreSQL
+```
+
+Para Next.js 16 se recomienda utilizar una versión actual de Node.js compatible con el framework.
+
+Las versiones instaladas pueden comprobarse mediante:
+
+```bash
+git --version
+node --version
+npm --version
+php --version
+composer --version
+psql --version
+```
+
+---
+
+# Instalación
+
+## 1. Clonar el repositorio
+
+```bash
+git clone https://github.com/Fer-Pizar/DRIC.git
+```
+
+Ingresar al directorio:
+
+```bash
+cd DRIC
+```
+
+Para trabajar con la rama de desarrollo:
+
+```bash
+git checkout dev
+```
+
+Actualizar el código local:
+
+```bash
+git pull origin dev
+```
+
+---
+
+# Configuración del backend
+
+Ingresar al directorio correspondiente:
+
+```bash
+cd DRIC/backend
+```
+
+Si ya se encuentra dentro del directorio principal del proyecto:
+
+```bash
+cd backend
+```
+
+## 1. Instalar dependencias PHP
+
+```bash
+composer install
+```
+
+---
+
+## 2. Crear el archivo de entorno
+
+Si se dispone de un archivo `.env.example`:
+
+```bash
+cp .env.example .env
+```
+
+En Windows Command Prompt:
+
+```cmd
+copy .env.example .env
+```
+
+En caso de que el repositorio no incluya públicamente este archivo, deberá crearse un `.env` utilizando la configuración proporcionada por el administrador responsable del entorno de despliegue.
+
+Las credenciales reales de producción nunca deben almacenarse en Git.
+
+---
+
+## 3. Generar la clave de Laravel
+
+```bash
+php artisan key:generate
+```
+
+---
+
+## 4. Configurar PostgreSQL
+
+Agregar al archivo `.env` la información correspondiente a la base de datos.
+
+Ejemplo:
+
+```env
+DB_CONNECTION=pgsql
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_DATABASE=dric_db
+DB_USERNAME=usuario_postgresql
+DB_PASSWORD=contraseña_postgresql
+```
+
+Los valores deberán sustituirse por las credenciales correspondientes al entorno utilizado.
+
+---
+
+## 5. Ejecutar migraciones
+
+```bash
+php artisan migrate
+```
+
+En caso de requerirse datos iniciales definidos por el proyecto:
+
+```bash
+php artisan db:seed
+```
+
+Los comandos destructivos de base de datos no deben ejecutarse en producción sin comprender previamente sus consecuencias.
+
+---
+
+# Configuración del frontend
+
+Abrir otra terminal e ingresar al frontend:
+
+```bash
+cd DRIC/frontend
+```
+
+o:
+
+```bash
+cd frontend
+```
+
+Instalar las dependencias:
+
+```bash
+npm install
+```
+
+En procesos de integración continua o despliegue, cuando existe un `package-lock.json` actualizado, se recomienda:
+
+```bash
+npm ci
+```
+
+Este comando realiza una instalación reproducible basada estrictamente en el archivo de bloqueo de dependencias.
+
+---
+
+# Configuración de la base de datos
+
+El sistema utiliza **PostgreSQL** como motor de persistencia relacional.
+
+La base de datos almacena información estructurada relacionada con:
+
+- Páginas.
+- Secciones.
+- Bloques de contenido.
+- Traducciones.
+- Usuarios.
+- Roles.
+- Permisos.
+- Certificados.
+- Información institucional.
+- Datos administrativos.
+
+Laravel se comunica con PostgreSQL mediante **Eloquent ORM**.
+
+El frontend nunca accede directamente a la base de datos.
+
+```text
+Frontend
+   |
+   v
+API Laravel
+   |
+   v
+Eloquent ORM
+   |
+   v
+PostgreSQL
+```
+
+Esta separación evita exponer credenciales y lógica de persistencia en el navegador.
+
+---
+
+# Ejecución de la aplicación
+
+Durante el desarrollo local normalmente deben mantenerse en ejecución tanto el frontend como el backend.
+
+## Backend
+
+Desde:
+
+```text
+DRIC/backend
+```
+
+ejecutar:
+
+```bash
+php artisan serve
+```
+
+Laravel generalmente inicia en:
+
+```text
+http://127.0.0.1:8000
+```
+
+El puerto puede variar según la configuración utilizada.
+
+---
+
+## Frontend
+
+Desde:
+
+```text
+DRIC/frontend
+```
+
+ejecutar:
+
+```bash
+npm run dev
+```
+
+Next.js generalmente inicia en:
+
+```text
+http://localhost:3000
+```
+
+La dirección mostrada por la terminal debe utilizarse para acceder a la aplicación.
+
+---
+
+# Comandos disponibles
+
+## Frontend
+
+### Desarrollo
+
+```bash
+npm run dev
+```
+
+Inicia el servidor de desarrollo de Next.js.
+
+### Compilación para producción
+
+```bash
+npm run build
+```
+
+Genera una compilación optimizada para producción.
+
+### Ejecución en producción
+
+```bash
+npm run start
+```
+
+Ejecuta la aplicación Next.js previamente compilada.
+
+### Análisis estático
+
+```bash
+npm run lint
+```
+
+Ejecuta ESLint sobre el proyecto.
+
+---
+
+## Laravel
+
+### Iniciar servidor de desarrollo
+
+```bash
+php artisan serve
+```
+
+### Ejecutar migraciones
+
+```bash
+php artisan migrate
+```
+
+### Limpiar caché de configuración
+
+```bash
+php artisan config:clear
+```
+
+### Limpiar caché de la aplicación
+
+```bash
+php artisan cache:clear
+```
+
+### Limpiar caché de rutas
+
+```bash
+php artisan route:clear
+```
+
+### Limpiar vistas compiladas
+
+```bash
+php artisan view:clear
+```
+
+### Limpiar cachés generales
+
+```bash
+php artisan optimize:clear
+```
+
+### Ejecutar pruebas
+
+```bash
+php artisan test
+```
+
+### Abrir consola interactiva
+
+```bash
+php artisan tinker
+```
+
+---
+
+## Comandos definidos mediante Composer
+
+El archivo `composer.json` del backend incorpora comandos adicionales.
+
+### Configuración inicial
+
+```bash
+composer run setup
+```
+
+Este proceso puede agrupar tareas de preparación como:
+
+- Instalación de dependencias.
+- Preparación del entorno.
+- Generación de la clave de aplicación.
+- Ejecución de migraciones.
+- Instalación o compilación de recursos asociados al backend.
+
+### Entorno de desarrollo Laravel
+
+```bash
+composer run dev
+```
+
+Este comando permite ejecutar de manera coordinada diferentes servicios de desarrollo, como:
+
+- Servidor Laravel.
+- Procesamiento de colas.
+- Laravel Pail.
+- Servidor Vite.
+
+### Pruebas
+
+```bash
+composer run test
+```
+
+Ejecuta la preparación correspondiente y posteriormente la suite de pruebas.
+
+---
+
+# Internacionalización
+
+La internacionalización del frontend se implementa mediante:
+
+```text
+next-intl
+```
+
+Los idiomas soportados son:
+
+```text
+es
+en
+```
+
+El español constituye el idioma predeterminado.
+
+El sistema diferencia entre dos categorías de información traducida.
+
+## Traducciones de interfaz
+
+Los elementos estáticos de la interfaz se gestionan mediante el sistema de internacionalización de Next.js.
+
+Por ejemplo:
+
+- Opciones de navegación.
+- Botones.
+- Mensajes del sistema.
+- Etiquetas de formularios.
+- Encabezados.
+- Elementos visuales de interfaz.
+
+## Contenido institucional
+
+La información administrada desde el CMS dispone de versiones independientes para cada idioma.
+
+Conceptualmente:
+
+```text
+Contenido
+   |
+   +-- Español
+   |
+   +-- Inglés
+```
+
+Esta estructura permite conservar equivalentes lingüísticos del contenido institucional y modificarlos de manera independiente.
+
+---
+
+# Gestión de contenido
+
+El backend funciona como un **CMS institucional modular**.
+
+La información pública se almacena de forma estructurada en lugar de encontrarse permanentemente escrita dentro del código del frontend.
+
+El modelo conceptual sigue una organización similar a:
+
+```text
+Páginas
+   |
+   v
+Secciones
+   |
+   v
+Bloques de contenido
+   |
+   v
+Traducciones
+```
+
+Este diseño permite que el frontend renderice información administrable manteniendo al mismo tiempo una presentación visual consistente.
+
+Los usuarios administrativos pueden realizar cambios de acuerdo con los permisos que tengan asignados.
+
+---
+
+# Autenticación y autorización
+
+Las funcionalidades administrativas se encuentran protegidas mediante mecanismos de autenticación y autorización.
+
+El flujo general es:
+
+```text
+Autenticación
+     |
+     v
+Usuario autenticado
+     |
+     v
+Rol
+     |
+     v
+Permisos
+     |
+     v
+Operación autorizada
+```
+
+Los roles y permisos utilizan:
+
+```text
+spatie/laravel-permission ^7.2
+```
+
+Esto permite definir distintos niveles de acceso.
+
+Entre los perfiles administrativos pueden existir, por ejemplo:
+
+- Administrador.
+- Editor de contenido.
+
+Las capacidades específicas dependen de los permisos configurados para cada rol.
+
+---
+
+# Verificación de certificados
+
+El módulo de certificados permite que cualquier usuario valide un certificado sin necesidad de acceder al panel administrativo.
+
+El flujo general es:
+
+```text
+Código de verificación
+        |
+        v
+Solicitud pública
+        |
+        v
+Validación Laravel
+        |
+        v
+Registro del certificado
+        |
+        +---- válido / activo ----> información del certificado
+        |
+        +---- inválido -----------> mensaje de verificación
+```
+
+La comprobación se realiza en el backend para evitar exponer directamente registros de la base de datos.
+
+---
+
+# Sitio web público
+
+La aplicación pública contiene las principales secciones institucionales de la DRIC.
+
+## Inicio
+
+La página principal reúne información y servicios relevantes.
+
+Puede incluir componentes como:
+
+- Presentación institucional.
+- Estadísticas.
+- Becas y movilidad.
+- Convenios recientes.
+- Información del director.
+- Preguntas frecuentes.
+- Llamados a la acción.
+- Experiencias estudiantiles.
+- Formulario o funcionalidad de agendamiento.
+
+---
+
+## Presentación
+
+Contiene información institucional relacionada con la DRIC, sus funciones y su actividad dentro de la Universidad.
+
+---
+
+## Convenios
+
+Presenta información correspondiente a convenios institucionales e internacionales.
+
+Los convenios pueden disponer de rutas individuales para mostrar información detallada.
+
+---
+
+## Proyectos
+
+Publica proyectos e iniciativas de cooperación internacional.
+
+---
+
+## Becas y Movilidad
+
+Concentra oportunidades relacionadas con:
+
+- Becas.
+- Movilidad académica.
+- Intercambio.
+- Internacionalización.
+
+---
+
+## Membresías
+
+Presenta redes, organizaciones y asociaciones institucionales vinculadas con la Universidad o con la DRIC.
+
+---
+
+## Noticias
+
+Publica noticias y novedades institucionales.
+
+---
+
+## Normativas
+
+Permite consultar normativa y documentación institucional relacionada.
+
+---
+
+## Informes de Gestión
+
+Proporciona acceso a informes institucionales y documentos asociados.
+
+---
+
+## Campus Life
+
+Presenta información destinada principalmente a estudiantes internacionales, visitantes y miembros de la comunidad universitaria interesados en conocer la vida dentro de la UMSS y Cochabamba.
+
+---
+
+## Contacto
+
+Contiene información institucional de contacto y mecanismos de comunicación con la DRIC.
+
+---
+
+## Verificar Certificado
+
+Permite comprobar públicamente certificados registrados mediante un código de verificación.
+
+---
+
+# Flujo de desarrollo
+
+El proyecto utiliza **Git** como sistema de control de versiones.
+
+La estrategia de ramas permite separar el código estable del trabajo en desarrollo.
+
+Un flujo recomendado es:
+
+```text
+dev
+ |
+ | desarrollo y pruebas
+ |
+ v
+Pull Request
+ |
+ v
+Revisión
+ |
+ v
+main
+```
+
+## Actualizar la rama de desarrollo
+
+```bash
+git checkout dev
+git pull origin dev
+```
+
+---
+
+## Crear una rama para una funcionalidad
+
+Cuando sea necesario:
+
+```bash
+git checkout -b feature/nombre-funcionalidad
+```
+
+Después de realizar los cambios:
+
+```bash
+git add .
+git commit -m "Descripción del cambio implementado"
+git push origin feature/nombre-funcionalidad
+```
+
+Posteriormente se crea un Pull Request hacia la rama correspondiente.
+
+---
+
+## Rama main
+
+La rama:
+
+```text
+main
+```
+
+debe representar código estable y revisado.
+
+Cuando se utilizan reglas de protección, los cambios directos sobre `main` deben evitarse y realizarse mediante Pull Requests.
+
+---
+
+# Pruebas y calidad de código
+
+## Análisis del frontend
+
+Ejecutar:
+
+```bash
+npm run lint
+```
+
+antes de integrar cambios importantes.
+
+---
+
+## Validación de compilación
+
+Ejecutar:
+
+```bash
+npm run build
+```
+
+Una aplicación que funciona correctamente mediante `npm run dev` no necesariamente está libre de errores de compilación para producción.
+
+Por ello, la generación del build constituye una verificación importante antes del despliegue.
+
+---
+
+## Pruebas del backend
+
+Ejecutar:
+
+```bash
+php artisan test
+```
+
+o:
+
+```bash
+composer run test
+```
+
+El backend utiliza PHPUnit como framework principal de pruebas.
+
+---
+
+## Formateo Laravel
+
+Laravel Pint se encuentra disponible como dependencia de desarrollo.
+
+En Linux o macOS:
+
+```bash
+./vendor/bin/pint
+```
+
+En Windows:
+
+```cmd
+vendor\bin\pint
+```
+
+---
+
+# Despliegue en producción
+
+La solución está compuesta por tres elementos principales:
+
+```text
+Frontend Next.js
+Backend Laravel
+Base de datos PostgreSQL
+```
+
+Cada componente debe configurarse adecuadamente en el entorno de producción.
+
+---
+
+## Compilación del frontend
+
+Desde el directorio del frontend:
+
+```bash
+npm install
+npm run build
+npm run start
+```
+
+En pipelines de despliegue:
+
+```bash
+npm ci
+npm run build
+```
+
+---
+
+## Preparación de Laravel
+
+Un despliegue típico de Laravel puede incluir:
+
+```bash
+composer install --no-dev --optimize-autoloader
+php artisan migrate --force
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+```
+
+Laravel debe disponer de permisos de escritura sobre:
+
+```text
+storage/
+bootstrap/cache/
+```
+
+---
+
+## Variables de entorno
+
+Las credenciales de producción deben configurarse mediante variables de entorno del servidor o mediante un archivo `.env` protegido.
+
+Nunca deben almacenarse en el repositorio:
+
+```text
+APP_KEY
+contraseñas de base de datos
+credenciales SMTP
+API tokens
+claves privadas
+credenciales de producción
+```
+
+---
+
+## Servidor web y proxy inverso
+
+El entorno de producción puede utilizar un servidor web o reverse proxy como:
+
+```text
+Nginx
+Apache
+```
+
+Una posible topología es:
+
+```text
+Internet
+   |
+   v
+Reverse Proxy
+   |
+   +--------> Next.js
+   |
+   +--------> Laravel API
+                  |
+                  v
+              PostgreSQL
+```
+
+El tráfico de producción debe utilizar HTTPS.
+
+---
+
+# Consideraciones de seguridad
+
+El sistema administra contenido institucional y cuentas administrativas, por lo que el despliegue debe mantener controles de seguridad apropiados.
+
+## Archivos de entorno
+
+El archivo:
+
+```text
+.env
+```
+
+no debe incluirse en Git.
+
+Debe verificarse que se encuentre excluido mediante `.gitignore`.
+
+---
+
+## Base de datos
+
+PostgreSQL no debe exponerse públicamente a Internet.
+
+El acceso debe estar restringido a:
+
+- Servidores autorizados.
+- Administradores responsables.
+- Servicios internos que lo requieran.
+
+---
+
+## Rutas administrativas
+
+Las funcionalidades administrativas deben permanecer protegidas mediante:
+
+- Autenticación.
+- Middleware de autorización.
+- Roles.
+- Permisos.
+
+Ocultar una opción en el frontend nunca debe considerarse un mecanismo de autorización suficiente.
+
+La seguridad debe aplicarse también en el backend.
+
+---
+
+## Validación de entradas
+
+Toda información recibida por el backend debe validarse antes de ser procesada o almacenada.
+
+La validación del frontend puede mejorar la experiencia del usuario, pero la validación del backend constituye el control definitivo.
+
+---
+
+## Archivos cargados
+
+Los archivos enviados por usuarios administrativos deben comprobarse considerando:
+
+- Tipo de archivo.
+- MIME type.
+- Tamaño.
+- Extensión permitida.
+- Restricciones específicas del módulo.
+
+---
+
+## Depuración en producción
+
+El entorno de producción no debe exponer información detallada de errores de Laravel.
+
+Una configuración típica es:
+
+```env
+APP_ENV=production
+APP_DEBUG=false
+```
+
+---
+
+# Solución de problemas
+
+## Los cambios del frontend no aparecen
+
+Eliminar la caché de Next.js y reiniciar el servidor.
+
+Linux/macOS:
+
+```bash
+rm -rf .next
+npm run dev
+```
+
+Windows PowerShell:
+
+```powershell
+Remove-Item -Recurse -Force .next
+npm run dev
+```
+
+---
+
+## El build de Next.js presenta errores
+
+Ejecutar:
+
+```bash
+npm run lint
+npm run build
+```
+
+Debe revisarse el primer error real de compilación mostrado por la terminal, ya que los mensajes finales suelen ser consecuencia de dicho error inicial.
+
+---
+
+## Laravel continúa utilizando una configuración anterior
+
+Ejecutar:
+
+```bash
+php artisan optimize:clear
+```
+
+Posteriormente reiniciar el proceso del servidor.
+
+---
+
+## Error de conexión con PostgreSQL
+
+Revisar las variables:
+
+```text
+DB_CONNECTION
+DB_HOST
+DB_PORT
+DB_DATABASE
+DB_USERNAME
+DB_PASSWORD
+```
+
+También debe comprobarse que PostgreSQL se encuentre activo.
+
+---
+
+## Error relacionado con extensiones PHP
+
+Comprobar extensiones mediante:
+
+```bash
+php -m
+```
+
+Para PostgreSQL deben encontrarse habilitados los controladores correspondientes.
+
+Entre las extensiones habituales se encuentran:
+
+```text
+pdo
+pdo_pgsql
+pgsql
+openssl
+mbstring
+fileinfo
+```
+
+Los requisitos exactos pueden variar según el entorno y las dependencias utilizadas.
+
+---
+
+## Problemas con Composer
+
+Ejecutar:
+
+```bash
+composer install
+```
+
+y comprobar:
+
+```bash
+php --version
+composer --version
+```
+
+El backend requiere actualmente:
+
+```text
+PHP >= 8.2
+```
+
+---
+
+## Problemas con dependencias del frontend
+
+Cuando sea realmente necesario, pueden eliminarse las dependencias locales y realizar una instalación limpia.
+
+Linux/macOS:
+
+```bash
+rm -rf node_modules
+npm install
+```
+
+Windows PowerShell:
+
+```powershell
+Remove-Item -Recurse -Force node_modules
+npm install
+```
+
+No se recomienda eliminar rutinariamente el archivo `package-lock.json`, ya que este contribuye a mantener instalaciones reproducibles.
+
+---
+
+## Problemas con migraciones
+
+Consultar el estado:
+
+```bash
+php artisan migrate:status
+```
+
+Aplicar migraciones pendientes:
+
+```bash
+php artisan migrate
+```
+
+El siguiente comando:
+
+```bash
+php artisan migrate:fresh
+```
+
+elimina las tablas existentes antes de reconstruirlas.
+
+Por esta razón, no debe ejecutarse en producción salvo que la destrucción completa de la información sea intencional y esté previamente respaldada.
+
+---
+
+# Contexto del proyecto
+
+El sistema fue desarrollado como proyecto institucional para la:
+
+**Dirección de Relaciones Internacionales y Convenios — DRIC**
+**Universidad Mayor de San Simón — UMSS**
+
+La solución integra la publicación web institucional con mecanismos estructurados de administración de contenido.
+
+El desarrollo prioriza:
+
+- Mantenibilidad.
+- Comunicación bilingüe.
+- Separación entre frontend y backend.
+- Gestión estructurada de información.
+- Control de acceso.
+- Diseño responsive.
+- Consistencia visual institucional.
+- Accesibilidad para usuarios públicos.
+- Posibilidad de ampliación futura.
+
+---
+
+# Repositorio
+
+GitHub:
+
+```text
+https://github.com/Fer-Pizar/DRIC
+```
+
+Rama principal de desarrollo:
+
+```text
+dev
+```
+
+Rama estable:
+
+```text
+main
+```
+
+---
+
+# Resumen tecnológico
+
+```text
+Frontend
+├── Next.js 16.1.7
+├── React 19.2.3
+├── TypeScript 5
+├── Material UI 9
+├── Emotion
+├── next-intl
+├── Framer Motion
+└── Tailwind CSS 4
+
+Backend
+├── PHP 8.2+
+├── Laravel 12
+├── Eloquent ORM
+├── Spatie Laravel Permission 7.2
+├── PHPUnit 11
+├── Laravel Pint
+└── Vite 7
+
+Persistencia
+└── PostgreSQL
+
+Arquitectura
+├── Cliente-servidor
+├── Separación frontend-backend
+├── MVC
+├── Backend organizado en capas
+├── API HTTP/JSON
+├── Persistencia relacional
+├── RBAC
+└── Monolito modular
+```
+
+---
+
+# Mantenimiento
+
+Proyecto desarrollado para la **Dirección de Relaciones Internacionales y Convenios de la Universidad Mayor de San Simón**.
+
+Las credenciales institucionales, parámetros de infraestructura, variables de entorno, configuraciones del servidor y demás información sensible necesaria para producción deben ser proporcionadas exclusivamente por la administración técnica autorizada de la DRIC o de la UMSS.
+
+La configuración específica de cada entorno debe mantenerse fuera del control de versiones.
