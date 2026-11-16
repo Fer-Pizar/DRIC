@@ -18,6 +18,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Illuminate\View\View;
 
@@ -47,7 +48,7 @@ class HomeContentController extends Controller
         ]);
     }
 
-    public function frontendImage(string $path): BinaryFileResponse
+    public function frontendImage(string $path): BinaryFileResponse|RedirectResponse
     {
         abort_if(str_contains($path, '..'), 404);
 
@@ -68,14 +69,18 @@ class HomeContentController extends Controller
             }
         }
 
-        abort(404);
+        return redirect()->away(rtrim(config('app.frontend_url'), '/').'/'.$relativePath);
     }
 
     public function update(Request $request, Page $page): RedirectResponse
     {
         $this->authorizeHomeAccess($page);
 
-        $validated = Validator::make($request->all(), $this->rules(), $this->messages())->validate();
+        try {
+            $validated = Validator::make($request->all(), $this->rules(), $this->messages())->validate();
+        } catch (ValidationException $exception) {
+            throw $exception->redirectTo(route('admin.pages.home.edit', $page));
+        }
         $faqs = $this->validatedFaqs($request);
 
         DB::transaction(function () use ($request, $validated, $faqs, $page): void {

@@ -19,7 +19,7 @@ class DashboardController extends Controller
             'isAdmin' => auth()->user()->hasRole('Admin'),
             'topbarLogoUrl' => $topbarLogoPath
                 ? url('storage/'.ltrim($topbarLogoPath, '/'))
-                : route('admin.frontend-image', ['path' => 'images/brand/DRIC_logo.png']),
+                : $frontendUrl.'/images/brand/DRIC_logo.png',
             'topbarLogoPath' => $topbarLogoPath,
             'hasCustomTopbarLogo' => (bool) $topbarLogoPath,
             'frontendUrl' => $frontendUrl,
