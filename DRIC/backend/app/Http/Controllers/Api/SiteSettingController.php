@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\SiteSetting;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Storage;
 
 class SiteSettingController extends Controller
 {
@@ -15,7 +16,7 @@ class SiteSettingController extends Controller
         $mobileMenuSettings = SiteSetting::mobileMenuSettings();
 
         return response()->json([
-            'topbar_logo_url' => $logoPath ? url('storage/'.ltrim($logoPath, '/')) : null,
+            'topbar_logo_url' => $logoPath ? Storage::disk('public')->url($logoPath) : null,
             'footer' => [
                 'title' => $footerSettings['footer_title'],
                 'title_en' => $footerSettings['footer_title_en'],

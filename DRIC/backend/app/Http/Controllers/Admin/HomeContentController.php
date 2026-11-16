@@ -24,7 +24,7 @@ use Illuminate\View\View;
 
 class HomeContentController extends Controller
 {
-    private const MAX_IMAGE_KB = 5120;
+    private const MAX_IMAGE_KB = 10240;
     private const CLEAN_LABEL_REGEX = '/\A[\p{L}\s.,]+\z/u';
     private const COUNTRIES = [1, 2, 3, 4, 5, 6, 7, 8, 9];
     private const AGREEMENTS = [1, 2, 3];
@@ -346,9 +346,9 @@ class HomeContentController extends Controller
             'file' => 'Debes subir un archivo válido.',
             'mimes' => 'Ese formato no está permitido. Solo se aceptan imágenes JPG o PNG.',
             'max' => 'Este campo supera el tamaño permitido.',
-            'about_image.max' => 'La imagen es demasiado pesada. El tamaño máximo permitido es 5 MB.',
-            'countries.*.image.max' => 'La imagen es demasiado pesada. El tamaño máximo permitido es 5 MB.',
-            'agreements.*.image.max' => 'La imagen es demasiado pesada. El tamaño máximo permitido es 5 MB.',
+            'about_image.max' => 'La imagen es demasiado pesada. El tamaño máximo permitido es 10 MB.',
+            'countries.*.image.max' => 'La imagen es demasiado pesada. El tamaño máximo permitido es 10 MB.',
+            'agreements.*.image.max' => 'La imagen es demasiado pesada. El tamaño máximo permitido es 10 MB.',
             'regex' => 'Este campo solo puede contener letras, espacios, puntos y comas. No uses números ni símbolos especiales.',
         ];
     }
