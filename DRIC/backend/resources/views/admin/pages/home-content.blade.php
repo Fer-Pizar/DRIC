@@ -11,8 +11,11 @@
         if (\Illuminate\Support\Str::startsWith($path, '/storage/')) {
             return url($path);
         }
+        if ($path === '/images/administration/dric-team.jpg') {
+            return $frontendUrl.'/images/presentation/dric-team.JPG';
+        }
         if (\Illuminate\Support\Str::startsWith($path, '/images/')) {
-            return route('admin.frontend-image', ['path' => ltrim($path, '/')]);
+            return $frontendUrl.$path;
         }
         return $frontendUrl.$path;
     };

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\SiteSetting;
 use App\Support\AdminRolePermissionSetup;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Storage;
 
 class DashboardController extends Controller
 {
@@ -18,8 +19,8 @@ class DashboardController extends Controller
         return view('admin.dashboard.index', [
             'isAdmin' => auth()->user()->hasRole('Admin'),
             'topbarLogoUrl' => $topbarLogoPath
-                ? url('storage/'.ltrim($topbarLogoPath, '/'))
-                : route('admin.frontend-image', ['path' => 'images/brand/DRIC_logo.png']),
+                ? Storage::disk('public')->url($topbarLogoPath)
+                : $frontendUrl.'/images/brand/DRIC_logo.png',
             'topbarLogoPath' => $topbarLogoPath,
             'hasCustomTopbarLogo' => (bool) $topbarLogoPath,
             'frontendUrl' => $frontendUrl,
