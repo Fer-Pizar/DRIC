@@ -16,7 +16,7 @@ export default function AboutDricSection({ section }: Props) {
             {section.title}
           </h2>
 
-          <p className="text-left text-base leading-relaxed text-slate-300 md:text-justify md:text-lg">
+          <p className="hyphens-none text-justify text-base leading-relaxed text-slate-300 sm:text-left md:text-justify md:text-lg">
             {section.summary}
           </p>
         </div>

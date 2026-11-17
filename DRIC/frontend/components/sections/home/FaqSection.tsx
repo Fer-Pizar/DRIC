@@ -56,10 +56,10 @@ export default function FaqSection({ section, locale = "es" }: Props) {
   };
 
   return (
-    <section className="dric-faq-section px-4 py-16 sm:px-6 md:py-24">
+    <section className="dric-faq-section px-4 py-16 sm:px-6 md:px-9 md:py-24 lg:px-6">
       <div className="mx-auto max-w-5xl">
-        <div className="mb-8 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between md:mb-12">
-          <h2 className="text-center text-3xl font-bold leading-tight sm:text-left sm:text-4xl md:text-5xl">
+        <div className="mb-8 flex items-center justify-between gap-3 sm:items-end sm:gap-5 md:mb-12">
+          <h2 className="text-left text-3xl font-bold leading-tight max-sm:min-w-0 sm:text-4xl md:text-5xl">
             {section.title}
           </h2>
 
@@ -67,7 +67,7 @@ export default function FaqSection({ section, locale = "es" }: Props) {
             <button
               type="button"
               onClick={toggleAll}
-              className="dric-faq-toggle-all mx-auto inline-flex min-h-11 items-center justify-center gap-2 border px-5 py-2 text-sm font-semibold transition sm:mx-0 sm:text-base"
+              className="dric-faq-toggle-all inline-flex min-h-11 items-center justify-center gap-2 border px-5 py-2 text-sm font-semibold transition max-sm:shrink-0 sm:text-base"
               aria-expanded={allOpen}
             >
               <span>{allOpen ? labels.hideAll : labels.showAll}</span>
@@ -94,7 +94,7 @@ export default function FaqSection({ section, locale = "es" }: Props) {
                   aria-expanded={isOpen}
                   aria-controls={answerIds[index]}
                 >
-                  <span className="text-lg font-semibold leading-snug sm:text-xl md:text-2xl">
+                  <span className="text-justify text-lg font-semibold leading-snug max-sm:hyphens-none sm:text-xl md:text-2xl">
                     {block.title}
                   </span>
 
@@ -111,7 +111,7 @@ export default function FaqSection({ section, locale = "es" }: Props) {
                   className="dric-faq-answer-grid grid transition-all duration-300 ease-out"
                 >
                   <div className="overflow-hidden">
-                    <p className="dric-faq-answer pb-5 text-sm leading-relaxed sm:text-base md:pb-6">
+                    <p className="dric-faq-answer pb-5 text-justify text-base leading-relaxed max-sm:hyphens-none md:pb-6 md:text-lg">
                       {block.summary}
                     </p>
                   </div>

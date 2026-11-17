@@ -39,12 +39,12 @@ export default function RecentAgreementsSection({
             {eyebrow}
           </p>
 
-          <h2 className="max-w-3xl text-4xl font-normal leading-tight text-white md:text-6xl">
+          <h2 className="max-w-3xl text-3xl font-normal leading-tight text-white sm:text-4xl md:text-5xl">
             {section.title}
           </h2>
 
           {section.summary && (
-            <p className="mt-6 text-lg leading-8 text-white/60 xl:whitespace-nowrap">
+            <p className="mt-6 hyphens-none text-justify text-base leading-relaxed text-slate-300 sm:text-left md:text-justify md:text-lg">
               {section.summary}
             </p>
           )}

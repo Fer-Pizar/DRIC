@@ -18,7 +18,7 @@ export default function DirectorSection({ section }: Props) {
                 {block.title}
               </h3>
 
-              <p className="text-sm leading-relaxed text-slate-300 sm:text-base">
+              <p className="text-sm leading-relaxed text-slate-300 max-sm:hyphens-none max-sm:text-justify sm:text-base">
                 {block.summary}
               </p>
             </div>

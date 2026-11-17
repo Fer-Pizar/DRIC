@@ -235,11 +235,11 @@ export default function StudentExperiencesSection({ locale, section }: Props) {
             />
           </div>
 
-          <div className="mx-auto flex w-full max-w-xl min-w-0 flex-col items-center lg:items-start">
-            <h2 className="text-center text-3xl font-light leading-tight tracking-wide text-balance sm:text-4xl md:text-5xl lg:text-left">
+          <div className="mx-0 flex w-full min-w-0 flex-col items-start lg:mx-auto lg:max-w-xl">
+            <h2 className="w-full text-left text-3xl font-light leading-tight tracking-wide sm:text-4xl md:text-5xl">
               {t.title}
             </h2>
-            <p className="mt-5 text-left text-base leading-relaxed text-white/60 sm:text-lg md:mt-7 md:text-justify md:text-xl">
+            <p className="mt-5 w-full text-left text-base leading-relaxed text-white/60 max-sm:hyphens-none max-sm:text-justify md:mt-7 md:text-justify md:text-lg">
               {t.text}
             </p>
             <a
