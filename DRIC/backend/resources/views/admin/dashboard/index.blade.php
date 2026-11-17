@@ -1285,7 +1285,7 @@
                     </form>
                 </div>
 
-                <div class="image-card" data-image-card data-current-image-path="{{ $topbarLogoPath ?? '' }}" data-default-image-src="{{ route('admin.frontend-image', ['path' => 'images/brand/DRIC_logo.png']) }}">
+                <div class="image-card" data-image-card data-current-image-path="{{ $topbarLogoPath ?? '' }}" data-default-image-src="{{ $frontendUrl }}/images/brand/DRIC_logo.png">
                     <div class="preview preview-logo" data-image-preview aria-label="Logo actual del topbar">
                         <img src="{{ $topbarLogoUrl }}" alt="{{ $hasCustomTopbarLogo ? 'Logo personalizado actual del topbar' : 'Logo predeterminado actual del topbar' }}" data-preview-image>
                         <span class="preview-ruler">64x64 circular</span>

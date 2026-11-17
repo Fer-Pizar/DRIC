@@ -225,8 +225,8 @@ export default function StudentExperiencesSection({ locale, section }: Props) {
   return (
     <section className="dric-student-experiences-section bg-[#020617] px-4 py-16 text-white sm:px-6 md:py-24">
       <div className="mx-auto max-w-7xl">
-        <div className="grid items-center gap-8 md:gap-12 lg:grid-cols-2">
-          <div className="relative h-[240px] overflow-hidden rounded-2xl border border-white/10 bg-white/5 sm:h-[320px] md:h-[360px] md:rounded-3xl">
+        <div className="mx-auto grid max-w-6xl items-center gap-10 lg:grid-cols-2 lg:gap-16">
+          <div className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl border border-white/10 bg-white/5 md:rounded-3xl">
             <Image
               src="/images/home/student-experience.png"
               alt={t.title}
@@ -235,11 +235,11 @@ export default function StudentExperiencesSection({ locale, section }: Props) {
             />
           </div>
 
-          <div className="min-w-0">
-            <h2 className="max-w-xl text-3xl font-light leading-tight tracking-wide sm:text-4xl md:text-5xl">
+          <div className="mx-0 flex w-full min-w-0 flex-col items-start lg:mx-auto lg:max-w-xl">
+            <h2 className="w-full text-left text-3xl font-light leading-tight tracking-wide sm:text-4xl md:text-5xl">
               {t.title}
             </h2>
-            <p className="mt-4 max-w-xl text-base leading-relaxed text-white/60 sm:text-lg md:mt-6 md:text-xl">
+            <p className="mt-5 w-full text-left text-base leading-relaxed text-white/60 max-sm:hyphens-none max-sm:text-justify md:mt-7 md:text-justify md:text-lg">
               {t.text}
             </p>
             <a

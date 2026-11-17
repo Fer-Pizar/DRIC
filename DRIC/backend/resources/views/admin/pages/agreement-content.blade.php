@@ -12,7 +12,7 @@
             return url($path);
         }
         if (\Illuminate\Support\Str::startsWith($path, '/images/')) {
-            return route('admin.frontend-image', ['path' => ltrim($path, '/')]);
+            return $frontendUrl.$path;
         }
         return $frontendUrl.$path;
     };

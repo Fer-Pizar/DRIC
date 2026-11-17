@@ -46,9 +46,9 @@ export default function ScholarshipGridSection({ section, locale = "es" }: Props
   return (
     <section className="px-6 py-24">
       <div className="mx-auto max-w-7xl">
-        <h2 className="mb-4 text-4xl font-bold">{section.title}</h2>
+        <h2 className="mb-4 text-3xl font-normal sm:text-4xl md:text-5xl">{section.title}</h2>
 
-        <p className="mb-12 text-slate-300">{section.summary}</p>
+        <p className="mb-12 text-base text-slate-300 max-sm:hyphens-none max-sm:text-justify md:text-lg">{section.summary}</p>
 
         <div className="dric-scholarship-country-grid grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
           {section.blocks.map((block) => {
