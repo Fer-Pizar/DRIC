@@ -12,13 +12,13 @@ export default function DirectorSection({ section }: Props) {
           {section.blocks.map((block) => (
             <div
               key={block.id}
-              className="rounded-2xl border border-slate-800 p-5 text-left md:rounded-3xl md:p-8 md:text-center"
+              className="rounded-2xl border border-slate-800 p-5 text-left max-sm:text-center md:rounded-3xl md:p-8 md:text-center"
             >
               <h3 className="mb-3 text-xl font-semibold leading-tight sm:text-2xl md:mb-4 md:text-3xl">
                 {block.title}
               </h3>
 
-              <p className="text-sm leading-relaxed text-slate-300 max-sm:hyphens-none max-sm:text-justify sm:text-base">
+              <p className="text-sm leading-relaxed text-slate-300 max-sm:hyphens-none max-sm:text-center sm:text-base">
                 {block.summary}
               </p>
             </div>
