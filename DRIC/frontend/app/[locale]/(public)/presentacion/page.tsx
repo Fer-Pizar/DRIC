@@ -118,26 +118,29 @@ export default async function PresentacionPage({ params }: Props) {
     <main className="dric-presentation-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
       <Header />
 
-      <section className="dric-presentation-content relative isolate px-4 pb-16 pt-32 sm:px-5 md:px-10 md:pb-20 md:pt-36 lg:px-12">
+      <section className="dric-presentation-content relative isolate px-4 pb-0 pt-32 sm:px-5 md:px-10 md:pt-36 lg:px-12">
         <div className="mx-auto max-w-7xl text-center md:text-left">
-          <p className="mb-5 inline-flex max-w-full rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-white/80 backdrop-blur sm:px-5 sm:tracking-[0.28em]">
-            DRIC · UMSS
-          </p>
+          <div className="text-left">
+            <p className="mb-5 inline-flex max-w-full rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-white/80 backdrop-blur sm:px-5 sm:tracking-[0.28em]">
+              DRIC · UMSS
+            </p>
+          </div>
 
-          <h1 className="mx-auto max-w-full break-words text-[2.25rem] font-light uppercase leading-[1.05] tracking-[-0.015em] sm:text-5xl md:mx-0 md:max-w-6xl md:text-7xl md:leading-[0.9] md:tracking-[-0.07em] lg:text-8xl">
+          <h1 className="mx-auto max-w-full break-words text-left text-[2.25rem] font-light uppercase leading-[1.05] tracking-[-0.015em] sm:text-5xl md:mx-0 md:max-w-6xl md:text-7xl md:leading-[0.9] md:tracking-[-0.07em] lg:text-8xl">
             {copy.heroTitle}
           </h1>
 
-          <p className="mx-auto mt-6 max-w-3xl text-base leading-7 text-white/70 md:mx-0 md:mt-8 md:text-lg md:leading-8">
+          <p className="mt-6 w-full max-w-none hyphens-none text-justify text-base leading-7 text-white/70 md:mt-8 md:text-lg md:leading-8">
             {copy.heroSummary}
           </p>
         </div>
       </section>
 
-      <section className="dric-presentation-content relative isolate overflow-hidden px-4 py-14 text-white sm:px-5 md:px-10 md:py-20 lg:px-12">
+      <section className="dric-presentation-content relative isolate overflow-hidden px-4 pb-14 pt-7 text-white sm:px-5 md:px-10 md:pb-20 md:pt-20 lg:px-12 lg:pt-10">
         <div className="mx-auto max-w-7xl">
-          <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+          <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-stretch">
             <Card
+              className="lg:h-full"
               sx={{
                 borderRadius: "36px",
                 overflow: "hidden",
@@ -146,7 +149,7 @@ export default async function PresentacionPage({ params }: Props) {
                 boxShadow: "0 30px 90px rgba(0,0,0,0.34)",
               }}
             >
-              <div className="relative h-[260px] bg-slate-200 sm:h-[340px] md:h-[420px]">
+              <div className="relative h-[260px] bg-slate-200 sm:h-[340px] md:h-[420px] lg:h-full lg:min-h-[420px]">
                 <Image
                   src={copy.teamImage}
                   alt={copy.imageAltTeam}
@@ -157,21 +160,23 @@ export default async function PresentacionPage({ params }: Props) {
             </Card>
 
             <div className="min-w-0 text-center lg:text-left">
-              <Chip
-                label={copy.historyBadge}
-                sx={{
-                  borderRadius: "999px",
-                  backgroundColor: "rgba(227,6,19,0.08)",
-                  color: "#E30613",
-                  fontWeight: 800,
-                }}
-              />
+              <div className="text-left">
+                <Chip
+                  label={copy.historyBadge}
+                  sx={{
+                    borderRadius: "999px",
+                    backgroundColor: "rgba(227,6,19,0.08)",
+                    color: "#E30613",
+                    fontWeight: 800,
+                  }}
+                />
+              </div>
 
-              <h2 className="mt-5 text-3xl font-semibold leading-tight tracking-[-0.025em] sm:text-4xl md:mt-6 md:text-5xl md:tracking-[-0.05em]">
+              <h2 className="mt-5 hyphens-none text-justify text-3xl font-semibold leading-tight tracking-[-0.025em] sm:text-4xl md:mt-6 md:text-5xl md:tracking-[-0.05em]">
                 {copy.historyTitle}
               </h2>
 
-              <p className="mx-auto mt-5 max-w-3xl text-sm leading-7 text-white/68 sm:text-base md:mt-6 md:leading-8 lg:mx-0">
+              <p className="mt-5 w-full max-w-none hyphens-none text-justify text-sm leading-7 text-white/68 sm:text-base md:mt-6 md:leading-8">
                 {copy.historyText}
               </p>
 
@@ -213,7 +218,7 @@ export default async function PresentacionPage({ params }: Props) {
                   src={copy.directorImage}
                   alt={copy.imageAltDirector}
                   fill
-                  className="object-cover"
+                  className="object-cover md:max-lg:object-[center_15%]"
                 />
               </div>
             </Card>
@@ -238,7 +243,7 @@ export default async function PresentacionPage({ params }: Props) {
                   {copy.structureTitle}
                 </h2>
 
-                <p className="mt-5 text-sm leading-7 text-white/68 md:mt-6">
+                <p className="mt-5 text-justify text-sm leading-7 text-white/68 md:mt-6">
                   {copy.structureDescription}
                 </p>
 
@@ -409,8 +414,8 @@ function InfoCard({ title, text, color }: { title: string; text: string; color: 
     >
       <div className="relative min-h-[260px] p-5 sm:p-8 md:min-h-[310px] md:p-10">
         <div className="absolute inset-x-0 top-0 h-1.5" style={{ backgroundColor: color }} />
-        <h3 className="text-3xl font-semibold leading-tight tracking-[-0.025em] md:text-4xl md:tracking-[-0.05em]">{title}</h3>
-        <p className="mt-5 text-sm leading-7 text-white/68 md:mt-6 md:leading-8">{text}</p>
+        <h3 className="text-center text-3xl font-semibold leading-tight tracking-[-0.025em] md:text-4xl md:tracking-[-0.05em] lg:text-left">{title}</h3>
+        <p className="mt-5 text-center text-sm leading-7 text-white/68 md:mt-6 md:leading-8 lg:text-justify">{text}</p>
       </div>
     </Card>
   );
