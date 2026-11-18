@@ -127,7 +127,7 @@ export default async function ApoyoFinancieroPage({ params }: Props) {
     <main className="dric-theme-page dric-projects-page dric-funding-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
       <Header />
 
-      <section className="dric-projects-hero relative isolate overflow-hidden px-5 pb-20 pt-36 md:px-10 lg:px-12">
+      <section className="dric-projects-hero relative isolate overflow-hidden px-5 pb-5 pt-[122px] sm:pt-[136px] md:px-10 md:pt-[140px] lg:px-12 lg:pb-7">
         <div className="mx-auto max-w-7xl">
             <Link href={`/${locale}/proyectos`} className="inline-flex">
             <Button
@@ -159,7 +159,7 @@ export default async function ApoyoFinancieroPage({ params }: Props) {
                 {text.title}
               </h1>
 
-              <p className="mt-8 max-w-3xl text-base leading-8 text-white/72 md:text-lg">
+              <p className="mt-8 max-w-3xl hyphens-none text-justify text-base leading-8 text-white/72 md:text-lg">
                 {text.subtitle}
               </p>
             </div>
@@ -178,10 +178,10 @@ export default async function ApoyoFinancieroPage({ params }: Props) {
         </div>
       </section>
 
-      <section className="dric-projects-section relative isolate overflow-hidden px-5 py-20 text-white md:px-10 lg:px-12">
+      <section className="dric-projects-section relative isolate overflow-hidden px-5 pb-10 pt-5 text-white md:px-10 lg:px-12 lg:pt-7">
         <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[1fr_0.8fr]">
           <article className="dric-funding-panel flex flex-col rounded-[2rem] border border-white/10 bg-white/[0.06] p-7 shadow-2xl shadow-black/25 backdrop-blur-xl md:p-10">
-            <h2 className="text-3xl font-semibold tracking-[-0.04em] md:text-4xl">
+            <h2 className="text-justify text-3xl font-semibold tracking-[-0.04em] md:text-4xl">
               {text.sectionTitle}
             </h2>
 
@@ -369,7 +369,7 @@ function renderSmartContent(items: string[]): ReactNode[] {
       return;
     }
 
-    nodes.push(<p key={`paragraph-${nodes.length}`}>{renderInlineSmartText(item)}</p>);
+    nodes.push(<p key={`paragraph-${nodes.length}`} className="hyphens-none text-justify">{renderInlineSmartText(item)}</p>);
   });
 
   flushBullets();

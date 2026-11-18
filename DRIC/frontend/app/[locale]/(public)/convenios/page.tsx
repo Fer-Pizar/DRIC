@@ -113,12 +113,13 @@ export default async function ConveniosPage({ params }: Props) {
               <div className="mt-14 flex justify-center">
                 <Link
                   href={t.procedureHref}
-                  className={`inline-flex items-center gap-3 rounded-full border border-cyan-300/30 bg-white/[0.03] px-8 py-4 text-sm font-medium tracking-wide text-cyan-200 backdrop-blur-xl transition-all duration-300 hover:scale-[1.02] hover:border-cyan-300 hover:bg-cyan-300/10 hover:text-white hover:shadow-[0_0_40px_rgba(0,55,112,0.20)] ${language === "en" ? "max-sm:max-w-full max-sm:min-w-0 max-sm:justify-center max-sm:whitespace-normal" : ""}`}
+                  className="inline-flex items-center gap-3 rounded-full border border-cyan-300/30 bg-white/[0.03] px-8 py-4 text-sm font-medium tracking-wide text-cyan-200 backdrop-blur-xl transition-all duration-300 hover:scale-[1.02] hover:border-cyan-300 hover:bg-cyan-300/10 hover:text-white hover:shadow-[0_0_40px_rgba(0,55,112,0.20)] max-sm:max-w-full max-sm:min-w-0 max-sm:justify-center max-sm:whitespace-normal"
                 >
-                  <span className={language === "en" ? "max-sm:min-w-0 max-sm:text-center" : undefined}>{t.procedure}</span>
+                  <span className="max-sm:min-w-0 max-sm:text-center">{t.procedure}</span>
 
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
+                    className="max-sm:hidden"
                     width="18"
                     height="18"
                     fill="none"

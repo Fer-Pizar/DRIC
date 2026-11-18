@@ -532,7 +532,7 @@ const countryAliases: Record<string, string[]> = {
 const labels = {
   es: {
     eyebrow: "Repositorio institucional",
-    title: "Otros convenios suscritos",
+    title: "Convenios suscritos por la UMSS",
     intro:
       "Consulta los acuerdos suscritos con instituciones nacionales e internacionales que forman parte del archivo documental de la DRIC.",
     count: "convenios disponibles",
@@ -540,7 +540,7 @@ const labels = {
     searchLabel: "Buscar convenios",
     searchPlaceholder: "Buscar por institución, país, programa o fecha",
     governmentEyebrow: "Repositorio CEUB y Gobierno de Bolivia",
-    governmentTitle: "Otros convenios suscritos por el CEUB y el Gobierno de Bolivia",
+    governmentTitle: "Convenios suscritos por el CEUB y el Gobierno de Bolivia",
     governmentIntro:
       "Explora convenios suscritos por el CEUB con otras instituciones y acuerdos bilaterales organizados por país.",
     governmentCount: "documentos disponibles",
@@ -705,7 +705,7 @@ export default async function AgreementDetailPage({ params }: Props) {
       <main className="dric-other-agreements-page min-h-screen overflow-x-hidden">
         <Header />
 
-        <section className="dric-other-agreements-section relative px-4 pb-20 pt-36 sm:px-6 md:pb-28 md:pt-40 lg:px-12">
+        <section className="dric-other-agreements-section relative px-4 pb-10 pt-[122px] sm:px-6 sm:pt-[136px] md:pt-[140px] lg:px-12">
           <div className="mx-auto max-w-7xl">
             <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
               <div>
@@ -718,7 +718,7 @@ export default async function AgreementDetailPage({ params }: Props) {
               </div>
 
               <div className="dric-other-agreements-intro rounded-[28px] p-6 backdrop-blur-2xl md:p-8">
-                <p className="dric-other-agreements-muted text-base leading-8 md:text-lg">
+                <p className="dric-other-agreements-muted text-base leading-8 max-sm:text-justify md:text-lg">
                   {t.governmentIntro}
                 </p>
                 <div className="dric-other-agreements-count mt-6 inline-flex rounded-full px-5 py-2 text-sm font-bold">
@@ -775,7 +775,7 @@ export default async function AgreementDetailPage({ params }: Props) {
     <main className="dric-other-agreements-page min-h-screen overflow-x-hidden">
       <Header />
 
-      <section className="dric-other-agreements-section relative px-4 pb-20 pt-36 sm:px-6 md:pb-28 md:pt-40 lg:px-12">
+      <section className="dric-other-agreements-section relative px-4 pb-10 pt-[122px] sm:px-6 sm:pt-[136px] md:pt-[140px] lg:px-12">
         <div className="mx-auto max-w-7xl">
           <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
             <div>
