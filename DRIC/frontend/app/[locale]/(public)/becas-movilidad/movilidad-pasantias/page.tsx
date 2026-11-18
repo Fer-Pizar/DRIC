@@ -27,7 +27,7 @@ export default async function MovilidadPasantiasPage({ params }: Props) {
     <main className="dric-theme-page dric-mobility-page dric-mobility-landing-page dric-mobility-programs-page dric-mobility-programs-index-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
       <Header />
 
-      <section className="dric-mobility-hero relative isolate px-5 pb-20 pt-28 md:px-10 md:pt-30 lg:px-12 lg:pt-32">
+      <section className="dric-mobility-hero relative isolate px-5 pb-20 pt-[122px] sm:pt-[136px] md:px-10 md:pt-[140px] lg:px-12">
         <div className="mx-auto max-w-7xl">
           <Link href={`/${locale}/becas-movilidad`} className="inline-flex">
             <Button
@@ -48,7 +48,7 @@ export default async function MovilidadPasantiasPage({ params }: Props) {
             </Button>
           </Link>
 
-          <div className="mt-14 max-w-5xl min-w-0">
+          <div className="mt-14 min-w-0">
             <p className="mb-5 inline-flex max-w-full rounded-full border border-white/15 bg-white/10 px-5 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-white/80 backdrop-blur">
               DRIC · UMSS
             </p>
@@ -57,11 +57,11 @@ export default async function MovilidadPasantiasPage({ params }: Props) {
               {text.eyebrow}
             </p>
 
-            <h1 className="max-w-5xl text-[2.65rem] font-light uppercase leading-[0.95] text-white [overflow-wrap:anywhere] sm:text-5xl md:text-7xl lg:text-8xl">
+            <h1 className="w-full text-[2.65rem] font-light uppercase leading-[0.95] text-white [overflow-wrap:anywhere] sm:text-5xl md:text-7xl lg:text-8xl">
               {text.title}
             </h1>
 
-            <p className="mt-8 max-w-3xl text-base leading-8 text-white/70 [overflow-wrap:anywhere] md:text-lg">
+            <p className="mt-8 w-full hyphens-none text-justify text-base leading-8 text-white/70 md:text-lg">
               {text.intro}
             </p>
           </div>
@@ -115,7 +115,7 @@ function MobilityTrack({
   conditions: string;
 }) {
   return (
-    <section id={id} className="dric-mobility-section relative isolate overflow-hidden px-5 py-20 text-white md:px-10 lg:px-12">
+    <section id={id} className="dric-mobility-section relative isolate overflow-hidden px-5 py-20 text-white last-of-type:pb-10 md:px-10 lg:px-12">
       <div className="mx-auto max-w-7xl">
         <div className="dric-mobility-track-heading mb-12 grid min-w-0 gap-8 sm:grid-cols-[auto_1fr] sm:items-center">
           <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-[1.35rem] bg-[#E30613] text-white shadow-2xl shadow-[#E30613]/20 sm:h-20 sm:w-20 sm:rounded-[1.7rem]">
@@ -130,7 +130,7 @@ function MobilityTrack({
             <h2 className="text-3xl font-semibold [overflow-wrap:anywhere] sm:text-4xl md:text-5xl">
               {title}
             </h2>
-            <p className="mt-4 max-w-4xl whitespace-pre-line text-sm leading-7 text-white/66 [overflow-wrap:anywhere] md:text-base">
+            <p className="mt-4 max-w-4xl whitespace-pre-line text-justify text-sm leading-7 text-white/66 [overflow-wrap:anywhere] md:text-base">
               {intro}
             </p>
           </div>
@@ -143,7 +143,7 @@ function MobilityTrack({
               href={programHref(locale, program, trackId)}
               className="block h-full min-w-0"
             >
-              <article className="dric-mobility-program-card group h-full min-w-0 rounded-[1.5rem] border border-white/10 bg-white/[0.055] p-5 shadow-2xl shadow-black/20 backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-[#E30613]/45 hover:bg-white/[0.075] sm:rounded-[2rem] sm:p-6 md:p-7">
+              <article className="dric-mobility-program-card group h-full min-w-0 rounded-[1.5rem] border border-white/10 bg-white/[0.055] p-5 text-justify shadow-2xl shadow-black/20 backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-[#E30613]/45 hover:bg-white/[0.075] sm:rounded-[2rem] sm:p-6 md:p-7">
                 <div className="flex min-w-0 flex-wrap items-center gap-3">
                   <span className="dric-mobility-program-tag max-w-full rounded-full border border-cyan-200/20 bg-cyan-200/10 px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-cyan-100 [overflow-wrap:anywhere]">
                     {program.tag}

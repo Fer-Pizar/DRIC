@@ -76,7 +76,7 @@ export default async function ScholarshipDestinationPage({ params }: Props) {
               {item.name[language]}
             </h1>
 
-            <p className="mt-7 max-w-3xl text-base leading-8 text-white/68 md:text-lg">
+            <p className="mt-7 max-w-3xl hyphens-none text-justify text-base leading-8 text-white/68 [text-align-last:left] md:text-lg">
               {item.summary[language]}
             </p>
           </div>
@@ -87,18 +87,18 @@ export default async function ScholarshipDestinationPage({ params }: Props) {
         <div className="mx-auto max-w-7xl">
           {opportunities.length > 0 ? (
             <>
-              <div className="mb-10 max-w-3xl">
+              <div className="mb-10 w-full">
                 <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#E30613]">
                   {language === "en" ? "Available programmes" : "Programas disponibles"}
                 </p>
-                <h2 className="mt-3 text-3xl font-semibold tracking-[-0.04em] md:text-5xl">
+                <h2 className="mt-3 text-left text-3xl font-semibold tracking-[-0.04em] md:text-5xl">
                   {language === "en"
                     ? `Scholarship channels for ${item.name.en}`
                     : `Canales de becas para ${item.name.es}`}
                 </h2>
               </div>
 
-              <div className="mx-auto flex max-w-6xl flex-col gap-8">
+              <div className="mx-auto flex max-w-6xl flex-col gap-8 xl:max-w-none">
                 {opportunities.map((opportunity) => {
                   const links = opportunity.links?.length
                     ? opportunity.links
@@ -117,7 +117,7 @@ export default async function ScholarshipDestinationPage({ params }: Props) {
                     className="dric-scholarship-program-card group relative overflow-hidden rounded-[2rem] p-[1px] shadow-2xl shadow-black/25 transition duration-500 hover:-translate-y-1"
                   >
                     <div className="dric-scholarship-program-card-inner relative flex min-h-[430px] flex-col rounded-[calc(2rem-1px)] px-7 py-8 md:min-h-[470px] md:px-12 md:py-11 lg:px-14">
-                      <h3 className="max-w-5xl text-3xl font-normal leading-tight tracking-[-0.035em] text-white md:text-4xl lg:text-[2.65rem]">
+                      <h3 className="text-left text-3xl font-normal leading-tight tracking-[-0.035em] text-white md:text-4xl lg:text-[2.65rem]">
                         {opportunity.title[language]}
                       </h3>
 
@@ -140,7 +140,10 @@ export default async function ScholarshipDestinationPage({ params }: Props) {
                               {section.bullets ? (
                                 <ul className="space-y-2 pl-5 text-left">
                                   {section.bullets.map((bullet, bulletIndex) => (
-                                    <li key={`${opportunity.slug}-bullet-${bulletIndex}`} className="list-disc">
+                                    <li
+                                      key={`${opportunity.slug}-bullet-${bulletIndex}`}
+                                      className="list-disc hyphens-none text-justify [text-align-last:left]"
+                                    >
                                       {bullet.label ? (
                                         <>
                                           <span className="font-semibold text-white">
@@ -154,7 +157,7 @@ export default async function ScholarshipDestinationPage({ params }: Props) {
                                           {bullet.children.map((child, childIndex) => (
                                             <li
                                               key={`${opportunity.slug}-bullet-${bulletIndex}-${childIndex}`}
-                                              className="list-disc"
+                                              className="list-disc hyphens-none text-justify [text-align-last:left]"
                                             >
                                               {child.label ? (
                                                 <>

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import FittedProgramTitle from "@/components/sections/scholarships/FittedProgramTitle";
 import Button from "@mui/material/Button";
 import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 import CalendarMonthRoundedIcon from "@mui/icons-material/CalendarMonthRounded";
@@ -110,7 +111,7 @@ export default async function MobilityProgramDetailPage({ params }: Props) {
     <main className="dric-theme-page dric-mobility-page dric-mobility-detail-page dric-mobility-programs-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
       <Header />
 
-      <section className="dric-mobility-hero relative isolate px-5 pb-16 pt-44 sm:pt-36 md:px-10 md:pb-20 lg:px-12">
+      <section className="dric-mobility-hero relative isolate px-5 pb-16 pt-[122px] sm:pt-[136px] md:px-10 md:pb-20 md:pt-[140px] lg:px-12">
         <div className="mx-auto max-w-7xl min-w-0">
           <Link href={`/${locale}/becas-movilidad/movilidad-pasantias`} className="inline-flex">
             <Button
@@ -137,15 +138,13 @@ export default async function MobilityProgramDetailPage({ params }: Props) {
                 DRIC · UMSS
               </p>
 
-              <h1 className="max-w-5xl break-words text-[2.35rem] font-light uppercase leading-[1.02] tracking-normal text-white [overflow-wrap:anywhere] sm:text-4xl sm:leading-[0.95] sm:tracking-[-0.06em] md:text-6xl lg:text-7xl">
-                {match.program.title}
-              </h1>
+              <FittedProgramTitle title={match.program.title} />
             </div>
           </div>
         </div>
       </section>
 
-      <section className="dric-mobility-section relative isolate overflow-hidden px-5 py-20 text-white md:px-10 lg:px-12">
+      <section className="dric-mobility-section relative isolate overflow-hidden px-5 pb-10 pt-20 text-white md:px-10 lg:px-12">
         <div className="mx-auto grid max-w-7xl gap-7 lg:grid-cols-[1fr_0.72fr]">
           <article className="dric-mobility-track-heading rounded-[2rem] border border-white/10 bg-white/[0.06] p-7 shadow-2xl shadow-black/20 backdrop-blur-xl md:p-10">
             <div className="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10">
@@ -202,7 +201,7 @@ export default async function MobilityProgramDetailPage({ params }: Props) {
                   {match.program.conditions.map((condition) => (
                     <li key={condition} className="flex gap-3 text-sm leading-7 text-white/66">
                       <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#E30613]" />
-                      <span className="whitespace-pre-line">{condition}</span>
+                      <span className="min-w-0 flex-1 whitespace-pre-line">{condition}</span>
                     </li>
                   ))}
                 </ul>
@@ -261,7 +260,7 @@ export default async function MobilityProgramDetailPage({ params }: Props) {
                       {section.items.map((item) => (
                         <li key={item} className="flex gap-3 text-sm leading-7 text-white/66">
                           <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-200" />
-                          <span className="whitespace-pre-line">{item}</span>
+                          <span className="min-w-0 flex-1 whitespace-pre-line">{item}</span>
                         </li>
                       ))}
                     </ul>
@@ -415,7 +414,7 @@ function InfoBlock({
         {items.map((item) => (
           <li key={item} className="flex gap-3 text-sm leading-7 text-white/66">
             <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-200" />
-            <span className="whitespace-pre-line">{item}</span>
+            <span className="min-w-0 flex-1 whitespace-pre-line">{item}</span>
           </li>
         ))}
       </ul>

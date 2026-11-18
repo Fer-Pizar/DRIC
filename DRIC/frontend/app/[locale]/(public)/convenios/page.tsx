@@ -101,7 +101,7 @@ export default async function ConveniosPage({ params }: Props) {
                 {t.eyebrow}
               </p>
 
-              <h1 className={`max-w-4xl text-5xl font-light leading-tight tracking-wide md:text-7xl ${language === "en" ? "max-sm:max-w-full max-sm:break-words max-sm:tracking-normal" : ""}`}>
+              <h1 className="max-w-4xl text-5xl font-light uppercase leading-tight tracking-wide md:text-7xl max-sm:w-[106%] max-sm:origin-left max-sm:scale-x-[0.94] max-sm:hyphens-none max-sm:tracking-[-0.1em]">
                 {t.title}
               </h1>
 

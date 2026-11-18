@@ -87,7 +87,7 @@ export default async function BecasMovilidadPage({ params }: Props) {
     <main className="dric-theme-page dric-mobility-page dric-scholarships-hub-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
       <Header />
 
-      <section className="dric-mobility-hero relative isolate px-5 pb-10 pt-36 md:px-10 md:pb-12 lg:px-12">
+      <section className="dric-mobility-hero relative isolate px-5 pb-10 pt-[122px] sm:pt-[136px] md:px-10 md:pb-12 md:pt-[140px] lg:px-12">
         <div className="mx-auto max-w-7xl">
           <p className="mb-5 inline-flex rounded-full border border-white/15 bg-white/10 px-5 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-white/80 backdrop-blur">
             {t.badge}
@@ -96,31 +96,31 @@ export default async function BecasMovilidadPage({ params }: Props) {
           <h1
             className={`max-w-5xl font-light uppercase ${
               isEnglish
-                ? "text-[2.47rem] leading-[1.00] tracking-[-0.025em] sm:text-5xl md:text-7xl md:leading-[0.9] md:tracking-[-0.07em] lg:text-7xl"
+                ? "text-[2.47rem] leading-[1.00] tracking-[-0.08em] sm:text-5xl sm:tracking-[-0.025em] md:text-7xl md:leading-[0.9] md:tracking-[-0.07em] lg:text-7xl"
                 : "text-5xl leading-[0.9] tracking-[-0.07em] md:text-7xl lg:text-7xl"
             }`}
           >
             {t.title}
           </h1>
 
-          <p className="dric-scholarships-hub-hero-copy mt-8 max-w-3xl text-base leading-8 text-white/70 md:text-lg">
+          <p className="dric-scholarships-hub-hero-copy mt-8 w-full hyphens-none text-justify text-base leading-8 text-white/70 md:text-lg">
             {t.intro}
           </p>
         </div>
       </section>
 
-      <section className="dric-mobility-section relative isolate overflow-hidden px-5 pb-20 pt-8 text-white md:px-10 md:pt-10 lg:px-12 lg:pt-12">
+      <section className="dric-mobility-section relative isolate overflow-hidden px-5 pb-10 pt-8 text-white md:px-10 md:pt-10 lg:px-12 lg:pt-12">
         <div className="mx-auto max-w-7xl">
-          <div className="mb-14 max-w-3xl">
+          <div className="mb-14">
             <p className="dric-scholarships-hub-eyebrow text-sm font-bold uppercase tracking-[0.25em]">
               {t.exploreBadge}
             </p>
 
-            <h2 className="mt-4 text-4xl font-semibold tracking-[-0.04em] md:text-5xl">
+            <h2 className="mt-4 w-full min-w-0 break-normal hyphens-none text-4xl font-semibold tracking-[-0.065em] sm:tracking-[-0.04em] md:text-5xl">
               {t.exploreTitle}
             </h2>
 
-            <p className="mt-5 text-sm leading-7 text-white/68 md:text-base">
+            <p className="mt-5 w-full hyphens-none text-justify text-sm leading-7 text-white/68 md:text-base">
               {t.exploreIntro}
             </p>
           </div>
@@ -162,7 +162,7 @@ export default async function BecasMovilidadPage({ params }: Props) {
                     {card.title}
                   </h3>
 
-                  <p className="mt-5 max-w-xl text-sm leading-7 text-white/62">
+                  <p className="mt-5 w-full hyphens-none text-justify text-sm leading-7 text-white/62">
                     {card.description}
                   </p>
 

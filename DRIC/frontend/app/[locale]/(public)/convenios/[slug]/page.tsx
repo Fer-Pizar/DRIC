@@ -712,7 +712,7 @@ export default async function AgreementDetailPage({ params }: Props) {
                 <p className="dric-other-agreements-eyebrow text-xs font-black uppercase tracking-[0.28em]">
                   {t.governmentEyebrow}
                 </p>
-                <h1 className="dric-other-agreements-title mt-5 max-w-4xl text-4xl font-light leading-tight tracking-wide sm:text-5xl md:text-6xl">
+                <h1 className="dric-other-agreements-title mt-5 max-w-4xl text-4xl font-light uppercase leading-tight tracking-wide sm:text-5xl md:text-6xl">
                   {t.governmentTitle}
                 </h1>
               </div>
@@ -782,7 +782,7 @@ export default async function AgreementDetailPage({ params }: Props) {
               <p className="dric-other-agreements-eyebrow text-xs font-black uppercase tracking-[0.28em]">
                 {t.eyebrow}
               </p>
-              <h1 className="dric-other-agreements-title mt-5 max-w-3xl text-4xl font-light leading-tight tracking-wide sm:text-5xl md:text-6xl">
+              <h1 className="dric-other-agreements-title mt-5 max-w-3xl text-4xl font-light uppercase leading-tight tracking-wide sm:text-5xl md:text-6xl">
                 {t.title}
               </h1>
             </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { use, useEffect, useMemo, useState, type ReactNode } from "react";
+import { use, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
@@ -466,7 +466,7 @@ export default function PremiosEventosCursosConcursosPage({ params }: { params: 
     <main className="dric-theme-page dric-awards-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
       <Header />
 
-      <section className="dric-awards-hero relative isolate px-5 pb-16 pt-36 md:px-10 md:pb-20 lg:px-12">
+      <section className="dric-awards-hero relative isolate px-5 pb-16 pt-[122px] sm:pt-[136px] md:px-10 md:pb-20 md:pt-[140px] lg:px-12">
         <div className="mx-auto max-w-7xl">
           <Link
             href={`/${locale}/becas-movilidad`}
@@ -482,11 +482,9 @@ export default function PremiosEventosCursosConcursosPage({ params }: { params: 
                 {t.eyebrow}
               </p>
 
-              <h1 className="max-w-5xl text-5xl font-light uppercase leading-[0.9] tracking-[-0.07em] text-white md:text-7xl lg:text-8xl">
-                {t.title}
-              </h1>
+              <ResponsiveAwardsTitle title={t.title} />
 
-              <p className="mt-8 max-w-3xl text-base leading-8 text-white/70 md:text-lg">
+              <p className="mt-8 w-full hyphens-none text-justify text-base leading-8 text-white/70 [text-align-last:left] md:text-lg">
                 {t.intro}
               </p>
             </div>
@@ -496,7 +494,7 @@ export default function PremiosEventosCursosConcursosPage({ params }: { params: 
             <button
               type="button"
               onClick={() => setActiveCategory("all")}
-              className={`dric-awards-filter rounded-full border px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] transition ${
+              className={`dric-awards-filter rounded-full border px-4 py-2 text-left text-xs font-bold uppercase tracking-[0.16em] transition sm:text-center ${
                 activeCategory === "all" ? "dric-awards-filter-active" : ""
               }`}
             >
@@ -507,7 +505,7 @@ export default function PremiosEventosCursosConcursosPage({ params }: { params: 
                 key={category}
                 type="button"
                 onClick={() => setActiveCategory(category)}
-                className={`dric-awards-filter rounded-full border px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] transition ${
+                className={`dric-awards-filter rounded-full border px-4 py-2 text-left text-xs font-bold uppercase tracking-[0.16em] transition sm:text-center ${
                   activeCategory === category ? "dric-awards-filter-active" : ""
                 }`}
               >
@@ -541,7 +539,7 @@ export default function PremiosEventosCursosConcursosPage({ params }: { params: 
         </section>
       ) : null}
 
-      <section className="relative isolate px-5 pb-24 md:px-10 lg:px-12">
+      <section className="relative isolate px-5 pb-10 md:px-10 lg:px-12">
         <div className="mx-auto max-w-7xl">
           <div className="mb-8">
             <h2 className="text-3xl font-semibold tracking-[-0.04em] md:text-5xl">
@@ -559,6 +557,91 @@ export default function PremiosEventosCursosConcursosPage({ params }: { params: 
 
       <Footer />
     </main>
+  );
+}
+
+function ResponsiveAwardsTitle({ title }: { title: string }) {
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const [scale, setScale] = useState(1);
+
+  useLayoutEffect(() => {
+    const heading = headingRef.current;
+    const container = heading?.parentElement;
+    if (!heading || !container) return;
+
+    let active = true;
+    let frame = 0;
+
+    const update = () => {
+      if (!active) return;
+      if (!window.matchMedia("(max-width: 639px)").matches) {
+        setScale(1);
+        return;
+      }
+
+      const availableWidth = container.clientWidth;
+      if (!availableWidth) return;
+
+      const computed = window.getComputedStyle(heading);
+      const probe = document.createElement("span");
+      probe.style.position = "fixed";
+      probe.style.visibility = "hidden";
+      probe.style.whiteSpace = "nowrap";
+      probe.style.fontFamily = computed.fontFamily;
+      probe.style.fontSize = computed.fontSize;
+      probe.style.fontWeight = computed.fontWeight;
+      probe.style.fontStyle = computed.fontStyle;
+      probe.style.letterSpacing = computed.letterSpacing;
+      probe.style.textTransform = computed.textTransform;
+      document.body.appendChild(probe);
+
+      const longestWord = Math.max(
+        0,
+        ...title.trim().split(/\s+/u).map((word) => {
+          probe.textContent = word;
+          return probe.getBoundingClientRect().width;
+        }),
+      );
+      probe.remove();
+
+      const nextScale = longestWord > availableWidth - 2
+        ? (availableWidth - 2) / longestWord
+        : 1;
+      setScale((current) => Math.abs(current - nextScale) < 0.001 ? current : nextScale);
+    };
+
+    const schedule = () => {
+      if (!active) return;
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(update);
+    };
+
+    const observer = new ResizeObserver(schedule);
+    observer.observe(container);
+    window.addEventListener("resize", schedule);
+    void document.fonts.ready.then(schedule);
+    schedule();
+
+    return () => {
+      active = false;
+      cancelAnimationFrame(frame);
+      observer.disconnect();
+      window.removeEventListener("resize", schedule);
+    };
+  }, [title]);
+
+  return (
+    <h1
+      ref={headingRef}
+      className="w-full hyphens-none text-left text-5xl font-light uppercase leading-[0.9] tracking-[-0.07em] text-white sm:text-[clamp(2rem,4vw,3.75rem)]"
+      style={scale < 1 ? {
+        width: `${100 / scale}%`,
+        transform: `scaleX(${scale})`,
+        transformOrigin: "left top",
+      } : undefined}
+    >
+      {title}
+    </h1>
   );
 }
 
@@ -588,7 +671,7 @@ function OpportunityCard({
             {iconForCategory(item.category[language])}
           </div>
 
-          <span className="dric-awards-chip rounded-full border border-cyan-200/20 bg-cyan-200/10 px-3 py-1 text-right text-[0.68rem] font-bold uppercase tracking-[0.16em] text-cyan-100">
+          <span className="dric-awards-chip rounded-full border border-cyan-200/20 bg-cyan-200/10 px-3 py-1 text-center text-[0.68rem] font-bold uppercase tracking-[0.16em] text-cyan-100 sm:text-right">
             {item.category[language]}
           </span>
         </div>
@@ -597,7 +680,7 @@ function OpportunityCard({
           {item.title[language]}
         </h3>
 
-        <p className="mt-5 text-sm leading-7 text-white/66">
+        <p className="mt-5 hyphens-none text-justify text-sm leading-7 text-white/66 [text-align-last:left]">
           {item.summary[language]}
         </p>
 
@@ -606,7 +689,7 @@ function OpportunityCard({
             <PublicRoundedIcon sx={{ color: "#E30613", fontSize: 20 }} />
             {labels.audience}
           </div>
-          <p className="text-sm leading-7 text-white/64">{item.audience[language]}</p>
+          <p className="hyphens-none text-justify text-sm leading-7 text-white/64 [text-align-last:left]">{item.audience[language]}</p>
         </div>
 
         {meta.length > 0 ? (
@@ -614,7 +697,7 @@ function OpportunityCard({
             {meta.map((entry) => (
               <div key={`${entry.label}-${entry.value}`} className="dric-awards-meta flex gap-3 rounded-2xl border border-white/10 bg-white/[0.045] px-4 py-3 text-sm">
                 <span className="mt-0.5 text-[#E30613] [&>svg]:h-5 [&>svg]:w-5">{entry.icon}</span>
-                <span>
+                <span className="min-w-0 hyphens-none text-justify [text-align-last:left]">
                   <span className="font-bold text-white">{entry.label}: </span>
                   <span className="text-white/62">{entry.value}</span>
                 </span>
@@ -643,10 +726,10 @@ function OpportunityCard({
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="dric-awards-link inline-flex items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-bold text-white transition hover:scale-[1.02]"
+                className="dric-awards-link inline-flex max-w-full items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-bold text-white transition hover:scale-[1.02]"
               >
                 <LinkRoundedIcon fontSize="small" />
-                {link.label[language]}
+                <span className="min-w-0 text-center sm:text-left">{link.label[language]}</span>
                 <ArrowForwardRoundedIcon fontSize="small" />
               </a>
             ))}
@@ -685,7 +768,7 @@ function InfoList({
         {items.map((item) => (
           <li key={item.es} className="flex gap-3 text-sm leading-7 text-white/64">
             <span className="mt-3 h-1.5 w-1.5 shrink-0 rounded-full bg-[#E30613]" />
-            <span>{item[language]}</span>
+            <span className="min-w-0 flex-1 hyphens-none text-justify [text-align-last:left]">{item[language]}</span>
           </li>
         ))}
       </ul>
