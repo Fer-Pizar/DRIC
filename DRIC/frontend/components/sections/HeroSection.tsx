@@ -86,17 +86,17 @@ export default function HeroSection({ section }: Props) {
           {heroBlock?.summary ?? section.summary}
         </p>
 
-        <div className="mt-8 flex w-full max-w-sm flex-col items-stretch justify-center gap-4 sm:max-w-none sm:flex-row sm:items-center md:mt-10">
+        <div className="mt-8 flex w-full max-w-[14rem] flex-col items-stretch justify-center gap-4 sm:max-w-none sm:flex-row sm:items-center md:mt-10">
           <Link
             href={primaryHref}
-            className="dric-glow-button dric-home-hero-primary rounded-xl px-6 py-3 text-center text-sm font-semibold text-white sm:px-8"
+            className="dric-glow-button dric-home-hero-primary rounded-xl px-6 py-3 text-center text-sm font-semibold text-white max-sm:flex max-sm:h-12 max-sm:items-center max-sm:justify-center max-sm:px-3 max-sm:text-xs sm:px-8"
           >
             {primaryLabel}
           </Link>
 
           <Link
             href={secondaryHref}
-            className="dric-home-hero-secondary rounded-xl border border-white/15 bg-black/35 px-6 py-3 text-center text-sm font-semibold text-white shadow-[0_0_24px_rgba(255,255,255,0.10)] backdrop-blur-md transition hover:-translate-y-0.5 hover:bg-white/10 sm:px-8"
+            className="dric-home-hero-secondary rounded-xl border border-white/15 bg-black/35 px-6 py-3 text-center text-sm font-semibold text-white shadow-[0_0_24px_rgba(255,255,255,0.10)] backdrop-blur-md transition hover:-translate-y-0.5 hover:bg-white/10 max-sm:flex max-sm:h-12 max-sm:items-center max-sm:justify-center max-sm:px-3 max-sm:text-xs sm:px-8"
           >
             {secondaryLabel}
           </Link>

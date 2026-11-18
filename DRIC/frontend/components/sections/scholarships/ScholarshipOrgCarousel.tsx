@@ -48,7 +48,10 @@ function CatalogCard({
           {item.name[language]}
         </h2>
 
-        <p className="mt-4 flex-1 text-sm leading-7 text-white/62">
+        <p
+          className="mt-4 w-full flex-1 hyphens-none text-sm leading-7 text-white/62"
+          style={{ textAlign: "justify", textAlignLast: "left" }}
+        >
           {item.summary[language]}
         </p>
 

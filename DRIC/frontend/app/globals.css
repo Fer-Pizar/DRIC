@@ -1913,6 +1913,22 @@ html[data-theme="light"] .dric-mobility-detail-page .dric-mobility-section p {
   color: rgba(71, 85, 105, 0.78) !important;
 }
 
+.dric-mobility-detail-page h1,
+.dric-mobility-detail-page h2,
+.dric-mobility-detail-page h3 {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  hyphens: none;
+}
+
+.dric-mobility-detail-page .dric-mobility-section p,
+.dric-mobility-detail-page .dric-mobility-section dd,
+.dric-mobility-detail-page .dric-mobility-section li > span:last-child,
+.dric-mobility-detail-page .dric-mobility-cyan-note {
+  text-align: justify;
+  text-align-last: left;
+}
+
 .dric-mobility-programs-index-page {
   background: #020617 !important;
   background-attachment: initial;
@@ -2044,6 +2060,11 @@ html[data-theme="light"] .dric-mobility-programs-index-page .dric-mobility-track
 .dric-scholarships-hub-eyebrow {
   color: #E30613;
   padding-left: 0.2rem;
+}
+
+.dric-scholarships-hub-page .dric-mobility-card-inner > p {
+  text-align: justify;
+  text-align-last: left;
 }
 
 html[data-theme="light"] .dric-scholarships-hub-page {
@@ -2437,6 +2458,18 @@ html[data-theme="light"] .dric-info-resource:hover {
   background:
     linear-gradient(135deg, rgba(255, 255, 255, 0.82), rgba(255, 238, 240, 0.48)) !important;
   border-color: rgba(227, 6, 19, 0.34) !important;
+}
+
+@media (max-width: 639px) {
+  .dric-info-mobility-page .dric-info-panel,
+  html[data-theme="light"] .dric-info-mobility-page .dric-info-panel {
+    background: none !important;
+    border: 0 !important;
+    border-radius: 0;
+    box-shadow: none !important;
+    padding: 0 !important;
+    backdrop-filter: none;
+  }
 }
 
 html[data-theme="light"] .dric-memberships-hero-glow {

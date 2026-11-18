@@ -84,18 +84,18 @@ export default async function ProyectosPage({ params }: Props) {
     <main className="dric-theme-page dric-projects-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
       <Header />
 
-      <section className="dric-projects-hero relative isolate overflow-hidden px-5 pb-20 pt-36 md:px-10 lg:px-12">
+      <section className="dric-projects-hero relative isolate overflow-hidden px-5 pb-10 pt-[122px] sm:pt-[136px] md:px-10 md:pt-[140px] lg:px-12">
         <div className="mx-auto max-w-7xl">
-          <div className="max-w-4xl">
+          <div>
             <p className="mb-5 inline-flex rounded-full border border-white/15 bg-white/10 px-5 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-white/80 backdrop-blur">
               DRIC · UMSS
             </p>
 
-            <h1 className="text-5xl font-light uppercase leading-[0.9] tracking-[-0.07em] text-white md:text-7xl lg:text-8xl">
+            <h1 className="max-w-4xl text-5xl font-light uppercase leading-[0.9] tracking-[-0.07em] text-white md:text-7xl lg:text-8xl">
               {text.title}
             </h1>
 
-            <p className="mt-8 max-w-3xl text-base leading-8 text-white/72 md:text-lg">
+            <p className="mt-8 w-full hyphens-none text-justify text-base leading-8 text-white/72 md:text-lg">
               {text.intro}
             </p>
 
@@ -120,7 +120,7 @@ export default async function ProyectosPage({ params }: Props) {
             </div>
           </div>
 
-          <div className="mt-20 grid gap-8 lg:grid-cols-2">
+          <div className="mt-13 grid gap-8 lg:grid-cols-2">
             {text.cards.map((card) => (
               <ProjectCard
                 key={card.title}
@@ -239,7 +239,7 @@ function ProjectCard({
 
           <h2 className="text-3xl font-semibold tracking-[-0.04em]">{title}</h2>
 
-          <p className="mt-4 min-h-[88px] text-sm leading-7 text-white/65">
+          <p className="mt-4 min-h-[88px] hyphens-none text-justify text-sm leading-7 text-white/65">
             {description}
           </p>
 

@@ -3,7 +3,6 @@ import Link from "next/link";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
-import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
 import FlightTakeoffRoundedIcon from "@mui/icons-material/FlightTakeoffRounded";
 import LinkRoundedIcon from "@mui/icons-material/LinkRounded";
 import PublicRoundedIcon from "@mui/icons-material/PublicRounded";
@@ -287,7 +286,7 @@ export default async function InformacionNacionalesExtranjerosPage({
     <main className="dric-theme-page dric-info-mobility-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
       <Header />
 
-      <section className="relative isolate px-5 pb-14 pt-36 md:px-10 md:pb-16 lg:px-12">
+      <section className="relative isolate px-5 pb-14 pt-[122px] sm:pt-[136px] md:px-10 md:pb-16 md:pt-[140px] lg:px-12">
         <div className="mx-auto max-w-7xl">
           <Link
             href={`/${locale}/becas-movilidad`}
@@ -297,7 +296,7 @@ export default async function InformacionNacionalesExtranjerosPage({
             {t.back}
           </Link>
 
-          <div className="mt-14 max-w-5xl">
+          <div className="mt-14 w-full">
             <p className="dric-info-eyebrow mb-5 inline-flex rounded-full border border-white/15 bg-white/10 px-5 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-white/80 backdrop-blur">
               DRIC · UMSS
             </p>
@@ -306,30 +305,28 @@ export default async function InformacionNacionalesExtranjerosPage({
               {t.eyebrow}
             </p>
 
-            <h1 className="max-w-5xl text-5xl font-light uppercase leading-[0.9] tracking-[-0.07em] text-white md:text-7xl lg:text-8xl">
+            <h1 className="w-full hyphens-none text-left text-[clamp(2.25rem,4vw,3.5rem)] font-light uppercase leading-[0.9] tracking-[-0.07em] text-white">
               {t.title}
             </h1>
 
-            <p className="mt-8 max-w-3xl text-base leading-8 text-white/70 md:text-lg">
+            <p className="mt-8 w-full hyphens-none text-justify text-base leading-8 text-white/70 [text-align-last:left] md:text-lg">
               {t.intro}
             </p>
           </div>
         </div>
       </section>
 
-      <section className="relative isolate px-5 pb-24 md:px-10 lg:px-12">
+      <section className="relative isolate px-5 pb-10 md:px-10 lg:px-12">
         <div className="mx-auto grid max-w-7xl gap-8">
-          {pageSections.map((section, index) => (
+          {pageSections.map((section) => (
             <article
               key={section.id}
               className="dric-info-card relative overflow-hidden rounded-[2rem] p-[1px]"
             >
-              <div className="dric-info-card-inner relative grid gap-8 rounded-[calc(2rem-1px)] p-6 md:p-8 lg:grid-cols-[0.86fr_1.14fr] lg:gap-10">
-                <div className={`${index % 2 === 1 ? "lg:order-2" : ""}`}>
+              <div className="dric-info-card-inner relative grid gap-8 rounded-[calc(2rem-1px)] p-6 md:p-8 lg:gap-10">
+                <div className="min-w-0">
                   <div
-                    className={`dric-info-image relative flex overflow-hidden rounded-[1.6rem] border border-white/10 bg-white/[0.045] ${
-                      section.id === "entrante" ? "min-h-[420px] lg:min-h-[500px]" : "min-h-[280px]"
-                    }`}
+                    className="dric-info-image relative aspect-video w-full overflow-hidden rounded-[1.6rem] border border-white/10 bg-white/[0.045] lg:aspect-[21/9]"
                   >
                     <div className="dric-info-image-placeholder absolute inset-0 flex items-center justify-center px-6 text-center">
                       <span className="rounded-full border border-white/12 bg-[#020617]/45 px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] text-white/62 backdrop-blur">
@@ -340,7 +337,7 @@ export default async function InformacionNacionalesExtranjerosPage({
                       src={section.image}
                       alt={section.imageAlt[language]}
                       fill
-                      sizes="(min-width: 1024px) 40vw, 100vw"
+                      sizes="(min-width: 1280px) 1216px, (min-width: 768px) calc(100vw - 160px), calc(100vw - 88px)"
                       className="object-cover"
                     />
                   </div>
@@ -356,19 +353,19 @@ export default async function InformacionNacionalesExtranjerosPage({
                       <p className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-200">
                         {section.eyebrow[language]}
                       </p>
-                      <h2 className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-white md:text-5xl">
+                      <h2 className="mt-2 text-3xl font-normal tracking-[-0.04em] text-white md:text-5xl">
                         {section.title[language]}
                       </h2>
                     </div>
                   </div>
 
-                  <p className="mt-6 text-base leading-8 text-white/68">
+                  <p className="mt-6 hyphens-none text-justify text-base leading-8 text-white/68 [text-align-last:left]">
                     {section.summary[language]}
                   </p>
 
                   <div className="mt-8 grid gap-6 xl:grid-cols-[0.92fr_1.08fr]">
                     <div className="dric-info-panel rounded-3xl border border-white/10 bg-[#020617]/36 p-5">
-                      <div className="mb-4 flex items-center gap-2 text-sm font-bold text-white">
+                      <div className="mb-4 flex items-center gap-2 text-sm font-normal text-white">
                         <SchoolRoundedIcon sx={{ color: "#E30613", fontSize: 20 }} />
                         {t.keyInfo}
                       </div>
@@ -377,14 +374,14 @@ export default async function InformacionNacionalesExtranjerosPage({
                         {section.points.map((point, pointIndex) => (
                           <li key={`${section.id}-point-${pointIndex}`} className="flex gap-3 text-sm leading-7 text-white/64">
                             <span className="mt-3 h-1.5 w-1.5 shrink-0 rounded-full bg-[#E30613]" />
-                            <span>{point[language]}</span>
+                            <span className="min-w-0 flex-1 hyphens-none text-justify [text-align-last:left]">{point[language]}</span>
                           </li>
                         ))}
                       </ul>
                     </div>
 
                     <div className="dric-info-panel rounded-3xl border border-white/10 bg-[#020617]/36 p-5">
-                      <div className="mb-4 flex items-center gap-2 text-sm font-bold text-white">
+                      <div className="mb-4 flex items-center gap-2 text-sm font-normal text-white">
                         <PublicRoundedIcon sx={{ color: "#c59dff", fontSize: 20 }} />
                         {t.resources}
                       </div>
@@ -396,14 +393,13 @@ export default async function InformacionNacionalesExtranjerosPage({
                             href={resource.href}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="dric-info-resource group/link flex items-center justify-between gap-4 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm font-semibold text-white/74 transition hover:border-cyan-200/35 hover:bg-white/[0.07] hover:text-white"
+                            className="dric-info-resource flex items-center rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm font-semibold text-white/74 transition hover:border-cyan-200/35 hover:bg-white/[0.07] hover:text-white"
                             aria-label={`${t.open}: ${resource.label[language]}`}
                           >
                             <span className="flex min-w-0 items-center gap-3">
                               <LinkRoundedIcon className="shrink-0 text-[#E30613]" fontSize="small" />
                               <span className="min-w-0">{resource.label[language]}</span>
                             </span>
-                            <ArrowForwardRoundedIcon className="shrink-0 text-cyan-200 transition group-hover/link:translate-x-1" fontSize="small" />
                           </a>
                         ))}
                       </div>

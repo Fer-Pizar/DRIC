@@ -52,7 +52,10 @@ function CatalogCard({
           {item.name[language]}
         </h2>
 
-        <p className="mt-4 flex-1 text-sm leading-7 text-white/62">
+        <p
+          className="mt-4 w-full flex-1 hyphens-none text-sm leading-7 text-white/62"
+          style={{ textAlign: "justify", textAlignLast: "left" }}
+        >
           {item.summary[language]}
         </p>
 
@@ -94,32 +97,30 @@ export default async function BecasPage({ params }: Props) {
     <main className="dric-theme-page dric-scholarship-index-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
       <Header />
 
-      <section className="relative isolate px-5 pb-16 pt-36 md:px-10 md:pb-20 lg:px-12">
+      <section className="relative isolate px-5 pb-16 pt-[122px] sm:pt-[136px] md:px-10 md:pb-20 md:pt-[140px] lg:px-12">
         <div className="mx-auto max-w-7xl">
           <p className="mb-5 inline-flex rounded-full border border-white/15 bg-white/10 px-5 py-2 text-xs font-semibold uppercase tracking-[0.26em] text-white/80 backdrop-blur">
             {copy.badge}
           </p>
 
-          <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-end">
-            <h1 className="max-w-5xl text-[2.65rem] font-light uppercase leading-[0.96] tracking-[-0.055em] sm:text-6xl md:text-7xl lg:text-8xl">
-              {copy.title}
-            </h1>
+          <h1 className={`w-full text-[2.65rem] font-light uppercase leading-[0.96] tracking-[-0.055em] sm:text-6xl md:text-7xl lg:text-8xl ${language === "en" ? "max-sm:w-[112%] max-sm:origin-left max-sm:scale-x-[0.89] max-sm:hyphens-none max-sm:tracking-[-0.09em]" : ""}`}>
+            {copy.title}
+          </h1>
 
-            <p className="max-w-2xl text-base leading-8 text-white/68 md:text-lg">
-              {copy.intro}
-            </p>
-          </div>
+          <p className="mt-8 w-full text-base leading-8 text-white/68 md:text-lg">
+            {copy.intro}
+          </p>
         </div>
       </section>
 
-      <section className="relative isolate overflow-hidden px-5 py-16 text-white md:px-10 md:py-20 lg:px-12">
+      <section className="relative isolate overflow-hidden px-5 pb-10 pt-16 text-white md:px-10 md:pt-20 lg:px-12">
         <div className="mx-auto max-w-7xl">
           <div className="mb-10 flex flex-col gap-4 md:mb-12 md:flex-row md:items-end md:justify-between">
             <div>
               <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#E30613]">
                 {copy.countriesBadge}
               </p>
-              <h2 className="mt-3 text-3xl font-semibold tracking-[-0.04em] md:text-5xl">
+              <h2 className="mt-3 text-3xl font-normal tracking-[-0.04em] md:text-5xl">
                 {copy.countriesTitle}
               </h2>
             </div>

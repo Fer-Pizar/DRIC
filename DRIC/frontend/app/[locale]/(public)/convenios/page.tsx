@@ -91,21 +91,21 @@ export default async function ConveniosPage({ params }: Props) {
     <main className="dric-theme-page dric-agreements-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
       <Header />
 
-      <section className="relative px-6 pb-28 pt-44">
+      <section className="relative px-6 pb-10 pt-28 md:pt-[140px]">
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(0,55,112,0.16),transparent_38%),radial-gradient(circle_at_bottom_right,rgba(0,55,112,0.18),transparent_36%)]" />
 
         <div className="mx-auto max-w-7xl">
-          <div className="grid items-center gap-14 lg:grid-cols-[1.1fr_0.9fr]">
-            <div>
+          <div className="grid items-center gap-14 lg:grid-cols-[1.1fr_0.9fr] lg:items-stretch">
+            <div className={language === "en" ? "max-sm:min-w-0" : undefined}>
               <p className="dric-agreements-hero-eyebrow mb-5 text-sm uppercase tracking-[0.35em]">
                 {t.eyebrow}
               </p>
 
-              <h1 className="max-w-4xl text-5xl font-light leading-tight tracking-wide md:text-7xl">
+              <h1 className="max-w-4xl text-5xl font-light uppercase leading-tight tracking-wide md:text-7xl max-sm:w-[106%] max-sm:origin-left max-sm:scale-x-[0.94] max-sm:hyphens-none max-sm:tracking-[-0.1em]">
                 {t.title}
               </h1>
 
-              <div className="mt-8 max-w-3xl space-y-5 text-lg leading-relaxed text-white/60">
+              <div className="mt-8 max-w-3xl space-y-5 hyphens-none text-justify text-lg leading-relaxed text-white/60">
                 <p>{t.intro1}</p>
                 <p>{t.intro2}</p>
               </div>
@@ -113,12 +113,13 @@ export default async function ConveniosPage({ params }: Props) {
               <div className="mt-14 flex justify-center">
                 <Link
                   href={t.procedureHref}
-                  className="inline-flex items-center gap-3 rounded-full border border-cyan-300/30 bg-white/[0.03] px-8 py-4 text-sm font-medium tracking-wide text-cyan-200 backdrop-blur-xl transition-all duration-300 hover:scale-[1.02] hover:border-cyan-300 hover:bg-cyan-300/10 hover:text-white hover:shadow-[0_0_40px_rgba(0,55,112,0.20)]"
+                  className="inline-flex items-center gap-3 rounded-full border border-cyan-300/30 bg-white/[0.03] px-8 py-4 text-sm font-medium tracking-wide text-cyan-200 backdrop-blur-xl transition-all duration-300 hover:scale-[1.02] hover:border-cyan-300 hover:bg-cyan-300/10 hover:text-white hover:shadow-[0_0_40px_rgba(0,55,112,0.20)] max-sm:max-w-full max-sm:min-w-0 max-sm:justify-center max-sm:whitespace-normal"
                 >
-                  <span>{t.procedure}</span>
+                  <span className="max-sm:min-w-0 max-sm:text-center">{t.procedure}</span>
 
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
+                    className="max-sm:hidden"
                     width="18"
                     height="18"
                     fill="none"
@@ -136,11 +137,11 @@ export default async function ConveniosPage({ params }: Props) {
               </div>
             </div>
 
-            <div className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-4 shadow-2xl backdrop-blur">
+            <div className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-4 shadow-2xl backdrop-blur lg:relative lg:min-h-[462px]">
               <img
                 src={t.heroImage}
                 alt={t.title}
-                className="h-[430px] w-full rounded-[1.5rem] object-cover"
+                className="h-[430px] w-full rounded-[1.5rem] object-cover lg:absolute lg:inset-4 lg:h-[calc(100%-2rem)] lg:w-[calc(100%-2rem)]"
               />
             </div>
           </div>
@@ -169,7 +170,7 @@ export default async function ConveniosPage({ params }: Props) {
                       {card.title}
                     </h2>
 
-                    <p className="mt-5 text-base leading-relaxed text-white/55">
+                    <p className="mt-5 hyphens-none text-justify text-base leading-relaxed text-white/55">
                       {card.description}
                     </p>
 

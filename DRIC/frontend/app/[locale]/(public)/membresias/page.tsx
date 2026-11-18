@@ -72,7 +72,7 @@ export default async function MembresiasPage({ params }: Props) {
     <main className="dric-theme-page dric-memberships-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
       <Header />
 
-      <section className="dric-memberships-hero relative isolate px-5 pb-20 pt-36 md:px-10 lg:px-12">
+      <section className="dric-memberships-hero relative isolate px-5 pb-20 pt-[122px] sm:pt-[136px] md:px-10 md:pt-[140px] lg:px-12">
         <div className="mx-auto max-w-7xl">
           <p className="mb-5 inline-flex rounded-full border border-white/15 bg-white/10 px-5 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-white/80 backdrop-blur">
             DRIC · UMSS
@@ -88,13 +88,13 @@ export default async function MembresiasPage({ params }: Props) {
             {copy.title}
           </h1>
 
-          <p className="mt-8 max-w-3xl text-base leading-8 text-white/70 md:text-lg">
+          <p className="mt-8 text-justify [text-align-last:left] text-base leading-8 text-white/70 md:text-lg">
             {copy.summary}
           </p>
         </div>
       </section>
 
-      <section className="dric-memberships-section relative isolate overflow-hidden px-5 py-24 text-white md:px-10 lg:px-12">
+      <section className="dric-memberships-section relative isolate overflow-hidden px-5 pb-10 pt-24 text-white md:px-10 lg:px-12">
         <div className="mx-auto max-w-7xl">
           <div className="mb-14 flex flex-col gap-5 md:flex-row md:items-end">
             <div>
@@ -145,7 +145,7 @@ export default async function MembresiasPage({ params }: Props) {
                   </h3>
 
                   <p
-                    className={`mt-3 text-sm leading-7 text-white/62 ${
+                    className={`mt-3 text-justify [text-align-last:left] text-sm leading-7 text-white/62 ${
                       item.name === "PADOR" ? "min-h-[42px]" : "min-h-[72px]"
                     }`}
                   >
@@ -154,7 +154,7 @@ export default async function MembresiasPage({ params }: Props) {
 
                   {item.extraInfoEnabled ? (
                     <div className="dric-memberships-note mt-auto rounded-2xl border border-amber-200/30 bg-amber-50/10 px-4 py-3">
-                      <p className="text-xs font-medium leading-6 text-white/62">
+                      <p className="text-justify [text-align-last:left] text-xs font-medium leading-6 text-white/62">
                         {item.padorText || defaultExtraInfoText(item.name, isEnglish)}
                       </p>
 
@@ -209,7 +209,7 @@ export default async function MembresiasPage({ params }: Props) {
               {copy.infoTitle}
             </h2>
 
-            <p className="mt-4 max-w-3xl text-sm leading-7 text-white/65">
+            <p className="mt-4 max-w-3xl text-justify [text-align-last:left] text-sm leading-7 text-white/65 lg:max-w-none">
               {copy.infoText}
             </p>
 
