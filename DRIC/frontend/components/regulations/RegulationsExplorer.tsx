@@ -134,7 +134,7 @@ export default function RegulationsExplorer({ locale, regulations }: Props) {
               </div>
 
               <div className="flex gap-4">
-                <div className="dric-regulations-icon mt-1 flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.05] text-cyan-200">
+                <div className="dric-regulations-icon mt-1 hidden h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.05] text-cyan-200 sm:flex">
                   <ArticleRoundedIcon sx={{ fontSize: 23 }} />
                 </div>
                 <h2 className="text-lg font-semibold leading-snug text-white/88 md:text-xl">

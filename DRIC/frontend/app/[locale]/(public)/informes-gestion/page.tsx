@@ -79,8 +79,8 @@ export default async function InformesGestionPage({ params }: Props) {
     <main className="dric-theme-page dric-reports-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
       <Header />
 
-      <section className="dric-reports-hero relative isolate px-5 pb-20 pt-36 md:px-10 lg:px-12">
-        <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
+      <section className="dric-reports-hero relative isolate px-5 pb-20 pt-[122px] sm:pt-[136px] md:px-10 md:pt-[140px] lg:px-12">
+        <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,28rem)] lg:items-end">
           <div>
             <p
               className={`mb-5 inline-flex max-w-full rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs font-semibold uppercase text-white/80 backdrop-blur sm:px-5 ${
@@ -101,7 +101,7 @@ export default async function InformesGestionPage({ params }: Props) {
             </h1>
 
             <p
-              className={`max-w-3xl text-white/70 ${
+              className={`w-full hyphens-none text-justify text-white/70 [text-align-last:left] ${
                 isEnglish
                   ? "mt-6 text-sm leading-7 sm:text-base md:mt-8 md:text-lg md:leading-8"
                   : "mt-8 text-base leading-8 md:text-lg"
@@ -111,7 +111,7 @@ export default async function InformesGestionPage({ params }: Props) {
             </p>
           </div>
 
-          <div className="dric-reports-summary rounded-3xl border border-white/10 bg-white/10 p-5 backdrop-blur-xl sm:p-7 md:rounded-[2rem]">
+          <div className="dric-reports-summary w-full rounded-3xl border border-white/10 bg-white/10 p-5 backdrop-blur-xl sm:p-7 md:ml-auto md:max-w-md md:rounded-[2rem]">
             <p
               className={`text-sm font-bold uppercase text-white/55 ${
                 isEnglish ? "tracking-[0.16em] sm:tracking-[0.24em]" : "tracking-[0.24em]"
@@ -137,7 +137,7 @@ export default async function InformesGestionPage({ params }: Props) {
         </div>
       </section>
 
-      <section className="dric-reports-section relative isolate overflow-hidden px-5 py-20 text-white md:px-10 lg:px-12">
+      <section className="dric-reports-section relative isolate overflow-hidden px-5 pb-10 pt-20 text-white md:px-10 lg:px-12">
         <div className="mx-auto max-w-7xl">
           <div className="mb-12 grid gap-6 lg:grid-cols-[1fr_0.8fr] lg:items-end">
             <div>

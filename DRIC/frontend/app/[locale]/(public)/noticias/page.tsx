@@ -30,7 +30,7 @@ export default async function NoticiasPage({ params }: Props) {
     <main className="dric-theme-page dric-news-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
       <Header />
 
-      <section className="relative isolate px-5 pb-20 pt-36 md:px-10 lg:px-12">
+      <section className="relative isolate px-5 pb-20 pt-[122px] sm:pt-[136px] md:px-10 md:pt-[140px] lg:px-12">
         <div className="mx-auto max-w-7xl">
           <p className="mb-5 inline-flex rounded-full border border-white/15 bg-white/10 px-5 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-white/80 backdrop-blur">
             DRIC · UMSS
@@ -40,7 +40,7 @@ export default async function NoticiasPage({ params }: Props) {
             {copy.title}
           </h1>
 
-          <p className="mt-8 max-w-3xl text-base leading-8 text-white/70 md:text-lg">
+          <p className="mt-8 w-full hyphens-none text-justify text-base leading-8 text-white/70 [text-align-last:left] md:text-lg">
             {copy.summary}
           </p>
         </div>

@@ -6,6 +6,7 @@ import Card from "@mui/material/Card";
 import PublicRoundedIcon from "@mui/icons-material/PublicRounded";
 import SchoolRoundedIcon from "@mui/icons-material/SchoolRounded";
 import GroupsRoundedIcon from "@mui/icons-material/GroupsRounded";
+import ResponsiveInternationalizationTitle from "./ResponsiveInternationalizationTitle";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -140,31 +141,25 @@ export default async function InternacionalizacionPage({ params }: Props) {
     <main className="dric-theme-page dric-internationalization-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
       <Header />
 
-      <section className="dric-internationalization-section relative isolate px-4 pb-16 pt-32 sm:px-5 md:px-10 md:pb-20 md:pt-36 lg:px-12">
-        <div className="absolute left-1/2 top-28 -z-10 h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-cyan-300/10 blur-[140px]" />
-
+      <section className="dric-internationalization-section relative isolate px-4 pb-[38px] pt-[124px] sm:px-5 sm:pt-[138px] md:px-10 md:pt-[142px] lg:px-12">
         <div className="mx-auto max-w-7xl text-center md:text-left">
-          <p className="mb-5 inline-flex max-w-full rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-white/80 backdrop-blur sm:px-5 sm:tracking-[0.28em]">
+          <p className="mb-5 inline-flex max-w-full rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs font-light uppercase tracking-[0.18em] text-white/80 backdrop-blur sm:px-5 sm:tracking-[0.28em]">
             {t.eyebrow}
           </p>
 
-          <h1 className="mx-auto max-w-full break-words text-[2.45rem] font-light uppercase leading-[1.04] tracking-[-0.025em] sm:text-5xl md:mx-0 md:max-w-6xl md:text-7xl md:leading-[0.9] md:tracking-[-0.07em] lg:text-8xl">
-            {t.title}
-          </h1>
+          <ResponsiveInternationalizationTitle title={t.title} />
 
-          <p className="mx-auto mt-6 max-w-3xl text-base leading-7 text-white/70 md:mx-0 md:mt-8 md:text-lg md:leading-8">
+          <p className="mt-6 w-full hyphens-none text-justify text-base leading-7 text-white/70 md:mt-8 md:text-lg md:leading-8">
             {t.intro}
           </p>
         </div>
       </section>
 
-      <section className="dric-internationalization-section relative isolate px-4 py-16 text-white sm:px-5 md:px-10 md:py-20 lg:px-12">
+      <section className="dric-internationalization-section relative isolate px-4 pb-16 pt-[38px] text-white sm:px-5 md:px-10 md:pb-20 lg:px-12">
         <div className="group mx-auto max-w-5xl rounded-[2rem] border border-white/10 bg-white/[0.055] p-6 shadow-2xl shadow-black/20 backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 hover:border-cyan-300/45 hover:bg-white/[0.085] hover:shadow-[0_28px_80px_rgba(0,55,112,0.25)] sm:p-8 md:rounded-[2.5rem] md:p-10">
-          <h2 className="mx-auto max-w-full break-words text-center text-2xl font-semibold leading-tight tracking-[-0.025em] sm:text-3xl md:text-5xl md:tracking-[-0.04em]">
-            {t.detailTitle}
-          </h2>
+          <ResponsiveInternationalizationTitle title={t.detailTitle} variant="card" />
 
-          <div className="mt-8 space-y-6 text-justify text-base leading-8 text-white/72 md:text-lg md:leading-9">
+          <div className="dric-internationalization-detail-body mt-8 space-y-6 text-justify text-sm leading-7 text-white/72">
             {t.detailParagraphs.map((paragraph) => (
               <p key={paragraph}>{paragraph}</p>
             ))}
@@ -175,16 +170,16 @@ export default async function InternacionalizacionPage({ params }: Props) {
       {t.showWorkAreas ? (
         <section className="dric-internationalization-section relative isolate overflow-hidden px-4 py-16 text-white sm:px-5 md:px-10 md:py-20 lg:px-12">
           <div className="mx-auto max-w-7xl">
-            <div className="mb-12 max-w-3xl text-center md:text-left">
-              <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#E30613] sm:text-sm sm:tracking-[0.25em]">
+            <div className="mb-12 w-full text-center md:text-left">
+              <p className="text-xs font-light uppercase tracking-[0.22em] text-[#E30613] sm:text-sm sm:tracking-[0.25em]">
                 {t.sectionEyebrow}
               </p>
 
-              <h2 className="mt-4 text-3xl font-semibold leading-tight tracking-[-0.025em] sm:text-4xl md:text-5xl md:tracking-[-0.04em]">
+              <h2 className="mt-4 text-3xl font-light leading-tight tracking-[-0.025em] sm:text-4xl md:text-5xl md:tracking-[-0.04em]">
                 {t.sectionTitle}
               </h2>
 
-              <p className="mt-5 text-sm leading-7 text-white/68 md:text-base">
+              <p className="mt-5 w-full hyphens-none text-justify text-sm leading-7 text-white/68 md:text-base">
                 {t.sectionText}
               </p>
             </div>
@@ -203,15 +198,15 @@ export default async function InternacionalizacionPage({ params }: Props) {
                   }}
                 >
                   <div className="min-h-[260px] p-6 md:p-8">
-                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#003770] text-white shadow-xl shadow-black/20">
+                    <div className="dric-internationalization-card-icon flex h-14 w-14 items-center justify-center rounded-2xl bg-[#003770] text-white shadow-xl shadow-black/20">
                       {icons[index]}
                     </div>
 
-                    <h3 className="mt-7 text-2xl font-semibold leading-tight tracking-[-0.03em]">
+                    <h3 className="mt-7 text-2xl font-light leading-tight tracking-[-0.03em]">
                       {card.title}
                     </h3>
 
-                    <p className="mt-4 text-sm leading-7 text-white/65">
+                    <p className="mt-4 hyphens-none text-justify text-sm leading-7 text-white/65">
                       {card.text}
                     </p>
                   </div>

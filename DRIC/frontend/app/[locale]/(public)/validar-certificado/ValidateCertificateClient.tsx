@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
+import { FormEvent, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
@@ -143,18 +143,16 @@ export default function ValidateCertificateClient({ editableText }: Props) {
     <>
       <Header />
 
-      <main className="dric-certificate-page relative min-h-screen overflow-hidden px-4 pb-24 pt-32 sm:px-6 md:pt-36">
+      <main className="dric-certificate-page relative overflow-hidden px-4 pb-[49px] pt-[135px] sm:px-6 sm:pt-[149px] md:pt-[153px]">
         <section className="relative mx-auto max-w-6xl">
           <div className="dric-certificate-glass rounded-3xl p-5 sm:p-8 md:rounded-[2.8rem] md:p-12">
             <p className="mb-4 max-w-full text-xs font-semibold uppercase leading-relaxed tracking-[0.22em] text-[#E30613] sm:tracking-[0.38em]">
               {editableText.eyebrow}
             </p>
 
-            <h1 className="dric-certificate-title max-w-[18rem] break-words text-[2.41rem] font-light uppercase leading-[1.04] tracking-[-0.025em] sm:max-w-2xl sm:text-5xl md:max-w-5xl md:text-7xl md:leading-none md:tracking-[-0.075em]">
-              {editableText.title}
-            </h1>
+            <ResponsiveCertificateTitle title={editableText.title} />
 
-            <p className="dric-certificate-muted mt-5 max-w-2xl text-sm leading-7 md:mt-6 md:text-base">
+            <p className="dric-certificate-muted mt-5 w-full min-w-0 hyphens-none text-justify text-sm leading-7 [text-align-last:left] md:mt-6 md:text-base">
               {editableText.description}
             </p>
 
@@ -241,5 +239,89 @@ export default function ValidateCertificateClient({ editableText }: Props) {
 
       <Footer />
     </>
+  );
+}
+
+function ResponsiveCertificateTitle({ title }: { title: string }) {
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const [scale, setScale] = useState(1);
+
+  useLayoutEffect(() => {
+    const heading = headingRef.current;
+    const container = heading?.parentElement;
+    if (!heading || !container) return;
+
+    let active = true;
+    let frame = 0;
+
+    const update = () => {
+      if (!active) return;
+      if (!window.matchMedia("(max-width: 639px)").matches) {
+        setScale(1);
+        return;
+      }
+
+      const availableWidth = container.clientWidth;
+      if (!availableWidth) return;
+
+      const computed = window.getComputedStyle(heading);
+      const probe = document.createElement("span");
+      probe.style.position = "fixed";
+      probe.style.visibility = "hidden";
+      probe.style.whiteSpace = "nowrap";
+      probe.style.fontFamily = computed.fontFamily;
+      probe.style.fontSize = computed.fontSize;
+      probe.style.fontWeight = computed.fontWeight;
+      probe.style.fontStyle = computed.fontStyle;
+      probe.style.letterSpacing = computed.letterSpacing;
+      probe.style.textTransform = computed.textTransform;
+      document.body.appendChild(probe);
+
+      const longestWord = Math.max(0, ...title.trim().split(/\s+/u).map((word) => {
+        probe.textContent = word;
+        return probe.getBoundingClientRect().width;
+      }));
+      probe.remove();
+
+      const nextScale = longestWord > availableWidth - 2
+        ? (availableWidth - 2) / longestWord
+        : 1;
+      setScale((current) => Math.abs(current - nextScale) < 0.001 ? current : nextScale);
+    };
+
+    const schedule = () => {
+      if (!active) return;
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(update);
+    };
+
+    const observer = new ResizeObserver(schedule);
+    observer.observe(container);
+    window.addEventListener("resize", schedule);
+    void document.fonts.ready.then(schedule);
+    schedule();
+
+    return () => {
+      active = false;
+      cancelAnimationFrame(frame);
+      observer.disconnect();
+      window.removeEventListener("resize", schedule);
+    };
+  }, [title]);
+
+  return (
+    <div className="w-full min-w-0 max-w-[18rem] sm:max-w-2xl md:max-w-5xl">
+      <h1
+        ref={headingRef}
+        className="dric-certificate-title w-full break-normal hyphens-none text-[2.41rem] font-light uppercase leading-[1.04] tracking-[-0.025em] [overflow-wrap:normal] sm:break-words sm:text-5xl sm:[overflow-wrap:break-word] md:text-7xl md:leading-none md:tracking-[-0.075em]"
+        style={scale < 1 ? {
+          width: `${100 / scale}%`,
+          transform: `scaleX(${scale})`,
+          transformOrigin: "left top",
+        } : undefined}
+      >
+        {title}
+      </h1>
+    </div>
   );
 }

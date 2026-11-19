@@ -8,6 +8,7 @@ import PublicRoundedIcon from "@mui/icons-material/PublicRounded";
 import { publicAssetUrl } from "@/lib/api/assets";
 import { getOptionalPageBySlug } from "@/lib/api/pages";
 import type { CmsBlock, CmsPage, CmsSection } from "@/types/cms";
+import ResponsiveMembershipsTitle from "./ResponsiveMembershipsTitle";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -78,15 +79,7 @@ export default async function MembresiasPage({ params }: Props) {
             DRIC · UMSS
           </p>
 
-          <h1
-            className={`max-w-5xl break-words font-light uppercase ${
-              isEnglish
-                ? "text-[2.40rem] sm:text-[2.8rem] md:text-7xl lg:text-8xl leading-[1.05]"
-                : "text-[2.55rem] sm:text-[4rem] md:text-7xl lg:text-8xl leading-[0.95]"
-            }`}
-          >
-            {copy.title}
-          </h1>
+          <ResponsiveMembershipsTitle title={copy.title} isEnglish={isEnglish} />
 
           <p className="mt-8 text-justify [text-align-last:left] text-base leading-8 text-white/70 md:text-lg">
             {copy.summary}
