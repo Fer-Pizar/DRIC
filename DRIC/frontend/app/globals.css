@@ -824,19 +824,25 @@ html[data-theme="light"] .dric-theme-page.dric-home-page > section .dric-recent-
 }
 
 .dric-internationalization-page {
-  background:
-    radial-gradient(circle at 0% 14%, rgba(227, 6, 19, 0.24), transparent 34%),
-    radial-gradient(circle at 100% 8%, rgba(0, 55, 112, 0.44), transparent 38%),
-    radial-gradient(circle at 44% 48%, rgba(15, 23, 42, 0.78), transparent 46%),
-    linear-gradient(145deg, #020617 0%, #08111f 45%, #12070a 100%) !important;
-  background-attachment: fixed;
-  background-repeat: no-repeat;
-  background-size: 100vw 100vh;
+  background: #020617 !important;
 }
 
 .dric-internationalization-page .dric-internationalization-section,
 html[data-theme="light"] .dric-internationalization-page .dric-internationalization-section {
   background: transparent !important;
+}
+
+@media (min-width: 640px) and (max-width: 1099px) {
+  .dric-internationalization-title {
+    font-size: clamp(42px, 10vw, 58px);
+  }
+}
+
+@media (min-width: 1100px) {
+  .dric-internationalization-detail-body {
+    font-size: 18px;
+    line-height: 36px;
+  }
 }
 
 html[data-theme="light"] .dric-internationalization-page {
@@ -857,6 +863,23 @@ html[data-theme="light"] .dric-internationalization-page .dric-internationalizat
 
 html[data-theme="light"] .dric-internationalization-page .dric-internationalization-section p:not(:first-child) {
   color: rgba(71, 85, 105, 0.78) !important;
+}
+
+html[data-theme="light"] .dric-internationalization-page .dric-internationalization-card-icon {
+  background-color: #e30613 !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="light"] .dric-internationalization-page .dric-internationalization-card-icon svg {
+  color: #ffffff !important;
+}
+
+.dric-internationalization-page .dric-internationalization-section :is(h1, h2, h3, strong, b) {
+  font-weight: 300;
+}
+
+.dric-internationalization-page > .dric-internationalization-section:last-of-type {
+  padding-bottom: 38px;
 }
 
 

@@ -47,7 +47,7 @@ export default async function ContactoPage({ params }: Props) {
     <main className="dric-theme-page dric-contact-page min-h-screen overflow-x-hidden bg-[#020617] text-white">
       <Header />
 
-      <section className="dric-contact-hero relative isolate px-5 pb-20 pt-36 md:px-10 lg:px-12">
+      <section className="dric-contact-hero relative isolate px-5 pb-7 pt-[124px] sm:pt-[138px] md:px-10 md:pt-[142px] lg:px-12">
         <div className="mx-auto max-w-7xl">
           <p className="mb-5 inline-flex rounded-full border border-white/15 bg-white/10 px-5 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-white/80 backdrop-blur">
             {labels.badge}
@@ -57,7 +57,7 @@ export default async function ContactoPage({ params }: Props) {
             {labels.title}
           </h1>
 
-          <p className="mt-8 max-w-3xl text-base leading-8 text-white/70 md:text-lg">
+          <p className="mt-8 w-full hyphens-none text-justify text-base leading-8 text-white/70 [text-align-last:left] md:text-lg">
             {labels.intro}
           </p>
 
@@ -95,7 +95,7 @@ export default async function ContactoPage({ params }: Props) {
         </div>
       </section>
 
-      <section className="dric-contact-section relative isolate overflow-hidden px-5 py-20 text-white md:px-10 lg:px-12">
+      <section className="dric-contact-section relative isolate overflow-hidden px-5 pb-[38px] pt-7 text-white md:px-10 lg:px-12">
         <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[0.85fr_1.15fr]">
           <div className="space-y-6">
             <ContactCard
@@ -136,7 +136,7 @@ export default async function ContactoPage({ params }: Props) {
                   {labels.addressName}
                 </h2>
 
-                <p className="mt-4 text-sm leading-7 text-white/62">
+                <p className="mt-4 hyphens-none text-justify text-sm leading-7 text-white/62 [text-align-last:left]">
                   {labels.addressText}
                 </p>
               </div>
@@ -158,11 +158,11 @@ export default async function ContactoPage({ params }: Props) {
                 <h2 className="mt-5 text-2xl font-bold tracking-[-0.04em]">
                   {labels.social}
                 </h2>
-                <p className="mt-4 text-sm leading-7 text-white/65">
+                <p className="mt-4 hyphens-none text-justify text-sm leading-7 text-white/65 [text-align-last:left]">
                   {labels.socialSummary}
                 </p>
                 {socialLinks.length ? (
-                  <div className="mt-6 flex flex-wrap gap-3">
+                  <div className="mt-6 flex flex-wrap justify-center gap-3 min-[1100px]:justify-start">
                     {socialLinks.map((link) => (
                       <a
                         key={`${link.label}-${link.url}`}
@@ -363,7 +363,7 @@ function ContactCard({
           {title}
         </p>
 
-        <p className="mt-4 text-xl font-bold text-cyan-300">{content}</p>
+        <p className="mt-4 hyphens-none text-justify text-xl font-bold text-cyan-300 [text-align-last:left]">{content}</p>
       </a>
     </Card>
   );

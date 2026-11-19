@@ -252,14 +252,21 @@ export default async function CampusLifePage({ params }: Props) {
                   borderRadius: "2rem",
                   background: "transparent",
                   color: "white",
+                  "@media (min-width: 1100px)": {
+                    "& .dric-campus-feature-title": { fontSize: "25px" },
+                    "& .dric-campus-feature-description": {
+                      fontSize: "17px",
+                      lineHeight: "35px",
+                    },
+                  },
                 }}
               >
-                <div className="dric-campus-feature-card-inner h-full min-h-[280px] min-w-0 rounded-[calc(2rem-1px)] p-6 md:min-h-[320px] md:p-4 min-[1100px]:min-h-[280px] min-[1100px]:p-8">
+                <div className="dric-campus-feature-card-inner h-full min-h-[280px] min-w-0 rounded-[calc(2rem-1px)] p-5 min-[360px]:p-6 md:min-h-[320px] md:p-4 min-[1100px]:min-h-[280px] min-[1100px]:p-8">
                   <div className="flex h-14 w-14 items-center justify-center rounded-3xl bg-white/10 text-cyan-300">
                     {card.icon}
                   </div>
-                  <h2 className="mt-8 w-full min-w-0 hyphens-none text-left text-3xl font-bold tracking-[-0.05em] md:text-xl min-[1100px]:text-3xl">{card.title}</h2>
-                  <p className="mt-5 w-full min-w-0 hyphens-none text-justify text-sm leading-7 text-white/62 [text-align-last:left] md:text-[0.8rem] md:leading-6 min-[1100px]:text-sm min-[1100px]:leading-7">{card.text}</p>
+                  <h2 className="dric-campus-feature-title mt-8 w-full min-w-0 hyphens-none text-left text-[clamp(1.5rem,8vw,1.875rem)] font-bold tracking-[-0.05em] md:text-xl">{card.title}</h2>
+                  <p className="dric-campus-feature-description mt-5 w-full min-w-0 hyphens-none text-justify text-sm leading-7 text-white/62 [text-align-last:left] md:text-[0.8rem] md:leading-6">{card.text}</p>
                 </div>
               </Card>
             ))}
@@ -269,7 +276,7 @@ export default async function CampusLifePage({ params }: Props) {
             <p className="text-sm font-bold uppercase tracking-[0.25em] text-[#E30613]">
               {t.basic}
             </p>
-            <h2 className="mt-4 w-full text-5xl font-semibold tracking-[-0.06em]">
+            <h2 className="mt-4 w-full min-w-0 hyphens-none text-[clamp(1.875rem,10vw,3rem)] font-normal tracking-[-0.06em] sm:text-5xl">
               {t.basicTitle}
             </h2>
             <p className="mt-6 w-full hyphens-none text-justify text-base leading-8 text-white/68 [text-align-last:left]">{t.basicText}</p>
@@ -286,11 +293,11 @@ export default async function CampusLifePage({ params }: Props) {
                     </div>
                   ) : null}
 
-                  <div className="flex flex-col justify-center p-8 md:p-12">
-                    <p className="text-sm font-bold uppercase tracking-[0.25em] text-[#E30613]">
+                  <div className="flex min-w-0 flex-col justify-center p-5 min-[360px]:p-8 md:p-12">
+                    <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#E30613] min-[360px]:text-sm min-[360px]:tracking-[0.25em]">
                       {index === 0 ? t.features : index === 1 ? t.strengths : t.other}
                     </p>
-                    <h3 className="mt-5 text-4xl font-semibold tracking-[-0.05em]">{section.title}</h3>
+                    <h3 className="mt-5 min-w-0 hyphens-none text-[clamp(1.5rem,8vw,2.25rem)] font-normal tracking-[-0.05em] sm:text-4xl">{section.title}</h3>
                     <p className="mt-6 hyphens-none text-justify text-sm leading-8 text-white/62 [text-align-last:left]">
                       {section.text}
                     </p>
@@ -331,40 +338,45 @@ export default async function CampusLifePage({ params }: Props) {
               </div>
             ) : null}
 
-            <div className="flex flex-col justify-center p-8 md:p-12">
-              <p className="text-sm font-bold uppercase tracking-[0.25em] text-[#E30613]">
+            <div className="flex min-w-0 flex-col justify-center p-5 min-[360px]:p-8 md:p-12">
+              <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#E30613] min-[360px]:text-sm min-[360px]:tracking-[0.25em]">
                 {resolvedMuseumSection.eyebrow}
               </p>
-              <h3 className="mt-5 text-4xl font-semibold tracking-[-0.05em]">{resolvedMuseumSection.title}</h3>
+              <h3 className="mt-5 min-w-0 hyphens-none text-[clamp(1.5rem,8vw,2.25rem)] font-normal tracking-[-0.05em] sm:text-4xl">{resolvedMuseumSection.title}</h3>
               <p className="mt-6 hyphens-none text-justify text-sm leading-8 text-white/62 [text-align-last:left]">{resolvedMuseumSection.text}</p>
             </div>
           </Link>
 
           <div className="mt-20 overflow-hidden rounded-[2.5rem] bg-[#020617] text-white shadow-2xl shadow-slate-300/60">
             <div className={`grid gap-0 ${resolvedCochabambaSection.image ? "lg:grid-cols-[0.95fr_1.05fr]" : ""}`}>
-              <div className="p-8 md:p-12">
-                <p className="text-sm font-bold uppercase tracking-[0.25em] text-[#E30613]">
+              <div className="min-w-0 p-5 min-[360px]:p-8 md:p-12">
+                <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#E30613] min-[360px]:text-sm min-[360px]:tracking-[0.25em]">
                   {resolvedCochabambaSection.eyebrow}
                 </p>
-                <h2 className="mt-5 text-5xl font-semibold tracking-[-0.06em]">
+                <h2 className="mt-5 min-w-0 hyphens-none text-[clamp(1.875rem,10vw,3rem)] font-normal tracking-[-0.06em] sm:text-5xl">
                   {resolvedCochabambaSection.title}
                 </h2>
-                <p className="mt-6 max-w-xl hyphens-none text-justify text-sm leading-8 text-white/68 [text-align-last:left]">
+                <p className="mt-6 w-full hyphens-none text-justify text-sm leading-8 text-white/68 [text-align-last:left] lg:max-w-xl">
                   {resolvedCochabambaSection.text}
                 </p>
 
-                <Link href={resolvedCochabambaSection.href} target="_blank" className="mt-8 inline-flex">
+                <Link href={resolvedCochabambaSection.href} target="_blank" className="mt-8 flex w-full min-w-0 min-[360px]:inline-flex min-[360px]:w-auto">
                   <Button
                     variant="contained"
                     endIcon={<ArrowOutwardRoundedIcon />}
                     sx={{
                       borderRadius: "999px",
+                      width: "100%",
+                      minWidth: 0,
                       px: 4,
                       py: 1.2,
                       background: "#ffffff",
                       color: "#020617",
                       textTransform: "none",
                       fontWeight: 900,
+                      whiteSpace: "normal",
+                      textAlign: "center",
+                      "@media (max-width: 359px)": { px: 2 },
                     }}
                   >
                     {resolvedCochabambaSection.button || t.explore}
