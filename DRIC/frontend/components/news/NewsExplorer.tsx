@@ -40,14 +40,14 @@ export default function NewsExplorer({ locale, news, kicker, title, searchPlaceh
   }, [query, news]);
 
   return (
-    <section className="relative isolate overflow-hidden px-5 py-20 text-white md:px-10 lg:px-12">
+    <section className="relative isolate overflow-hidden px-5 pb-10 pt-20 text-white md:px-10 lg:px-12">
       <div className="mx-auto max-w-7xl">
-        <div className="mb-12 grid gap-8 lg:grid-cols-[1fr_0.75fr] lg:items-end">
-          <div>
+        <div className="mb-12 grid gap-8 xl:grid-cols-[minmax(0,1fr)_18rem] xl:items-end">
+          <div className="min-w-0">
             <p className="text-sm font-bold uppercase tracking-[0.25em] text-[#E30613]">
               {kicker || (locale === "en" ? "Explore" : "Explorar")}
             </p>
-            <h2 className="mt-4 text-4xl font-semibold tracking-[-0.04em] md:text-5xl">
+            <h2 className="mt-4 w-full break-normal hyphens-none text-4xl font-semibold tracking-[-0.04em] md:text-5xl">
               {title || (locale === "en" ? "Latest institutional updates" : "Últimas noticias institucionales")}
             </h2>
           </div>
@@ -106,7 +106,7 @@ export default function NewsExplorer({ locale, news, kicker, title, searchPlaceh
                   {item.date}
                 </div>
 
-                <p className="mt-6 text-sm leading-7 text-white/62">
+                <p className="mt-6 hyphens-none text-justify text-sm leading-7 text-white/62 [text-align-last:left]">
                   {item.excerpt}
                 </p>
 

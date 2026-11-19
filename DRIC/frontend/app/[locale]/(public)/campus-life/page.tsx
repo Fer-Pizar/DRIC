@@ -162,7 +162,7 @@ export default async function CampusLifePage({ params }: Props) {
               {t.title}
             </h1>
 
-            <p className="mt-8 max-w-3xl text-base leading-8 text-white/75 md:text-xl">
+            <p className="mt-8 max-w-3xl hyphens-none text-justify text-base leading-8 text-white/75 [text-align-last:left] md:text-xl">
               {t.subtitle}
             </p>
           </div>
@@ -200,7 +200,7 @@ export default async function CampusLifePage({ params }: Props) {
                 </div>
               </Link>
 
-              <p className="mt-8 text-sm leading-7 text-white/68">{t.basicText}</p>
+              <p className="mt-8 hyphens-none text-justify text-sm leading-7 text-white/68 [text-align-last:left]">{t.basicText}</p>
 
               <Link href={t.officialUrl} target="_blank" className="mt-8 inline-flex">
                 <Button
@@ -228,7 +228,7 @@ export default async function CampusLifePage({ params }: Props) {
         <div className="absolute right-[-9rem] top-16 -z-10 h-[430px] w-[430px] rounded-full bg-cyan-300/10 blur-[135px]" />
 
         <div className="mx-auto max-w-7xl">
-          <div className="mb-16 border-y border-white/10 bg-white/[0.06] px-4 py-10 shadow-2xl shadow-black/20 backdrop-blur-xl md:px-8">
+          <div className="mb-16 rounded-2xl border border-white/10 bg-white/[0.06] px-4 py-10 shadow-2xl shadow-black/20 backdrop-blur-xl md:px-8">
             <div className="grid gap-8 text-center md:grid-cols-3">
               {stats.map((stat) => (
                 <div key={stat.label}>
@@ -246,7 +246,7 @@ export default async function CampusLifePage({ params }: Props) {
           <div className="grid gap-7 md:grid-cols-3">
             {cards.map((card) => (
               <Card
-                className="dric-campus-feature-card relative overflow-hidden rounded-[2rem] p-[1px] shadow-2xl shadow-black/25"
+                className="dric-campus-feature-card relative min-w-0 overflow-hidden rounded-[2rem] p-[1px] shadow-2xl shadow-black/25"
                 key={card.title}
                 sx={{
                   borderRadius: "2rem",
@@ -254,12 +254,12 @@ export default async function CampusLifePage({ params }: Props) {
                   color: "white",
                 }}
               >
-                <div className="dric-campus-feature-card-inner h-full min-h-[280px] rounded-[calc(2rem-1px)] p-8">
+                <div className="dric-campus-feature-card-inner h-full min-h-[280px] min-w-0 rounded-[calc(2rem-1px)] p-6 md:min-h-[320px] md:p-4 min-[1100px]:min-h-[280px] min-[1100px]:p-8">
                   <div className="flex h-14 w-14 items-center justify-center rounded-3xl bg-white/10 text-cyan-300">
                     {card.icon}
                   </div>
-                  <h2 className="mt-8 text-3xl font-bold tracking-[-0.05em]">{card.title}</h2>
-                  <p className="mt-5 text-sm leading-7 text-white/62">{card.text}</p>
+                  <h2 className="mt-8 w-full min-w-0 hyphens-none text-left text-3xl font-bold tracking-[-0.05em] md:text-xl min-[1100px]:text-3xl">{card.title}</h2>
+                  <p className="mt-5 w-full min-w-0 hyphens-none text-justify text-sm leading-7 text-white/62 [text-align-last:left] md:text-[0.8rem] md:leading-6 min-[1100px]:text-sm min-[1100px]:leading-7">{card.text}</p>
                 </div>
               </Card>
             ))}
@@ -269,10 +269,10 @@ export default async function CampusLifePage({ params }: Props) {
             <p className="text-sm font-bold uppercase tracking-[0.25em] text-[#E30613]">
               {t.basic}
             </p>
-            <h2 className="mt-4 max-w-4xl text-5xl font-semibold tracking-[-0.06em]">
+            <h2 className="mt-4 w-full text-5xl font-semibold tracking-[-0.06em]">
               {t.basicTitle}
             </h2>
-            <p className="mt-6 max-w-4xl text-base leading-8 text-white/68">{t.basicText}</p>
+            <p className="mt-6 w-full hyphens-none text-justify text-base leading-8 text-white/68 [text-align-last:left]">{t.basicText}</p>
           </div>
 
           <div className="mt-16 space-y-10">
@@ -287,11 +287,11 @@ export default async function CampusLifePage({ params }: Props) {
                   ) : null}
 
                   <div className="flex flex-col justify-center p-8 md:p-12">
-                    <p className="text-sm font-bold uppercase tracking-[0.25em] text-[#003770]">
+                    <p className="text-sm font-bold uppercase tracking-[0.25em] text-[#E30613]">
                       {index === 0 ? t.features : index === 1 ? t.strengths : t.other}
                     </p>
                     <h3 className="mt-5 text-4xl font-semibold tracking-[-0.05em]">{section.title}</h3>
-                    <p className="mt-6 text-sm leading-8 text-white/62">
+                    <p className="mt-6 hyphens-none text-justify text-sm leading-8 text-white/62 [text-align-last:left]">
                       {section.text}
                     </p>
                   </div>
@@ -336,7 +336,7 @@ export default async function CampusLifePage({ params }: Props) {
                 {resolvedMuseumSection.eyebrow}
               </p>
               <h3 className="mt-5 text-4xl font-semibold tracking-[-0.05em]">{resolvedMuseumSection.title}</h3>
-              <p className="mt-6 text-sm leading-8 text-white/62">{resolvedMuseumSection.text}</p>
+              <p className="mt-6 hyphens-none text-justify text-sm leading-8 text-white/62 [text-align-last:left]">{resolvedMuseumSection.text}</p>
             </div>
           </Link>
 
@@ -349,7 +349,7 @@ export default async function CampusLifePage({ params }: Props) {
                 <h2 className="mt-5 text-5xl font-semibold tracking-[-0.06em]">
                   {resolvedCochabambaSection.title}
                 </h2>
-                <p className="mt-6 max-w-xl text-sm leading-8 text-white/68">
+                <p className="mt-6 max-w-xl hyphens-none text-justify text-sm leading-8 text-white/68 [text-align-last:left]">
                   {resolvedCochabambaSection.text}
                 </p>
 
