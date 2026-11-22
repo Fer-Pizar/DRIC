@@ -23,7 +23,7 @@ class CertificateContentController extends Controller
     private const CODE_REGEX = '/\A[A-Z0-9]{7}\z/';
     private const CODE_LETTERS = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
     private const CODE_NUMBERS = '23456789';
-    private const PROTECTED_CODES = ['B7T3SG9', 'X4D8R1Q', 'A7K9P2M'];
+    private const PROTECTED_CODES = ['B7T3SG9', 'X4D8R1Q', 'A7K9P2M', '9L6D9V9'];
 
     public function edit(Page $page): View
     {
