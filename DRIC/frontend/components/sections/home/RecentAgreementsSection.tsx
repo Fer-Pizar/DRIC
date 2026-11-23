@@ -21,13 +21,11 @@ export default function RecentAgreementsSection({
 
   return (
     <section className="relative overflow-hidden px-6 py-24 md:px-10 lg:px-16">
-      {/* Background cinematic blur */}
       <div className="absolute left-0 top-32 h-72 w-72 rounded-full bg-cyan-400/10 blur-[120px]" />
 
       <div className="absolute bottom-0 right-0 h-80 w-80 rounded-full bg-red-500/10 blur-[140px]" />
 
       <div className="relative mx-auto max-w-7xl">
-        {/* Section Heading */}
         <motion.div
           initial={{ opacity: 0, y: 36 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -50,7 +48,6 @@ export default function RecentAgreementsSection({
           )}
         </motion.div>
 
-        {/* Agreements Grid */}
         <div className="grid gap-10 md:grid-cols-2 xl:grid-cols-3">
           {section.blocks.map((block, index) => {
             const image = block.data?.image_hidden
@@ -93,7 +90,6 @@ export default function RecentAgreementsSection({
                   href={href}
                   className="group relative block overflow-hidden rounded-[34px] border border-white/10 bg-white/[0.03] backdrop-blur-xl"
                 >
-                  {/* Image */}
                   {image ? (
                     <div className="relative h-[460px] overflow-hidden">
                       <Image
@@ -110,7 +106,6 @@ export default function RecentAgreementsSection({
                         "
                       />
 
-                      {/* Overlay */}
                       <div
                         className="
                           absolute inset-0
@@ -121,7 +116,6 @@ export default function RecentAgreementsSection({
                         "
                       />
 
-                      {/* Glow */}
                       <div
                         className="
                           absolute inset-0
@@ -137,7 +131,6 @@ export default function RecentAgreementsSection({
                     <div className="h-[220px] bg-white/[0.04]" />
                   )}
 
-                  {/* Content */}
                   <div className="absolute bottom-0 left-0 z-10 p-8">
                     <p className="dric-recent-agreement-kicker mb-3 text-xs uppercase tracking-[0.25em] text-cyan-300">
                       DRIC UMSS
@@ -160,7 +153,6 @@ export default function RecentAgreementsSection({
                     </h3>
                   </div>
 
-                  {/* Border glow */}
                   <div
                     className="
                       pointer-events-none

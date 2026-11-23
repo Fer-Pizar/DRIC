@@ -181,8 +181,8 @@
             <svg viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
         </div>
         <h1>Recuperar contraseña</h1>
-        <p>Escribe tu correo registrado y te enviaremos una nueva contraseña temporal.</p>
-        <div class="note">Usa la contraseña temporal para entrar. Después podrás cambiarla desde tu perfil.</div>
+        <p>Escribe tu correo registrado y te enviaremos un enlace para elegir una nueva contraseña.</p>
+        <div class="note">Tu contraseña actual continúa vigente hasta que confirmes una nueva mediante el enlace.</div>
 
         @if (session('success'))
             <div class="alert">{{ session('success') }}</div>
@@ -204,7 +204,7 @@
                 </a>
                 <button class="btn btn-primary" type="submit">
                     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
-                    Enviar código
+                    Enviar enlace
                 </button>
             </div>
         </form>

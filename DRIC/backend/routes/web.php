@@ -12,13 +12,19 @@ Route::get('/', function () {
 
 Route::middleware('guest')->group(function () {
     Route::get('/admin/login', [AuthController::class, 'create'])->name('login');
-    Route::post('/admin/login', [AuthController::class, 'store'])->name('admin.login.store');
+    Route::post('/admin/login', [AuthController::class, 'store'])->middleware('throttle:20,1')->name('admin.login.store');
 });
 
 Route::get('/admin/password/recover', [PasswordRecoveryController::class, 'create'])->name('admin.password.request');
 Route::post('/admin/password/recover', [PasswordRecoveryController::class, 'store'])
     ->middleware('throttle:5,1')
     ->name('admin.password.email');
+
+Route::get('/admin/password/reset/{token}', [PasswordRecoveryController::class, 'edit'])
+    ->name('admin.password.reset');
+Route::post('/admin/password/reset', [PasswordRecoveryController::class, 'update'])
+    ->middleware('throttle:5,1')
+    ->name('admin.password.update');
 
 Route::post('/admin/logout', [AuthController::class, 'destroy'])
     ->middleware('auth')

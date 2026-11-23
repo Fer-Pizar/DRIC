@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="utf-8">
-    <title>Nueva contraseña temporal - Panel DRIC</title>
+    <title>Restablecer contraseña - Panel DRIC</title>
 </head>
 <body style="margin:0; padding:0; background:#f1f5f9; font-family:Arial, Helvetica, sans-serif; color:#0f172a;">
     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f1f5f9; padding:32px 16px;">
@@ -15,7 +15,7 @@
                                 Panel DRIC
                             </p>
                             <h1 style="margin:0; font-size:30px; line-height:1.2; font-weight:700;">
-                                Nueva contraseña temporal
+                                Restablecer contraseña
                             </h1>
                         </td>
                     </tr>
@@ -27,15 +27,15 @@
                             </p>
 
                             <p style="margin:0 0 10px; font-size:13px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:#64748b;">
-                                Tu nueva contraseña
+                                Elige tu nueva contraseña
                             </p>
 
                             <div style="margin:0 0 24px; padding:18px 22px; border-radius:18px; background:#eef2ff; color:#0f2f6f; font-size:34px; font-weight:800; letter-spacing:0.18em; text-align:center;">
-                                {{ $temporaryPassword }}
+                                <a href="{{ $resetUrl }}">Restablecer contraseña</a>
                             </div>
 
                             <p style="margin:0 0 24px; font-size:15px; line-height:1.7; color:#475569;">
-                                Ingresa al panel con esta contraseña temporal. Luego puedes cambiarla desde tu perfil.
+                                El enlace vence en {{ $expires }} minutos y se puede utilizar una sola vez. Si no solicitaste el cambio, puedes ignorar este mensaje. Tu contraseña actual sigue vigente.
                             </p>
 
                         </td>
@@ -43,7 +43,7 @@
 
                     <tr>
                         <td style="padding:22px 36px; background:#020617; color:rgba(255,255,255,0.66); font-size:12px; line-height:1.6;">
-                            Si no solicitaste este cambio, notifica a Direccion para revisar el acceso de tu cuenta.
+                            Si el enlace ha vencido, solicita uno nuevo desde el acceso al Panel DRIC.
                         </td>
                     </tr>
                 </table>

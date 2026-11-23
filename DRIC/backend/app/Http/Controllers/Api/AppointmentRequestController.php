@@ -12,6 +12,8 @@ class AppointmentRequestController extends Controller
 {
     public function store(Request $request): JsonResponse
     {
+        $english = $request->input('locale') === 'en';
+        app()->setLocale($english ? 'en' : 'es');
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:160'],
             'email' => ['required', 'email', 'max:190'],
@@ -21,6 +23,14 @@ class AppointmentRequestController extends Controller
             'message' => ['required', 'string', 'max:3000'],
             'consent' => ['accepted'],
             'locale' => ['nullable', 'string', 'in:es,en'],
+        ], [
+            'name.required' => $english ? 'Enter your full name.' : 'Escribe tu nombre completo.',
+            'email.required' => $english ? 'Enter your email address.' : 'Escribe tu correo electrónico.',
+            'email.email' => $english ? 'Enter a valid email address.' : 'Ingresa un correo electrónico válido.',
+            'topic.required' => $english ? 'Select an appointment topic.' : 'Selecciona el motivo de la cita.',
+            'message.required' => $english ? 'Describe your request.' : 'Describe tu consulta.',
+            'consent.accepted' => $english ? 'Agree to the use of your data to handle this request.' : 'Acepta el uso de tus datos para gestionar la solicitud.',
+            'max.string' => $english ? 'This field is too long.' : 'Este campo es demasiado largo.',
         ]);
 
         $locale = $validated['locale'] ?? 'es';
@@ -28,9 +38,14 @@ class AppointmentRequestController extends Controller
             ? "DRIC appointment request - {$validated['name']}"
             : "Solicitud de cita DRIC - {$validated['name']}";
 
+        $recipient = config('dric.appointments.recipient_email');
+        if (!is_string($recipient) || !filter_var($recipient, FILTER_VALIDATE_EMAIL)) {
+            return response()->json(['message' => $english ? 'Appointment delivery is unavailable.' : 'El envío de solicitudes no está disponible.'], 503);
+        }
+
         if (in_array(config('mail.default'), ['log', 'array'], true)) {
             return response()->json([
-                'message' => 'Email delivery is not configured for real SMTP sending.',
+                'message' => $english ? 'Email delivery is unavailable.' : 'El envío de correo no está disponible.',
             ], 500);
         }
 
@@ -52,12 +67,12 @@ class AppointmentRequestController extends Controller
             report($exception);
 
             return response()->json([
-                'message' => 'The appointment request could not be sent.',
+                'message' => $english ? 'The appointment request could not be sent.' : 'No se pudo enviar la solicitud de cita.',
             ], 500);
         }
 
         return response()->json([
-            'message' => 'Appointment request sent successfully.',
+            'message' => $english ? 'Appointment request sent successfully.' : 'Solicitud de cita enviada correctamente.',
         ]);
     }
 }

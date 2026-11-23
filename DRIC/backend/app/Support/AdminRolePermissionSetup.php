@@ -2,14 +2,13 @@
 
 namespace App\Support;
 
-use App\Models\User;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
 
 class AdminRolePermissionSetup
 {
-    public static function ensureBaseRolesAndPermissions(?User $currentUser = null): void
+    public static function ensureBaseRolesAndPermissions(): void
     {
         foreach (AdminPermissionCatalog::flatPermissions() as $permissionName => $label) {
             Permission::firstOrCreate([
@@ -24,13 +23,9 @@ class AdminRolePermissionSetup
                 'guard_name' => 'web',
             ]);
 
-            if ($role->permissions()->count() === 0) {
+            if ($role->wasRecentlyCreated) {
                 $role->syncPermissions($roleData['permissions']);
             }
-        }
-
-        if ($currentUser && Role::where('name', 'Admin')->first()?->users()->count() === 0) {
-            $currentUser->assignRole('Admin');
         }
 
         app(PermissionRegistrar::class)->forgetCachedPermissions();

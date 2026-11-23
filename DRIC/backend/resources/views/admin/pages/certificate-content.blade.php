@@ -111,7 +111,7 @@
                 <div class="panel-header with-actions">
                     <div>
                         <h2>Certificados administrables</h2>
-                        <p class="muted">Cada persona necesita un código único de siete caracteres, nombre, fecha de emisión y descripción bilingüe.</p>
+                        <p class="muted">Cada persona necesita un código único de siete caracteres, nombre, fecha de emisión y descripción bilingüe. Quitar una fila conserva el registro guardado. Para revocar un certificado, desmarca Activo y guarda.</p>
                     </div>
                     <button class="btn btn-undo" type="button" id="restore-certificate" disabled title="Restaurar última persona quitada" aria-label="Restaurar última persona quitada">↶</button>
                 </div>
@@ -134,6 +134,7 @@
                                 </div>
                             </div>
 
+                            <input type="hidden" name="certificates[{{ $index }}][revision]" value="{{ $certificate['revision'] ?? '' }}">
                             <input type="hidden" name="certificates[{{ $index }}][id]" value="{{ $certificate['id'] ?? '' }}">
 
                             <div class="code-row">
@@ -154,7 +155,8 @@
 
                                 <label>
                                     Fecha de emisión
-                                    <input type="date" name="certificates[{{ $index }}][issue_date]" value="{{ $certificate['issue_date'] ?? '' }}">
+                                    <input type="date" lang="es-BO" name="certificates[{{ $index }}][issue_date]" value="{{ $certificate['issue_date'] ?? '' }}">
+                                    <span class="hint">Fecha de emisión en Bolivia. Se mostrará al público como día/mes/año, sin conversión horaria.</span>
                                     @error('certificates.'.$index.'.issue_date')<span class="field-error">{{ $message }}</span>@enderror
                                 </label>
                             </div>
@@ -234,7 +236,8 @@
                     </label>
                     <label>
                         Fecha de emisión
-                        <input type="date" name="__NAME__[issue_date]">
+                        <input type="date" lang="es-BO" name="__NAME__[issue_date]">
+                        <span class="hint">Fecha de emisión en Bolivia. Se mostrará al público como día/mes/año, sin conversión horaria.</span>
                     </label>
                 </div>
                 <div class="certificate-grid">
@@ -364,7 +367,7 @@
             const placeholder = document.createElement("div");
             placeholder.className = "undo-placeholder";
             placeholder.innerHTML = `
-                <span>Registro quitado. Puedes deshacer antes de guardar.</span>
+                <span>Fila quitada de este formulario. Si ya estaba guardada, se conserva. Para revocarla, desmarca Activo y guarda.</span>
                 <button class="btn btn-undo" type="button">↶ Deshacer</button>
             `;
 

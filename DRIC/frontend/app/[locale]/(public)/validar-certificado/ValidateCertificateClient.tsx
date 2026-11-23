@@ -38,7 +38,9 @@ export default function ValidateCertificateClient({ editableText }: Props) {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://127.0.0.1:8000/api";
 
   const formatDate = (date: string) => {
-    return new Intl.DateTimeFormat(locale === "es" ? "es-BO" : "en-US").format(new Date(date));
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return "—";
+    const [year, month, day] = date.split("-");
+    return `${day}/${month}/${year}`;
   };
 
   const resetVerification = useCallback(() => {
