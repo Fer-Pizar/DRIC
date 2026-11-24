@@ -15,6 +15,12 @@ const content = {
     intro:
       "Cuéntanos brevemente el motivo de tu consulta para orientar mejor tu atención. El mensaje será preparado para enviarse al correo institucional de la DRIC.",
     name: "Nombre completo",
+    nameRequired: "Escribe tu nombre completo.",
+    emailRequired: "Escribe tu correo electrónico.",
+    emailInvalid: "Ingresa un correo electrónico válido.",
+    topicRequired: "Selecciona el motivo de la cita.",
+    messageRequired: "Describe tu consulta.",
+    consentRequired: "Acepta el uso de tus datos para gestionar la solicitud.",
     email: "Correo electrónico",
     phone: "Teléfono o WhatsApp",
     topic: "Motivo de la cita",
@@ -40,6 +46,12 @@ const content = {
     intro:
       "Tell us briefly the reason for your request so we can guide your appointment properly. The message will be prepared to be sent to DRIC’s institutional email.",
     name: "Full name",
+    nameRequired: "Enter your full name.",
+    emailRequired: "Enter your email address.",
+    emailInvalid: "Enter a valid email address.",
+    topicRequired: "Select an appointment topic.",
+    messageRequired: "Describe your request.",
+    consentRequired: "Agree to the use of your data to handle this request.",
     email: "Email address",
     phone: "Phone or WhatsApp",
     topic: "Appointment topic",
@@ -82,14 +94,29 @@ export default function AgendarCitaPage({ params }: Props) {
     message: "",
     consent: false,
   });
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
 
   const updateField = (field: string, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
+    setErrors((prev) => ({ ...prev, [field]: "" }));
   };
 
-  const handleSubmit = async (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    const nextErrors: Record<string, string> = {};
+    if (!form.name.trim()) nextErrors.name = t.nameRequired;
+    if (!form.email.trim()) nextErrors.email = t.emailRequired;
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) nextErrors.email = t.emailInvalid;
+    if (!form.topic) nextErrors.topic = t.topicRequired;
+    if (!form.message.trim()) nextErrors.message = t.messageRequired;
+    if (!form.consent) nextErrors.consent = t.consentRequired;
+    setErrors(nextErrors);
+    if (Object.keys(nextErrors).length) {
+      event.currentTarget.querySelector<HTMLElement>('[name="' + Object.keys(nextErrors)[0] + '"]')?.focus();
+      return;
+    }
 
     setStatus("sending");
 
@@ -102,9 +129,22 @@ export default function AgendarCitaPage({ params }: Props) {
         },
         body: JSON.stringify({
           ...form,
+          name: form.name.trim(),
+          email: form.email.trim(),
           locale,
         }),
       });
+
+      if (response.status === 422) {
+        const result = await response.json();
+        const fieldErrors: Record<string, string> = {};
+        for (const [field, messages] of Object.entries(result.errors ?? {})) {
+          if (Array.isArray(messages)) fieldErrors[field] = String(messages[0]);
+        }
+        setErrors(fieldErrors);
+        setStatus("idle");
+        return;
+      }
 
       if (!response.ok) {
         throw new Error("Appointment request failed");
@@ -149,25 +189,35 @@ export default function AgendarCitaPage({ params }: Props) {
           </div>
 
           <form
+            noValidate
             onSubmit={handleSubmit}
             className="dric-appointment-form min-w-0 rounded-[1.75rem] border border-white/10 bg-white/[0.05] p-4 shadow-2xl backdrop-blur-xl sm:rounded-[2rem] sm:p-6 md:p-8"
           >
             <div className="grid min-w-0 gap-4 sm:gap-5 md:grid-cols-2">
-              <input required placeholder={t.name} value={form.name} onChange={(e) => updateField("name", e.target.value)} className="dric-appointment-field min-w-0 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3.5 text-base outline-none focus:border-[#003770] sm:px-5 sm:py-4" />
-              <input required type="email" placeholder={t.email} value={form.email} onChange={(e) => updateField("email", e.target.value)} className="dric-appointment-field min-w-0 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3.5 text-base outline-none focus:border-[#003770] sm:px-5 sm:py-4" />
-              <input placeholder={t.phone} value={form.phone} onChange={(e) => updateField("phone", e.target.value)} className="dric-appointment-field min-w-0 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3.5 text-base outline-none focus:border-[#003770] sm:px-5 sm:py-4" />
+              <div className="min-w-0 [&_input]:w-full">
+              <input name="name" maxLength={160} aria-label={t.name} aria-invalid={!!errors.name} aria-describedby={errors.name ? "name-error" : undefined} required placeholder={t.name} value={form.name} onChange={(e) => updateField("name", e.target.value)} className="dric-appointment-field min-w-0 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3.5 text-base outline-none focus:border-[#003770] sm:px-5 sm:py-4" />
+                {errors.name && <p id="name-error" role="alert" className="mt-2 text-sm text-red-500">{errors.name}</p>}
+              </div>
+              <div className="min-w-0 [&_input]:w-full">
+              <input name="email" maxLength={190} aria-label={t.email} aria-invalid={!!errors.email} aria-describedby={errors.email ? "email-error" : undefined} required type="email" placeholder={t.email} value={form.email} onChange={(e) => updateField("email", e.target.value)} className="dric-appointment-field min-w-0 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3.5 text-base outline-none focus:border-[#003770] sm:px-5 sm:py-4" />
+                {errors.email && <p id="email-error" role="alert" className="mt-2 text-sm text-red-500">{errors.email}</p>}
+              </div>
+              <input aria-label={t.phone} placeholder={t.phone} value={form.phone} onChange={(e) => updateField("phone", e.target.value)} className="dric-appointment-field min-w-0 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3.5 text-base outline-none focus:border-[#003770] sm:px-5 sm:py-4" />
 
-              <select required value={form.topic} onChange={(e) => updateField("topic", e.target.value)} className="dric-appointment-field min-w-0 rounded-2xl border border-white/10 bg-[#071126] px-4 py-3.5 text-base outline-none focus:border-[#003770] sm:px-5 sm:py-4">
+              <select name="topic" aria-label={t.topic} required value={form.topic} onChange={(e) => updateField("topic", e.target.value)} className="dric-appointment-field min-w-0 rounded-2xl border border-white/10 bg-[#071126] px-4 py-3.5 text-base outline-none focus:border-[#003770] sm:px-5 sm:py-4">
                 <option value="">{t.topic}</option>
                 {t.topics.map((topic) => (
                   <option key={topic}>{topic}</option>
                 ))}
               </select>
 
-              <input type="date" value={form.date} onChange={(e) => updateField("date", e.target.value)} className="dric-appointment-field min-w-0 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3.5 text-base outline-none focus:border-[#003770] sm:px-5 sm:py-4" />
+              <input aria-label={t.date} type="date" value={form.date} onChange={(e) => updateField("date", e.target.value)} className="dric-appointment-field min-w-0 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3.5 text-base outline-none focus:border-[#003770] sm:px-5 sm:py-4" />
             </div>
 
             <textarea
+              name="message"
+              aria-label={t.message}
+              maxLength={3000}
               required
               placeholder={t.message}
               value={form.message}
@@ -179,6 +229,7 @@ export default function AgendarCitaPage({ params }: Props) {
             <label className="mt-5 flex items-start gap-3 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3.5 text-sm leading-6 text-white/70 sm:px-5">
               <input
                 required
+                name="consent"
                 type="checkbox"
                 checked={form.consent}
                 onChange={(e) => setForm((prev) => ({ ...prev, consent: e.target.checked }))}
@@ -186,6 +237,10 @@ export default function AgendarCitaPage({ params }: Props) {
               />
               <span>{t.consent}</span>
             </label>
+
+            {["topic", "message", "consent"].map((field) => errors[field] && (
+              <p key={field} role="alert" className="mt-2 text-sm text-red-500">{errors[field]}</p>
+            ))}
 
             <button
               type="submit"

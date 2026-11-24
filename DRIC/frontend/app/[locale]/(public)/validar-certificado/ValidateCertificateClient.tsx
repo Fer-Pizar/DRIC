@@ -33,32 +33,69 @@ export default function ValidateCertificateClient({ editableText }: Props) {
   const [certificate, setCertificate] = useState<CertificateData | null>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const restoredVerificationRef = useRef<string | null>(null);
+  const verificationRequestRef = useRef<AbortController | null>(null);
 
   const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://127.0.0.1:8000/api";
 
   const formatDate = (date: string) => {
-    return new Intl.DateTimeFormat(locale === "es" ? "es-BO" : "en-US").format(new Date(date));
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return "—";
+    const [year, month, day] = date.split("-");
+    return `${day}/${month}/${year}`;
   };
 
-  const verifyCertificate = useCallback(async (cleanCode: string, options?: { keepCurrentResult?: boolean }) => {
+  const resetVerification = useCallback(() => {
+    verificationRequestRef.current?.abort();
+    verificationRequestRef.current = null;
+    setCode("");
+    setCertificate(null);
     setError("");
+    setLoading(false);
+  }, []);
 
-    if (!options?.keepCurrentResult) {
-      setCertificate(null);
+  useEffect(() => {
+    resetVerification();
+
+    try {
+      sessionStorage.removeItem(CERTIFICATE_SESSION_KEY);
+    } catch {
     }
+
+    const handlePageShow = (event: PageTransitionEvent) => {
+      if (event.persisted) resetVerification();
+    };
+
+    window.addEventListener("pagehide", resetVerification);
+    window.addEventListener("pageshow", handlePageShow);
+
+    return () => {
+      verificationRequestRef.current?.abort();
+      verificationRequestRef.current = null;
+      window.removeEventListener("pagehide", resetVerification);
+      window.removeEventListener("pageshow", handlePageShow);
+    };
+  }, [locale, resetVerification]);
+
+  const verifyCertificate = useCallback(async (cleanCode: string) => {
+    verificationRequestRef.current?.abort();
+    verificationRequestRef.current = null;
+    setError("");
+    setCertificate(null);
+    setLoading(false);
 
     if (!/^[A-Z0-9]{7}$/.test(cleanCode)) {
       setError(t("invalidCode"));
-      sessionStorage.removeItem(CERTIFICATE_SESSION_KEY);
       return;
     }
 
+    const controller = new AbortController();
+    verificationRequestRef.current = controller;
     setLoading(true);
 
     try {
       const response = await fetch(`${apiUrl}/certificates/verify`, {
         method: "POST",
+        signal: controller.signal,
+        cache: "no-store",
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
@@ -67,10 +104,10 @@ export default function ValidateCertificateClient({ editableText }: Props) {
       });
 
       const result = await response.json();
+      if (controller.signal.aborted) return;
 
       if (!response.ok) {
         setError(t("notFound"));
-        sessionStorage.removeItem(CERTIFICATE_SESSION_KEY);
         return;
       }
 
@@ -83,53 +120,15 @@ export default function ValidateCertificateClient({ editableText }: Props) {
       };
 
       setCertificate(nextCertificate);
-      sessionStorage.setItem(
-        CERTIFICATE_SESSION_KEY,
-        JSON.stringify({ code: cleanCode, certificate: nextCertificate }),
-      );
     } catch {
-      setError(t("serverError"));
+      if (!controller.signal.aborted) setError(t("serverError"));
     } finally {
-      setLoading(false);
+      if (verificationRequestRef.current === controller) {
+        verificationRequestRef.current = null;
+        setLoading(false);
+      }
     }
   }, [apiUrl, locale, t]);
-
-  useEffect(() => {
-    const savedVerification = sessionStorage.getItem(CERTIFICATE_SESSION_KEY);
-
-    if (!savedVerification) {
-      return;
-    }
-
-    try {
-      const parsed = JSON.parse(savedVerification) as {
-        code?: string;
-        certificate?: CertificateData;
-      };
-      const savedCode = parsed.code?.trim().toUpperCase();
-
-      if (!savedCode || !/^[A-Z0-9]{7}$/.test(savedCode)) {
-        return;
-      }
-
-      const restorationKey = `${locale}:${savedCode}`;
-
-      if (restoredVerificationRef.current === restorationKey) {
-        return;
-      }
-
-      restoredVerificationRef.current = restorationKey;
-      setCode(savedCode);
-
-      if (parsed.certificate) {
-        setCertificate(parsed.certificate);
-      }
-
-      void verifyCertificate(savedCode, { keepCurrentResult: Boolean(parsed.certificate) });
-    } catch {
-      sessionStorage.removeItem(CERTIFICATE_SESSION_KEY);
-    }
-  }, [verifyCertificate]);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -163,6 +162,7 @@ export default function ValidateCertificateClient({ editableText }: Props) {
 
               <div className="dric-certificate-input-shell flex flex-col gap-4 rounded-3xl p-3 md:flex-row">
                 <input
+                  autoComplete="off"
                   value={code}
                   onChange={(event) => setCode(event.target.value.toUpperCase())}
                   maxLength={7}

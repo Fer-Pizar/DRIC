@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class AuthController extends Controller
@@ -26,12 +28,20 @@ class AuthController extends Controller
             'password.required' => 'La contraseña es obligatoria.',
         ]);
 
+        $key = 'admin-login:'.hash('sha256', Str::lower($credentials['email']));
+        if (RateLimiter::tooManyAttempts($key, 5)) {
+            return back()->withErrors(['email' => 'Demasiados intentos. Inténtalo de nuevo en '.RateLimiter::availableIn($key).' segundos.'])->onlyInput('email');
+        }
+
         if (! Auth::attempt($credentials, $request->boolean('remember'))) {
+            RateLimiter::hit($key, 60);
+
             return back()
                 ->withErrors(['email' => 'Las credenciales no coinciden con nuestros registros.'])
                 ->onlyInput('email');
         }
 
+        RateLimiter::clear($key);
         $request->session()->regenerate();
         $request->session()->put('admin_last_activity_at', now()->timestamp);
 

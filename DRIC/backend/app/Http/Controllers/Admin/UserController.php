@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Support\AdminPermissionCatalog;
-use App\Support\AdminRolePermissionSetup;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -17,7 +16,6 @@ class UserController extends Controller
 {
     public function index(): View
     {
-        AdminRolePermissionSetup::ensureBaseRolesAndPermissions(auth()->user());
         $this->authorizeAdmin();
 
         $users = User::query()
@@ -33,7 +31,6 @@ class UserController extends Controller
 
     public function create(): View
     {
-        AdminRolePermissionSetup::ensureBaseRolesAndPermissions(auth()->user());
         $this->authorizeAdmin();
 
         return view('admin.users.create', [
@@ -44,7 +41,6 @@ class UserController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        AdminRolePermissionSetup::ensureBaseRolesAndPermissions($request->user());
         $this->authorizeAdmin();
 
         $data = $request->validate([
@@ -73,7 +69,6 @@ class UserController extends Controller
 
     public function edit(User $user): View
     {
-        AdminRolePermissionSetup::ensureBaseRolesAndPermissions(auth()->user());
         $this->authorizeAdmin();
 
         $user->load('roles');
@@ -87,7 +82,6 @@ class UserController extends Controller
 
     public function update(Request $request, User $user): RedirectResponse
     {
-        AdminRolePermissionSetup::ensureBaseRolesAndPermissions($request->user());
         $this->authorizeAdmin();
 
         $data = $request->validate([
@@ -123,7 +117,6 @@ class UserController extends Controller
 
     public function destroy(Request $request, User $user): RedirectResponse
     {
-        AdminRolePermissionSetup::ensureBaseRolesAndPermissions($request->user());
         $this->authorizeAdmin();
 
         if ($request->user()->is($user)) {

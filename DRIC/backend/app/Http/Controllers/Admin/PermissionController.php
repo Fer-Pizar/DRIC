@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Support\AdminPermissionCatalog;
-use App\Support\AdminRolePermissionSetup;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -16,7 +15,6 @@ class PermissionController extends Controller
 {
     public function index(): View
     {
-        AdminRolePermissionSetup::ensureBaseRolesAndPermissions(auth()->user());
         $this->authorizeAdmin();
 
         $systemPermissions = array_keys(AdminPermissionCatalog::flatPermissions());
@@ -35,7 +33,6 @@ class PermissionController extends Controller
 
     public function create(): View
     {
-        AdminRolePermissionSetup::ensureBaseRolesAndPermissions(auth()->user());
         $this->authorizeAdmin();
 
         return view('admin.permissions.create');
@@ -43,7 +40,6 @@ class PermissionController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        AdminRolePermissionSetup::ensureBaseRolesAndPermissions($request->user());
         $this->authorizeAdmin();
 
         $data = $request->validate([
@@ -70,7 +66,6 @@ class PermissionController extends Controller
 
     public function destroy(Request $request, Permission $permission): RedirectResponse
     {
-        AdminRolePermissionSetup::ensureBaseRolesAndPermissions($request->user());
         $this->authorizeAdmin();
 
         if (array_key_exists($permission->name, AdminPermissionCatalog::flatPermissions())) {

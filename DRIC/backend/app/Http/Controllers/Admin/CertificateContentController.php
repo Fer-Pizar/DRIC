@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
+use Illuminate\Validation\ValidationException;
 
 class CertificateContentController extends Controller
 {
@@ -23,7 +24,7 @@ class CertificateContentController extends Controller
     private const CODE_REGEX = '/\A[A-Z0-9]{7}\z/';
     private const CODE_LETTERS = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
     private const CODE_NUMBERS = '23456789';
-    private const PROTECTED_CODES = ['B7T3SG9', 'X4D8R1Q', 'A7K9P2M'];
+    private const PROTECTED_CODES = ['B7T3SG9', 'X4D8R1Q', 'A7K9P2M', '9L6D9V9'];
 
     public function edit(Page $page): View
     {
@@ -46,6 +47,7 @@ class CertificateContentController extends Controller
         $certificates = $this->validatedCertificates($request);
 
         DB::transaction(function () use ($request, $validated, $certificates, $page): void {
+            Page::whereKey($page->id)->lockForUpdate()->firstOrFail();
             $page->update([
                 'status' => 'published',
                 'published_at' => $page->published_at ?? now(),
@@ -131,13 +133,14 @@ class CertificateContentController extends Controller
             ['certificates' => $rows],
             [
                 'certificates' => ['array'],
-                'certificates.*.id' => ['nullable', 'integer'],
+                'certificates.*.id' => ['nullable', 'integer', 'distinct'],
+                'certificates.*.revision' => ['nullable', 'string', 'max:64'],
                 'certificates.*.is_active' => ['nullable', 'boolean'],
                 'certificates.*.code' => ['required', 'string', 'size:7', 'regex:'.self::CODE_REGEX],
                 'certificates.*.full_name' => ['required', 'string', 'max:180', 'regex:'.self::CLEAN_NAME_REGEX],
                 'certificates.*.certificate_type' => ['required', 'string', 'max:160', 'regex:'.self::CLEAN_NAME_REGEX],
                 'certificates.*.certificate_type_en' => ['nullable', 'string', 'max:160', 'regex:'.self::CLEAN_NAME_REGEX],
-                'certificates.*.issue_date' => ['required', 'date'],
+                'certificates.*.issue_date' => ['required', 'date_format:Y-m-d'],
                 'certificates.*.description_es' => ['required', 'string', 'max:900'],
                 'certificates.*.description_en' => ['nullable', 'string', 'max:900'],
             ],
@@ -151,7 +154,7 @@ class CertificateContentController extends Controller
                 'certificates.*.certificate_type.regex' => 'El tipo de certificado solo puede contener letras, espacios, puntos y comas. No uses números ni símbolos especiales.',
                 'certificates.*.certificate_type_en.regex' => 'El tipo de certificado en inglés solo puede contener letras, espacios, puntos y comas. No uses números ni símbolos especiales.',
                 'certificates.*.issue_date.required' => 'Selecciona la fecha de emisión.',
-                'certificates.*.issue_date.date' => 'Selecciona una fecha de emisión válida.',
+                'certificates.*.issue_date.date_format' => 'Selecciona una fecha de emisión válida.',
                 'certificates.*.description_es.required' => 'Escribe una descripción en español.',
             ]
         );
@@ -192,6 +195,7 @@ class CertificateContentController extends Controller
         return collect($validated['certificates'] ?? [])
             ->map(fn ($row) => [
                 'id' => isset($row['id']) ? (int) $row['id'] : null,
+                'revision' => $row['revision'] ?? '',
                 'is_active' => (bool) ($row['is_active'] ?? false),
                 'code' => strtoupper(trim($row['code'])),
                 'full_name' => trim($row['full_name']),
@@ -206,20 +210,19 @@ class CertificateContentController extends Controller
 
     private function syncCertificates(array $certificates): void
     {
-        $keptIds = [];
-
-        foreach ($certificates as $certificateData) {
-            $certificate = $certificateData['id']
-                ? CertificateVerification::query()
-                    ->where('id', $certificateData['id'])
-                    ->whereNotIn('code', self::PROTECTED_CODES)
-                    ->first()
-                : null;
-
-            if (! $certificate) {
-                $certificate = new CertificateVerification();
+        foreach ($certificates as $index => $certificateData) {
+            $certificate = new CertificateVerification();
+            if ($certificateData['id']) {
+                $certificate = CertificateVerification::query()->whereKey($certificateData['id'])
+                    ->whereNotIn('code', self::PROTECTED_CODES)->lockForUpdate()->first();
+                if (!$certificate || !hash_equals($this->revision($certificate), $certificateData['revision'])) {
+                    throw ValidationException::withMessages([
+                        "certificates.{$index}.code" => 'Este registro cambió desde que abriste la página. Recarga antes de guardar.',
+                    ]);
+                }
             }
 
+            $before = $certificate->exists ? $certificate->getAttributes() : null;
             $certificate->fill([
                 'code' => $certificateData['code'],
                 'full_name' => $certificateData['full_name'],
@@ -230,14 +233,23 @@ class CertificateContentController extends Controller
                 'issue_date' => $certificateData['issue_date'],
                 'is_active' => $certificateData['is_active'],
             ]);
-            $certificate->save();
-            $keptIds[] = $certificate->id;
-        }
 
-        CertificateVerification::query()
-            ->whereNotIn('code', self::PROTECTED_CODES)
-            ->when($keptIds !== [], fn ($query) => $query->whereNotIn('id', $keptIds))
-            ->delete();
+            if (!$certificate->exists || $certificate->isDirty()) {
+                $certificate->save();
+                DB::table('certificate_change_logs')->insert([
+                    'certificate_id' => $certificate->id,
+                    'user_id' => auth()->id(),
+                    'before' => $before === null ? null : json_encode($before, JSON_THROW_ON_ERROR),
+                    'after' => json_encode($certificate->getAttributes(), JSON_THROW_ON_ERROR),
+                    'created_at' => now(),
+                ]);
+            }
+        }
+    }
+
+    private function revision(CertificateVerification $certificate): string
+    {
+        return hash_hmac('sha256', json_encode($certificate->getAttributes(), JSON_THROW_ON_ERROR), config('app.key'));
     }
 
     private function formContent(Page $page): array
@@ -265,6 +277,7 @@ class CertificateContentController extends Controller
             ->get()
             ->map(fn (CertificateVerification $certificate) => [
                 'id' => $certificate->id,
+                'revision' => $this->revision($certificate),
                 'is_active' => (bool) $certificate->is_active,
                 'code' => $certificate->code,
                 'full_name' => $certificate->full_name,

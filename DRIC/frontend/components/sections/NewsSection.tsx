@@ -23,7 +23,6 @@ export default function NewsSection() {
   return (
     <section className="px-4 py-20 md:px-8 lg:px-12">
       <div className="mx-auto max-w-7xl">
-        {/* Header */}
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
             <h2 className="text-4xl font-extrabold md:text-5xl">
@@ -39,14 +38,12 @@ export default function NewsSection() {
           </button>
         </div>
 
-        {/* Cards */}
         <div className="mt-12 grid gap-8 md:grid-cols-2">
           {news.map((item) => (
             <div
               key={item.title}
               className="overflow-hidden rounded-3xl border border-white/10"
             >
-              {/* Top gradient block */}
               <div
                 className={`h-40 bg-gradient-to-br ${item.gradient} p-6`}
               >
@@ -55,7 +52,6 @@ export default function NewsSection() {
                 </span>
               </div>
 
-              {/* Content */}
               <div className="bg-[#040611] p-6">
                 <p className="text-sm text-cyan-300">{item.date}</p>
 
