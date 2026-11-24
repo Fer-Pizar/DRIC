@@ -557,6 +557,22 @@ html[data-theme="dark"] .dric-certificate-cell-label {
   transition: background 300ms ease, color 300ms ease;
 }
 
+@media (hover: none) and (pointer: coarse) and (min-width: 768px) and (max-width: 1440px) and (min-height: 600px) and (orientation: landscape) {
+  .dric-home-page {
+    width: 100vw;
+    width: 100dvw;
+    max-width: none;
+    overflow-x: clip;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  .dric-home-page .dric-site-header {
+    width: 100vw;
+    width: 100dvw;
+  }
+}
+
 html[data-theme="light"] .dric-theme-page {
   background:
     radial-gradient(circle at 18% 8%, rgba(255, 255, 255, 0.96), transparent 28%),
